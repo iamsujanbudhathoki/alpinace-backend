@@ -1,0 +1,3310 @@
+{
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"Record_string.string_": {
+				"properties": {},
+				"additionalProperties": {
+					"type": "string"
+				},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
+			"ApiResponse_Record_string.string__": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/Record_string.string_"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/Record_string.string_"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateSettingsDto": {
+				"properties": {
+					"siteName": {
+						"type": "string"
+					},
+					"contactEmail": {
+						"type": "string"
+					},
+					"contactPhone": {
+						"type": "string"
+					},
+					"companyAddress": {
+						"type": "string"
+					},
+					"metaTitle": {
+						"type": "string"
+					},
+					"metaDescription": {
+						"type": "string"
+					},
+					"currency": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Package": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"deletedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"title": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"categoryType": {
+						"type": "string",
+						"enum": [
+							"Trekking",
+							"Expedition",
+							"Tour"
+						]
+					},
+					"category": {
+						"type": "string"
+					},
+					"region": {
+						"type": "string"
+					},
+					"durationDays": {
+						"type": "number",
+						"format": "double"
+					},
+					"maxAltitudeMeters": {
+						"type": "number",
+						"format": "double"
+					},
+					"difficulty": {
+						"type": "string"
+					},
+					"priceUSD": {
+						"type": "number",
+						"format": "double"
+					},
+					"status": {
+						"type": "string",
+						"enum": [
+							"Active",
+							"Featured",
+							"Draft"
+						]
+					},
+					"totalBookings": {
+						"type": "number",
+						"format": "double"
+					},
+					"rating": {
+						"type": "number",
+						"format": "double"
+					},
+					"reviewsCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"image": {
+						"type": "string"
+					},
+					"shortDesc": {
+						"type": "string"
+					},
+					"bestSeason": {
+						"type": "string"
+					},
+					"startEndLocation": {
+						"type": "string"
+					},
+					"accommodation": {
+						"type": "string"
+					},
+					"meals": {
+						"type": "string"
+					},
+					"groupSizeRange": {
+						"type": "string"
+					},
+					"permitsRequired": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"inclusionsText": {
+						"type": "string"
+					},
+					"exclusionsText": {
+						"type": "string"
+					},
+					"metaTitle": {
+						"type": "string"
+					},
+					"metaDescription": {
+						"type": "string"
+					},
+					"keywords": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"deletedAt",
+					"title",
+					"slug",
+					"categoryType",
+					"category",
+					"region",
+					"durationDays",
+					"maxAltitudeMeters",
+					"difficulty",
+					"priceUSD",
+					"status",
+					"totalBookings",
+					"rating",
+					"reviewsCount",
+					"image",
+					"shortDesc",
+					"bestSeason",
+					"startEndLocation",
+					"accommodation",
+					"meals",
+					"groupSizeRange",
+					"permitsRequired",
+					"inclusionsText",
+					"exclusionsText",
+					"metaTitle",
+					"metaDescription",
+					"keywords"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_Package-Array_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"items": {
+									"$ref": "#/components/schemas/Package"
+								},
+								"type": "array"
+							},
+							{
+								"items": {
+									"items": {
+										"$ref": "#/components/schemas/Package"
+									},
+									"type": "array"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_Package_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/Package"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/Package"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreatePackageDto": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"categoryType": {
+						"type": "string",
+						"enum": [
+							"Trekking",
+							"Expedition",
+							"Tour"
+						]
+					},
+					"category": {
+						"type": "string"
+					},
+					"region": {
+						"type": "string"
+					},
+					"durationDays": {
+						"type": "number",
+						"format": "double"
+					},
+					"maxAltitudeMeters": {
+						"type": "number",
+						"format": "double"
+					},
+					"difficulty": {
+						"type": "string"
+					},
+					"priceUSD": {
+						"type": "number",
+						"format": "double"
+					},
+					"status": {
+						"type": "string",
+						"enum": [
+							"Active",
+							"Featured",
+							"Draft"
+						]
+					},
+					"shortDesc": {
+						"type": "string"
+					},
+					"image": {
+						"type": "string"
+					},
+					"bestSeason": {
+						"type": "string"
+					},
+					"startEndLocation": {
+						"type": "string"
+					},
+					"accommodation": {
+						"type": "string"
+					},
+					"meals": {
+						"type": "string"
+					},
+					"groupSizeRange": {
+						"type": "string"
+					},
+					"permitsText": {
+						"type": "string"
+					},
+					"permitsRequired": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"inclusionsText": {
+						"type": "string"
+					},
+					"exclusionsText": {
+						"type": "string"
+					},
+					"metaTitle": {
+						"type": "string"
+					},
+					"metaDescription": {
+						"type": "string"
+					},
+					"keywords": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"title",
+					"categoryType",
+					"category",
+					"region",
+					"durationDays",
+					"difficulty",
+					"priceUSD",
+					"status",
+					"shortDesc",
+					"image"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdatePackageDto": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"categoryType": {
+						"type": "string",
+						"enum": [
+							"Trekking",
+							"Expedition",
+							"Tour"
+						]
+					},
+					"category": {
+						"type": "string"
+					},
+					"region": {
+						"type": "string"
+					},
+					"durationDays": {
+						"type": "number",
+						"format": "double"
+					},
+					"maxAltitudeMeters": {
+						"type": "number",
+						"format": "double"
+					},
+					"difficulty": {
+						"type": "string"
+					},
+					"priceUSD": {
+						"type": "number",
+						"format": "double"
+					},
+					"status": {
+						"type": "string",
+						"enum": [
+							"Active",
+							"Featured",
+							"Draft"
+						]
+					},
+					"shortDesc": {
+						"type": "string"
+					},
+					"image": {
+						"type": "string"
+					},
+					"bestSeason": {
+						"type": "string"
+					},
+					"startEndLocation": {
+						"type": "string"
+					},
+					"accommodation": {
+						"type": "string"
+					},
+					"meals": {
+						"type": "string"
+					},
+					"groupSizeRange": {
+						"type": "string"
+					},
+					"permitsText": {
+						"type": "string"
+					},
+					"permitsRequired": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"inclusionsText": {
+						"type": "string"
+					},
+					"exclusionsText": {
+						"type": "string"
+					},
+					"metaTitle": {
+						"type": "string"
+					},
+					"metaDescription": {
+						"type": "string"
+					},
+					"keywords": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_boolean_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"type": "boolean"
+							},
+							{
+								"items": {
+									"type": "boolean"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MediaUploadResult": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"altText": {
+						"type": "string"
+					},
+					"url": {
+						"type": "string"
+					},
+					"mimeType": {
+						"type": "string"
+					},
+					"fileSize": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"title",
+					"category",
+					"description",
+					"altText",
+					"url",
+					"mimeType",
+					"fileSize"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_MediaUploadResult_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/MediaUploadResult"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/MediaUploadResult"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_MediaUploadResult-Array_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"items": {
+									"$ref": "#/components/schemas/MediaUploadResult"
+								},
+								"type": "array"
+							},
+							{
+								"items": {
+									"items": {
+										"$ref": "#/components/schemas/MediaUploadResult"
+									},
+									"type": "array"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateMediaDto": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"altText": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Inquiry": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"deletedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"guestName": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"country": {
+						"type": "string"
+					},
+					"interestedTrip": {
+						"type": "string"
+					},
+					"travelDates": {
+						"type": "string"
+					},
+					"groupSize": {
+						"type": "number",
+						"format": "double"
+					},
+					"message": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string",
+						"enum": [
+							"New",
+							"Contacted",
+							"Quote Sent",
+							"Booked",
+							"Closed"
+						]
+					},
+					"notes": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"deletedAt",
+					"guestName",
+					"email",
+					"phone",
+					"country",
+					"interestedTrip",
+					"travelDates",
+					"groupSize",
+					"message",
+					"status",
+					"notes"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_Inquiry-Array_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"items": {
+									"$ref": "#/components/schemas/Inquiry"
+								},
+								"type": "array"
+							},
+							{
+								"items": {
+									"items": {
+										"$ref": "#/components/schemas/Inquiry"
+									},
+									"type": "array"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_Inquiry_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/Inquiry"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/Inquiry"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateInquiryDto": {
+				"properties": {
+					"guestName": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"country": {
+						"type": "string"
+					},
+					"interestedTrip": {
+						"type": "string"
+					},
+					"travelDates": {
+						"type": "string"
+					},
+					"groupSize": {
+						"type": "number",
+						"format": "double"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"guestName",
+					"email",
+					"phone",
+					"country",
+					"interestedTrip",
+					"travelDates",
+					"groupSize",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateInquiryDto": {
+				"properties": {
+					"status": {
+						"type": "string",
+						"enum": [
+							"New",
+							"Contacted",
+							"Quote Sent",
+							"Booked",
+							"Closed"
+						]
+					},
+					"notes": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Guide": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"deletedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"name": {
+						"type": "string"
+					},
+					"role": {
+						"type": "string",
+						"enum": [
+							"Lead Expedition Leader",
+							"Senior Trekking Guide",
+							"High Altitude Sherpa",
+							"Cultural Tour Guide"
+						]
+					},
+					"summitStats": {
+						"type": "string"
+					},
+					"certifications": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"status": {
+						"type": "string",
+						"enum": [
+							"Available",
+							"On Mountain",
+							"On Leave"
+						]
+					},
+					"phone": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"currentAssignment": {
+						"type": "string"
+					},
+					"avatarUrl": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"deletedAt",
+					"name",
+					"role",
+					"summitStats",
+					"certifications",
+					"status",
+					"phone",
+					"email",
+					"currentAssignment",
+					"avatarUrl"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_Guide-Array_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"items": {
+									"$ref": "#/components/schemas/Guide"
+								},
+								"type": "array"
+							},
+							{
+								"items": {
+									"items": {
+										"$ref": "#/components/schemas/Guide"
+									},
+									"type": "array"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_Guide_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/Guide"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/Guide"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateGuideDto": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"role": {
+						"type": "string"
+					},
+					"summitStats": {
+						"type": "string"
+					},
+					"certifications": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"status": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"currentAssignment": {
+						"type": "string"
+					},
+					"avatarUrl": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name",
+					"role",
+					"phone",
+					"email",
+					"avatarUrl"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateGuideDto": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"role": {
+						"type": "string"
+					},
+					"summitStats": {
+						"type": "string"
+					},
+					"certifications": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"status": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"currentAssignment": {
+						"type": "string"
+					},
+					"avatarUrl": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Booking": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"deletedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"reference": {
+						"type": "string"
+					},
+					"guestName": {
+						"type": "string"
+					},
+					"guestEmail": {
+						"type": "string"
+					},
+					"guestPhone": {
+						"type": "string"
+					},
+					"country": {
+						"type": "string"
+					},
+					"packageName": {
+						"type": "string"
+					},
+					"packageType": {
+						"type": "string",
+						"enum": [
+							"Trekking",
+							"Expedition",
+							"Tour"
+						]
+					},
+					"startDate": {
+						"type": "string"
+					},
+					"endDate": {
+						"type": "string"
+					},
+					"groupSize": {
+						"type": "number",
+						"format": "double"
+					},
+					"totalAmountUSD": {
+						"type": "number",
+						"format": "double"
+					},
+					"paymentStatus": {
+						"type": "string",
+						"enum": [
+							"Paid",
+							"Deposit Paid",
+							"Pending",
+							"Refunded"
+						]
+					},
+					"bookingStatus": {
+						"type": "string",
+						"enum": [
+							"Confirmed",
+							"In Review",
+							"Active Trek",
+							"Completed",
+							"Cancelled"
+						]
+					},
+					"assignedGuide": {
+						"type": "string"
+					},
+					"permitStatus": {
+						"type": "string",
+						"enum": [
+							"Issued",
+							"Processing",
+							"Pending Document"
+						]
+					},
+					"specialRequests": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"deletedAt",
+					"reference",
+					"guestName",
+					"guestEmail",
+					"guestPhone",
+					"country",
+					"packageName",
+					"packageType",
+					"startDate",
+					"endDate",
+					"groupSize",
+					"totalAmountUSD",
+					"paymentStatus",
+					"bookingStatus",
+					"assignedGuide",
+					"permitStatus",
+					"specialRequests"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"DashboardMetricsResponse": {
+				"properties": {
+					"totalRevenueUSD": {
+						"type": "number",
+						"format": "double"
+					},
+					"revenueChangePercent": {
+						"type": "number",
+						"format": "double"
+					},
+					"activeExpeditions": {
+						"type": "number",
+						"format": "double"
+					},
+					"climbersOnMountain": {
+						"type": "number",
+						"format": "double"
+					},
+					"pendingBookings": {
+						"type": "number",
+						"format": "double"
+					},
+					"pendingInquiries": {
+						"type": "number",
+						"format": "double"
+					},
+					"timsPermitsProcessing": {
+						"type": "number",
+						"format": "double"
+					},
+					"recentBookings": {
+						"items": {
+							"$ref": "#/components/schemas/Booking"
+						},
+						"type": "array"
+					},
+					"featuredPackages": {
+						"items": {
+							"$ref": "#/components/schemas/Package"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"totalRevenueUSD",
+					"revenueChangePercent",
+					"activeExpeditions",
+					"climbersOnMountain",
+					"pendingBookings",
+					"pendingInquiries",
+					"timsPermitsProcessing",
+					"recentBookings",
+					"featuredPackages"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_DashboardMetricsResponse_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/DashboardMetricsResponse"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/DashboardMetricsResponse"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CategoryType": {
+				"enum": [
+					"Trekking",
+					"Tours",
+					"Expeditions",
+					"Blogs",
+					"Media"
+				],
+				"type": "string"
+			},
+			"CategoryStatus": {
+				"enum": [
+					"Active",
+					"Draft"
+				],
+				"type": "string"
+			},
+			"Category": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"deletedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"name": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"type": {
+						"$ref": "#/components/schemas/CategoryType"
+					},
+					"description": {
+						"type": "string"
+					},
+					"itemCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"status": {
+						"$ref": "#/components/schemas/CategoryStatus"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"deletedAt",
+					"name",
+					"slug",
+					"type",
+					"description",
+					"itemCount",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_Category-Array_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"items": {
+									"$ref": "#/components/schemas/Category"
+								},
+								"type": "array"
+							},
+							{
+								"items": {
+									"items": {
+										"$ref": "#/components/schemas/Category"
+									},
+									"type": "array"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_Category_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/Category"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/Category"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateCategoryDto": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"type": {
+						"$ref": "#/components/schemas/CategoryType"
+					},
+					"description": {
+						"type": "string"
+					},
+					"status": {
+						"$ref": "#/components/schemas/CategoryStatus"
+					}
+				},
+				"required": [
+					"name",
+					"type",
+					"description",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateCategoryDto": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"type": {
+						"$ref": "#/components/schemas/CategoryType"
+					},
+					"description": {
+						"type": "string"
+					},
+					"status": {
+						"$ref": "#/components/schemas/CategoryStatus"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_Booking-Array_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"items": {
+									"$ref": "#/components/schemas/Booking"
+								},
+								"type": "array"
+							},
+							{
+								"items": {
+									"items": {
+										"$ref": "#/components/schemas/Booking"
+									},
+									"type": "array"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_Booking_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/Booking"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/Booking"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateBookingDto": {
+				"properties": {
+					"guestName": {
+						"type": "string"
+					},
+					"guestEmail": {
+						"type": "string"
+					},
+					"guestPhone": {
+						"type": "string"
+					},
+					"country": {
+						"type": "string"
+					},
+					"packageName": {
+						"type": "string"
+					},
+					"packageType": {
+						"type": "string",
+						"enum": [
+							"Trekking",
+							"Expedition",
+							"Tour"
+						]
+					},
+					"startDate": {
+						"type": "string"
+					},
+					"endDate": {
+						"type": "string"
+					},
+					"groupSize": {
+						"type": "number",
+						"format": "double"
+					},
+					"totalAmountUSD": {
+						"type": "number",
+						"format": "double"
+					},
+					"paymentStatus": {
+						"type": "string",
+						"enum": [
+							"Paid",
+							"Deposit Paid",
+							"Pending",
+							"Refunded"
+						]
+					},
+					"bookingStatus": {
+						"type": "string",
+						"enum": [
+							"Confirmed",
+							"In Review",
+							"Active Trek",
+							"Completed",
+							"Cancelled"
+						]
+					},
+					"assignedGuide": {
+						"type": "string"
+					},
+					"permitStatus": {
+						"type": "string",
+						"enum": [
+							"Issued",
+							"Processing",
+							"Pending Document"
+						]
+					},
+					"specialRequests": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"guestName",
+					"guestEmail",
+					"guestPhone",
+					"country",
+					"packageName",
+					"packageType",
+					"startDate",
+					"endDate",
+					"groupSize",
+					"totalAmountUSD",
+					"paymentStatus",
+					"bookingStatus",
+					"permitStatus"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateBookingDto": {
+				"properties": {
+					"guestName": {
+						"type": "string"
+					},
+					"guestEmail": {
+						"type": "string"
+					},
+					"guestPhone": {
+						"type": "string"
+					},
+					"country": {
+						"type": "string"
+					},
+					"packageName": {
+						"type": "string"
+					},
+					"packageType": {
+						"type": "string",
+						"enum": [
+							"Trekking",
+							"Expedition",
+							"Tour"
+						]
+					},
+					"startDate": {
+						"type": "string"
+					},
+					"endDate": {
+						"type": "string"
+					},
+					"groupSize": {
+						"type": "number",
+						"format": "double"
+					},
+					"totalAmountUSD": {
+						"type": "number",
+						"format": "double"
+					},
+					"paymentStatus": {
+						"type": "string",
+						"enum": [
+							"Paid",
+							"Deposit Paid",
+							"Pending",
+							"Refunded"
+						]
+					},
+					"bookingStatus": {
+						"type": "string",
+						"enum": [
+							"Confirmed",
+							"In Review",
+							"Active Trek",
+							"Completed",
+							"Cancelled"
+						]
+					},
+					"assignedGuide": {
+						"type": "string"
+					},
+					"permitStatus": {
+						"type": "string",
+						"enum": [
+							"Issued",
+							"Processing",
+							"Pending Document"
+						]
+					},
+					"specialRequests": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BlogArticle": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"deletedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"title": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					},
+					"author": {
+						"type": "string"
+					},
+					"authorRole": {
+						"type": "string"
+					},
+					"authorAvatar": {
+						"type": "string"
+					},
+					"readTime": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string",
+						"enum": [
+							"Published",
+							"Draft",
+							"Archived"
+						]
+					},
+					"publishedDate": {
+						"type": "string"
+					},
+					"views": {
+						"type": "number",
+						"format": "double"
+					},
+					"excerpt": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					},
+					"image": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"deletedAt",
+					"title",
+					"slug",
+					"category",
+					"author",
+					"authorRole",
+					"authorAvatar",
+					"readTime",
+					"status",
+					"publishedDate",
+					"views",
+					"excerpt",
+					"content",
+					"image"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_BlogArticle-Array_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"items": {
+									"$ref": "#/components/schemas/BlogArticle"
+								},
+								"type": "array"
+							},
+							{
+								"items": {
+									"items": {
+										"$ref": "#/components/schemas/BlogArticle"
+									},
+									"type": "array"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_BlogArticle_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/BlogArticle"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/BlogArticle"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateBlogArticleDto": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					},
+					"author": {
+						"type": "string"
+					},
+					"authorRole": {
+						"type": "string"
+					},
+					"authorAvatar": {
+						"type": "string"
+					},
+					"readTime": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string",
+						"enum": [
+							"Published",
+							"Draft",
+							"Archived"
+						]
+					},
+					"publishedDate": {
+						"type": "string"
+					},
+					"excerpt": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					},
+					"image": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"title",
+					"category",
+					"author",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateBlogArticleDto": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					},
+					"author": {
+						"type": "string"
+					},
+					"authorRole": {
+						"type": "string"
+					},
+					"authorAvatar": {
+						"type": "string"
+					},
+					"readTime": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string",
+						"enum": [
+							"Published",
+							"Draft",
+							"Archived"
+						]
+					},
+					"publishedDate": {
+						"type": "string"
+					},
+					"excerpt": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					},
+					"image": {
+						"type": "string"
+					},
+					"views": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminLoginResponse": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"role": {
+						"type": "string"
+					},
+					"avatarUrl": {
+						"type": "string"
+					},
+					"token": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"email",
+					"role",
+					"token"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_AdminLoginResponse_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/AdminLoginResponse"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/AdminLoginResponse"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminAuthSchema": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"email",
+					"password"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_null_": {
+				"properties": {
+					"data": {
+						"items": {
+							"type": "number",
+							"enum": [
+								null
+							],
+							"nullable": true
+						},
+						"type": "array",
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "rest-nodejs-starter",
+		"version": "1.0.0",
+		"license": {
+			"name": "ISC"
+		},
+		"contact": {}
+	},
+	"paths": {
+		"/settings": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Record_string.string__"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Site Settings"
+				],
+				"security": [],
+				"parameters": []
+			},
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Record_string.string__"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Site Settings"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateSettingsDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/packages": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Package-Array_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Packages (Treks, Tours, Expeditions)"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "categoryType",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"Trekking",
+								"Expedition",
+								"Tour"
+							]
+						}
+					},
+					{
+						"in": "query",
+						"name": "region",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "difficulty",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"Active",
+								"Featured",
+								"Draft"
+							]
+						}
+					},
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Package_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Packages (Treks, Tours, Expeditions)"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreatePackageDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/packages/{idOrSlug}": {
+			"get": {
+				"operationId": "GetByIdOrSlug",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Package_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Packages (Treks, Tours, Expeditions)"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "idOrSlug",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/packages/{id}": {
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Package_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Packages (Treks, Tours, Expeditions)"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdatePackageDto"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "Delete",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Packages (Treks, Tours, Expeditions)"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/media/upload": {
+			"post": {
+				"operationId": "UploadFile",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_MediaUploadResult_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Media Uploads"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"file": {
+										"type": "string",
+										"format": "binary"
+									}
+								},
+								"required": [
+									"file"
+								]
+							}
+						}
+					}
+				}
+			}
+		},
+		"/media": {
+			"get": {
+				"operationId": "GetAllMedia",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_MediaUploadResult-Array_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Media Uploads"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/media/{id}": {
+			"put": {
+				"operationId": "UpdateMedia",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_MediaUploadResult_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Media Uploads"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateMediaDto"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteMedia",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Media Uploads"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/inquiries": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Inquiry-Array_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Inquiries & Leads"
+				],
+				"security": [],
+				"parameters": []
+			},
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Inquiry_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Inquiries & Leads"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateInquiryDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/inquiries/{id}": {
+			"get": {
+				"operationId": "GetById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Inquiry_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Inquiries & Leads"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Inquiry_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Inquiries & Leads"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateInquiryDto"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "Delete",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Inquiries & Leads"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/guides": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Guide-Array_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Guides"
+				],
+				"security": [],
+				"parameters": []
+			},
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Guide_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Guides"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateGuideDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/guides/{id}": {
+			"get": {
+				"operationId": "GetById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Guide_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Guides"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Guide_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Guides"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateGuideDto"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "Delete",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Guides"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/admin/dashboard": {
+			"get": {
+				"operationId": "GetMetrics",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_DashboardMetricsResponse_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Dashboard"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/categories": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Category-Array_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Categories"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "type",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/CategoryType"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Category_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Categories"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateCategoryDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/categories/{id}": {
+			"get": {
+				"operationId": "GetById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Category_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Categories"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Category_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Categories"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateCategoryDto"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "Delete",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Categories"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/bookings": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Booking-Array_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Bookings"
+				],
+				"security": [],
+				"parameters": []
+			},
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Booking_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Bookings"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateBookingDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/bookings/{id}": {
+			"get": {
+				"operationId": "GetById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Booking_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Bookings"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Booking_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Bookings"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateBookingDto"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "Delete",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Bookings"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/blogs": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_BlogArticle-Array_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Blog Articles"
+				],
+				"security": [],
+				"parameters": []
+			},
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_BlogArticle_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Blog Articles"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateBlogArticleDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/blogs/{idOrSlug}": {
+			"get": {
+				"operationId": "GetByIdOrSlug",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_BlogArticle_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Blog Articles"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "idOrSlug",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/blogs/{id}": {
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_BlogArticle_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Blog Articles"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateBlogArticleDto"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "Delete",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Blog Articles"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/admin/auth/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_AdminLoginResponse_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Auth System"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AdminAuthSchema"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/auth/me": {
+			"get": {
+				"operationId": "GetCurrentUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_AdminLoginResponse_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Auth System"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "header",
+						"name": "Authorization",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/admin/auth/logout": {
+			"post": {
+				"operationId": "Logout",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_null_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Auth System"
+				],
+				"security": [],
+				"parameters": []
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "https://abc.com/api/v1",
+			"description": "prouduction server"
+		},
+		{
+			"url": "http://localhost:4000/api/v1",
+			"description": "Development server"
+		}
+	]
+}

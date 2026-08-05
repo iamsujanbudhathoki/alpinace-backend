@@ -1,0 +1,58 @@
+import { plainToInstance } from 'class-transformer';
+import { ValidationError, validate } from 'class-validator';
+import { NextFunction, Request, Response } from 'express';
+import { AppError } from '../utils/appError.util';
+
+export class RequestValidator {
+  static validate = (classInstance: any) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      const convertedObject = plainToInstance(classInstance, req.body, {
+        enableImplicitConversion: true,
+      });
+
+      const errors: ValidationError[] = await validate(
+        convertedObject as object,
+        {
+          whitelist: true,
+          forbidNonWhitelisted: true,
+        },
+      );
+
+      if (errors.length > 0) {
+        const rawErrors: string[] = [];
+
+        for (const errorItem of errors) {
+          if (errorItem.children && errorItem.children.length > 0) {
+            for (const child of errorItem.children) {
+              if (child.constraints) {
+                rawErrors.push(...Object.values(child.constraints));
+              }
+            }
+          }
+          if (errorItem.constraints) {
+            rawErrors.push(...Object.values(errorItem.constraints));
+          }
+        }
+
+        return res.status(400).json({
+          success: false,
+          message: 'Validation failed',
+          errors: rawErrors,
+          data: null,
+        });
+      }
+
+      req.body = convertedObject;
+      next();
+    };
+  };
+}
+
+export function createValidatorMiddleware(schema: any) {
+  class ValidatorMiddleware {
+    public use(req: Request, res: Response, next: NextFunction) {
+      return RequestValidator.validate(schema)(req, res, next);
+    }
+  }
+  return ValidatorMiddleware;
+}

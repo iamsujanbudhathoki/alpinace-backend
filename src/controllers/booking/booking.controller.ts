@@ -10,7 +10,6 @@ import {
   Route,
   Tags,
 } from 'tsoa';
-import { autoInjectable } from 'tsyringe';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
 import { Booking } from '../../entities/booking/Booking.entity';
 import { BookingService } from '../../services/booking/booking.service';
@@ -22,7 +21,6 @@ import { RequestValidator } from '../../middlewares/validator.middleware';
 
 @Route('bookings')
 @Tags('Bookings')
-@autoInjectable()
 export class BookingController extends Controller {
   constructor(private bookingService: BookingService = new BookingService()) {
     super();

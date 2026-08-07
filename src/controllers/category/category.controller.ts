@@ -11,7 +11,6 @@ import {
   Route,
   Tags,
 } from 'tsoa';
-import { autoInjectable } from 'tsyringe';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
 import {
   Category,
@@ -26,7 +25,6 @@ import { RequestValidator } from '../../middlewares/validator.middleware';
 
 @Route('categories')
 @Tags('Categories')
-@autoInjectable()
 export class CategoryController extends Controller {
   constructor(
     private categoryService: CategoryService = new CategoryService(),

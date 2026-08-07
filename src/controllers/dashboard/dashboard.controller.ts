@@ -1,5 +1,4 @@
 import { Controller, Get, Route, Tags } from 'tsoa';
-import { autoInjectable } from 'tsyringe';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
 import {
   DashboardMetricsResponse,
@@ -8,7 +7,6 @@ import {
 
 @Route('admin/dashboard')
 @Tags('Admin Dashboard')
-@autoInjectable()
 export class DashboardController extends Controller {
   constructor(
     private dashboardService: DashboardService = new DashboardService(),

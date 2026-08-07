@@ -11,7 +11,6 @@ import {
   Route,
   Tags,
 } from 'tsoa';
-import { autoInjectable } from 'tsyringe';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
 import { Package } from '../../entities/package/Package.entity';
 import { PackageService } from '../../services/package/package.service';
@@ -23,7 +22,6 @@ import { RequestValidator } from '../../middlewares/validator.middleware';
 
 @Route('packages')
 @Tags('Packages (Treks, Tours, Expeditions)')
-@autoInjectable()
 export class PackageController extends Controller {
   constructor(private packageService: PackageService = new PackageService()) {
     super();

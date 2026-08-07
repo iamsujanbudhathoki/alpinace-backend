@@ -18,7 +18,7 @@ class Server {
       .then(async () => {
         console.log('Data Source has been initialized!');
         try {
-          await seedDatabase();
+          // await seedDatabase();
         } catch (seedErr) {
           console.warn(
             'Seeding skipped or encountered non-fatal error:',

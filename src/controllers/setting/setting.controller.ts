@@ -1,5 +1,4 @@
 import { Body, Controller, Get, Middlewares, Put, Route, Tags } from 'tsoa';
-import { autoInjectable } from 'tsyringe';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
 import { SettingService } from '../../services/setting/setting.service';
 import { UpdateSettingsDto } from '../../schemas/setting.schema';
@@ -7,7 +6,6 @@ import { RequestValidator } from '../../middlewares/validator.middleware';
 
 @Route('settings')
 @Tags('Site Settings')
-@autoInjectable()
 export class SettingController extends Controller {
   constructor(private settingService: SettingService = new SettingService()) {
     super();

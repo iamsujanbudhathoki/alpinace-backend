@@ -10,7 +10,6 @@ import {
   Route,
   Tags,
 } from 'tsoa';
-import { autoInjectable } from 'tsyringe';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
 import { Guide } from '../../entities/guide/Guide.entity';
 import { GuideService } from '../../services/guide/guide.service';
@@ -19,7 +18,6 @@ import { RequestValidator } from '../../middlewares/validator.middleware';
 
 @Route('guides')
 @Tags('Guides')
-@autoInjectable()
 export class GuideController extends Controller {
   constructor(private guideService: GuideService = new GuideService()) {
     super();

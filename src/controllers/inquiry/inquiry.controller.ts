@@ -10,7 +10,6 @@ import {
   Route,
   Tags,
 } from 'tsoa';
-import { autoInjectable } from 'tsyringe';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
 import { Inquiry } from '../../entities/inquiry/Inquiry.entity';
 import { InquiryService } from '../../services/inquiry/inquiry.service';
@@ -22,7 +21,6 @@ import { RequestValidator } from '../../middlewares/validator.middleware';
 
 @Route('inquiries')
 @Tags('Inquiries & Leads')
-@autoInjectable()
 export class InquiryController extends Controller {
   constructor(private inquiryService: InquiryService = new InquiryService()) {
     super();

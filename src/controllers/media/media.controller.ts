@@ -11,7 +11,6 @@ import {
   Body,
   Middlewares,
 } from 'tsoa';
-import { autoInjectable } from 'tsyringe';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
 import {
   MediaService,
@@ -22,7 +21,6 @@ import { RequestValidator } from '../../middlewares/validator.middleware';
 
 @Route('media')
 @Tags('Media Uploads')
-@autoInjectable()
 export class MediaController extends Controller {
   constructor(private mediaService: MediaService = new MediaService()) {
     super();

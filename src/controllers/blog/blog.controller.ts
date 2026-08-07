@@ -10,7 +10,6 @@ import {
   Route,
   Tags,
 } from 'tsoa';
-import { autoInjectable } from 'tsyringe';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
 import { BlogArticle } from '../../entities/blog/BlogArticle.entity';
 import { BlogService } from '../../services/blog/blog.service';
@@ -22,7 +21,6 @@ import { RequestValidator } from '../../middlewares/validator.middleware';
 
 @Route('blogs')
 @Tags('Blog Articles')
-@autoInjectable()
 export class BlogController extends Controller {
   constructor(private blogService: BlogService = new BlogService()) {
     super();

@@ -8,7 +8,6 @@ import {
   Route,
   Tags,
 } from 'tsoa';
-import { autoInjectable } from 'tsyringe';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
 import { AdminAuthSchema } from '../../schemas/admin-auth.schema';
 import { AdminAuthService } from '../../services/admin/auth.service';
@@ -19,7 +18,6 @@ import { RequestValidator } from '../../middlewares/validator.middleware';
 
 @Route('admin/auth')
 @Tags('Admin Auth System')
-@autoInjectable()
 export class AdminAuthController extends Controller {
   constructor(
     private adminAuthService: AdminAuthService = new AdminAuthService(),

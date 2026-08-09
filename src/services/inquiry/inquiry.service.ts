@@ -6,6 +6,7 @@ import {
   UpdateInquiryDto,
 } from '../../schemas/inquiry.schema';
 import { AppError } from '../../utils/appError.util';
+import emailUtil from '../../utils/email.util';
 
 @autoInjectable()
 export class InquiryService {
@@ -34,7 +35,22 @@ export class InquiryService {
       status: 'New',
     });
 
-    return this.repo.save(inquiry);
+    const saved = await this.repo.save(inquiry);
+
+    // Asynchronously dispatch emails to Client and Admin via Nodemailer
+    emailUtil
+      .sendInquiryEmails({
+        guestName: dto.guestName,
+        email: dto.email,
+        phone: dto.phone,
+        interestedTrip: dto.interestedTrip,
+        travelDates: dto.travelDates,
+        groupSize: Number(dto.groupSize),
+        message: dto.message,
+      })
+      .catch((err) => console.error('[Nodemailer] Background email send error:', err));
+
+    return saved;
   }
 
   async update(id: string, dto: UpdateInquiryDto): Promise<Inquiry> {

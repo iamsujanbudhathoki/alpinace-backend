@@ -28,9 +28,11 @@ class DotenvConfig {
     process.env.JWT_SECRET || 'alpineace_super_secret_jwt_key_2026';
 
   // MAIL
-  static MAIL_HOST = process.env.MAIL_HOST;
-  static MAIL_USER = process.env.MAIL_USER;
-  static MAIL_PASSWORD = process.env.MAIL_PASSWORD;
+  static MAIL_HOST = process.env.MAIL_HOST || 'smtp.gmail.com';
+  static MAIL_PORT = Number(process.env.MAIL_PORT) || 465;
+  static MAIL_USER = process.env.MAIL_USER || '';
+  static MAIL_PASSWORD = process.env.MAIL_PASSWORD || '';
+  static ADMIN_EMAIL = process.env.ADMIN_EMAIL || process.env.MAIL_USER || '';
 
   // LOG
   static LOG_LEVEL = process.env.LOG_LEVEL;

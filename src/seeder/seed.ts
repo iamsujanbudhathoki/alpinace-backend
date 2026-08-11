@@ -13,6 +13,7 @@ import { BlogArticle, BlogStatus } from '../entities/blog/BlogArticle.entity';
 import { Setting } from '../entities/setting/Setting.entity';
 import { Media } from '../entities/media/media.entity';
 import { Associate, AssociateStatus } from '../entities/associate/Associate.entity';
+import { Faq, FaqStatus } from '../entities/faq/Faq.entity';
 import { MediaType } from '../constants/appConstant';
 
 export const seedDatabase = async () => {
@@ -986,6 +987,66 @@ export const seedDatabase = async () => {
       await associateRepo.save(associateRepo.create(a));
     }
     console.log('Seeded initial associate records');
+  }
+
+  // 11. Seed Pre-Trip Consultation FAQs
+  const faqRepo = AppDataSource.getRepository(Faq);
+  const faqCount = await faqRepo.count();
+  if (faqCount === 0) {
+    const defaultFaqs = [
+      {
+        question: 'What physical fitness and prior experience is required?',
+        answer:
+          'For classic trekking routes (such as Everest Base Camp or Annapurna Circuit), strong cardiovascular endurance and regular aerobic training 6–8 weeks in advance is recommended. Prior trekking experience is beneficial but not mandatory. For 6,000m peak expeditions (Island Peak, Mera Peak, Lobuche), basic mountaineering skills with crampons and fixed ropes are taught on-site during basecamp training clinics by our certified master guides.',
+        category: 'Preparation & Fitness',
+        status: FaqStatus.ACTIVE,
+        order: 1,
+      },
+      {
+        question: 'How does Alpine Ace manage altitude acclimatization and medical safety?',
+        answer:
+          'All our itineraries follow conservative ascent profiles with dedicated acclimatization days. Guide leaders conduct twice-daily pulse-oximeter biometric checks (SpO2 & heart rate). Every high-altitude group is equipped with supplemental medical oxygen, comprehensive first-aid kits, and 24/7 direct satellite emergency dispatch for immediate helicopter evacuation when warranted.',
+        category: 'Safety & Altitude',
+        status: FaqStatus.ACTIVE,
+        order: 2,
+      },
+      {
+        question: 'What travel permits and government paperwork are needed?',
+        answer:
+          'Alpine Ace handles 100% of required paperwork including National Park Entry permits (Sagarmatha, Annapurna, Langtang), TIMS cards, Restricted Area permits (Manaslu, Upper Mustang), and NMA peak climbing permits. You only need a passport with at least 6 months validity and valid travel insurance covering high-altitude trekking up to 6,000m.',
+        category: 'Permits & Documents',
+        status: FaqStatus.ACTIVE,
+        order: 3,
+      },
+      {
+        question: 'When is the optimal season for trekking and peak climbing in Nepal?',
+        answer:
+          'The two primary seasons are Spring (March to May) and Autumn (September to November). Spring offers pleasant temperatures, blooming rhododendron forests, and active mountaineering summit pushes. Autumn provides the crispest blue skies, stable high-pressure windows, and extraordinary mountain panoramas.',
+        category: 'Weather & Seasons',
+        status: FaqStatus.ACTIVE,
+        order: 4,
+      },
+      {
+        question: 'What are the accommodations and dietary arrangements on the trail?',
+        answer:
+          'We partner with the finest boutique lodges and luxury mountain retreats along the Khumbu and Annapurna trails, offering heated electric blankets, en-suite bathrooms, and hot showers. At wilderness basecamps, we provide four-season private tents and a dedicated expedition cook team serving freshly prepared, hygienic, nutrient-dense organic meals.',
+        category: 'Lodges & Dining',
+        status: FaqStatus.ACTIVE,
+        order: 5,
+      },
+      {
+        question: 'What is your booking deposit and rescheduling policy?',
+        answer:
+          'A 20% advance deposit secures your guide crew, lodge bookings, and government permits. The remaining balance can be settled upon arrival in Kathmandu via bank transfer, credit card, or cash. We offer complimentary trip date transfers up to 30 days prior to departure in the event of unexpected travel changes.',
+        category: 'Bookings & Payments',
+        status: FaqStatus.ACTIVE,
+        order: 6,
+      },
+    ];
+    for (const f of defaultFaqs) {
+      await faqRepo.save(faqRepo.create(f));
+    }
+    console.log('Seeded initial FAQ records');
   }
 
   console.log('Database seeding finished successfully!');

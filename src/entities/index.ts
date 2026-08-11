@@ -9,4 +9,6 @@ export * from './blog/BlogArticle.entity';
 export * from './media/media.entity';
 export * from './setting/Setting.entity';
 export * from './associate/Associate.entity';
+export * from './faq/Faq.entity';
+
 

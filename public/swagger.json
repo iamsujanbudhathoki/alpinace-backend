@@ -1271,6 +1271,172 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"FaqStatus": {
+				"enum": [
+					"Active",
+					"Draft"
+				],
+				"type": "string"
+			},
+			"Faq": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"deletedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"question": {
+						"type": "string"
+					},
+					"answer": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					},
+					"status": {
+						"$ref": "#/components/schemas/FaqStatus"
+					},
+					"order": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"deletedAt",
+					"question",
+					"answer",
+					"category",
+					"status",
+					"order"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_Faq-Array_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"items": {
+									"$ref": "#/components/schemas/Faq"
+								},
+								"type": "array"
+							},
+							{
+								"items": {
+									"items": {
+										"$ref": "#/components/schemas/Faq"
+									},
+									"type": "array"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_Faq_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/Faq"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/Faq"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateFaqDto": {
+				"properties": {
+					"question": {
+						"type": "string"
+					},
+					"answer": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					},
+					"status": {
+						"$ref": "#/components/schemas/FaqStatus"
+					},
+					"order": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"question",
+					"answer"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateFaqDto": {
+				"properties": {
+					"question": {
+						"type": "string"
+					},
+					"answer": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					},
+					"status": {
+						"$ref": "#/components/schemas/FaqStatus"
+					},
+					"order": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"Booking": {
 				"properties": {
 					"id": {
@@ -3289,6 +3455,166 @@
 				},
 				"tags": [
 					"Guides"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/faqs": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Faq-Array_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"FAQs & Consultations"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/FaqStatus"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Faq_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"FAQs & Consultations"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateFaqDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/faqs/{id}": {
+			"get": {
+				"operationId": "GetById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Faq_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"FAQs & Consultations"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Faq_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"FAQs & Consultations"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateFaqDto"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "Delete",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"FAQs & Consultations"
 				],
 				"security": [],
 				"parameters": [

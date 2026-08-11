@@ -1358,6 +1358,38 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ReorderFaqItemDto": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"order": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"id",
+					"order"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ReorderFaqsDto": {
+				"properties": {
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/ReorderFaqItemDto"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"items"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ApiResponse_Faq_": {
 				"properties": {
 					"data": {
@@ -3524,6 +3556,38 @@
 						"application/json": {
 							"schema": {
 								"$ref": "#/components/schemas/CreateFaqDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/faqs/reorder": {
+			"put": {
+				"operationId": "Reorder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"FAQs & Consultations"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ReorderFaqsDto"
 							}
 						}
 					}

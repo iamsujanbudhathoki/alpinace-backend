@@ -14,7 +14,7 @@ import {
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
 import { Faq, FaqStatus } from '../../entities/faq/Faq.entity';
 import { FaqService } from '../../services/faq/faq.service';
-import { CreateFaqDto, UpdateFaqDto } from '../../schemas/faq.schema';
+import { CreateFaqDto, UpdateFaqDto, ReorderFaqsDto } from '../../schemas/faq.schema';
 import { RequestValidator } from '../../middlewares/validator.middleware';
 
 @Route('faqs')
@@ -28,6 +28,12 @@ export class FaqController extends Controller {
   async getAll(@Query() status?: FaqStatus): Promise<ApiResponse<Faq[]>> {
     const data = await this.faqService.getAll(status);
     return { data, message: 'FAQs retrieved successfully', success: true };
+  }
+
+  @Put('reorder')
+  async reorder(@Body() body: ReorderFaqsDto): Promise<ApiResponse<boolean>> {
+    const data = await this.faqService.reorder(body.items);
+    return { data, message: 'FAQs reordered successfully', success: true };
   }
 
   @Get('{id}')

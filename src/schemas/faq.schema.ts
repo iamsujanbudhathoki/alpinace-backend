@@ -53,3 +53,18 @@ export class UpdateFaqDto {
   @IsNumber()
   order?: number;
 }
+
+export class ReorderFaqItemDto {
+  @IsString()
+  @IsNotEmpty()
+  id!: string;
+
+  @Type(() => Number)
+  @IsNumber()
+  order!: number;
+}
+
+export class ReorderFaqsDto {
+  items!: ReorderFaqItemDto[];
+}
+

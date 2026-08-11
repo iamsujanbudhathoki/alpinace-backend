@@ -53,4 +53,17 @@ export class FaqService {
     await this.repo.remove(faq);
     return true;
   }
+
+  async reorder(items: { id: string; order: number }[]): Promise<boolean> {
+    if (!Array.isArray(items) || items.length === 0) return true;
+
+    await AppDataSource.transaction(async (manager) => {
+      for (const item of items) {
+        await manager.update(Faq, { id: item.id }, { order: item.order });
+      }
+    });
+
+    return true;
+  }
 }
+

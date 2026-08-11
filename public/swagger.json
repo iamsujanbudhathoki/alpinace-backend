@@ -2039,6 +2039,211 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"AssociateStatus": {
+				"enum": [
+					"Active",
+					"Draft"
+				],
+				"type": "string"
+			},
+			"Associate": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"deletedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"name": {
+						"type": "string"
+					},
+					"role": {
+						"type": "string"
+					},
+					"company": {
+						"type": "string"
+					},
+					"image": {
+						"type": "string"
+					},
+					"websiteUrl": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					},
+					"status": {
+						"$ref": "#/components/schemas/AssociateStatus"
+					},
+					"order": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"deletedAt",
+					"name",
+					"role",
+					"company",
+					"image",
+					"websiteUrl",
+					"description",
+					"category",
+					"status",
+					"order"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_Associate-Array_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"items": {
+									"$ref": "#/components/schemas/Associate"
+								},
+								"type": "array"
+							},
+							{
+								"items": {
+									"items": {
+										"$ref": "#/components/schemas/Associate"
+									},
+									"type": "array"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_Associate_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/Associate"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/Associate"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateAssociateDto": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"role": {
+						"type": "string"
+					},
+					"company": {
+						"type": "string"
+					},
+					"image": {
+						"type": "string"
+					},
+					"websiteUrl": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					},
+					"status": {
+						"$ref": "#/components/schemas/AssociateStatus"
+					},
+					"order": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateAssociateDto": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"role": {
+						"type": "string"
+					},
+					"company": {
+						"type": "string"
+					},
+					"image": {
+						"type": "string"
+					},
+					"websiteUrl": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					},
+					"status": {
+						"$ref": "#/components/schemas/AssociateStatus"
+					},
+					"order": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"AdminLoginResponse": {
 				"properties": {
 					"id": {
@@ -3532,6 +3737,166 @@
 				},
 				"tags": [
 					"Blog Articles"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/associates": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Associate-Array_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Associates & Partners"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/AssociateStatus"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Associate_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Associates & Partners"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateAssociateDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/associates/{id}": {
+			"get": {
+				"operationId": "GetById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Associate_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Associates & Partners"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Associate_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Associates & Partners"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateAssociateDto"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "Delete",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Associates & Partners"
 				],
 				"security": [],
 				"parameters": [

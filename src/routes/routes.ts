@@ -24,6 +24,8 @@ import { BookingController } from './../controllers/booking/booking.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { BlogController } from './../controllers/blog/blog.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { AssociateController } from './../controllers/associate/associate.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminAuthController } from './../controllers/admin/auth.controller';
 import type { Request as ExRequest, Response as ExResponse, RequestHandler, Router } from 'express';
 const multer = require('multer');
@@ -687,6 +689,82 @@ const models: TsoaRoute.Models = {
             "content": {"dataType":"string"},
             "image": {"dataType":"string"},
             "views": {"dataType":"double"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AssociateStatus": {
+        "dataType": "refEnum",
+        "enums": ["Active","Draft"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Associate": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "deletedAt": {"dataType":"datetime","required":true},
+            "name": {"dataType":"string","required":true},
+            "role": {"dataType":"string","required":true},
+            "company": {"dataType":"string","required":true},
+            "image": {"dataType":"string","required":true},
+            "websiteUrl": {"dataType":"string","required":true},
+            "description": {"dataType":"string","required":true},
+            "category": {"dataType":"string","required":true},
+            "status": {"ref":"AssociateStatus","required":true},
+            "order": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ApiResponse_Associate-Array_": {
+        "dataType": "refObject",
+        "properties": {
+            "data": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"Associate"}},{"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"Associate"}}},{"dataType":"enum","enums":[null]}],"required":true},
+            "success": {"dataType":"boolean","required":true},
+            "message": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ApiResponse_Associate_": {
+        "dataType": "refObject",
+        "properties": {
+            "data": {"dataType":"union","subSchemas":[{"ref":"Associate"},{"dataType":"array","array":{"dataType":"refObject","ref":"Associate"}},{"dataType":"enum","enums":[null]}],"required":true},
+            "success": {"dataType":"boolean","required":true},
+            "message": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CreateAssociateDto": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true},
+            "role": {"dataType":"string"},
+            "company": {"dataType":"string"},
+            "image": {"dataType":"string"},
+            "websiteUrl": {"dataType":"string"},
+            "description": {"dataType":"string"},
+            "category": {"dataType":"string"},
+            "status": {"ref":"AssociateStatus"},
+            "order": {"dataType":"double"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UpdateAssociateDto": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string"},
+            "role": {"dataType":"string"},
+            "company": {"dataType":"string"},
+            "image": {"dataType":"string"},
+            "websiteUrl": {"dataType":"string"},
+            "description": {"dataType":"string"},
+            "category": {"dataType":"string"},
+            "status": {"ref":"AssociateStatus"},
+            "order": {"dataType":"double"},
         },
         "additionalProperties": false,
     },
@@ -2038,6 +2116,157 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 validatedArgs = templateService.getValidatedArgs({ args: argsBlogController_delete, request, response });
 
                 const controller = new BlogController();
+
+              await templateService.apiHandler({
+                methodName: 'delete',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAssociateController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
+                status: {"in":"query","name":"status","ref":"AssociateStatus"},
+        };
+        app.get('/associates',
+            ...(fetchMiddlewares<RequestHandler>(AssociateController)),
+            ...(fetchMiddlewares<RequestHandler>(AssociateController.prototype.getAll)),
+
+            async function AssociateController_getAll(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAssociateController_getAll, request, response });
+
+                const controller = new AssociateController();
+
+              await templateService.apiHandler({
+                methodName: 'getAll',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAssociateController_getById: Record<string, TsoaRoute.ParameterSchema> = {
+                id: {"in":"path","name":"id","required":true,"dataType":"string"},
+        };
+        app.get('/associates/:id',
+            ...(fetchMiddlewares<RequestHandler>(AssociateController)),
+            ...(fetchMiddlewares<RequestHandler>(AssociateController.prototype.getById)),
+
+            async function AssociateController_getById(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAssociateController_getById, request, response });
+
+                const controller = new AssociateController();
+
+              await templateService.apiHandler({
+                methodName: 'getById',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAssociateController_create: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"CreateAssociateDto"},
+        };
+        app.post('/associates',
+            ...(fetchMiddlewares<RequestHandler>(AssociateController)),
+            ...(fetchMiddlewares<RequestHandler>(AssociateController.prototype.create)),
+
+            async function AssociateController_create(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAssociateController_create, request, response });
+
+                const controller = new AssociateController();
+
+              await templateService.apiHandler({
+                methodName: 'create',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAssociateController_update: Record<string, TsoaRoute.ParameterSchema> = {
+                id: {"in":"path","name":"id","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"UpdateAssociateDto"},
+        };
+        app.put('/associates/:id',
+            ...(fetchMiddlewares<RequestHandler>(AssociateController)),
+            ...(fetchMiddlewares<RequestHandler>(AssociateController.prototype.update)),
+
+            async function AssociateController_update(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAssociateController_update, request, response });
+
+                const controller = new AssociateController();
+
+              await templateService.apiHandler({
+                methodName: 'update',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAssociateController_delete: Record<string, TsoaRoute.ParameterSchema> = {
+                id: {"in":"path","name":"id","required":true,"dataType":"string"},
+        };
+        app.delete('/associates/:id',
+            ...(fetchMiddlewares<RequestHandler>(AssociateController)),
+            ...(fetchMiddlewares<RequestHandler>(AssociateController.prototype.delete)),
+
+            async function AssociateController_delete(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAssociateController_delete, request, response });
+
+                const controller = new AssociateController();
 
               await templateService.apiHandler({
                 methodName: 'delete',

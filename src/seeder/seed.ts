@@ -12,6 +12,7 @@ import { Inquiry } from '../entities/inquiry/Inquiry.entity';
 import { BlogArticle, BlogStatus } from '../entities/blog/BlogArticle.entity';
 import { Setting } from '../entities/setting/Setting.entity';
 import { Media } from '../entities/media/media.entity';
+import { Associate, AssociateStatus } from '../entities/associate/Associate.entity';
 import { MediaType } from '../constants/appConstant';
 
 export const seedDatabase = async () => {
@@ -940,6 +941,51 @@ export const seedDatabase = async () => {
       await mediaRepo.save(mediaRepo.create(m));
     }
     console.log('Seeded initial media records');
+  }
+
+  // 10. Seed Associates & Affiliations
+  const associateRepo = AppDataSource.getRepository(Associate);
+  const associateCount = await associateRepo.count();
+  if (associateCount === 0) {
+    const defaultAssociates = [
+      {
+        name: 'Trekking Agencies Association of Nepal (TAAN)',
+        role: 'Accredited Member',
+        company: 'TAAN Nepal',
+        image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=300&auto=format&fit=crop&q=80',
+        websiteUrl: 'https://taan.org.np',
+        description: 'Apex body of trekking agencies in Nepal ensuring certified ethical operations.',
+        category: 'Accreditation',
+        status: AssociateStatus.ACTIVE,
+        order: 1,
+      },
+      {
+        name: 'Nepal Mountaineering Association (NMA)',
+        role: 'Certified Expedition Partner',
+        company: 'NMA',
+        image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=300&auto=format&fit=crop&q=80',
+        websiteUrl: 'https://nepalmountaineering.org',
+        description: 'National governing body for peak climbing permits and Sherpa mountaineering training.',
+        category: 'Mountaineering',
+        status: AssociateStatus.ACTIVE,
+        order: 2,
+      },
+      {
+        name: 'Himalayan Rescue Association (HRA)',
+        role: 'Medical Safety Partner',
+        company: 'HRA Nepal',
+        image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=300&auto=format&fit=crop&q=80',
+        websiteUrl: 'https://hra.org.np',
+        description: 'Volunteer medical stations in Pheriche and Manang dedicated to AMS prevention and high-altitude rescue.',
+        category: 'Safety & Rescue',
+        status: AssociateStatus.ACTIVE,
+        order: 3,
+      },
+    ];
+    for (const a of defaultAssociates) {
+      await associateRepo.save(associateRepo.create(a));
+    }
+    console.log('Seeded initial associate records');
   }
 
   console.log('Database seeding finished successfully!');

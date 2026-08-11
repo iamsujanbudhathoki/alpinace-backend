@@ -7,6 +7,7 @@
     "node": ">=22.0.0"
   },
   "scripts": {
+    "start": "node dist/server.js",
     "start:dev": "tsoa spec-and-routes && ts-node-dev --transpile-only --respawn src/server.ts",
     "prepare": "husky",
     "build": "tsoa spec-and-routes && tsc",

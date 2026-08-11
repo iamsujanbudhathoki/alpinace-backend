@@ -5,9 +5,11 @@ import {
   Header,
   Middlewares,
   Post,
+  Request,
   Route,
   Tags,
 } from 'tsoa';
+import express from 'express';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
 import { AdminAuthSchema } from '../../schemas/admin-auth.schema';
 import { AdminAuthService } from '../../services/admin/auth.service';
@@ -15,6 +17,41 @@ import { AdminLoginResponse } from '../../interfaces/admin.interface';
 import { JwtUtil } from '../../utils/jwt.util';
 import { AppError } from '../../utils/appError.util';
 import { RequestValidator } from '../../middlewares/validator.middleware';
+import EmailUtil from '../../utils/email.util';
+
+async function resolveLocation(ip: string): Promise<string> {
+  if (
+    !ip ||
+    ip === '127.0.0.1' ||
+    ip === '::1' ||
+    ip === 'localhost' ||
+    ip.startsWith('192.168.') ||
+    ip.startsWith('10.') ||
+    ip.startsWith('172.')
+  ) {
+    return 'Localhost / Private Network';
+  }
+
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 2000);
+    const res = await fetch(
+      `http://ip-api.com/json/${ip}?fields=status,country,city,regionName`,
+      { signal: controller.signal },
+    );
+    clearTimeout(timeout);
+    if (res.ok) {
+      const geo: any = await res.json();
+      if (geo?.status === 'success') {
+        const parts = [geo.city || geo.regionName, geo.country].filter(Boolean);
+        return parts.join(', ') || 'Unknown Location';
+      }
+    }
+  } catch {
+    // Ignore and fallback gracefully
+  }
+  return 'Location Unavailable';
+}
 
 @Route('admin/auth')
 @Tags('Admin Auth System')
@@ -29,8 +66,36 @@ export class AdminAuthController extends Controller {
   @Middlewares(RequestValidator.validate(AdminAuthSchema))
   async login(
     @Body() body: AdminAuthSchema,
+    @Request() req: express.Request,
   ): Promise<ApiResponse<AdminLoginResponse>> {
     const data = await this.adminAuthService.login(body);
+
+    // Extract IP address
+    const rawIp =
+      (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() ||
+      req.socket.remoteAddress ||
+      req.ip ||
+      '127.0.0.1';
+    const cleanIp = rawIp.replace(/^::ffff:/, '');
+    const userAgent = req.headers['user-agent'] || 'Unknown Browser/Device';
+    const now = new Date();
+    const timestamp = `${now.toUTCString()} / ${now.toLocaleString('en-US', { timeZone: 'Asia/Kathmandu' })} (NPT)`;
+
+    // Asynchronously resolve location and send security notification email
+    resolveLocation(cleanIp)
+      .then((location) => {
+        return EmailUtil.sendLoginAlertEmail({
+          adminName: data.name,
+          adminEmail: data.email,
+          ip: cleanIp,
+          userAgent,
+          location,
+          timestamp,
+        });
+      })
+      .catch((err) =>
+        console.error('[Auth Alert] Background email notification error:', err),
+      );
 
     return {
       data,

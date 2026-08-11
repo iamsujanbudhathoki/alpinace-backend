@@ -2,6 +2,10 @@ import nodemailer from 'nodemailer';
 import { DotenvConfig } from '../config/env.config';
 import { getClientInquiryEmailTemplate } from '../templates/emails/client-inquiry.template';
 import { getAdminInquiryEmailTemplate } from '../templates/emails/admin-inquiry.template';
+import {
+  getAdminLoginAlertEmailTemplate,
+  LoginAlertEmailData,
+} from '../templates/emails/admin-login-alert.template';
 
 export enum MailType {
   RESET_PASSWORD = 'RESET_PASSWORD',
@@ -115,6 +119,30 @@ class EmailUtil {
     } catch (error) {
       console.error('[Nodemailer] Error sending quote email:', error);
       throw error;
+    }
+  }
+
+  async sendLoginAlertEmail(data: LoginAlertEmailData): Promise<void> {
+    if (!DotenvConfig.MAIL_USER || !DotenvConfig.MAIL_PASSWORD) {
+      console.log('Skipping login alert email: MAIL_USER or MAIL_PASSWORD not configured in .env');
+      return;
+    }
+
+    try {
+      const transporter = this.getTransporter();
+      const adminHtml = getAdminLoginAlertEmailTemplate(data);
+      const recipient = DotenvConfig.ADMIN_EMAIL || data.adminEmail;
+
+      await transporter.sendMail({
+        from: `"Alpine Ace Security" <${DotenvConfig.MAIL_USER}>`,
+        to: recipient,
+        subject: `[Security Alert] Admin Login Detected - ${data.adminName} (${data.ip})`,
+        html: adminHtml,
+      });
+
+      console.log(`[Nodemailer] Admin login security alert email sent to ${recipient} (IP: ${data.ip})`);
+    } catch (error) {
+      console.error('[Nodemailer] Error sending login alert email:', error);
     }
   }
 

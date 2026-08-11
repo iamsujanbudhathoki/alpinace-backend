@@ -5,7 +5,11 @@ import {
   CategoryStatus,
   CategoryType,
 } from '../entities/category/Category.entity';
-import { Package } from '../entities/package/Package.entity';
+import {
+  Package,
+  PackageCategoryType,
+  PackageStatus,
+} from '../entities/package/Package.entity';
 import { Guide } from '../entities/guide/Guide.entity';
 import { Booking } from '../entities/booking/Booking.entity';
 import { Inquiry } from '../entities/inquiry/Inquiry.entity';
@@ -463,7 +467,7 @@ export const seedDatabase = async () => {
   for (const pkg of packagesData) {
     const exists = await packageRepo.findOne({ where: { slug: pkg.slug } });
     if (!exists) {
-      await packageRepo.save(packageRepo.create(pkg));
+      await packageRepo.save(packageRepo.create(pkg as any));
     }
   }
   console.log('Seeded packages');

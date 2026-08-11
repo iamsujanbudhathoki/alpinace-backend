@@ -10,15 +10,38 @@ export class SettingService {
   async getAll(): Promise<Record<string, string>> {
     const settings = await this.repo.find();
     const map: Record<string, string> = {
+      // General Info
       siteName: 'Alpine Ace Expeditions',
-      contactEmail: 'expeditions@alpineace.com',
-      contactPhone: '+977 1 4545890',
-      companyAddress: 'Thamel, Kathmandu, Nepal',
-      metaTitle: 'Alpine Ace | Premium Himalayan Expeditions & Luxury Treks',
+      tagline: 'Venture Beyond the Ordinary',
+      contactEmail: 'info@alpineace.com',
+      contactPhone: '+977 1 4700543',
+      emergencyPhone: '+977 9851000000',
+      whatsappNumber: '9779851000000',
+      companyAddress: 'Thamel Marg, Ward 26, Kathmandu, Nepal',
+      googleMapsUrl: 'https://maps.google.com/?q=Thamel+Kathmandu+Nepal',
+      officeHours: 'Sun - Fri: 09:00 AM - 06:00 PM (NPT)',
+
+      // SEO & Analytics
+      metaTitle: 'Alpine Ace | Nepal Trekking, Historical Tours & Peak Expeditions',
       metaDescription:
-        'Leading high-altitude expedition operator in Nepal specializing in 8000m peaks, Everest Base Camp luxury lodge treks, and bespoke cultural tours.',
-      enableBookings: 'true',
+        'Experience Nepal\'s spectacular trekking routes, historical tours, and elite peak expeditions under the safe guidance of multi-summit Sherpas.',
+      metaKeywords:
+        'Nepal trekking, Everest Base Camp, Annapurna Circuit, peak climbing, Sherpa guides, luxury mountain lodges',
+      canonicalUrl: 'https://alpineace.com',
+      googleAnalyticsId: '',
+      googleSiteVerification: '',
+
+      // Social Links
+      facebookUrl: 'https://facebook.com/alpineacenepal',
+      instagramUrl: 'https://instagram.com/alpineacenepal',
+      youtubeUrl: 'https://youtube.com/@alpineacenepal',
+      tripadvisorUrl: 'https://tripadvisor.com',
+      linkedinUrl: 'https://linkedin.com/company/alpine-ace-expeditions',
+
+      // Operations & Bookings
       currency: 'USD',
+      depositPercentage: '20',
+      enableBookings: 'true',
     };
 
     settings.forEach((s) => {
@@ -30,13 +53,15 @@ export class SettingService {
 
   async update(dto: UpdateSettingsDto): Promise<Record<string, string>> {
     for (const [key, value] of Object.entries(dto)) {
-      let setting = await this.repo.findOne({ where: { key } });
-      if (!setting) {
-        setting = this.repo.create({ key, value: String(value) });
-      } else {
-        setting.value = String(value);
+      if (value !== undefined) {
+        let setting = await this.repo.findOne({ where: { key } });
+        if (!setting) {
+          setting = this.repo.create({ key, value: String(value) });
+        } else {
+          setting.value = String(value);
+        }
+        await this.repo.save(setting);
       }
-      await this.repo.save(setting);
     }
     return this.getAll();
   }

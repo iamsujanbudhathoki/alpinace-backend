@@ -51,13 +51,28 @@
 					"siteName": {
 						"type": "string"
 					},
+					"tagline": {
+						"type": "string"
+					},
 					"contactEmail": {
 						"type": "string"
 					},
 					"contactPhone": {
 						"type": "string"
 					},
+					"emergencyPhone": {
+						"type": "string"
+					},
+					"whatsappNumber": {
+						"type": "string"
+					},
 					"companyAddress": {
+						"type": "string"
+					},
+					"googleMapsUrl": {
+						"type": "string"
+					},
+					"officeHours": {
 						"type": "string"
 					},
 					"metaTitle": {
@@ -66,7 +81,40 @@
 					"metaDescription": {
 						"type": "string"
 					},
+					"metaKeywords": {
+						"type": "string"
+					},
+					"canonicalUrl": {
+						"type": "string"
+					},
+					"googleAnalyticsId": {
+						"type": "string"
+					},
+					"googleSiteVerification": {
+						"type": "string"
+					},
+					"facebookUrl": {
+						"type": "string"
+					},
+					"instagramUrl": {
+						"type": "string"
+					},
+					"youtubeUrl": {
+						"type": "string"
+					},
+					"tripadvisorUrl": {
+						"type": "string"
+					},
+					"linkedinUrl": {
+						"type": "string"
+					},
 					"currency": {
+						"type": "string"
+					},
+					"depositPercentage": {
+						"type": "string"
+					},
+					"enableBookings": {
 						"type": "string"
 					}
 				},

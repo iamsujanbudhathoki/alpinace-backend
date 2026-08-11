@@ -1,6 +1,18 @@
 import { Column, Entity } from 'typeorm';
 import { CommonEntity } from '../common/common.entity';
 
+export enum PackageCategoryType {
+  TREKKING = 'Trekking',
+  EXPEDITION = 'Expedition',
+  TOUR = 'Tour',
+}
+
+export enum PackageStatus {
+  ACTIVE = 'Active',
+  FEATURED = 'Featured',
+  DRAFT = 'Draft',
+}
+
 @Entity('packages')
 export class Package extends CommonEntity {
   @Column({ name: 'title' })
@@ -9,8 +21,13 @@ export class Package extends CommonEntity {
   @Column({ name: 'slug', unique: true })
   slug: string;
 
-  @Column({ name: 'category_type', default: 'Trekking' })
-  categoryType: 'Trekking' | 'Expedition' | 'Tour';
+  @Column({
+    name: 'category_type',
+    type: 'enum',
+    enum: PackageCategoryType,
+    default: PackageCategoryType.TREKKING,
+  })
+  categoryType: PackageCategoryType;
 
   @Column({ name: 'category', default: 'Trekking' })
   category: string;
@@ -30,8 +47,13 @@ export class Package extends CommonEntity {
   @Column({ name: 'price_usd', type: 'decimal', precision: 10, scale: 2 })
   priceUSD: number;
 
-  @Column({ name: 'status', default: 'Active' })
-  status: 'Active' | 'Featured' | 'Draft';
+  @Column({
+    name: 'status',
+    type: 'enum',
+    enum: PackageStatus,
+    default: PackageStatus.ACTIVE,
+  })
+  status: PackageStatus;
 
   @Column({ name: 'total_bookings', type: 'int', default: 0 })
   totalBookings: number;

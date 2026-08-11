@@ -83,6 +83,16 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PackageCategoryType": {
+        "dataType": "refEnum",
+        "enums": ["Trekking","Expedition","Tour"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PackageStatus": {
+        "dataType": "refEnum",
+        "enums": ["Active","Featured","Draft"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Package": {
         "dataType": "refObject",
         "properties": {
@@ -91,14 +101,14 @@ const models: TsoaRoute.Models = {
             "deletedAt": {"dataType":"datetime","required":true},
             "title": {"dataType":"string","required":true},
             "slug": {"dataType":"string","required":true},
-            "categoryType": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["Trekking"]},{"dataType":"enum","enums":["Expedition"]},{"dataType":"enum","enums":["Tour"]}],"required":true},
+            "categoryType": {"ref":"PackageCategoryType","required":true},
             "category": {"dataType":"string","required":true},
             "region": {"dataType":"string","required":true},
             "durationDays": {"dataType":"double","required":true},
             "maxAltitudeMeters": {"dataType":"double","required":true},
             "difficulty": {"dataType":"string","required":true},
             "priceUSD": {"dataType":"double","required":true},
-            "status": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["Active"]},{"dataType":"enum","enums":["Featured"]},{"dataType":"enum","enums":["Draft"]}],"required":true},
+            "status": {"ref":"PackageStatus","required":true},
             "totalBookings": {"dataType":"double","required":true},
             "rating": {"dataType":"double","required":true},
             "reviewsCount": {"dataType":"double","required":true},
@@ -143,14 +153,14 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "title": {"dataType":"string","required":true},
-            "categoryType": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["Trekking"]},{"dataType":"enum","enums":["Expedition"]},{"dataType":"enum","enums":["Tour"]}],"required":true},
+            "categoryType": {"ref":"PackageCategoryType","required":true},
             "category": {"dataType":"string","required":true},
             "region": {"dataType":"string","required":true},
             "durationDays": {"dataType":"double","required":true},
             "maxAltitudeMeters": {"dataType":"double"},
             "difficulty": {"dataType":"string","required":true},
             "priceUSD": {"dataType":"double","required":true},
-            "status": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["Active"]},{"dataType":"enum","enums":["Featured"]},{"dataType":"enum","enums":["Draft"]}],"required":true},
+            "status": {"ref":"PackageStatus","required":true},
             "shortDesc": {"dataType":"string","required":true},
             "image": {"dataType":"string","required":true},
             "bestSeason": {"dataType":"string"},
@@ -173,14 +183,14 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "title": {"dataType":"string"},
-            "categoryType": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["Trekking"]},{"dataType":"enum","enums":["Expedition"]},{"dataType":"enum","enums":["Tour"]}]},
+            "categoryType": {"ref":"PackageCategoryType"},
             "category": {"dataType":"string"},
             "region": {"dataType":"string"},
             "durationDays": {"dataType":"double"},
             "maxAltitudeMeters": {"dataType":"double"},
             "difficulty": {"dataType":"string"},
             "priceUSD": {"dataType":"double"},
-            "status": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["Active"]},{"dataType":"enum","enums":["Featured"]},{"dataType":"enum","enums":["Draft"]}]},
+            "status": {"ref":"PackageStatus"},
             "shortDesc": {"dataType":"string"},
             "image": {"dataType":"string"},
             "bestSeason": {"dataType":"string"},
@@ -988,10 +998,10 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsPackageController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
-                categoryType: {"in":"query","name":"categoryType","dataType":"union","subSchemas":[{"dataType":"enum","enums":["Trekking"]},{"dataType":"enum","enums":["Expedition"]},{"dataType":"enum","enums":["Tour"]}]},
+                categoryType: {"in":"query","name":"categoryType","ref":"PackageCategoryType"},
                 region: {"in":"query","name":"region","dataType":"string"},
                 difficulty: {"in":"query","name":"difficulty","dataType":"string"},
-                status: {"in":"query","name":"status","dataType":"union","subSchemas":[{"dataType":"enum","enums":["Active"]},{"dataType":"enum","enums":["Featured"]},{"dataType":"enum","enums":["Draft"]}]},
+                status: {"in":"query","name":"status","ref":"PackageStatus"},
                 search: {"in":"query","name":"search","dataType":"string"},
                 minPrice: {"in":"query","name":"minPrice","dataType":"double"},
                 maxPrice: {"in":"query","name":"maxPrice","dataType":"double"},

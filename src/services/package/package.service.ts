@@ -1,6 +1,10 @@
 import { autoInjectable } from 'tsyringe';
 import { AppDataSource } from '../../config/database.config';
-import { Package } from '../../entities/package/Package.entity';
+import {
+  Package,
+  PackageCategoryType,
+  PackageStatus,
+} from '../../entities/package/Package.entity';
 import {
   CreatePackageDto,
   UpdatePackageDto,
@@ -12,10 +16,10 @@ export class PackageService {
   private repo = AppDataSource.getRepository(Package);
 
   async getAll(params?: {
-    categoryType?: 'Trekking' | 'Expedition' | 'Tour';
+    categoryType?: PackageCategoryType;
     region?: string;
     difficulty?: string;
-    status?: 'Active' | 'Featured' | 'Draft';
+    status?: PackageStatus;
     search?: string;
     minPrice?: number;
     maxPrice?: number;

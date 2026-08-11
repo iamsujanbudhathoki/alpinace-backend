@@ -12,7 +12,11 @@ import {
   Tags,
 } from 'tsoa';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
-import { Package } from '../../entities/package/Package.entity';
+import {
+  Package,
+  PackageCategoryType,
+  PackageStatus,
+} from '../../entities/package/Package.entity';
 import { PackageService } from '../../services/package/package.service';
 import {
   CreatePackageDto,
@@ -29,10 +33,10 @@ export class PackageController extends Controller {
 
   @Get('')
   async getAll(
-    @Query() categoryType?: 'Trekking' | 'Expedition' | 'Tour',
+    @Query() categoryType?: PackageCategoryType,
     @Query() region?: string,
     @Query() difficulty?: string,
-    @Query() status?: 'Active' | 'Featured' | 'Draft',
+    @Query() status?: PackageStatus,
     @Query() search?: string,
     @Query() minPrice?: number,
     @Query() maxPrice?: number,

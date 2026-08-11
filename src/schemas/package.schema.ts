@@ -8,17 +8,21 @@ import {
   IsString,
   Min,
 } from 'class-validator';
+import {
+  PackageCategoryType,
+  PackageStatus,
+} from '../entities/package/Package.entity';
 
 export class CreatePackageDto {
   @IsString()
   @IsNotEmpty({ message: 'Title is required' })
   title!: string;
 
-  @IsEnum(['Trekking', 'Expedition', 'Tour'], {
-    message: 'Invalid category type',
+  @IsEnum(PackageCategoryType, {
+    message: 'Invalid category type. Must be Trekking, Expedition, or Tour',
   })
   @IsNotEmpty({ message: 'Category type is required' })
-  categoryType!: 'Trekking' | 'Expedition' | 'Tour';
+  categoryType!: PackageCategoryType;
 
   @IsString()
   @IsNotEmpty({ message: 'Category is required' })
@@ -47,11 +51,11 @@ export class CreatePackageDto {
   @Min(0, { message: 'Price must be non-negative' })
   priceUSD!: number;
 
-  @IsEnum(['Active', 'Featured', 'Draft'], {
-    message: 'Invalid package status',
+  @IsEnum(PackageStatus, {
+    message: 'Invalid package status. Must be Active, Featured, or Draft',
   })
   @IsNotEmpty({ message: 'Status is required' })
-  status!: 'Active' | 'Featured' | 'Draft';
+  status!: PackageStatus;
 
   @IsString()
   @IsNotEmpty({ message: 'Short description is required' })
@@ -117,8 +121,8 @@ export class UpdatePackageDto {
   title?: string;
 
   @IsOptional()
-  @IsEnum(['Trekking', 'Expedition', 'Tour'])
-  categoryType?: 'Trekking' | 'Expedition' | 'Tour';
+  @IsEnum(PackageCategoryType)
+  categoryType?: PackageCategoryType;
 
   @IsOptional()
   @IsString()
@@ -148,8 +152,8 @@ export class UpdatePackageDto {
   priceUSD?: number;
 
   @IsOptional()
-  @IsEnum(['Active', 'Featured', 'Draft'])
-  status?: 'Active' | 'Featured' | 'Draft';
+  @IsEnum(PackageStatus)
+  status?: PackageStatus;
 
   @IsOptional()
   @IsString()

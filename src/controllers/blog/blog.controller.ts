@@ -7,11 +7,12 @@ import {
   Path,
   Post,
   Put,
+  Query,
   Route,
   Tags,
 } from 'tsoa';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
-import { BlogArticle } from '../../entities/blog/BlogArticle.entity';
+import { BlogArticle, BlogStatus } from '../../entities/blog/BlogArticle.entity';
 import { BlogService } from '../../services/blog/blog.service';
 import {
   CreateBlogArticleDto,
@@ -26,9 +27,20 @@ export class BlogController extends Controller {
     super();
   }
 
+  /**
+   * Get all blog articles.
+   * Pass ?status=Published to only retrieve published articles (used by marketing pages).
+   */
   @Get('')
-  async getAll(): Promise<ApiResponse<BlogArticle[]>> {
-    const data = await this.blogService.getAll();
+  async getAll(
+    @Query() status?: BlogStatus,
+  ): Promise<ApiResponse<BlogArticle[]>> {
+    let data: BlogArticle[];
+    if (status === BlogStatus.PUBLISHED) {
+      data = await this.blogService.getPublished();
+    } else {
+      data = await this.blogService.getAll();
+    }
     return {
       data,
       message: 'Blog articles retrieved successfully',

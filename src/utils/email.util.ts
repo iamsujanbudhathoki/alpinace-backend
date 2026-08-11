@@ -83,6 +83,41 @@ class EmailUtil {
     }
   }
 
+  async sendQuoteEmail(data: { guestName: string; email: string; interestedTrip?: string; message: string }): Promise<void> {
+    if (!DotenvConfig.MAIL_USER || !DotenvConfig.MAIL_PASSWORD) {
+      console.log('Skipping quote email: MAIL_USER or MAIL_PASSWORD not configured in .env');
+      return;
+    }
+
+    try {
+      const transporter = this.getTransporter();
+      const html = `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 24px;">
+          <h2 style="color: #0f172a;">Custom Quote from Alpine Ace</h2>
+          <p style="color: #475569;">Dear <strong>${data.guestName}</strong>,</p>
+          <p style="color: #475569;">Thank you for your interest in <strong>${data.interestedTrip || 'our expeditions'}</strong>. Please find your custom quote below:</p>
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin: 16px 0; white-space: pre-line; color: #1e293b; line-height: 1.7;">
+            ${data.message}
+          </div>
+          <p style="color: #475569;">To confirm your booking or ask further questions, please reply to this email or contact us directly.</p>
+          <p style="color: #94a3b8; font-size: 13px; margin-top: 24px;">— Alpine Ace Treks &amp; Expeditions Team</p>
+        </div>
+      `;
+
+      await transporter.sendMail({
+        from: `"Alpine Ace Concierge" <${DotenvConfig.MAIL_USER}>`,
+        to: data.email,
+        subject: `Your Custom Quote – ${data.interestedTrip || 'Alpine Ace Expedition'}`,
+        html,
+      });
+
+      console.log(`[Nodemailer] Custom quote email dispatched to ${data.email}`);
+    } catch (error) {
+      console.error('[Nodemailer] Error sending quote email:', error);
+      throw error;
+    }
+  }
+
   private async getTemplate(email: string, mailType: MailType) {
     let subject = 'Alpine Ace Notification', body = '';
     switch (mailType) {

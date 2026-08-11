@@ -4,6 +4,7 @@ export * from './package/Package.entity';
 export * from './guide/Guide.entity';
 export * from './booking/Booking.entity';
 export * from './inquiry/Inquiry.entity';
+export * from './notification/Notification.entity';
 export * from './blog/BlogArticle.entity';
 export * from './media/media.entity';
 export * from './setting/Setting.entity';

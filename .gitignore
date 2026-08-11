@@ -3,3 +3,6 @@ node_modules/
 build/
 pnpm-lock.yaml
 dist/
+public/uploads/*
+!public/uploads/.gitkeep
+public/temp/

@@ -16,6 +16,7 @@ import { InquiryService } from '../../services/inquiry/inquiry.service';
 import {
   CreateInquiryDto,
   UpdateInquiryDto,
+  SendQuoteDto,
 } from '../../schemas/inquiry.schema';
 import { RequestValidator } from '../../middlewares/validator.middleware';
 
@@ -53,6 +54,16 @@ export class InquiryController extends Controller {
   ): Promise<ApiResponse<Inquiry>> {
     const data = await this.inquiryService.update(id, body);
     return { data, message: 'Inquiry updated successfully', success: true };
+  }
+
+  @Post('{id}/quote')
+  @Middlewares(RequestValidator.validate(SendQuoteDto))
+  async sendQuote(
+    @Path() id: string,
+    @Body() body: SendQuoteDto & { status?: string },
+  ): Promise<ApiResponse<Inquiry>> {
+    const data = await this.inquiryService.sendQuote(id, { message: body.message, status: body.status });
+    return { data, message: 'Custom quote email dispatched successfully', success: true };
   }
 
   @Delete('{id}')

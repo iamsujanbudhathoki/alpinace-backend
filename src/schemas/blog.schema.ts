@@ -6,6 +6,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { BlogStatus } from '../entities/blog/BlogArticle.entity';
 
 export class CreateBlogArticleDto {
   @IsString()
@@ -16,27 +17,13 @@ export class CreateBlogArticleDto {
   @IsNotEmpty({ message: 'Category is required' })
   category!: string;
 
-  @IsString()
-  @IsNotEmpty({ message: 'Author is required' })
-  author!: string;
-
-  @IsOptional()
-  @IsString()
-  authorRole?: string;
-
-  @IsOptional()
-  @IsString()
-  authorAvatar?: string;
-
   @IsOptional()
   @IsString()
   readTime?: string;
 
-  @IsEnum(['Published', 'Draft', 'Archived'], {
-    message: 'Invalid blog status',
-  })
+  @IsEnum(BlogStatus, { message: 'Invalid blog status' })
   @IsNotEmpty({ message: 'Status is required' })
-  status!: 'Published' | 'Draft' | 'Archived';
+  status!: BlogStatus;
 
   @IsOptional()
   @IsString()
@@ -66,23 +53,11 @@ export class UpdateBlogArticleDto {
 
   @IsOptional()
   @IsString()
-  author?: string;
-
-  @IsOptional()
-  @IsString()
-  authorRole?: string;
-
-  @IsOptional()
-  @IsString()
-  authorAvatar?: string;
-
-  @IsOptional()
-  @IsString()
   readTime?: string;
 
   @IsOptional()
-  @IsEnum(['Published', 'Draft', 'Archived'])
-  status?: 'Published' | 'Draft' | 'Archived';
+  @IsEnum(BlogStatus)
+  status?: BlogStatus;
 
   @IsOptional()
   @IsString()

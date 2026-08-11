@@ -7,10 +7,12 @@ import {
 } from '../../schemas/inquiry.schema';
 import { AppError } from '../../utils/appError.util';
 import emailUtil from '../../utils/email.util';
+import { NotificationService } from '../notification/notification.service';
 
 @autoInjectable()
 export class InquiryService {
   private repo = AppDataSource.getRepository(Inquiry);
+  private notifSvc = new NotificationService();
 
   async getAll(): Promise<Inquiry[]> {
     return this.repo.find({ order: { createdAt: 'DESC' } });
@@ -37,6 +39,16 @@ export class InquiryService {
 
     const saved = await this.repo.save(inquiry);
 
+    // Create a notification for the new inquiry
+    this.notifSvc
+      .create({
+        title: `New Inquiry from ${dto.guestName}`,
+        body: `${dto.guestName} from ${dto.country} is interested in "${dto.interestedTrip}".`,
+        type: 'inquiry',
+        refId: saved.id,
+      })
+      .catch((err) => console.error('[Notification] Create error:', err));
+
     // Asynchronously dispatch emails to Client and Admin via Nodemailer
     emailUtil
       .sendInquiryEmails({
@@ -58,6 +70,43 @@ export class InquiryService {
     if (dto.status) inquiry.status = dto.status;
     if (dto.notes !== undefined) inquiry.notes = dto.notes;
     return this.repo.save(inquiry);
+  }
+
+  async sendQuote(id: string, dto: { message: string; status?: string }): Promise<Inquiry> {
+    const inquiry = await this.getById(id);
+
+    // Apply status update if provided
+    if (dto.status) {
+      inquiry.status = dto.status as Inquiry['status'];
+    }
+
+    // Persist any status changes in a single save
+    const saved = await this.repo.save(inquiry);
+
+    // Only dispatch email if a non-empty message was provided
+    const hasMessage = typeof dto.message === 'string' && dto.message.trim().length > 0;
+    if (hasMessage) {
+      // Create a notification for the quote dispatch
+      this.notifSvc
+        .create({
+          title: `Quote Dispatched to ${saved.guestName}`,
+          body: `Custom quote email sent to ${saved.email} for "${saved.interestedTrip}".`,
+          type: 'quote',
+          refId: saved.id,
+        })
+        .catch((err) => console.error('[Notification] Create error:', err));
+
+      emailUtil
+        .sendQuoteEmail({
+          guestName: saved.guestName,
+          email: saved.email,
+          interestedTrip: saved.interestedTrip,
+          message: dto.message.trim(),
+        })
+        .catch((err) => console.error('[Nodemailer] Quote email send error:', err));
+    }
+
+    return saved;
   }
 
   async delete(id: string): Promise<boolean> {

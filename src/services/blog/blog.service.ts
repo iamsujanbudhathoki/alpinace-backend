@@ -1,6 +1,6 @@
 import { autoInjectable } from 'tsyringe';
 import { AppDataSource } from '../../config/database.config';
-import { BlogArticle } from '../../entities/blog/BlogArticle.entity';
+import { BlogArticle, BlogStatus } from '../../entities/blog/BlogArticle.entity';
 import {
   CreateBlogArticleDto,
   UpdateBlogArticleDto,
@@ -32,21 +32,14 @@ export class BlogService {
       title: dto.title,
       slug,
       category: dto.category,
-      author: dto.author,
-      authorRole: dto.authorRole || 'Expedition Specialist',
-      authorAvatar:
-        dto.authorAvatar ||
-        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
       readTime: dto.readTime || '5 min read',
-      status: dto.status || 'Published',
+      status: dto.status || BlogStatus.PUBLISHED,
       publishedDate:
         dto.publishedDate || new Date().toISOString().split('T')[0],
       views: 0,
       excerpt: dto.excerpt || '',
       content: dto.content || '',
-      image:
-        dto.image ||
-        'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80',
+      image: dto.image || '',
     });
 
     return this.repo.save(blog);
@@ -55,12 +48,29 @@ export class BlogService {
   async update(id: string, dto: UpdateBlogArticleDto): Promise<BlogArticle> {
     const article = await this.getByIdOrSlug(id);
 
+    // Update slug only when title changes
     if (dto.title && dto.title !== article.title) {
       article.title = dto.title;
       article.slug = dto.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     }
-    Object.assign(article, dto);
+
+    if (dto.category !== undefined) article.category = dto.category;
+    if (dto.readTime !== undefined) article.readTime = dto.readTime;
+    if (dto.status !== undefined) article.status = dto.status;
+    if (dto.publishedDate !== undefined) article.publishedDate = dto.publishedDate;
+    if (dto.excerpt !== undefined) article.excerpt = dto.excerpt;
+    if (dto.content !== undefined) article.content = dto.content;
+    if (dto.image !== undefined) article.image = dto.image;
+    if (dto.views !== undefined) article.views = dto.views;
+
     return this.repo.save(article);
+  }
+
+  async getPublished(): Promise<BlogArticle[]> {
+    return this.repo.find({
+      where: { status: BlogStatus.PUBLISHED },
+      order: { createdAt: 'DESC' },
+    });
   }
 
   async delete(id: string): Promise<boolean> {

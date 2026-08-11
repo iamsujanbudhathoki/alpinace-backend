@@ -9,7 +9,7 @@ import { Package } from '../entities/package/Package.entity';
 import { Guide } from '../entities/guide/Guide.entity';
 import { Booking } from '../entities/booking/Booking.entity';
 import { Inquiry } from '../entities/inquiry/Inquiry.entity';
-import { BlogArticle } from '../entities/blog/BlogArticle.entity';
+import { BlogArticle, BlogStatus } from '../entities/blog/BlogArticle.entity';
 import { Setting } from '../entities/setting/Setting.entity';
 import { Media } from '../entities/media/media.entity';
 import { MediaType } from '../constants/appConstant';
@@ -723,12 +723,8 @@ export const seedDatabase = async () => {
       title: 'How to Prepare for High-Altitude Trekking in Nepal',
       slug: 'high-altitude-trekking-preparation',
       category: 'Expedition Prep',
-      author: 'Mingma Sherpa',
-      authorRole: 'IFMGA Expedition Leader',
-      authorAvatar:
-        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
       readTime: '6 min read',
-      status: 'Published' as const,
+      status: BlogStatus.PUBLISHED,
       publishedDate: '2026-07-12',
       views: 1420,
       excerpt:
@@ -742,12 +738,8 @@ export const seedDatabase = async () => {
       title: 'Top 5 Essential Packing Items for Everest Base Camp',
       slug: 'packing-list-everest-base-camp',
       category: 'Gear & Equipment',
-      author: 'Sujan Budhathoki',
-      authorRole: 'Founder & Director',
-      authorAvatar:
-        'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80',
       readTime: '4 min read',
-      status: 'Published' as const,
+      status: BlogStatus.PUBLISHED,
       publishedDate: '2026-06-28',
       views: 980,
       excerpt:
@@ -761,12 +753,8 @@ export const seedDatabase = async () => {
       title: 'Understanding Sherpa Culture and Sacred Himalayan Peaks',
       slug: 'sherpa-culture-sacred-peaks',
       category: 'Sherpa Culture',
-      author: 'Passang Lhamu Sherpa',
-      authorRole: 'Cultural Historian',
-      authorAvatar:
-        'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&auto=format&fit=crop&q=80',
       readTime: '8 min read',
-      status: 'Published' as const,
+      status: BlogStatus.PUBLISHED,
       publishedDate: '2026-06-15',
       views: 2150,
       excerpt:
@@ -780,12 +768,8 @@ export const seedDatabase = async () => {
       title: 'Ama Dablam vs Island Peak: Choosing Your First Peak Climb',
       slug: 'ama-dablam-vs-island-peak',
       category: 'Expedition Prep',
-      author: 'Lakpa Tenzing Sherpa',
-      authorRole: 'IFMGA Lead Guide',
-      authorAvatar:
-        'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&auto=format&fit=crop&q=80',
       readTime: '5 min read',
-      status: 'Published' as const,
+      status: BlogStatus.PUBLISHED,
       publishedDate: '2026-07-25',
       views: 540,
       excerpt:

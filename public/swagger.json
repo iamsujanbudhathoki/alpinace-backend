@@ -511,6 +511,155 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"NotificationType": {
+				"type": "string",
+				"enum": [
+					"inquiry",
+					"booking",
+					"quote",
+					"system"
+				]
+			},
+			"Notification": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"deletedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"title": {
+						"type": "string"
+					},
+					"body": {
+						"type": "string"
+					},
+					"type": {
+						"$ref": "#/components/schemas/NotificationType"
+					},
+					"isRead": {
+						"type": "boolean"
+					},
+					"refId": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"deletedAt",
+					"title",
+					"body",
+					"type",
+					"isRead",
+					"refId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_Notification-Array_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"items": {
+									"$ref": "#/components/schemas/Notification"
+								},
+								"type": "array"
+							},
+							{
+								"items": {
+									"items": {
+										"$ref": "#/components/schemas/Notification"
+									},
+									"type": "array"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PaginatedNotifications": {
+				"properties": {
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/Notification"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"limit": {
+						"type": "number",
+						"format": "double"
+					},
+					"offset": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"items",
+					"total",
+					"limit",
+					"offset"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_PaginatedNotifications_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/PaginatedNotifications"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/PaginatedNotifications"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"MediaUploadResult": {
 				"properties": {
 					"id": {
@@ -840,6 +989,18 @@
 						"type": "string"
 					}
 				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SendQuoteDto": {
+				"properties": {
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"message"
+				],
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -1670,6 +1831,14 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"BlogStatus": {
+				"enum": [
+					"Published",
+					"Draft",
+					"Archived"
+				],
+				"type": "string"
+			},
 			"BlogArticle": {
 				"properties": {
 					"id": {
@@ -1692,25 +1861,11 @@
 					"category": {
 						"type": "string"
 					},
-					"author": {
-						"type": "string"
-					},
-					"authorRole": {
-						"type": "string"
-					},
-					"authorAvatar": {
-						"type": "string"
-					},
 					"readTime": {
 						"type": "string"
 					},
 					"status": {
-						"type": "string",
-						"enum": [
-							"Published",
-							"Draft",
-							"Archived"
-						]
+						"$ref": "#/components/schemas/BlogStatus"
 					},
 					"publishedDate": {
 						"type": "string"
@@ -1736,9 +1891,6 @@
 					"title",
 					"slug",
 					"category",
-					"author",
-					"authorRole",
-					"authorAvatar",
 					"readTime",
 					"status",
 					"publishedDate",
@@ -1826,25 +1978,11 @@
 					"category": {
 						"type": "string"
 					},
-					"author": {
-						"type": "string"
-					},
-					"authorRole": {
-						"type": "string"
-					},
-					"authorAvatar": {
-						"type": "string"
-					},
 					"readTime": {
 						"type": "string"
 					},
 					"status": {
-						"type": "string",
-						"enum": [
-							"Published",
-							"Draft",
-							"Archived"
-						]
+						"$ref": "#/components/schemas/BlogStatus"
 					},
 					"publishedDate": {
 						"type": "string"
@@ -1862,7 +2000,6 @@
 				"required": [
 					"title",
 					"category",
-					"author",
 					"status"
 				],
 				"type": "object",
@@ -1876,25 +2013,11 @@
 					"category": {
 						"type": "string"
 					},
-					"author": {
-						"type": "string"
-					},
-					"authorRole": {
-						"type": "string"
-					},
-					"authorAvatar": {
-						"type": "string"
-					},
 					"readTime": {
 						"type": "string"
 					},
 					"status": {
-						"type": "string",
-						"enum": [
-							"Published",
-							"Draft",
-							"Archived"
-						]
+						"$ref": "#/components/schemas/BlogStatus"
 					},
 					"publishedDate": {
 						"type": "string"
@@ -2290,6 +2413,155 @@
 				]
 			}
 		},
+		"/notifications": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Notification-Array_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Notifications"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/notifications/paged": {
+			"get": {
+				"operationId": "GetPaged",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_PaginatedNotifications_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Notifications"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"default": 10,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "offset",
+						"required": false,
+						"schema": {
+							"default": 0,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/notifications/read-all": {
+			"put": {
+				"operationId": "MarkAllRead",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Notifications"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/notifications/{id}/read": {
+			"put": {
+				"operationId": "MarkRead",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Notifications"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/notifications/{id}": {
+			"delete": {
+				"operationId": "Delete",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Notifications"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/media/upload": {
 			"post": {
 				"operationId": "UploadFile",
@@ -2572,6 +2844,59 @@
 						}
 					}
 				]
+			}
+		},
+		"/inquiries/{id}/quote": {
+			"post": {
+				"operationId": "SendQuote",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Inquiry_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Inquiries & Leads"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"allOf": [
+									{
+										"$ref": "#/components/schemas/SendQuoteDto"
+									},
+									{
+										"properties": {
+											"status": {
+												"type": "string"
+											}
+										},
+										"type": "object"
+									}
+								]
+							}
+						}
+					}
+				}
 			}
 		},
 		"/guides": {
@@ -3073,11 +3398,21 @@
 						}
 					}
 				},
+				"description": "Get all blog articles.\nPass ?status=Published to only retrieve published articles (used by marketing pages).",
 				"tags": [
 					"Blog Articles"
 				],
 				"security": [],
-				"parameters": []
+				"parameters": [
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/BlogStatus"
+						}
+					}
+				]
 			},
 			"post": {
 				"operationId": "Create",

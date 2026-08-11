@@ -55,3 +55,9 @@ export class UpdateInquiryDto {
   @IsString()
   notes?: string;
 }
+
+export class SendQuoteDto {
+  @IsString()
+  @IsNotEmpty({ message: 'Quote message is required' })
+  message!: string;
+}

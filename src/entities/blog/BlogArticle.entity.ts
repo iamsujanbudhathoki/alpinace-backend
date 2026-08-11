@@ -1,6 +1,12 @@
 import { Column, Entity } from 'typeorm';
 import { CommonEntity } from '../common/common.entity';
 
+export enum BlogStatus {
+  PUBLISHED = 'Published',
+  DRAFT = 'Draft',
+  ARCHIVED = 'Archived',
+}
+
 @Entity('blog_articles')
 export class BlogArticle extends CommonEntity {
   @Column({ name: 'title' })
@@ -12,20 +18,16 @@ export class BlogArticle extends CommonEntity {
   @Column({ name: 'category' })
   category: string;
 
-  @Column({ name: 'author' })
-  author: string;
-
-  @Column({ name: 'author_role', nullable: true })
-  authorRole: string;
-
-  @Column({ name: 'author_avatar', nullable: true })
-  authorAvatar: string;
-
   @Column({ name: 'read_time', default: '5 min read' })
   readTime: string;
 
-  @Column({ name: 'status', default: 'Published' })
-  status: 'Published' | 'Draft' | 'Archived';
+  @Column({
+    name: 'status',
+    type: 'enum',
+    enum: BlogStatus,
+    default: BlogStatus.PUBLISHED,
+  })
+  status: BlogStatus;
 
   @Column({ name: 'published_date', nullable: true })
   publishedDate: string;

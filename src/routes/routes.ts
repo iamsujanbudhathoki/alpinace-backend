@@ -139,6 +139,16 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ApiResponse_any_": {
+        "dataType": "refObject",
+        "properties": {
+            "data": {"dataType":"union","subSchemas":[{"dataType":"any"},{"dataType":"array","array":{"dataType":"any"}},{"dataType":"enum","enums":[null]}],"required":true},
+            "success": {"dataType":"boolean","required":true},
+            "message": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ApiResponse_Package_": {
         "dataType": "refObject",
         "properties": {
@@ -1027,6 +1037,36 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
               await templateService.apiHandler({
                 methodName: 'getAll',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsPackageController_getFilterOptions: Record<string, TsoaRoute.ParameterSchema> = {
+                categoryType: {"in":"query","name":"categoryType","ref":"PackageCategoryType"},
+        };
+        app.get('/packages/filter-options',
+            ...(fetchMiddlewares<RequestHandler>(PackageController)),
+            ...(fetchMiddlewares<RequestHandler>(PackageController.prototype.getFilterOptions)),
+
+            async function PackageController_getFilterOptions(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsPackageController_getFilterOptions, request, response });
+
+                const controller = new PackageController();
+
+              await templateService.apiHandler({
+                methodName: 'getFilterOptions',
                 controller,
                 response,
                 next,

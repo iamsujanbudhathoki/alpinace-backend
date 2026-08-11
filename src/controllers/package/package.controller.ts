@@ -63,6 +63,18 @@ export class PackageController extends Controller {
     return { data, message: 'Packages retrieved successfully', success: true };
   }
 
+  @Get('filter-options')
+  async getFilterOptions(
+    @Query() categoryType?: PackageCategoryType,
+  ): Promise<ApiResponse<any>> {
+    const data = await this.packageService.getFilterOptions(categoryType);
+    return {
+      data,
+      message: 'Package filter options retrieved successfully',
+      success: true,
+    };
+  }
+
   @Get('{idOrSlug}')
   async getByIdOrSlug(@Path() idOrSlug: string): Promise<ApiResponse<Package>> {
     const data = await this.packageService.getByIdOrSlug(idOrSlug);

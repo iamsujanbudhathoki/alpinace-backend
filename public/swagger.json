@@ -309,6 +309,33 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ApiResponse_any_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{},
+							{
+								"items": {},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ApiResponse_Package_": {
 				"properties": {
 					"data": {
@@ -2799,6 +2826,37 @@
 						}
 					}
 				}
+			}
+		},
+		"/packages/filter-options": {
+			"get": {
+				"operationId": "GetFilterOptions",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_any_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Packages (Treks, Tours, Expeditions)"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "categoryType",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/PackageCategoryType"
+						}
+					}
+				]
 			}
 		},
 		"/packages/{idOrSlug}": {

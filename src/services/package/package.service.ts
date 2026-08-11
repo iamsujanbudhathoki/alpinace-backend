@@ -207,4 +207,155 @@ export class PackageService {
     await this.repo.remove(pkg);
     return true;
   }
+
+  async getFilterOptions(categoryType?: PackageCategoryType): Promise<{
+    categoryType?: string;
+    styles: { label: string; value: string }[];
+    difficulties: { label: string; value: string }[];
+    regions: { label: string; value: string }[];
+    sortOptions: { label: string; value: string }[];
+    minDuration: number;
+    maxDuration: number;
+    minPrice: number;
+    maxPrice: number;
+    minAltitude: number;
+    maxAltitude: number;
+  }> {
+    const qb = this.repo.createQueryBuilder('pkg');
+    if (categoryType) {
+      qb.andWhere('pkg.categoryType = :categoryType', { categoryType });
+    }
+
+    const packages = await qb.getMany();
+
+    // Distinct values from DB
+    const dbCategories = Array.from(new Set(packages.map((p) => p.category).filter(Boolean)));
+    const dbDifficulties = Array.from(new Set(packages.map((p) => p.difficulty).filter(Boolean)));
+    const dbRegions = Array.from(new Set(packages.map((p) => p.region).filter(Boolean)));
+
+    // Min & Max calculations
+    const durations = packages.map((p) => Number(p.durationDays)).filter((d) => !isNaN(d) && d > 0);
+    const prices = packages.map((p) => Number(p.priceUSD)).filter((pr) => !isNaN(pr) && pr > 0);
+    const altitudes = packages.map((p) => Number(p.maxAltitudeMeters)).filter((a) => !isNaN(a) && a > 0);
+
+    const minDuration = durations.length > 0 ? Math.min(...durations) : 1;
+    const maxDuration = durations.length > 0 ? Math.max(...durations) : 30;
+    const minPrice = prices.length > 0 ? Math.min(...prices) : 100;
+    const maxPrice = prices.length > 0 ? Math.max(...prices) : 10000;
+    const minAltitude = altitudes.length > 0 ? Math.min(...altitudes) : 1400;
+    const maxAltitude = altitudes.length > 0 ? Math.max(...altitudes) : 8848;
+
+    let styles: { label: string; value: string }[] = [];
+    let difficulties: { label: string; value: string }[] = [];
+    let sortOptions: { label: string; value: string }[] = [];
+
+    if (categoryType === PackageCategoryType.TOUR) {
+      const standardTourStyles = [
+        { label: 'All Styles', value: 'All' },
+        { label: 'Cultural Heritage', value: 'Cultural Heritage' },
+        { label: 'Luxury Wildlife Safari', value: 'Luxury Wildlife Safari' },
+        { label: 'Helicopter Pilgrimage', value: 'Helicopter Pilgrimage' },
+        { label: 'Photography & Scenic', value: 'Photography & Scenic' },
+        { label: 'Spiritual & Wellness', value: 'Spiritual & Wellness' },
+      ];
+      // Merge db categories
+      const knownValues = new Set(standardTourStyles.map((s) => s.value));
+      const extra = dbCategories
+        .filter((c) => !knownValues.has(c))
+        .map((c) => ({ label: c, value: c }));
+      styles = [...standardTourStyles, ...extra];
+
+      difficulties = [
+        { label: 'All Levels', value: 'All' },
+        { label: 'Easy / Leisure', value: 'Easy' },
+        { label: 'Moderate', value: 'Moderate' },
+      ];
+
+      sortOptions = [
+        { label: 'Guest Rating', value: 'rating' },
+        { label: 'Price: Low to High', value: 'price-low' },
+        { label: 'Price: High to Low', value: 'price-high' },
+        { label: 'Duration: Short to Long', value: 'duration' },
+        { label: 'Newest Added', value: 'newest' },
+      ];
+    } else if (categoryType === PackageCategoryType.EXPEDITION) {
+      const standardExpeditionGrades = [
+        { label: 'All Alpine Grades', value: 'All' },
+        { label: 'PD (Slightly Difficult)', value: 'Alpine PD' },
+        { label: 'AD (Fairly Difficult)', value: 'Alpine AD' },
+        { label: 'D (Difficult / Technical)', value: 'Alpine D' },
+        { label: 'ED (Extremely Difficult)', value: 'Alpine ED' },
+      ];
+      const knownGrades = new Set(standardExpeditionGrades.map((g) => g.value));
+      const extraGrades = dbDifficulties
+        .filter((d) => !knownGrades.has(d))
+        .map((d) => ({ label: d, value: d }));
+      difficulties = [...standardExpeditionGrades, ...extraGrades];
+
+      styles = [
+        { label: 'All Expeditions', value: 'All' },
+        { label: 'Trekking Peak (6000m)', value: 'Trekking Peak' },
+        { label: 'Major Peak (7000m+)', value: 'Major Peak' },
+        { label: '8000m Summit', value: '8000m Peak' },
+      ];
+
+      sortOptions = [
+        { label: 'Guest Rating', value: 'rating' },
+        { label: 'Price: Low to High', value: 'price-low' },
+        { label: 'Price: High to Low', value: 'price-high' },
+        { label: 'Peak Elevation: High to Low', value: 'altitude' },
+        { label: 'Duration: Short to Long', value: 'duration' },
+        { label: 'Newest Added', value: 'newest' },
+      ];
+    } else {
+      // Trekking (default)
+      const standardTrekDifficulties = [
+        { label: 'All Difficulties', value: 'All' },
+        { label: 'Moderate Trek', value: 'Moderate Trek' },
+        { label: 'Challenging Trek', value: 'Challenging Trek' },
+        { label: 'Strenuous Trek', value: 'Strenuous Trek' },
+      ];
+      const knownDiffs = new Set(standardTrekDifficulties.map((d) => d.value));
+      const extraDiffs = dbDifficulties
+        .filter((d) => !knownDiffs.has(d))
+        .map((d) => ({ label: d, value: d }));
+      difficulties = [...standardTrekDifficulties, ...extraDiffs];
+
+      styles = [
+        { label: 'All Types', value: 'All' },
+        { label: 'Tea House Trek', value: 'Tea House' },
+        { label: 'High Pass Crossing', value: 'High Pass' },
+        { label: 'Circuit Trek', value: 'Circuit' },
+        { label: 'Base Camp Trek', value: 'Base Camp' },
+      ];
+
+      sortOptions = [
+        { label: 'Guest Rating', value: 'rating' },
+        { label: 'Price: Low to High', value: 'price-low' },
+        { label: 'Price: High to Low', value: 'price-high' },
+        { label: 'Duration: Short to Long', value: 'duration' },
+        { label: 'Highest Altitude', value: 'altitude' },
+        { label: 'Newest Added', value: 'newest' },
+      ];
+    }
+
+    const standardRegions = [
+      { label: 'All Regions', value: 'All' },
+      ...dbRegions.map((r) => ({ label: r, value: r })),
+    ];
+
+    return {
+      categoryType,
+      styles,
+      difficulties,
+      regions: standardRegions,
+      sortOptions,
+      minDuration,
+      maxDuration: Math.max(maxDuration, categoryType === PackageCategoryType.TOUR ? 10 : 30),
+      minPrice,
+      maxPrice,
+      minAltitude,
+      maxAltitude,
+    };
+  }
 }

@@ -34,6 +34,13 @@ export class PackageController extends Controller {
     @Query() difficulty?: string,
     @Query() status?: 'Active' | 'Featured' | 'Draft',
     @Query() search?: string,
+    @Query() minPrice?: number,
+    @Query() maxPrice?: number,
+    @Query() minDuration?: number,
+    @Query() maxDuration?: number,
+    @Query() sortBy?: string,
+    @Query() limit?: number,
+    @Query() page?: number,
   ): Promise<ApiResponse<Package[]>> {
     const data = await this.packageService.getAll({
       categoryType,
@@ -41,6 +48,13 @@ export class PackageController extends Controller {
       difficulty,
       status,
       search,
+      minPrice,
+      maxPrice,
+      minDuration,
+      maxDuration,
+      sortBy,
+      limit,
+      page,
     });
     return { data, message: 'Packages retrieved successfully', success: true };
   }

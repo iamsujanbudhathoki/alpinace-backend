@@ -993,6 +993,13 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 difficulty: {"in":"query","name":"difficulty","dataType":"string"},
                 status: {"in":"query","name":"status","dataType":"union","subSchemas":[{"dataType":"enum","enums":["Active"]},{"dataType":"enum","enums":["Featured"]},{"dataType":"enum","enums":["Draft"]}]},
                 search: {"in":"query","name":"search","dataType":"string"},
+                minPrice: {"in":"query","name":"minPrice","dataType":"double"},
+                maxPrice: {"in":"query","name":"maxPrice","dataType":"double"},
+                minDuration: {"in":"query","name":"minDuration","dataType":"double"},
+                maxDuration: {"in":"query","name":"maxDuration","dataType":"double"},
+                sortBy: {"in":"query","name":"sortBy","dataType":"string"},
+                limit: {"in":"query","name":"limit","dataType":"double"},
+                page: {"in":"query","name":"page","dataType":"double"},
         };
         app.get('/packages',
             ...(fetchMiddlewares<RequestHandler>(PackageController)),

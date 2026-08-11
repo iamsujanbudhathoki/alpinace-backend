@@ -34,6 +34,7 @@ export class PackageController extends Controller {
   @Get('')
   async getAll(
     @Query() categoryType?: PackageCategoryType,
+    @Query() categoryId?: string,
     @Query() region?: string,
     @Query() difficulty?: string,
     @Query() status?: PackageStatus,
@@ -48,6 +49,7 @@ export class PackageController extends Controller {
   ): Promise<ApiResponse<Package[]>> {
     const data = await this.packageService.getAll({
       categoryType,
+      categoryId,
       region,
       difficulty,
       status,

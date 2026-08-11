@@ -159,7 +159,7 @@
 					"categoryType": {
 						"$ref": "#/components/schemas/PackageCategoryType"
 					},
-					"category": {
+					"categoryId": {
 						"type": "string"
 					},
 					"region": {
@@ -245,7 +245,7 @@
 					"title",
 					"slug",
 					"categoryType",
-					"category",
+					"categoryId",
 					"region",
 					"durationDays",
 					"maxAltitudeMeters",
@@ -375,7 +375,7 @@
 					"categoryType": {
 						"$ref": "#/components/schemas/PackageCategoryType"
 					},
-					"category": {
+					"categoryId": {
 						"type": "string"
 					},
 					"region": {
@@ -448,7 +448,7 @@
 				"required": [
 					"title",
 					"categoryType",
-					"category",
+					"categoryId",
 					"region",
 					"durationDays",
 					"difficulty",
@@ -468,7 +468,7 @@
 					"categoryType": {
 						"$ref": "#/components/schemas/PackageCategoryType"
 					},
-					"category": {
+					"categoryId": {
 						"type": "string"
 					},
 					"region": {
@@ -2699,6 +2699,14 @@
 						"required": false,
 						"schema": {
 							"$ref": "#/components/schemas/PackageCategoryType"
+						}
+					},
+					{
+						"in": "query",
+						"name": "categoryId",
+						"required": false,
+						"schema": {
+							"type": "string"
 						}
 					},
 					{

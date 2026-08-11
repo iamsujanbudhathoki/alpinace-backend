@@ -29,8 +29,8 @@ export class Package extends CommonEntity {
   })
   categoryType: PackageCategoryType;
 
-  @Column({ name: 'category', default: 'Trekking' })
-  category: string;
+  @Column({ name: 'category_id', nullable: true })
+  categoryId: string;
 
   @Column({ name: 'region' })
   region: string;

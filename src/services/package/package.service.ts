@@ -5,6 +5,7 @@ import {
   PackageCategoryType,
   PackageStatus,
 } from '../../entities/package/Package.entity';
+import { Category } from '../../entities/category/Category.entity';
 import {
   CreatePackageDto,
   UpdatePackageDto,
@@ -14,9 +15,11 @@ import { AppError } from '../../utils/appError.util';
 @autoInjectable()
 export class PackageService {
   private repo = AppDataSource.getRepository(Package);
+  private categoryRepo = AppDataSource.getRepository(Category);
 
   async getAll(params?: {
     categoryType?: PackageCategoryType;
+    categoryId?: string;
     region?: string;
     difficulty?: string;
     status?: PackageStatus;
@@ -34,6 +37,11 @@ export class PackageService {
     if (params?.categoryType) {
       qb.andWhere('pkg.categoryType = :categoryType', {
         categoryType: params.categoryType,
+      });
+    }
+    if (params?.categoryId && params.categoryId !== 'All') {
+      qb.andWhere('pkg.categoryId = :categoryId', {
+        categoryId: params.categoryId,
       });
     }
     if (params?.region && params.region !== 'All') {
@@ -115,6 +123,11 @@ export class PackageService {
       slug = `${slug}-${Date.now()}`;
     }
 
+    // Validate categoryId and resolve category name
+    if (!dto.categoryId) throw AppError.badRequest('categoryId is required');
+    const categoryEntity = await this.categoryRepo.findOne({ where: { id: dto.categoryId } });
+    if (!categoryEntity) throw AppError.notFound(`Category ${dto.categoryId} not found`);
+
     const permitsArray = dto.permitsRequired
       ? dto.permitsRequired
       : dto.permitsText
@@ -128,7 +141,7 @@ export class PackageService {
       title: dto.title,
       slug,
       categoryType: dto.categoryType || 'Trekking',
-      category: dto.category || dto.categoryType || 'Trekking',
+      categoryId: categoryEntity.id,
       region: dto.region,
       durationDays: Number(dto.durationDays),
       maxAltitudeMeters: Number(dto.maxAltitudeMeters) || 1400,
@@ -164,7 +177,11 @@ export class PackageService {
       pkg.slug = dto.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     }
     if (dto.categoryType) pkg.categoryType = dto.categoryType;
-    if (dto.category) pkg.category = dto.category;
+    if (dto.categoryId) {
+      const categoryEntity = await this.categoryRepo.findOne({ where: { id: dto.categoryId } });
+      if (!categoryEntity) throw AppError.notFound(`Category ${dto.categoryId} not found`);
+      pkg.categoryId = categoryEntity.id;
+    }
     if (dto.region) pkg.region = dto.region;
     if (dto.durationDays !== undefined)
       pkg.durationDays = Number(dto.durationDays);
@@ -228,8 +245,7 @@ export class PackageService {
 
     const packages = await qb.getMany();
 
-    // Distinct values from DB
-    const dbCategories = Array.from(new Set(packages.map((p) => p.category).filter(Boolean)));
+    // Distinct values from DB via category join
     const dbDifficulties = Array.from(new Set(packages.map((p) => p.difficulty).filter(Boolean)));
     const dbRegions = Array.from(new Set(packages.map((p) => p.region).filter(Boolean)));
 

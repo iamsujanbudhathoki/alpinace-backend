@@ -25,8 +25,8 @@ export class CreatePackageDto {
   categoryType!: PackageCategoryType;
 
   @IsString()
-  @IsNotEmpty({ message: 'Category is required' })
-  category!: string;
+  @IsNotEmpty({ message: 'Category ID is required' })
+  categoryId!: string;
 
   @IsString()
   @IsNotEmpty({ message: 'Region is required' })
@@ -126,7 +126,7 @@ export class UpdatePackageDto {
 
   @IsOptional()
   @IsString()
-  category?: string;
+  categoryId?: string;
 
   @IsOptional()
   @IsString()

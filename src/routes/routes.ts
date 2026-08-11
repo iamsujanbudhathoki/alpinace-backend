@@ -102,7 +102,7 @@ const models: TsoaRoute.Models = {
             "title": {"dataType":"string","required":true},
             "slug": {"dataType":"string","required":true},
             "categoryType": {"ref":"PackageCategoryType","required":true},
-            "category": {"dataType":"string","required":true},
+            "categoryId": {"dataType":"string","required":true},
             "region": {"dataType":"string","required":true},
             "durationDays": {"dataType":"double","required":true},
             "maxAltitudeMeters": {"dataType":"double","required":true},
@@ -164,7 +164,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "title": {"dataType":"string","required":true},
             "categoryType": {"ref":"PackageCategoryType","required":true},
-            "category": {"dataType":"string","required":true},
+            "categoryId": {"dataType":"string","required":true},
             "region": {"dataType":"string","required":true},
             "durationDays": {"dataType":"double","required":true},
             "maxAltitudeMeters": {"dataType":"double"},
@@ -194,7 +194,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "title": {"dataType":"string"},
             "categoryType": {"ref":"PackageCategoryType"},
-            "category": {"dataType":"string"},
+            "categoryId": {"dataType":"string"},
             "region": {"dataType":"string"},
             "durationDays": {"dataType":"double"},
             "maxAltitudeMeters": {"dataType":"double"},
@@ -1009,6 +1009,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsPackageController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
                 categoryType: {"in":"query","name":"categoryType","ref":"PackageCategoryType"},
+                categoryId: {"in":"query","name":"categoryId","dataType":"string"},
                 region: {"in":"query","name":"region","dataType":"string"},
                 difficulty: {"in":"query","name":"difficulty","dataType":"string"},
                 status: {"in":"query","name":"status","ref":"PackageStatus"},

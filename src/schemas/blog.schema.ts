@@ -5,8 +5,27 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsUUID,
 } from 'class-validator';
 import { BlogStatus } from '../entities/blog/BlogArticle.entity';
+
+export class GetBlogsQueryDto {
+  @IsOptional()
+  @IsEnum(BlogStatus, { message: 'Invalid blog status' })
+  status?: BlogStatus;
+
+  @IsOptional()
+  @IsUUID('4', { message: 'categoryId must be a valid UUID' })
+  categoryId?: string;
+
+  @IsOptional()
+  @IsString()
+  category?: string;
+
+  @IsOptional()
+  @IsString()
+  search?: string;
+}
 
 export class CreateBlogArticleDto {
   @IsString()
@@ -16,6 +35,10 @@ export class CreateBlogArticleDto {
   @IsString()
   @IsNotEmpty({ message: 'Category is required' })
   category!: string;
+
+  @IsOptional()
+  @IsUUID('4', { message: 'categoryId must be a valid UUID' })
+  categoryId?: string;
 
   @IsOptional()
   @IsString()
@@ -50,6 +73,10 @@ export class UpdateBlogArticleDto {
   @IsOptional()
   @IsString()
   category?: string;
+
+  @IsOptional()
+  @IsUUID('4', { message: 'categoryId must be a valid UUID' })
+  categoryId?: string;
 
   @IsOptional()
   @IsString()

@@ -84,6 +84,23 @@ export class UpdateSettingsDto {
   @IsString()
   linkedinUrl?: string;
 
+  // Dynamic & Custom Content
+  @IsOptional()
+  @IsString()
+  siteTitle?: string;
+
+  @IsOptional()
+  @IsString()
+  homeStats?: string;
+
+  @IsOptional()
+  @IsString()
+  companyFaqs?: string;
+
+  @IsOptional()
+  @IsString()
+  testimonials?: string;
+
   // Booking & Operations
   @IsOptional()
   @IsString()

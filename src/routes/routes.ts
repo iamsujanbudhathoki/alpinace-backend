@@ -4,6 +4,10 @@
 import type { TsoaRoute } from '@tsoa/runtime';
 import {  fetchMiddlewares, ExpressTemplateService } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { TrekkingController } from './../controllers/trekking/trekking.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { TourController } from './../controllers/tour/tour.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { SettingController } from './../controllers/setting/setting.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { PackageController } from './../controllers/package/package.controller';
@@ -17,6 +21,8 @@ import { InquiryController } from './../controllers/inquiry/inquiry.controller';
 import { GuideController } from './../controllers/guide/guide.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { FaqController } from './../controllers/faq/faq.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { ExpeditionController } from './../controllers/expedition/expedition.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { DashboardController } from './../controllers/dashboard/dashboard.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -38,51 +44,6 @@ const multer = require('multer');
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
 const models: TsoaRoute.Models = {
-    "Record_string.string_": {
-        "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"dataType":"string"},"validators":{}},
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ApiResponse_Record_string.string__": {
-        "dataType": "refObject",
-        "properties": {
-            "data": {"dataType":"union","subSchemas":[{"ref":"Record_string.string_"},{"dataType":"array","array":{"dataType":"refAlias","ref":"Record_string.string_"}},{"dataType":"enum","enums":[null]}],"required":true},
-            "success": {"dataType":"boolean","required":true},
-            "message": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "UpdateSettingsDto": {
-        "dataType": "refObject",
-        "properties": {
-            "siteName": {"dataType":"string"},
-            "tagline": {"dataType":"string"},
-            "contactEmail": {"dataType":"string"},
-            "contactPhone": {"dataType":"string"},
-            "emergencyPhone": {"dataType":"string"},
-            "whatsappNumber": {"dataType":"string"},
-            "companyAddress": {"dataType":"string"},
-            "googleMapsUrl": {"dataType":"string"},
-            "officeHours": {"dataType":"string"},
-            "metaTitle": {"dataType":"string"},
-            "metaDescription": {"dataType":"string"},
-            "metaKeywords": {"dataType":"string"},
-            "canonicalUrl": {"dataType":"string"},
-            "googleAnalyticsId": {"dataType":"string"},
-            "googleSiteVerification": {"dataType":"string"},
-            "facebookUrl": {"dataType":"string"},
-            "instagramUrl": {"dataType":"string"},
-            "youtubeUrl": {"dataType":"string"},
-            "tripadvisorUrl": {"dataType":"string"},
-            "linkedinUrl": {"dataType":"string"},
-            "currency": {"dataType":"string"},
-            "depositPercentage": {"dataType":"string"},
-            "enableBookings": {"dataType":"string"},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "PackageCategoryType": {
         "dataType": "refEnum",
         "enums": ["Trekking","Expedition","Tour"],
@@ -159,6 +120,55 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Record_string.string_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"dataType":"string"},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ApiResponse_Record_string.string__": {
+        "dataType": "refObject",
+        "properties": {
+            "data": {"dataType":"union","subSchemas":[{"ref":"Record_string.string_"},{"dataType":"array","array":{"dataType":"refAlias","ref":"Record_string.string_"}},{"dataType":"enum","enums":[null]}],"required":true},
+            "success": {"dataType":"boolean","required":true},
+            "message": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UpdateSettingsDto": {
+        "dataType": "refObject",
+        "properties": {
+            "siteName": {"dataType":"string"},
+            "tagline": {"dataType":"string"},
+            "contactEmail": {"dataType":"string"},
+            "contactPhone": {"dataType":"string"},
+            "emergencyPhone": {"dataType":"string"},
+            "whatsappNumber": {"dataType":"string"},
+            "companyAddress": {"dataType":"string"},
+            "googleMapsUrl": {"dataType":"string"},
+            "officeHours": {"dataType":"string"},
+            "metaTitle": {"dataType":"string"},
+            "metaDescription": {"dataType":"string"},
+            "metaKeywords": {"dataType":"string"},
+            "canonicalUrl": {"dataType":"string"},
+            "googleAnalyticsId": {"dataType":"string"},
+            "googleSiteVerification": {"dataType":"string"},
+            "facebookUrl": {"dataType":"string"},
+            "instagramUrl": {"dataType":"string"},
+            "youtubeUrl": {"dataType":"string"},
+            "tripadvisorUrl": {"dataType":"string"},
+            "linkedinUrl": {"dataType":"string"},
+            "siteTitle": {"dataType":"string"},
+            "homeStats": {"dataType":"string"},
+            "companyFaqs": {"dataType":"string"},
+            "testimonials": {"dataType":"string"},
+            "currency": {"dataType":"string"},
+            "depositPercentage": {"dataType":"string"},
+            "enableBookings": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "CreatePackageDto": {
         "dataType": "refObject",
         "properties": {
@@ -171,7 +181,7 @@ const models: TsoaRoute.Models = {
             "difficulty": {"dataType":"string","required":true},
             "priceUSD": {"dataType":"double","required":true},
             "status": {"ref":"PackageStatus","required":true},
-            "shortDesc": {"dataType":"string","required":true},
+            "shortDesc": {"dataType":"string"},
             "image": {"dataType":"string","required":true},
             "bestSeason": {"dataType":"string"},
             "startEndLocation": {"dataType":"string"},
@@ -185,6 +195,9 @@ const models: TsoaRoute.Models = {
             "metaTitle": {"dataType":"string"},
             "metaDescription": {"dataType":"string"},
             "keywords": {"dataType":"string"},
+            "tourType": {"dataType":"string"},
+            "climbingGrade": {"dataType":"string"},
+            "peakHeightM": {"dataType":"double"},
         },
         "additionalProperties": false,
     },
@@ -215,6 +228,9 @@ const models: TsoaRoute.Models = {
             "metaTitle": {"dataType":"string"},
             "metaDescription": {"dataType":"string"},
             "keywords": {"dataType":"string"},
+            "tourType": {"dataType":"string"},
+            "climbingGrade": {"dataType":"string"},
+            "peakHeightM": {"dataType":"double"},
         },
         "additionalProperties": false,
     },
@@ -786,6 +802,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "title": {"dataType":"string","required":true},
             "category": {"dataType":"string","required":true},
+            "categoryId": {"dataType":"string"},
             "readTime": {"dataType":"string"},
             "status": {"ref":"BlogStatus","required":true},
             "publishedDate": {"dataType":"string"},
@@ -801,6 +818,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "title": {"dataType":"string"},
             "category": {"dataType":"string"},
+            "categoryId": {"dataType":"string"},
             "readTime": {"dataType":"string"},
             "status": {"ref":"BlogStatus"},
             "publishedDate": {"dataType":"string"},
@@ -948,6 +966,204 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
     const upload = opts?.multer ||  multer({"limits":{"fileSize":8388608}});
 
     
+        const argsTrekkingController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
+                categoryId: {"in":"query","name":"categoryId","dataType":"string"},
+                region: {"in":"query","name":"region","dataType":"string"},
+                difficulty: {"in":"query","name":"difficulty","dataType":"string"},
+                search: {"in":"query","name":"search","dataType":"string"},
+                minPrice: {"in":"query","name":"minPrice","dataType":"double"},
+                maxPrice: {"in":"query","name":"maxPrice","dataType":"double"},
+                minDuration: {"in":"query","name":"minDuration","dataType":"double"},
+                maxDuration: {"in":"query","name":"maxDuration","dataType":"double"},
+                sortBy: {"in":"query","name":"sortBy","dataType":"string"},
+                limit: {"in":"query","name":"limit","dataType":"double"},
+                page: {"in":"query","name":"page","dataType":"double"},
+        };
+        app.get('/treks',
+            ...(fetchMiddlewares<RequestHandler>(TrekkingController)),
+            ...(fetchMiddlewares<RequestHandler>(TrekkingController.prototype.getAll)),
+
+            async function TrekkingController_getAll(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsTrekkingController_getAll, request, response });
+
+                const controller = new TrekkingController();
+
+              await templateService.apiHandler({
+                methodName: 'getAll',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsTrekkingController_getFilterOptions: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/treks/filter-options',
+            ...(fetchMiddlewares<RequestHandler>(TrekkingController)),
+            ...(fetchMiddlewares<RequestHandler>(TrekkingController.prototype.getFilterOptions)),
+
+            async function TrekkingController_getFilterOptions(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsTrekkingController_getFilterOptions, request, response });
+
+                const controller = new TrekkingController();
+
+              await templateService.apiHandler({
+                methodName: 'getFilterOptions',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsTrekkingController_getByIdOrSlug: Record<string, TsoaRoute.ParameterSchema> = {
+                idOrSlug: {"in":"path","name":"idOrSlug","required":true,"dataType":"string"},
+        };
+        app.get('/treks/:idOrSlug',
+            ...(fetchMiddlewares<RequestHandler>(TrekkingController)),
+            ...(fetchMiddlewares<RequestHandler>(TrekkingController.prototype.getByIdOrSlug)),
+
+            async function TrekkingController_getByIdOrSlug(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsTrekkingController_getByIdOrSlug, request, response });
+
+                const controller = new TrekkingController();
+
+              await templateService.apiHandler({
+                methodName: 'getByIdOrSlug',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsTourController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
+                categoryId: {"in":"query","name":"categoryId","dataType":"string"},
+                region: {"in":"query","name":"region","dataType":"string"},
+                difficulty: {"in":"query","name":"difficulty","dataType":"string"},
+                search: {"in":"query","name":"search","dataType":"string"},
+                minPrice: {"in":"query","name":"minPrice","dataType":"double"},
+                maxPrice: {"in":"query","name":"maxPrice","dataType":"double"},
+                minDuration: {"in":"query","name":"minDuration","dataType":"double"},
+                maxDuration: {"in":"query","name":"maxDuration","dataType":"double"},
+                sortBy: {"in":"query","name":"sortBy","dataType":"string"},
+                limit: {"in":"query","name":"limit","dataType":"double"},
+                page: {"in":"query","name":"page","dataType":"double"},
+        };
+        app.get('/tours',
+            ...(fetchMiddlewares<RequestHandler>(TourController)),
+            ...(fetchMiddlewares<RequestHandler>(TourController.prototype.getAll)),
+
+            async function TourController_getAll(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsTourController_getAll, request, response });
+
+                const controller = new TourController();
+
+              await templateService.apiHandler({
+                methodName: 'getAll',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsTourController_getFilterOptions: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/tours/filter-options',
+            ...(fetchMiddlewares<RequestHandler>(TourController)),
+            ...(fetchMiddlewares<RequestHandler>(TourController.prototype.getFilterOptions)),
+
+            async function TourController_getFilterOptions(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsTourController_getFilterOptions, request, response });
+
+                const controller = new TourController();
+
+              await templateService.apiHandler({
+                methodName: 'getFilterOptions',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsTourController_getByIdOrSlug: Record<string, TsoaRoute.ParameterSchema> = {
+                idOrSlug: {"in":"path","name":"idOrSlug","required":true,"dataType":"string"},
+        };
+        app.get('/tours/:idOrSlug',
+            ...(fetchMiddlewares<RequestHandler>(TourController)),
+            ...(fetchMiddlewares<RequestHandler>(TourController.prototype.getByIdOrSlug)),
+
+            async function TourController_getByIdOrSlug(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsTourController_getByIdOrSlug, request, response });
+
+                const controller = new TourController();
+
+              await templateService.apiHandler({
+                methodName: 'getByIdOrSlug',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsSettingController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
         };
         app.get('/settings',
@@ -1987,6 +2203,105 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsExpeditionController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
+                categoryId: {"in":"query","name":"categoryId","dataType":"string"},
+                region: {"in":"query","name":"region","dataType":"string"},
+                difficulty: {"in":"query","name":"difficulty","dataType":"string"},
+                search: {"in":"query","name":"search","dataType":"string"},
+                minPrice: {"in":"query","name":"minPrice","dataType":"double"},
+                maxPrice: {"in":"query","name":"maxPrice","dataType":"double"},
+                minAltitude: {"in":"query","name":"minAltitude","dataType":"double"},
+                maxAltitude: {"in":"query","name":"maxAltitude","dataType":"double"},
+                sortBy: {"in":"query","name":"sortBy","dataType":"string"},
+                limit: {"in":"query","name":"limit","dataType":"double"},
+                page: {"in":"query","name":"page","dataType":"double"},
+        };
+        app.get('/expeditions',
+            ...(fetchMiddlewares<RequestHandler>(ExpeditionController)),
+            ...(fetchMiddlewares<RequestHandler>(ExpeditionController.prototype.getAll)),
+
+            async function ExpeditionController_getAll(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsExpeditionController_getAll, request, response });
+
+                const controller = new ExpeditionController();
+
+              await templateService.apiHandler({
+                methodName: 'getAll',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsExpeditionController_getFilterOptions: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/expeditions/filter-options',
+            ...(fetchMiddlewares<RequestHandler>(ExpeditionController)),
+            ...(fetchMiddlewares<RequestHandler>(ExpeditionController.prototype.getFilterOptions)),
+
+            async function ExpeditionController_getFilterOptions(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsExpeditionController_getFilterOptions, request, response });
+
+                const controller = new ExpeditionController();
+
+              await templateService.apiHandler({
+                methodName: 'getFilterOptions',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsExpeditionController_getByIdOrSlug: Record<string, TsoaRoute.ParameterSchema> = {
+                idOrSlug: {"in":"path","name":"idOrSlug","required":true,"dataType":"string"},
+        };
+        app.get('/expeditions/:idOrSlug',
+            ...(fetchMiddlewares<RequestHandler>(ExpeditionController)),
+            ...(fetchMiddlewares<RequestHandler>(ExpeditionController.prototype.getByIdOrSlug)),
+
+            async function ExpeditionController_getByIdOrSlug(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsExpeditionController_getByIdOrSlug, request, response });
+
+                const controller = new ExpeditionController();
+
+              await templateService.apiHandler({
+                methodName: 'getByIdOrSlug',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsDashboardController_getMetrics: Record<string, TsoaRoute.ParameterSchema> = {
         };
         app.get('/admin/dashboard',
@@ -2319,6 +2634,9 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsBlogController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
                 status: {"in":"query","name":"status","ref":"BlogStatus"},
+                categoryId: {"in":"query","name":"categoryId","dataType":"string"},
+                category: {"in":"query","name":"category","dataType":"string"},
+                search: {"in":"query","name":"search","dataType":"string"},
         };
         app.get('/blogs',
             ...(fetchMiddlewares<RequestHandler>(BlogController)),

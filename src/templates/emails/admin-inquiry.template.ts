@@ -134,14 +134,11 @@ export function getAdminInquiryEmailTemplate(data: InquiryEmailData): string {
 <body>
   <div class="wrapper">
     <div class="main-card">
-      
-      {/* Header */}
       <div class="admin-header">
         <span class="badge">New Website Inquiry</span>
         <h1 class="admin-title">${data.guestName} &mdash; ${data.interestedTrip || 'General Trip'}</h1>
       </div>
 
-      {/* Body Content */}
       <div class="body-content">
         <div class="section-title">Guest Profile &amp; Contact Details</div>
         
@@ -172,13 +169,11 @@ export function getAdminInquiryEmailTemplate(data: InquiryEmailData): string {
           </tr>
         </table>
 
-        {/* Message Box */}
         <div class="message-card">
           <div class="message-title">Guest Requirements &amp; Message</div>
           <p class="message-text">"${data.message || 'No additional details provided.'}"</p>
         </div>
 
-        {/* Action Button */}
         <div class="btn-container">
           <a href="mailto:${data.email}?subject=RE:%20Alpine%20Ace%20Expedition%20Inquiry" class="btn-reply">
             Reply to ${data.guestName} &rarr;
@@ -186,7 +181,6 @@ export function getAdminInquiryEmailTemplate(data: InquiryEmailData): string {
         </div>
       </div>
 
-      {/* Footer */}
       <div class="footer">
         Alpine Ace Admin Notification &bull; Generated automatically by backend server.
       </div>

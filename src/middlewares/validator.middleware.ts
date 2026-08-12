@@ -46,6 +46,49 @@ export class RequestValidator {
       next();
     };
   };
+
+  static validateQuery = (classInstance: any) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      const convertedObject = plainToInstance(classInstance, req.query, {
+        enableImplicitConversion: true,
+      });
+
+      const errors: ValidationError[] = await validate(
+        convertedObject as object,
+        {
+          whitelist: true,
+          forbidNonWhitelisted: true,
+        },
+      );
+
+      if (errors.length > 0) {
+        const rawErrors: string[] = [];
+
+        for (const errorItem of errors) {
+          if (errorItem.children && errorItem.children.length > 0) {
+            for (const child of errorItem.children) {
+              if (child.constraints) {
+                rawErrors.push(...Object.values(child.constraints));
+              }
+            }
+          }
+          if (errorItem.constraints) {
+            rawErrors.push(...Object.values(errorItem.constraints));
+          }
+        }
+
+        return res.status(400).json({
+          success: false,
+          message: 'Validation failed',
+          errors: rawErrors,
+          data: null,
+        });
+      }
+
+      req.query = convertedObject as any;
+      next();
+    };
+  };
 }
 
 export function createValidatorMiddleware(schema: any) {

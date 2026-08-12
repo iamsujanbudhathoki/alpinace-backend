@@ -6,6 +6,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsUUID,
   Min,
 } from 'class-validator';
 import {
@@ -24,7 +25,7 @@ export class CreatePackageDto {
   @IsNotEmpty({ message: 'Category type is required' })
   categoryType!: PackageCategoryType;
 
-  @IsString()
+  @IsUUID('4', { message: 'Category ID must be a valid UUID' })
   @IsNotEmpty({ message: 'Category ID is required' })
   categoryId!: string;
 
@@ -57,9 +58,9 @@ export class CreatePackageDto {
   @IsNotEmpty({ message: 'Status is required' })
   status!: PackageStatus;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty({ message: 'Short description is required' })
-  shortDesc!: string;
+  shortDesc?: string;
 
   @IsString()
   @IsNotEmpty({ message: 'Image URL is required' })
@@ -113,6 +114,19 @@ export class CreatePackageDto {
   @IsOptional()
   @IsString()
   keywords?: string;
+
+  @IsOptional()
+  @IsString()
+  tourType?: string;
+
+  @IsOptional()
+  @IsString()
+  climbingGrade?: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  peakHeightM?: number;
 }
 
 export class UpdatePackageDto {
@@ -125,7 +139,7 @@ export class UpdatePackageDto {
   categoryType?: PackageCategoryType;
 
   @IsOptional()
-  @IsString()
+  @IsUUID('4', { message: 'Category ID must be a valid UUID' })
   categoryId?: string;
 
   @IsOptional()
@@ -211,4 +225,17 @@ export class UpdatePackageDto {
   @IsOptional()
   @IsString()
   keywords?: string;
+
+  @IsOptional()
+  @IsString()
+  tourType?: string;
+
+  @IsOptional()
+  @IsString()
+  climbingGrade?: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  peakHeightM?: number;
 }

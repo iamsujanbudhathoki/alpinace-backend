@@ -16,6 +16,7 @@ import { BlogArticle, BlogStatus } from '../../entities/blog/BlogArticle.entity'
 import { BlogService } from '../../services/blog/blog.service';
 import {
   CreateBlogArticleDto,
+  GetBlogsQueryDto,
   UpdateBlogArticleDto,
 } from '../../schemas/blog.schema';
 import { RequestValidator } from '../../middlewares/validator.middleware';
@@ -28,19 +29,25 @@ export class BlogController extends Controller {
   }
 
   /**
-   * Get all blog articles.
-   * Pass ?status=Published to only retrieve published articles (used by marketing pages).
+   * Get all blog articles with optional status, category, and search filtering.
+   * Pass ?status=Published to only retrieve published articles.
+   * Pass ?categoryId=... to filter by category ID.
+   * Pass ?search=... to search within title, excerpt, and category.
    */
   @Get('')
+  @Middlewares(RequestValidator.validateQuery(GetBlogsQueryDto))
   async getAll(
     @Query() status?: BlogStatus,
+    @Query() categoryId?: string,
+    @Query() category?: string,
+    @Query() search?: string,
   ): Promise<ApiResponse<BlogArticle[]>> {
-    let data: BlogArticle[];
-    if (status === BlogStatus.PUBLISHED) {
-      data = await this.blogService.getPublished();
-    } else {
-      data = await this.blogService.getAll();
-    }
+    const data = await this.blogService.getAll(
+      status,
+      categoryId,
+      category,
+      search,
+    );
     return {
       data,
       message: 'Blog articles retrieved successfully',

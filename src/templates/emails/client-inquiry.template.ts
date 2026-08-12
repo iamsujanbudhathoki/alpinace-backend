@@ -125,21 +125,17 @@ export function getClientInquiryEmailTemplate(data: InquiryEmailData): string {
 <body>
   <div class="wrapper">
     <div class="main-card">
-      
-      {/* Header */}
       <div class="brand-header">
         <h1 class="brand-title">ALPINE ACE</h1>
         <p class="brand-subtitle">Nepal Trekking &amp; Expeditions</p>
       </div>
 
-      {/* Body Content */}
       <div class="body-content">
         <h2 class="greeting">Namaste, ${data.guestName}!</h2>
         <p class="paragraph">
           Thank you for choosing Alpine Ace. We have safely received your trip inquiry and assigned it to a Senior Destination Specialist at our Kathmandu Headquarters.
         </p>
 
-        {/* Summary */}
         <div class="summary-card">
           <div class="summary-title">Inquiry Details</div>
           
@@ -163,14 +159,12 @@ export function getClientInquiryEmailTemplate(data: InquiryEmailData): string {
           </table>
         </div>
 
-        {/* Notice */}
         <div class="highlight-box">
           <strong>What Happens Next?</strong><br />
           Our team in Kathmandu is preparing custom route recommendations and lodge options. A destination specialist will contact you directly within 24 hours.
         </div>
       </div>
 
-      {/* Footer */}
       <div class="footer">
         <p style="margin: 0 0 4px 0;"><strong>Alpine Ace Treks &amp; Expeditions Pvt. Ltd.</strong></p>
         <p style="margin: 0 0 4px 0;">Tridevi Marg, Thamel, Kathmandu, Nepal (44600)</p>

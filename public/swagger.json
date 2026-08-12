@@ -7,120 +7,6 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"Record_string.string_": {
-				"properties": {},
-				"additionalProperties": {
-					"type": "string"
-				},
-				"type": "object",
-				"description": "Construct a type with a set of properties K of type T"
-			},
-			"ApiResponse_Record_string.string__": {
-				"properties": {
-					"data": {
-						"anyOf": [
-							{
-								"$ref": "#/components/schemas/Record_string.string_"
-							},
-							{
-								"items": {
-									"$ref": "#/components/schemas/Record_string.string_"
-								},
-								"type": "array"
-							}
-						],
-						"nullable": true
-					},
-					"success": {
-						"type": "boolean"
-					},
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"data",
-					"success",
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"UpdateSettingsDto": {
-				"properties": {
-					"siteName": {
-						"type": "string"
-					},
-					"tagline": {
-						"type": "string"
-					},
-					"contactEmail": {
-						"type": "string"
-					},
-					"contactPhone": {
-						"type": "string"
-					},
-					"emergencyPhone": {
-						"type": "string"
-					},
-					"whatsappNumber": {
-						"type": "string"
-					},
-					"companyAddress": {
-						"type": "string"
-					},
-					"googleMapsUrl": {
-						"type": "string"
-					},
-					"officeHours": {
-						"type": "string"
-					},
-					"metaTitle": {
-						"type": "string"
-					},
-					"metaDescription": {
-						"type": "string"
-					},
-					"metaKeywords": {
-						"type": "string"
-					},
-					"canonicalUrl": {
-						"type": "string"
-					},
-					"googleAnalyticsId": {
-						"type": "string"
-					},
-					"googleSiteVerification": {
-						"type": "string"
-					},
-					"facebookUrl": {
-						"type": "string"
-					},
-					"instagramUrl": {
-						"type": "string"
-					},
-					"youtubeUrl": {
-						"type": "string"
-					},
-					"tripadvisorUrl": {
-						"type": "string"
-					},
-					"linkedinUrl": {
-						"type": "string"
-					},
-					"currency": {
-						"type": "string"
-					},
-					"depositPercentage": {
-						"type": "string"
-					},
-					"enableBookings": {
-						"type": "string"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
 			"PackageCategoryType": {
 				"enum": [
 					"Trekking",
@@ -367,6 +253,132 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"Record_string.string_": {
+				"properties": {},
+				"additionalProperties": {
+					"type": "string"
+				},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
+			"ApiResponse_Record_string.string__": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/Record_string.string_"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/Record_string.string_"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateSettingsDto": {
+				"properties": {
+					"siteName": {
+						"type": "string"
+					},
+					"tagline": {
+						"type": "string"
+					},
+					"contactEmail": {
+						"type": "string"
+					},
+					"contactPhone": {
+						"type": "string"
+					},
+					"emergencyPhone": {
+						"type": "string"
+					},
+					"whatsappNumber": {
+						"type": "string"
+					},
+					"companyAddress": {
+						"type": "string"
+					},
+					"googleMapsUrl": {
+						"type": "string"
+					},
+					"officeHours": {
+						"type": "string"
+					},
+					"metaTitle": {
+						"type": "string"
+					},
+					"metaDescription": {
+						"type": "string"
+					},
+					"metaKeywords": {
+						"type": "string"
+					},
+					"canonicalUrl": {
+						"type": "string"
+					},
+					"googleAnalyticsId": {
+						"type": "string"
+					},
+					"googleSiteVerification": {
+						"type": "string"
+					},
+					"facebookUrl": {
+						"type": "string"
+					},
+					"instagramUrl": {
+						"type": "string"
+					},
+					"youtubeUrl": {
+						"type": "string"
+					},
+					"tripadvisorUrl": {
+						"type": "string"
+					},
+					"linkedinUrl": {
+						"type": "string"
+					},
+					"siteTitle": {
+						"type": "string"
+					},
+					"homeStats": {
+						"type": "string"
+					},
+					"companyFaqs": {
+						"type": "string"
+					},
+					"testimonials": {
+						"type": "string"
+					},
+					"currency": {
+						"type": "string"
+					},
+					"depositPercentage": {
+						"type": "string"
+					},
+					"enableBookings": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"CreatePackageDto": {
 				"properties": {
 					"title": {
@@ -443,6 +455,16 @@
 					},
 					"keywords": {
 						"type": "string"
+					},
+					"tourType": {
+						"type": "string"
+					},
+					"climbingGrade": {
+						"type": "string"
+					},
+					"peakHeightM": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
@@ -454,7 +476,6 @@
 					"difficulty",
 					"priceUSD",
 					"status",
-					"shortDesc",
 					"image"
 				],
 				"type": "object",
@@ -536,6 +557,16 @@
 					},
 					"keywords": {
 						"type": "string"
+					},
+					"tourType": {
+						"type": "string"
+					},
+					"climbingGrade": {
+						"type": "string"
+					},
+					"peakHeightM": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"type": "object",
@@ -2237,6 +2268,9 @@
 					"category": {
 						"type": "string"
 					},
+					"categoryId": {
+						"type": "string"
+					},
 					"readTime": {
 						"type": "string"
 					},
@@ -2270,6 +2304,9 @@
 						"type": "string"
 					},
 					"category": {
+						"type": "string"
+					},
+					"categoryId": {
 						"type": "string"
 					},
 					"readTime": {
@@ -2621,6 +2658,352 @@
 		"contact": {}
 	},
 	"paths": {
+		"/treks": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Package-Array_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all active trekking packages with dynamic filtering.",
+				"tags": [
+					"Trekking (Public)"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "categoryId",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "region",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "difficulty",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "minPrice",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "maxPrice",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "minDuration",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "maxDuration",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sortBy",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/treks/filter-options": {
+			"get": {
+				"operationId": "GetFilterOptions",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_any_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get dynamic filter options for trekking (difficulties, categories, regions, sort options, ranges).",
+				"tags": [
+					"Trekking (Public)"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/treks/{idOrSlug}": {
+			"get": {
+				"operationId": "GetByIdOrSlug",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Package_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get trekking package by ID or Slug.",
+				"tags": [
+					"Trekking (Public)"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "idOrSlug",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/tours": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Package-Array_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all active tour packages with dynamic filtering.",
+				"tags": [
+					"Tours (Public)"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "categoryId",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "region",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "difficulty",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "minPrice",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "maxPrice",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "minDuration",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "maxDuration",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sortBy",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/tours/filter-options": {
+			"get": {
+				"operationId": "GetFilterOptions",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_any_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get dynamic filter options for tours (styles, categories, levels, regions, sort options, ranges).",
+				"tags": [
+					"Tours (Public)"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/tours/{idOrSlug}": {
+			"get": {
+				"operationId": "GetByIdOrSlug",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Package_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get tour package by ID or Slug.",
+				"tags": [
+					"Tours (Public)"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "idOrSlug",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/settings": {
 			"get": {
 				"operationId": "GetAll",
@@ -3797,6 +4180,179 @@
 				]
 			}
 		},
+		"/expeditions": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Package-Array_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all active expedition packages with dynamic filtering.",
+				"tags": [
+					"Expeditions (Public)"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "categoryId",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "region",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "difficulty",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "minPrice",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "maxPrice",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "minAltitude",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "maxAltitude",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sortBy",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/expeditions/filter-options": {
+			"get": {
+				"operationId": "GetFilterOptions",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_any_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get dynamic filter options for expeditions (alpine grades, categories, peaks, regions, sort options, ranges).",
+				"tags": [
+					"Expeditions (Public)"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/expeditions/{idOrSlug}": {
+			"get": {
+				"operationId": "GetByIdOrSlug",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Package_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get expedition package by ID or Slug.",
+				"tags": [
+					"Expeditions (Public)"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "idOrSlug",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/admin/dashboard": {
 			"get": {
 				"operationId": "GetMetrics",
@@ -4145,7 +4701,7 @@
 						}
 					}
 				},
-				"description": "Get all blog articles.\nPass ?status=Published to only retrieve published articles (used by marketing pages).",
+				"description": "Get all blog articles with optional status, category, and search filtering.\nPass ?status=Published to only retrieve published articles.\nPass ?categoryId=... to filter by category ID.\nPass ?search=... to search within title, excerpt, and category.",
 				"tags": [
 					"Blog Articles"
 				],
@@ -4157,6 +4713,30 @@
 						"required": false,
 						"schema": {
 							"$ref": "#/components/schemas/BlogStatus"
+						}
+					},
+					{
+						"in": "query",
+						"name": "categoryId",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "category",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
 						}
 					}
 				]

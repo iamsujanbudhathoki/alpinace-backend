@@ -1,6 +1,7 @@
 import { autoInjectable } from 'tsyringe';
 import { AppDataSource } from '../../config/database.config';
 import { BlogArticle, BlogStatus } from '../../entities/blog/BlogArticle.entity';
+import { Category } from '../../entities/category/Category.entity';
 import {
   CreateBlogArticleDto,
   UpdateBlogArticleDto,
@@ -10,15 +11,65 @@ import { AppError } from '../../utils/appError.util';
 @autoInjectable()
 export class BlogService {
   private repo = AppDataSource.getRepository(BlogArticle);
+  private categoryRepo = AppDataSource.getRepository(Category);
 
-  async getAll(): Promise<BlogArticle[]> {
-    return this.repo.find({ order: { createdAt: 'DESC' } });
+  async getAll(
+    status?: BlogStatus,
+    categoryId?: string,
+    category?: string,
+    search?: string,
+  ): Promise<BlogArticle[]> {
+    const qb = this.repo.createQueryBuilder('blog');
+
+    if (status) {
+      qb.andWhere('blog.status = :status', { status });
+    }
+
+    if (categoryId && categoryId !== 'All') {
+      const isUuid =
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+          categoryId,
+        );
+      if (isUuid) {
+        const catEntity = await this.categoryRepo.findOne({
+          where: { id: categoryId },
+        });
+        if (catEntity) {
+          qb.andWhere('blog.category = :categoryName', {
+            categoryName: catEntity.name,
+          });
+        }
+      }
+    } else if (category && category !== 'All') {
+      qb.andWhere('blog.category = :category', { category });
+    }
+
+    if (search && search.trim() !== '') {
+      const term = `%${search.trim().toLowerCase()}%`;
+      qb.andWhere(
+        '(LOWER(blog.title) LIKE :term OR LOWER(blog.excerpt) LIKE :term OR LOWER(blog.category) LIKE :term)',
+        { term },
+      );
+    }
+
+    qb.orderBy('blog.createdAt', 'DESC');
+    return qb.getMany();
   }
 
   async getByIdOrSlug(idOrSlug: string): Promise<BlogArticle> {
-    const item = await this.repo.findOne({
-      where: [{ id: idOrSlug }, { slug: idOrSlug }],
-    });
+    const isUuid =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+        idOrSlug,
+      );
+
+    let item: BlogArticle | null = null;
+    if (isUuid) {
+      item = await this.repo.findOne({ where: { id: idOrSlug } });
+    }
+    if (!item) {
+      item = await this.repo.findOne({ where: { slug: idOrSlug } });
+    }
+
     if (!item) throw AppError.notFound(`Blog article ${idOrSlug} not found`);
     return item;
   }

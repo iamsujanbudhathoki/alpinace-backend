@@ -1,3 +1,4 @@
+import { In } from 'typeorm';
 import { autoInjectable } from 'tsyringe';
 import { AppDataSource } from '../../config/database.config';
 import {
@@ -5,7 +6,11 @@ import {
   PackageCategoryType,
   PackageStatus,
 } from '../../entities/package/Package.entity';
-import { Category } from '../../entities/category/Category.entity';
+import {
+  Category,
+  CategoryStatus,
+  CategoryType,
+} from '../../entities/category/Category.entity';
 import {
   CreatePackageDto,
   UpdatePackageDto,
@@ -28,6 +33,8 @@ export class PackageService {
     maxPrice?: number;
     minDuration?: number;
     maxDuration?: number;
+    minAltitude?: number;
+    maxAltitude?: number;
     sortBy?: string;
     limit?: number;
     page?: number;
@@ -57,7 +64,7 @@ export class PackageService {
     }
     if (params?.search && params.search.trim()) {
       qb.andWhere(
-        '(LOWER(pkg.title) LIKE :search OR LOWER(pkg.shortDesc) LIKE :search OR LOWER(pkg.region) LIKE :search OR LOWER(pkg.destination) LIKE :search)',
+        '(LOWER(pkg.title) LIKE :search OR LOWER(pkg.shortDesc) LIKE :search OR LOWER(pkg.region) LIKE :search OR LOWER(pkg.difficulty) LIKE :search OR LOWER(pkg.startEndLocation) LIKE :search)',
         {
           search: `%${params.search.trim().toLowerCase()}%`,
         },
@@ -74,6 +81,12 @@ export class PackageService {
     }
     if (params?.maxDuration !== undefined && Number(params.maxDuration) > 0) {
       qb.andWhere('pkg.durationDays <= :maxDuration', { maxDuration: Number(params.maxDuration) });
+    }
+    if (params?.minAltitude !== undefined && Number(params.minAltitude) > 0) {
+      qb.andWhere('pkg.maxAltitudeMeters >= :minAltitude', { minAltitude: Number(params.minAltitude) });
+    }
+    if (params?.maxAltitude !== undefined && Number(params.maxAltitude) > 0) {
+      qb.andWhere('pkg.maxAltitudeMeters <= :maxAltitude', { maxAltitude: Number(params.maxAltitude) });
     }
 
     switch (params?.sortBy) {
@@ -109,9 +122,19 @@ export class PackageService {
   }
 
   async getByIdOrSlug(idOrSlug: string): Promise<Package> {
-    const item = await this.repo.findOne({
-      where: [{ id: idOrSlug }, { slug: idOrSlug }],
-    });
+    const isUuid =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+        idOrSlug,
+      );
+
+    let item: Package | null = null;
+    if (isUuid) {
+      item = await this.repo.findOne({ where: { id: idOrSlug } });
+    }
+    if (!item) {
+      item = await this.repo.findOne({ where: { slug: idOrSlug } });
+    }
+
     if (!item) throw AppError.notFound(`Package ${idOrSlug} not found`);
     return item;
   }
@@ -227,7 +250,8 @@ export class PackageService {
 
   async getFilterOptions(categoryType?: PackageCategoryType): Promise<{
     categoryType?: string;
-    styles: { label: string; value: string }[];
+    categories: { label: string; value: string; id?: string; name?: string; slug?: string }[];
+    styles: { label: string; value: string; id?: string; name?: string; slug?: string }[];
     difficulties: { label: string; value: string }[];
     regions: { label: string; value: string }[];
     sortOptions: { label: string; value: string }[];
@@ -245,8 +269,14 @@ export class PackageService {
 
     const packages = await qb.getMany();
 
-    // Distinct values from DB via category join
-    const dbDifficulties = Array.from(new Set(packages.map((p) => p.difficulty).filter(Boolean)));
+    // Distinct values from DB via category lookup
+    const categoryIds = Array.from(
+      new Set(packages.map((p) => p.categoryId).filter((id): id is string => Boolean(id))),
+    );
+    const dbCategories =
+      categoryIds.length > 0
+        ? (await this.categoryRepo.find({ where: { id: In(categoryIds) } })).map((c) => c.name).filter(Boolean)
+        : [];
     const dbRegions = Array.from(new Set(packages.map((p) => p.region).filter(Boolean)));
 
     // Min & Max calculations
@@ -261,32 +291,59 @@ export class PackageService {
     const minAltitude = altitudes.length > 0 ? Math.min(...altitudes) : 1400;
     const maxAltitude = altitudes.length > 0 ? Math.max(...altitudes) : 8848;
 
-    let styles: { label: string; value: string }[] = [];
-    let difficulties: { label: string; value: string }[] = [];
-    let sortOptions: { label: string; value: string }[] = [];
-
+    let categoryEntityEnum: CategoryType = CategoryType.TREKKING;
     if (categoryType === PackageCategoryType.TOUR) {
-      const standardTourStyles = [
-        { label: 'All Styles', value: 'All' },
-        { label: 'Cultural Heritage', value: 'Cultural Heritage' },
-        { label: 'Luxury Wildlife Safari', value: 'Luxury Wildlife Safari' },
-        { label: 'Helicopter Pilgrimage', value: 'Helicopter Pilgrimage' },
-        { label: 'Photography & Scenic', value: 'Photography & Scenic' },
-        { label: 'Spiritual & Wellness', value: 'Spiritual & Wellness' },
-      ];
-      // Merge db categories
-      const knownValues = new Set(standardTourStyles.map((s) => s.value));
-      const extra = dbCategories
-        .filter((c) => !knownValues.has(c))
-        .map((c) => ({ label: c, value: c }));
-      styles = [...standardTourStyles, ...extra];
+      categoryEntityEnum = CategoryType.TOURS;
+    } else if (categoryType === PackageCategoryType.EXPEDITION) {
+      categoryEntityEnum = CategoryType.EXPEDITIONS;
+    }
 
-      difficulties = [
-        { label: 'All Levels', value: 'All' },
-        { label: 'Easy / Leisure', value: 'Easy' },
-        { label: 'Moderate', value: 'Moderate' },
-      ];
+    const dynamicCategories = await this.categoryRepo.find({
+      where: { type: categoryEntityEnum, status: CategoryStatus.ACTIVE },
+      order: { name: 'ASC' },
+    });
 
+    const categoryOptions = [
+      { label: 'All Categories', value: 'All' },
+      ...dynamicCategories.map((c) => ({
+        label: c.name,
+        value: c.id,
+        id: c.id,
+        name: c.name,
+        slug: c.slug,
+      })),
+    ];
+
+    const dbDifficulties = Array.from(
+      new Set(
+        packages
+          .map((p) => p.difficulty?.trim())
+          .filter((d): d is string => Boolean(d)),
+      ),
+    );
+
+    let difficultyLabel = 'All Difficulties';
+    let defaultDifficulties: string[] = ['Moderate Trek', 'Challenging Trek', 'Strenuous Trek'];
+    if (categoryType === PackageCategoryType.TOUR) {
+      difficultyLabel = 'All Levels';
+      defaultDifficulties = ['Easy / Leisure', 'Moderate', 'Challenging'];
+    } else if (categoryType === PackageCategoryType.EXPEDITION) {
+      difficultyLabel = 'All Alpine Grades';
+      defaultDifficulties = ['Alpine PD', 'Alpine AD', 'Alpine D', 'Alpine ED'];
+    }
+
+    const uniqueDifficulties =
+      dbDifficulties.length > 0
+        ? dbDifficulties
+        : defaultDifficulties;
+
+    const difficulties = [
+      { label: difficultyLabel, value: 'All' },
+      ...uniqueDifficulties.map((d) => ({ label: d, value: d })),
+    ];
+
+    let sortOptions: { label: string; value: string }[] = [];
+    if (categoryType === PackageCategoryType.TOUR) {
       sortOptions = [
         { label: 'Guest Rating', value: 'rating' },
         { label: 'Price: Low to High', value: 'price-low' },
@@ -295,26 +352,6 @@ export class PackageService {
         { label: 'Newest Added', value: 'newest' },
       ];
     } else if (categoryType === PackageCategoryType.EXPEDITION) {
-      const standardExpeditionGrades = [
-        { label: 'All Alpine Grades', value: 'All' },
-        { label: 'PD (Slightly Difficult)', value: 'Alpine PD' },
-        { label: 'AD (Fairly Difficult)', value: 'Alpine AD' },
-        { label: 'D (Difficult / Technical)', value: 'Alpine D' },
-        { label: 'ED (Extremely Difficult)', value: 'Alpine ED' },
-      ];
-      const knownGrades = new Set(standardExpeditionGrades.map((g) => g.value));
-      const extraGrades = dbDifficulties
-        .filter((d) => !knownGrades.has(d))
-        .map((d) => ({ label: d, value: d }));
-      difficulties = [...standardExpeditionGrades, ...extraGrades];
-
-      styles = [
-        { label: 'All Expeditions', value: 'All' },
-        { label: 'Trekking Peak (6000m)', value: 'Trekking Peak' },
-        { label: 'Major Peak (7000m+)', value: 'Major Peak' },
-        { label: '8000m Summit', value: '8000m Peak' },
-      ];
-
       sortOptions = [
         { label: 'Guest Rating', value: 'rating' },
         { label: 'Price: Low to High', value: 'price-low' },
@@ -324,27 +361,6 @@ export class PackageService {
         { label: 'Newest Added', value: 'newest' },
       ];
     } else {
-      // Trekking (default)
-      const standardTrekDifficulties = [
-        { label: 'All Difficulties', value: 'All' },
-        { label: 'Moderate Trek', value: 'Moderate Trek' },
-        { label: 'Challenging Trek', value: 'Challenging Trek' },
-        { label: 'Strenuous Trek', value: 'Strenuous Trek' },
-      ];
-      const knownDiffs = new Set(standardTrekDifficulties.map((d) => d.value));
-      const extraDiffs = dbDifficulties
-        .filter((d) => !knownDiffs.has(d))
-        .map((d) => ({ label: d, value: d }));
-      difficulties = [...standardTrekDifficulties, ...extraDiffs];
-
-      styles = [
-        { label: 'All Types', value: 'All' },
-        { label: 'Tea House Trek', value: 'Tea House' },
-        { label: 'High Pass Crossing', value: 'High Pass' },
-        { label: 'Circuit Trek', value: 'Circuit' },
-        { label: 'Base Camp Trek', value: 'Base Camp' },
-      ];
-
       sortOptions = [
         { label: 'Guest Rating', value: 'rating' },
         { label: 'Price: Low to High', value: 'price-low' },
@@ -362,12 +378,16 @@ export class PackageService {
 
     return {
       categoryType,
-      styles,
+      categories: categoryOptions,
+      styles: categoryOptions,
       difficulties,
       regions: standardRegions,
       sortOptions,
       minDuration,
-      maxDuration: Math.max(maxDuration, categoryType === PackageCategoryType.TOUR ? 10 : 30),
+      maxDuration: Math.max(
+        maxDuration,
+        categoryType === PackageCategoryType.TOUR ? 10 : 30,
+      ),
       minPrice,
       maxPrice,
       minAltitude,

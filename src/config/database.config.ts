@@ -7,6 +7,7 @@ const isSslEnabled =
   DotenvConfig.DB_SSL ||
   Boolean(
     DotenvConfig.DATABASE_URL?.includes('supabase.co') ||
+      DotenvConfig.DATABASE_URL?.includes('supabase.com') ||
       DotenvConfig.DATABASE_URL?.includes('sslmode=require'),
   );
 

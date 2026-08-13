@@ -17,11 +17,12 @@ class DotenvConfig {
   // DB
   static DATABASE_URL =
     process.env.DATABASE_URL?.trim() ||
-    'postgresql://postgres:eDi4h6iZIW42Ql7z@db.kqebaxbdkioqiejrvuve.supabase.co:5432/postgres';
+    'postgresql://postgres.kqebaxbdkioqiejrvuve:eDi4h6iZIW42Ql7z@aws-0-ap-northeast-2.pooler.supabase.com:5432/postgres';
   static DB_SSL =
     process.env.DB_SSL === 'true' ||
     Boolean(
       (process.env.DATABASE_URL || 'supabase.co').includes('supabase.co') ||
+        (process.env.DATABASE_URL || 'pooler.supabase.com').includes('pooler.supabase.com') ||
         (process.env.DATABASE_URL || '').includes('sslmode=require'),
     );
 

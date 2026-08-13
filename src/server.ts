@@ -4,7 +4,7 @@ import { AppDataSource } from './config/database.config';
 import { DotenvConfig } from './config/env.config';
 import { configMiddleware } from './middlewares';
 import { PathUtils } from './utils/path.util';
-import { RedisUtil } from './utils/redis.util';
+// import { RedisUtil } from './utils/redis.util';
 import { seedDatabase } from './seeder/seed';
 
 class Server {
@@ -30,11 +30,11 @@ class Server {
         const app = express();
         configMiddleware(app);
 
-        try {
-          new RedisUtil().initialize();
-        } catch (redisErr) {
-          console.warn('Redis initialization skipped:', redisErr);
-        }
+        // try {
+        //   new RedisUtil().initialize();
+        // } catch (redisErr) {
+        //   console.warn('Redis initialization skipped:', redisErr);
+        // }
 
         const port = DotenvConfig.PORT || 5000;
         app.listen(port, () => {

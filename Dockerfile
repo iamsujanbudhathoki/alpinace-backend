@@ -16,8 +16,12 @@ RUN pnpm install
 # Copy app source code
 COPY . .
 
-# Expose the port your app runs on
-EXPOSE 3000
+# Build the TypeScript code and generate TSOA routes (creates dist/server.js)
+RUN pnpm run build
 
-# Start the app
+# Expose the port your app runs on
+EXPOSE 5000
+
+# Start the compiled application
 CMD ["pnpm", "start"]
+

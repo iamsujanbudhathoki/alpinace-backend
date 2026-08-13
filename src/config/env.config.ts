@@ -20,8 +20,8 @@ class DotenvConfig {
   static DB_SSL = process.env.DB_SSL === 'true';
 
   // JWT
-  static JWT_SECRET = process.env.JWT_SECRET;
-
+  static JWT_SECRET =
+    process.env.JWT_SECRET!
   // MAIL
   static MAIL_HOST = process.env.MAIL_HOST;
   static MAIL_PORT = Number(process.env.MAIL_PORT);

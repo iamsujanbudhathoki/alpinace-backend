@@ -16,12 +16,18 @@ class DotenvConfig {
 
   // DB
   static DATABASE_URL =
-    process.env.DATABASE_URL
-  static DB_SSL = process.env.DB_SSL === 'true';
+    process.env.DATABASE_URL?.trim() ||
+    'postgresql://postgres:eDi4h6iZIW42Ql7z@db.kqebaxbdkioqiejrvuve.supabase.co:5432/postgres';
+  static DB_SSL =
+    process.env.DB_SSL === 'true' ||
+    Boolean(
+      (process.env.DATABASE_URL || 'supabase.co').includes('supabase.co') ||
+        (process.env.DATABASE_URL || '').includes('sslmode=require'),
+    );
 
   // JWT
   static JWT_SECRET =
-    process.env.JWT_SECRET!
+    process.env.JWT_SECRET || 'alpineace_super_secret_jwt_key_2026';
   // MAIL
   static MAIL_HOST = process.env.MAIL_HOST;
   static MAIL_PORT = Number(process.env.MAIL_PORT);

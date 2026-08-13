@@ -14,6 +14,7 @@ class Server {
 
   async bootstrap() {
     await this.initializePath();
+    console.log('Connecting to PostgreSQL database...');
     AppDataSource.initialize()
       .then(async () => {
         console.log('Data Source has been initialized!');

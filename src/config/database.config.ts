@@ -1,14 +1,19 @@
 import { DataSource } from 'typeorm';
 import { DotenvConfig } from './env.config';
 
+const isSslEnabled =
+  DotenvConfig.DB_SSL ||
+  Boolean(
+    DotenvConfig.DATABASE_URL?.includes('supabase.co') ||
+      DotenvConfig.DATABASE_URL?.includes('sslmode=require'),
+  );
+
 export const AppDataSource = new DataSource({
   type: 'postgres',
-  host: DotenvConfig.DB_HOST!,
-  port: +DotenvConfig.DB_PORT!,
-  username: DotenvConfig.DB_USERNAME!,
-  password: DotenvConfig.DB_PASSWORD!,
-  database: DotenvConfig.DB_NAME!,
+  url: DotenvConfig.DATABASE_URL,
   entities: [`${__dirname}/../entities/**/*.entity.{ts,js}`],
   synchronize: DotenvConfig.NODE_ENV === 'DEVELOPMENT',
-  ssl: DotenvConfig.DB_SSL ? { rejectUnauthorized: false } : false,
+  ssl: isSslEnabled ? { rejectUnauthorized: false } : false,
 });
+
+

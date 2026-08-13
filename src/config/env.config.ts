@@ -15,23 +15,18 @@ class DotenvConfig {
   static NODE_ENV = process.env.NODE_ENV;
 
   // DB
-  static DB_TYPE = process.env.DB_TYPE || 'postgres';
-  static DB_HOST = process.env.DB_HOST;
-  static DB_PORT = process.env.DB_PORT || 5432;
-  static DB_USERNAME = process.env.DB_USERNAME;
-  static DB_PASSWORD = process.env.DB_PASSWORD;
-  static DB_NAME = process.env.DB_NAME;
+  static DATABASE_URL =
+    process.env.DATABASE_URL
   static DB_SSL = process.env.DB_SSL === 'true';
 
   // JWT
-  static JWT_SECRET =
-    process.env.JWT_SECRET || 'alpineace_super_secret_jwt_key_2026';
+  static JWT_SECRET = process.env.JWT_SECRET;
 
   // MAIL
-  static MAIL_HOST = process.env.MAIL_HOST || 'smtp.gmail.com';
-  static MAIL_PORT = Number(process.env.MAIL_PORT) || 465;
-  static MAIL_USER = process.env.MAIL_USER || '';
-  static MAIL_PASSWORD = process.env.MAIL_PASSWORD || '';
+  static MAIL_HOST = process.env.MAIL_HOST;
+  static MAIL_PORT = Number(process.env.MAIL_PORT);
+  static MAIL_USER = process.env.MAIL_USER;
+  static MAIL_PASSWORD = process.env.MAIL_PASSWORD;
   static ADMIN_EMAIL = process.env.ADMIN_EMAIL || process.env.MAIL_USER || '';
 
   // LOG

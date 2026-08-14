@@ -1,6 +1,14 @@
 import { Column, Entity } from 'typeorm';
 import { CommonEntity } from '../common/common.entity';
 
+export enum InquiryStatus {
+  NEW = 'New',
+  CONTACTED = 'Contacted',
+  QUOTE_SENT = 'Quote Sent',
+  BOOKED = 'Booked',
+  CLOSED = 'Closed',
+}
+
 @Entity('inquiries')
 export class Inquiry extends CommonEntity {
   @Column({ name: 'guest_name' })
@@ -27,8 +35,13 @@ export class Inquiry extends CommonEntity {
   @Column({ name: 'message', type: 'text' })
   message: string;
 
-  @Column({ name: 'status', default: 'New' })
-  status: 'New' | 'Contacted' | 'Quote Sent' | 'Booked' | 'Closed';
+  @Column({
+    name: 'status',
+    type: 'enum',
+    enum: InquiryStatus,
+    default: InquiryStatus.NEW,
+  })
+  status: InquiryStatus;
 
   @Column({ name: 'notes', type: 'text', nullable: true })
   notes: string;

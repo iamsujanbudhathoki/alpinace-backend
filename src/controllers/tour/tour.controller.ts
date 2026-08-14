@@ -1,34 +1,40 @@
 import {
+  Body,
   Controller,
+  Delete,
   Get,
+  Middlewares,
   Path,
+  Post,
+  Put,
   Query,
   Route,
   Tags,
 } from 'tsoa';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
-import {
-  Package,
-  PackageCategoryType,
-  PackageStatus,
-} from '../../entities/package/Package.entity';
-import { PackageService } from '../../services/package/package.service';
+import { Tour, TourStatus, TourType } from '../../entities/tour/Tour.entity';
+import { TripDifficulty } from '../../entities/common/difficulty.enum';
+import { TourService } from '../../services/tour/tour.service';
+import { CreateTourDto, UpdateTourDto } from '../../schemas/tour.schema';
+import { RequestValidator } from '../../middlewares/validator.middleware';
 
 @Route('tours')
-@Tags('Tours (Public)')
+@Tags('Tours')
 export class TourController extends Controller {
-  constructor(private packageService: PackageService = new PackageService()) {
+  constructor(private tourService: TourService = new TourService()) {
     super();
   }
 
   /**
-   * Get all active tour packages with dynamic filtering.
+   * Get all tour packages with dynamic filtering.
    */
   @Get('')
   async getAll(
     @Query() categoryId?: string,
     @Query() region?: string,
-    @Query() difficulty?: string,
+    @Query() tourType?: TourType,
+    @Query() difficulty?: TripDifficulty,
+    @Query() status?: TourStatus,
     @Query() search?: string,
     @Query() minPrice?: number,
     @Query() maxPrice?: number,
@@ -37,13 +43,13 @@ export class TourController extends Controller {
     @Query() sortBy?: string,
     @Query() limit?: number,
     @Query() page?: number,
-  ): Promise<ApiResponse<Package[]>> {
-    const data = await this.packageService.getAll({
-      categoryType: PackageCategoryType.TOUR,
+  ): Promise<ApiResponse<Tour[]>> {
+    const data = await this.tourService.getAll({
       categoryId,
       region,
+      tourType,
       difficulty,
-      status: PackageStatus.ACTIVE,
+      status,
       search,
       minPrice,
       maxPrice,
@@ -57,13 +63,11 @@ export class TourController extends Controller {
   }
 
   /**
-   * Get dynamic filter options for tours (styles, categories, levels, regions, sort options, ranges).
+   * Get dynamic filter options for tours (styles, categories, tour types, regions, sort options, ranges).
    */
   @Get('filter-options')
   async getFilterOptions(): Promise<ApiResponse<any>> {
-    const data = await this.packageService.getFilterOptions(
-      PackageCategoryType.TOUR,
-    );
+    const data = await this.tourService.getFilterOptions();
     return {
       data,
       message: 'Tour filter options retrieved successfully',
@@ -75,8 +79,40 @@ export class TourController extends Controller {
    * Get tour package by ID or Slug.
    */
   @Get('{idOrSlug}')
-  async getByIdOrSlug(@Path() idOrSlug: string): Promise<ApiResponse<Package>> {
-    const data = await this.packageService.getByIdOrSlug(idOrSlug);
+  async getByIdOrSlug(@Path() idOrSlug: string): Promise<ApiResponse<Tour>> {
+    const data = await this.tourService.getByIdOrSlug(idOrSlug);
     return { data, message: 'Tour retrieved successfully', success: true };
+  }
+
+  /**
+   * Create a new tour package.
+   */
+  @Post('')
+  @Middlewares(RequestValidator.validate(CreateTourDto))
+  async create(@Body() body: CreateTourDto): Promise<ApiResponse<Tour>> {
+    const data = await this.tourService.create(body);
+    return { data, message: 'Tour created successfully', success: true };
+  }
+
+  /**
+   * Update an existing tour package.
+   */
+  @Put('{id}')
+  @Middlewares(RequestValidator.validate(UpdateTourDto))
+  async update(
+    @Path() id: string,
+    @Body() body: UpdateTourDto,
+  ): Promise<ApiResponse<Tour>> {
+    const data = await this.tourService.update(id, body);
+    return { data, message: 'Tour updated successfully', success: true };
+  }
+
+  /**
+   * Delete a tour package.
+   */
+  @Delete('{id}')
+  async delete(@Path() id: string): Promise<ApiResponse<boolean>> {
+    const data = await this.tourService.delete(id);
+    return { data, message: 'Tour deleted successfully', success: true };
   }
 }

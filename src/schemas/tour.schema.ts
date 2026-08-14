@@ -8,31 +8,35 @@ import {
   IsString,
   IsUUID,
   Min,
+  ValidateNested,
 } from 'class-validator';
-import {
-  PackageCategoryType,
-  PackageStatus,
-} from '../entities/package/Package.entity';
+import { TourStatus, TourType } from '../entities/tour/Tour.entity';
 import { TripDifficulty } from '../entities/common/difficulty.enum';
+import { TripFaqDto, TripReviewDto } from './common-trip.schema';
 
-export class CreatePackageDto {
+export class CreateTourDto {
   @IsString()
   @IsNotEmpty({ message: 'Title is required' })
   title!: string;
 
-  @IsEnum(PackageCategoryType, {
-    message: 'Invalid category type. Must be Trekking, Expedition, or Tour',
-  })
-  @IsNotEmpty({ message: 'Category type is required' })
-  categoryType!: PackageCategoryType;
-
+  @IsOptional()
   @IsUUID('4', { message: 'Category ID must be a valid UUID' })
-  @IsNotEmpty({ message: 'Category ID is required' })
-  categoryId!: string;
+  categoryId?: string;
 
   @IsString()
   @IsNotEmpty({ message: 'Region is required' })
   region!: string;
+
+  @IsOptional()
+  @IsEnum(TourType, {
+    message:
+      'Invalid tour type. Must be cultural_heritage, luxury_wellness, wildlife_safari, helicopter_tour, day_tour, or other',
+  })
+  tourType?: TourType;
+
+  @IsOptional()
+  @IsString()
+  transportation?: string;
 
   @Type(() => Number)
   @IsNumber({}, { message: 'Duration must be a number' })
@@ -44,23 +48,23 @@ export class CreatePackageDto {
   @IsNumber()
   maxAltitudeMeters?: number;
 
+  @IsOptional()
   @IsEnum(TripDifficulty, {
     message:
       'Invalid difficulty. Must be easy, moderate, challenging, strenuous, or extreme',
   })
-  @IsNotEmpty({ message: 'Difficulty is required' })
-  difficulty!: TripDifficulty;
+  difficulty?: TripDifficulty;
 
   @Type(() => Number)
   @IsNumber({}, { message: 'Price must be a number' })
   @Min(0, { message: 'Price must be non-negative' })
   priceUSD!: number;
 
-  @IsEnum(PackageStatus, {
-    message: 'Invalid package status. Must be active, featured, or draft',
+  @IsOptional()
+  @IsEnum(TourStatus, {
+    message: 'Invalid tour status. Must be active, featured, or draft',
   })
-  @IsNotEmpty({ message: 'Status is required' })
-  status!: PackageStatus;
+  status?: TourStatus;
 
   @IsOptional()
   @IsString()
@@ -108,6 +112,18 @@ export class CreatePackageDto {
   exclusionsText?: string;
 
   @IsOptional()
+  @IsArray({ message: 'FAQs must be an array of FAQ items' })
+  @ValidateNested({ each: true })
+  @Type(() => TripFaqDto)
+  faqs?: TripFaqDto[];
+
+  @IsOptional()
+  @IsArray({ message: 'Reviews must be an array of review items' })
+  @ValidateNested({ each: true })
+  @Type(() => TripReviewDto)
+  reviews?: TripReviewDto[];
+
+  @IsOptional()
   @IsString()
   metaTitle?: string;
 
@@ -118,29 +134,12 @@ export class CreatePackageDto {
   @IsOptional()
   @IsString()
   keywords?: string;
-
-  @IsOptional()
-  @IsString()
-  tourType?: string;
-
-  @IsOptional()
-  @IsString()
-  climbingGrade?: string;
-
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  peakHeightM?: number;
 }
 
-export class UpdatePackageDto {
+export class UpdateTourDto {
   @IsOptional()
   @IsString()
   title?: string;
-
-  @IsOptional()
-  @IsEnum(PackageCategoryType)
-  categoryType?: PackageCategoryType;
 
   @IsOptional()
   @IsUUID('4', { message: 'Category ID must be a valid UUID' })
@@ -149,6 +148,14 @@ export class UpdatePackageDto {
   @IsOptional()
   @IsString()
   region?: string;
+
+  @IsOptional()
+  @IsEnum(TourType)
+  tourType?: TourType;
+
+  @IsOptional()
+  @IsString()
+  transportation?: string;
 
   @IsOptional()
   @Type(() => Number)
@@ -170,8 +177,8 @@ export class UpdatePackageDto {
   priceUSD?: number;
 
   @IsOptional()
-  @IsEnum(PackageStatus)
-  status?: PackageStatus;
+  @IsEnum(TourStatus)
+  status?: TourStatus;
 
   @IsOptional()
   @IsString()
@@ -219,6 +226,18 @@ export class UpdatePackageDto {
   exclusionsText?: string;
 
   @IsOptional()
+  @IsArray({ message: 'FAQs must be an array of FAQ items' })
+  @ValidateNested({ each: true })
+  @Type(() => TripFaqDto)
+  faqs?: TripFaqDto[];
+
+  @IsOptional()
+  @IsArray({ message: 'Reviews must be an array of review items' })
+  @ValidateNested({ each: true })
+  @Type(() => TripReviewDto)
+  reviews?: TripReviewDto[];
+
+  @IsOptional()
   @IsString()
   metaTitle?: string;
 
@@ -229,17 +248,4 @@ export class UpdatePackageDto {
   @IsOptional()
   @IsString()
   keywords?: string;
-
-  @IsOptional()
-  @IsString()
-  tourType?: string;
-
-  @IsOptional()
-  @IsString()
-  climbingGrade?: string;
-
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  peakHeightM?: number;
 }

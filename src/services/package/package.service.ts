@@ -6,6 +6,7 @@ import {
   PackageCategoryType,
   PackageStatus,
 } from '../../entities/package/Package.entity';
+import { TripDifficulty } from '../../entities/common/difficulty.enum';
 import {
   Category,
   CategoryStatus,
@@ -26,7 +27,7 @@ export class PackageService {
     categoryType?: PackageCategoryType;
     categoryId?: string;
     region?: string;
-    difficulty?: string;
+    difficulty?: TripDifficulty;
     status?: PackageStatus;
     search?: string;
     minPrice?: number;
@@ -52,9 +53,11 @@ export class PackageService {
       });
     }
     if (params?.region && params.region !== 'All') {
-      qb.andWhere('LOWER(pkg.region) = LOWER(:region)', { region: params.region });
+      qb.andWhere('LOWER(pkg.region) = LOWER(:region)', {
+        region: params.region,
+      });
     }
-    if (params?.difficulty && params.difficulty !== 'All') {
+    if (params?.difficulty && (params.difficulty as any) !== 'All') {
       qb.andWhere('pkg.difficulty = :difficulty', {
         difficulty: params.difficulty,
       });
@@ -71,22 +74,34 @@ export class PackageService {
       );
     }
     if (params?.minPrice !== undefined && Number(params.minPrice) > 0) {
-      qb.andWhere('pkg.priceUSD >= :minPrice', { minPrice: Number(params.minPrice) });
+      qb.andWhere('pkg.priceUSD >= :minPrice', {
+        minPrice: Number(params.minPrice),
+      });
     }
     if (params?.maxPrice !== undefined && Number(params.maxPrice) > 0) {
-      qb.andWhere('pkg.priceUSD <= :maxPrice', { maxPrice: Number(params.maxPrice) });
+      qb.andWhere('pkg.priceUSD <= :maxPrice', {
+        maxPrice: Number(params.maxPrice),
+      });
     }
     if (params?.minDuration !== undefined && Number(params.minDuration) > 0) {
-      qb.andWhere('pkg.durationDays >= :minDuration', { minDuration: Number(params.minDuration) });
+      qb.andWhere('pkg.durationDays >= :minDuration', {
+        minDuration: Number(params.minDuration),
+      });
     }
     if (params?.maxDuration !== undefined && Number(params.maxDuration) > 0) {
-      qb.andWhere('pkg.durationDays <= :maxDuration', { maxDuration: Number(params.maxDuration) });
+      qb.andWhere('pkg.durationDays <= :maxDuration', {
+        maxDuration: Number(params.maxDuration),
+      });
     }
     if (params?.minAltitude !== undefined && Number(params.minAltitude) > 0) {
-      qb.andWhere('pkg.maxAltitudeMeters >= :minAltitude', { minAltitude: Number(params.minAltitude) });
+      qb.andWhere('pkg.maxAltitudeMeters >= :minAltitude', {
+        minAltitude: Number(params.minAltitude),
+      });
     }
     if (params?.maxAltitude !== undefined && Number(params.maxAltitude) > 0) {
-      qb.andWhere('pkg.maxAltitudeMeters <= :maxAltitude', { maxAltitude: Number(params.maxAltitude) });
+      qb.andWhere('pkg.maxAltitudeMeters <= :maxAltitude', {
+        maxAltitude: Number(params.maxAltitude),
+      });
     }
 
     switch (params?.sortBy) {
@@ -148,8 +163,11 @@ export class PackageService {
 
     // Validate categoryId and resolve category name
     if (!dto.categoryId) throw AppError.badRequest('categoryId is required');
-    const categoryEntity = await this.categoryRepo.findOne({ where: { id: dto.categoryId } });
-    if (!categoryEntity) throw AppError.notFound(`Category ${dto.categoryId} not found`);
+    const categoryEntity = await this.categoryRepo.findOne({
+      where: { id: dto.categoryId },
+    });
+    if (!categoryEntity)
+      throw AppError.notFound(`Category ${dto.categoryId} not found`);
 
     const permitsArray = dto.permitsRequired
       ? dto.permitsRequired
@@ -163,14 +181,14 @@ export class PackageService {
     const pkg = this.repo.create({
       title: dto.title,
       slug,
-      categoryType: dto.categoryType || 'Trekking',
+      categoryType: dto.categoryType || PackageCategoryType.TREKKING,
       categoryId: categoryEntity.id,
       region: dto.region,
       durationDays: Number(dto.durationDays),
       maxAltitudeMeters: Number(dto.maxAltitudeMeters) || 1400,
-      difficulty: dto.difficulty || 'Moderate',
+      difficulty: dto.difficulty || TripDifficulty.MODERATE,
       priceUSD: Number(dto.priceUSD),
-      status: dto.status || 'Active',
+      status: dto.status || PackageStatus.ACTIVE,
       shortDesc: dto.shortDesc,
       image: dto.image,
       bestSeason: dto.bestSeason,
@@ -201,8 +219,11 @@ export class PackageService {
     }
     if (dto.categoryType) pkg.categoryType = dto.categoryType;
     if (dto.categoryId) {
-      const categoryEntity = await this.categoryRepo.findOne({ where: { id: dto.categoryId } });
-      if (!categoryEntity) throw AppError.notFound(`Category ${dto.categoryId} not found`);
+      const categoryEntity = await this.categoryRepo.findOne({
+        where: { id: dto.categoryId },
+      });
+      if (!categoryEntity)
+        throw AppError.notFound(`Category ${dto.categoryId} not found`);
       pkg.categoryId = categoryEntity.id;
     }
     if (dto.region) pkg.region = dto.region;
@@ -250,8 +271,20 @@ export class PackageService {
 
   async getFilterOptions(categoryType?: PackageCategoryType): Promise<{
     categoryType?: string;
-    categories: { label: string; value: string; id?: string; name?: string; slug?: string }[];
-    styles: { label: string; value: string; id?: string; name?: string; slug?: string }[];
+    categories: {
+      label: string;
+      value: string;
+      id?: string;
+      name?: string;
+      slug?: string;
+    }[];
+    styles: {
+      label: string;
+      value: string;
+      id?: string;
+      name?: string;
+      slug?: string;
+    }[];
     difficulties: { label: string; value: string }[];
     regions: { label: string; value: string }[];
     sortOptions: { label: string; value: string }[];
@@ -271,18 +304,32 @@ export class PackageService {
 
     // Distinct values from DB via category lookup
     const categoryIds = Array.from(
-      new Set(packages.map((p) => p.categoryId).filter((id): id is string => Boolean(id))),
+      new Set(
+        packages
+          .map((p) => p.categoryId)
+          .filter((id): id is string => Boolean(id)),
+      ),
     );
     const dbCategories =
       categoryIds.length > 0
-        ? (await this.categoryRepo.find({ where: { id: In(categoryIds) } })).map((c) => c.name).filter(Boolean)
+        ? (await this.categoryRepo.find({ where: { id: In(categoryIds) } }))
+            .map((c) => c.name)
+            .filter(Boolean)
         : [];
-    const dbRegions = Array.from(new Set(packages.map((p) => p.region).filter(Boolean)));
+    const dbRegions = Array.from(
+      new Set(packages.map((p) => p.region).filter(Boolean)),
+    );
 
     // Min & Max calculations
-    const durations = packages.map((p) => Number(p.durationDays)).filter((d) => !isNaN(d) && d > 0);
-    const prices = packages.map((p) => Number(p.priceUSD)).filter((pr) => !isNaN(pr) && pr > 0);
-    const altitudes = packages.map((p) => Number(p.maxAltitudeMeters)).filter((a) => !isNaN(a) && a > 0);
+    const durations = packages
+      .map((p) => Number(p.durationDays))
+      .filter((d) => !isNaN(d) && d > 0);
+    const prices = packages
+      .map((p) => Number(p.priceUSD))
+      .filter((pr) => !isNaN(pr) && pr > 0);
+    const altitudes = packages
+      .map((p) => Number(p.maxAltitudeMeters))
+      .filter((a) => !isNaN(a) && a > 0);
 
     const minDuration = durations.length > 0 ? Math.min(...durations) : 1;
     const maxDuration = durations.length > 0 ? Math.max(...durations) : 30;
@@ -323,19 +370,29 @@ export class PackageService {
     );
 
     let difficultyLabel = 'All Difficulties';
-    let defaultDifficulties: string[] = ['Moderate Trek', 'Challenging Trek', 'Strenuous Trek'];
+    let defaultDifficulties: string[] = [
+      TripDifficulty.MODERATE,
+      TripDifficulty.CHALLENGING,
+      TripDifficulty.STRENUOUS,
+    ];
     if (categoryType === PackageCategoryType.TOUR) {
       difficultyLabel = 'All Levels';
-      defaultDifficulties = ['Easy / Leisure', 'Moderate', 'Challenging'];
+      defaultDifficulties = [
+        TripDifficulty.EASY,
+        TripDifficulty.MODERATE,
+        TripDifficulty.CHALLENGING,
+      ];
     } else if (categoryType === PackageCategoryType.EXPEDITION) {
       difficultyLabel = 'All Alpine Grades';
-      defaultDifficulties = ['Alpine PD', 'Alpine AD', 'Alpine D', 'Alpine ED'];
+      defaultDifficulties = [
+        TripDifficulty.CHALLENGING,
+        TripDifficulty.STRENUOUS,
+        TripDifficulty.EXTREME,
+      ];
     }
 
     const uniqueDifficulties =
-      dbDifficulties.length > 0
-        ? dbDifficulties
-        : defaultDifficulties;
+      dbDifficulties.length > 0 ? dbDifficulties : defaultDifficulties;
 
     const difficulties = [
       { label: difficultyLabel, value: 'All' },

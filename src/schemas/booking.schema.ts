@@ -8,6 +8,12 @@ import {
   IsString,
   Min,
 } from 'class-validator';
+import {
+  BookingPackageType,
+  BookingPaymentStatus,
+  BookingPermitStatus,
+  BookingStatus,
+} from '../entities/booking/Booking.entity';
 
 export class CreateBookingDto {
   @IsString()
@@ -30,11 +36,11 @@ export class CreateBookingDto {
   @IsNotEmpty({ message: 'Package name is required' })
   packageName!: string;
 
-  @IsEnum(['Trekking', 'Expedition', 'Tour'], {
-    message: 'Invalid package type',
+  @IsEnum(BookingPackageType, {
+    message: 'Invalid package type. Must be trekking, expedition, or tour',
   })
   @IsNotEmpty({ message: 'Package type is required' })
-  packageType!: 'Trekking' | 'Expedition' | 'Tour';
+  packageType!: BookingPackageType;
 
   @IsString()
   @IsNotEmpty({ message: 'Start date is required' })
@@ -54,28 +60,27 @@ export class CreateBookingDto {
   @Min(0, { message: 'Total amount must be non-negative' })
   totalAmountUSD!: number;
 
-  @IsEnum(['Paid', 'Deposit Paid', 'Pending', 'Refunded'], {
+  @IsEnum(BookingPaymentStatus, {
     message: 'Invalid payment status',
   })
-  @IsNotEmpty({ message: 'Payment status is required' })
-  paymentStatus!: 'Paid' | 'Deposit Paid' | 'Pending' | 'Refunded';
+  @IsOptional()
+  paymentStatus?: BookingPaymentStatus;
 
-  @IsEnum(['Confirmed', 'In Review', 'Active Trek', 'Completed', 'Cancelled'], {
+  @IsEnum(BookingStatus, {
     message: 'Invalid booking status',
   })
-  @IsNotEmpty({ message: 'Booking status is required' })
-  bookingStatus!:
-    'Confirmed' | 'In Review' | 'Active Trek' | 'Completed' | 'Cancelled';
+  @IsOptional()
+  bookingStatus?: BookingStatus;
 
   @IsOptional()
   @IsString()
   assignedGuide?: string;
 
-  @IsEnum(['Issued', 'Processing', 'Pending Document'], {
+  @IsEnum(BookingPermitStatus, {
     message: 'Invalid permit status',
   })
-  @IsNotEmpty({ message: 'Permit status is required' })
-  permitStatus!: 'Issued' | 'Processing' | 'Pending Document';
+  @IsOptional()
+  permitStatus?: BookingPermitStatus;
 
   @IsOptional()
   @IsString()
@@ -104,8 +109,8 @@ export class UpdateBookingDto {
   packageName?: string;
 
   @IsOptional()
-  @IsEnum(['Trekking', 'Expedition', 'Tour'])
-  packageType?: 'Trekking' | 'Expedition' | 'Tour';
+  @IsEnum(BookingPackageType)
+  packageType?: BookingPackageType;
 
   @IsOptional()
   @IsString()
@@ -126,21 +131,20 @@ export class UpdateBookingDto {
   totalAmountUSD?: number;
 
   @IsOptional()
-  @IsEnum(['Paid', 'Deposit Paid', 'Pending', 'Refunded'])
-  paymentStatus?: 'Paid' | 'Deposit Paid' | 'Pending' | 'Refunded';
+  @IsEnum(BookingPaymentStatus)
+  paymentStatus?: BookingPaymentStatus;
 
   @IsOptional()
-  @IsEnum(['Confirmed', 'In Review', 'Active Trek', 'Completed', 'Cancelled'])
-  bookingStatus?:
-    'Confirmed' | 'In Review' | 'Active Trek' | 'Completed' | 'Cancelled';
+  @IsEnum(BookingStatus)
+  bookingStatus?: BookingStatus;
 
   @IsOptional()
   @IsString()
   assignedGuide?: string;
 
   @IsOptional()
-  @IsEnum(['Issued', 'Processing', 'Pending Document'])
-  permitStatus?: 'Issued' | 'Processing' | 'Pending Document';
+  @IsEnum(BookingPermitStatus)
+  permitStatus?: BookingPermitStatus;
 
   @IsOptional()
   @IsString()

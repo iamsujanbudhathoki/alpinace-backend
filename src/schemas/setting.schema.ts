@@ -90,27 +90,11 @@ export class UpdateSettingsDto {
   siteTitle?: string;
 
   @IsOptional()
-  @IsString()
-  homeStats?: string;
+  homeStats?: any;
 
   @IsOptional()
-  @IsString()
-  companyFaqs?: string;
+  companyFaqs?: any;
 
   @IsOptional()
-  @IsString()
-  testimonials?: string;
-
-  // Booking & Operations
-  @IsOptional()
-  @IsString()
-  currency?: string;
-
-  @IsOptional()
-  @IsString()
-  depositPercentage?: string;
-
-  @IsOptional()
-  @IsString()
-  enableBookings?: string;
+  testimonials?: any;
 }

@@ -1,6 +1,11 @@
 export * from './admin/Admin.entity';
 export * from './category/Category.entity';
+export * from './common/common.entity';
+export * from './common/difficulty.enum';
 export * from './package/Package.entity';
+export * from './trek/Trek.entity';
+export * from './tour/Tour.entity';
+export * from './expedition/Expedition.entity';
 export * from './guide/Guide.entity';
 export * from './booking/Booking.entity';
 export * from './inquiry/Inquiry.entity';
@@ -10,5 +15,3 @@ export * from './media/media.entity';
 export * from './setting/Setting.entity';
 export * from './associate/Associate.entity';
 export * from './faq/Faq.entity';
-
-

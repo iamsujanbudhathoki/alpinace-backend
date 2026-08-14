@@ -17,6 +17,7 @@ import {
   PackageCategoryType,
   PackageStatus,
 } from '../../entities/package/Package.entity';
+import { TripDifficulty } from '../../entities/common/difficulty.enum';
 import { PackageService } from '../../services/package/package.service';
 import {
   CreatePackageDto,
@@ -36,7 +37,7 @@ export class PackageController extends Controller {
     @Query() categoryType?: PackageCategoryType,
     @Query() categoryId?: string,
     @Query() region?: string,
-    @Query() difficulty?: string,
+    @Query() difficulty?: TripDifficulty,
     @Query() status?: PackageStatus,
     @Query() search?: string,
     @Query() minPrice?: number,

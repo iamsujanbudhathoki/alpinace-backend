@@ -1,6 +1,7 @@
 import { autoInjectable } from 'tsyringe';
 import { AppDataSource } from '../../config/database.config';
-import { Inquiry } from '../../entities/inquiry/Inquiry.entity';
+import { Inquiry, InquiryStatus } from '../../entities/inquiry/Inquiry.entity';
+import { NotificationType } from '../../entities/notification/Notification.entity';
 import {
   CreateInquiryDto,
   UpdateInquiryDto,
@@ -34,7 +35,7 @@ export class InquiryService {
       travelDates: dto.travelDates,
       groupSize: Number(dto.groupSize),
       message: dto.message,
-      status: 'New',
+      status: InquiryStatus.NEW,
     });
 
     const saved = await this.repo.save(inquiry);
@@ -44,7 +45,7 @@ export class InquiryService {
       .create({
         title: `New Inquiry from ${dto.guestName}`,
         body: `${dto.guestName} from ${dto.country} is interested in "${dto.interestedTrip}".`,
-        type: 'inquiry',
+        type: NotificationType.INQUIRY,
         refId: saved.id,
       })
       .catch((err) => console.error('[Notification] Create error:', err));
@@ -60,7 +61,9 @@ export class InquiryService {
         groupSize: Number(dto.groupSize),
         message: dto.message,
       })
-      .catch((err) => console.error('[Nodemailer] Background email send error:', err));
+      .catch((err) =>
+        console.error('[Nodemailer] Background email send error:', err),
+      );
 
     return saved;
   }
@@ -72,26 +75,30 @@ export class InquiryService {
     return this.repo.save(inquiry);
   }
 
-  async sendQuote(id: string, dto: { message: string; status?: string }): Promise<Inquiry> {
+  async sendQuote(
+    id: string,
+    dto: { message: string; status?: InquiryStatus },
+  ): Promise<Inquiry> {
     const inquiry = await this.getById(id);
 
     // Apply status update if provided
     if (dto.status) {
-      inquiry.status = dto.status as Inquiry['status'];
+      inquiry.status = dto.status;
     }
 
     // Persist any status changes in a single save
     const saved = await this.repo.save(inquiry);
 
     // Only dispatch email if a non-empty message was provided
-    const hasMessage = typeof dto.message === 'string' && dto.message.trim().length > 0;
+    const hasMessage =
+      typeof dto.message === 'string' && dto.message.trim().length > 0;
     if (hasMessage) {
       // Create a notification for the quote dispatch
       this.notifSvc
         .create({
           title: `Quote Dispatched to ${saved.guestName}`,
           body: `Custom quote email sent to ${saved.email} for "${saved.interestedTrip}".`,
-          type: 'quote',
+          type: NotificationType.QUOTE,
           refId: saved.id,
         })
         .catch((err) => console.error('[Notification] Create error:', err));
@@ -103,7 +110,9 @@ export class InquiryService {
           interestedTrip: saved.interestedTrip,
           message: dto.message.trim(),
         })
-        .catch((err) => console.error('[Nodemailer] Quote email send error:', err));
+        .catch((err) =>
+          console.error('[Nodemailer] Quote email send error:', err),
+        );
     }
 
     return saved;

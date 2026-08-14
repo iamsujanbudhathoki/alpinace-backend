@@ -2,16 +2,16 @@ import { Column, Entity } from 'typeorm';
 import { CommonEntity } from '../common/common.entity';
 
 export enum CategoryType {
-  TREKKING = 'Trekking',
-  TOURS = 'Tours',
-  EXPEDITIONS = 'Expeditions',
-  BLOGS = 'Blogs',
-  MEDIA = 'Media',
+  TREKKING = 'trekking',
+  TOURS = 'tours',
+  EXPEDITIONS = 'expeditions',
+  BLOGS = 'blogs',
+  MEDIA = 'media',
 }
 
 export enum CategoryStatus {
-  ACTIVE = 'Active',
-  DRAFT = 'Draft',
+  ACTIVE = 'active',
+  DRAFT = 'draft',
 }
 
 @Entity('categories')

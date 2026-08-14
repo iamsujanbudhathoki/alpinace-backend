@@ -8,6 +8,7 @@ import {
   IsString,
   Min,
 } from 'class-validator';
+import { InquiryStatus } from '../entities/inquiry/Inquiry.entity';
 
 export class CreateInquiryDto {
   @IsString()
@@ -46,10 +47,10 @@ export class CreateInquiryDto {
 
 export class UpdateInquiryDto {
   @IsOptional()
-  @IsEnum(['New', 'Contacted', 'Quote Sent', 'Booked', 'Closed'], {
+  @IsEnum(InquiryStatus, {
     message: 'Invalid inquiry status',
   })
-  status?: 'New' | 'Contacted' | 'Quote Sent' | 'Booked' | 'Closed';
+  status?: InquiryStatus;
 
   @IsOptional()
   @IsString()

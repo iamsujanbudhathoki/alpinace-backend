@@ -1,40 +1,47 @@
 import { Column, Entity } from 'typeorm';
 import { CommonEntity } from '../common/common.entity';
 import { TripDifficulty } from '../common/difficulty.enum';
+import { TripFaq, TripReview } from '../trek/Trek.entity';
 
-export enum PackageCategoryType {
-  TREKKING = 'trekking',
-  EXPEDITION = 'expedition',
-  TOUR = 'tour',
-}
-
-export enum PackageStatus {
+export enum TourStatus {
   ACTIVE = 'active',
   FEATURED = 'featured',
   DRAFT = 'draft',
 }
 
-@Entity('packages')
-export class Package extends CommonEntity {
+export enum TourType {
+  CULTURAL_HERITAGE = 'cultural_heritage',
+  LUXURY_WELLNESS = 'luxury_wellness',
+  WILDLIFE_SAFARI = 'wildlife_safari',
+  HELICOPTER_TOUR = 'helicopter_tour',
+  DAY_TOUR = 'day_tour',
+  OTHER = 'other',
+}
+
+@Entity('tours')
+export class Tour extends CommonEntity {
   @Column({ name: 'title' })
   title: string;
 
   @Column({ name: 'slug', unique: true })
   slug: string;
 
-  @Column({
-    name: 'category_type',
-    type: 'enum',
-    enum: PackageCategoryType,
-    default: PackageCategoryType.TREKKING,
-  })
-  categoryType: PackageCategoryType;
-
   @Column({ name: 'category_id', nullable: true })
   categoryId: string;
 
   @Column({ name: 'region' })
   region: string;
+
+  @Column({
+    name: 'tour_type',
+    type: 'enum',
+    enum: TourType,
+    default: TourType.CULTURAL_HERITAGE,
+  })
+  tourType: TourType;
+
+  @Column({ name: 'transportation', nullable: true })
+  transportation: string;
 
   @Column({ name: 'duration_days', type: 'int' })
   durationDays: number;
@@ -46,7 +53,7 @@ export class Package extends CommonEntity {
     name: 'difficulty',
     type: 'enum',
     enum: TripDifficulty,
-    default: TripDifficulty.MODERATE,
+    default: TripDifficulty.EASY,
   })
   difficulty: TripDifficulty;
 
@@ -56,10 +63,10 @@ export class Package extends CommonEntity {
   @Column({
     name: 'status',
     type: 'enum',
-    enum: PackageStatus,
-    default: PackageStatus.ACTIVE,
+    enum: TourStatus,
+    default: TourStatus.ACTIVE,
   })
-  status: PackageStatus;
+  status: TourStatus;
 
   @Column({ name: 'total_bookings', type: 'int', default: 0 })
   totalBookings: number;
@@ -99,6 +106,22 @@ export class Package extends CommonEntity {
 
   @Column({ name: 'exclusions_text', type: 'text', nullable: true })
   exclusionsText: string;
+
+  @Column({
+    name: 'faqs',
+    type: 'jsonb',
+    nullable: true,
+    default: () => "'[]'",
+  })
+  faqs: TripFaq[];
+
+  @Column({
+    name: 'reviews',
+    type: 'jsonb',
+    nullable: true,
+    default: () => "'[]'",
+  })
+  reviews: TripReview[];
 
   @Column({ name: 'meta_title', nullable: true })
   metaTitle: string;

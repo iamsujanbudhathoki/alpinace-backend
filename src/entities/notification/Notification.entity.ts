@@ -1,7 +1,12 @@
 import { Column, Entity } from 'typeorm';
 import { CommonEntity } from '../common/common.entity';
 
-export type NotificationType = 'inquiry' | 'booking' | 'quote' | 'system';
+export enum NotificationType {
+  INQUIRY = 'inquiry',
+  BOOKING = 'booking',
+  QUOTE = 'quote',
+  SYSTEM = 'system',
+}
 
 @Entity('notifications')
 export class Notification extends CommonEntity {
@@ -11,7 +16,11 @@ export class Notification extends CommonEntity {
   @Column({ type: 'text' })
   body: string;
 
-  @Column({ type: 'varchar', length: 30, default: 'system' })
+  @Column({
+    type: 'enum',
+    enum: NotificationType,
+    default: NotificationType.SYSTEM,
+  })
   type: NotificationType;
 
   @Column({ name: 'is_read', type: 'boolean', default: false })

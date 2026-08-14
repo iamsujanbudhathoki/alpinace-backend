@@ -13,7 +13,7 @@ export const configMiddleware = (app: express.Application) => {
   const allowedOrigins = [
     'https://alpineace.vercel.app',
     'http://localhost:3000',
-    'http://localhost:5000',
+    'http://localhost:5001',
   ];
   if (DotenvConfig.FRONTEND_BASE_URL) {
     allowedOrigins.push(DotenvConfig.FRONTEND_BASE_URL.replace(/\/$/, ''));

@@ -2,33 +2,35 @@ import { Column, Entity } from 'typeorm';
 import { CommonEntity } from '../common/common.entity';
 import { TripDifficulty } from '../common/difficulty.enum';
 
-export enum PackageCategoryType {
-  TREKKING = 'trekking',
-  EXPEDITION = 'expedition',
-  TOUR = 'tour',
-}
-
-export enum PackageStatus {
+export enum TrekStatus {
   ACTIVE = 'active',
   FEATURED = 'featured',
   DRAFT = 'draft',
 }
 
-@Entity('packages')
-export class Package extends CommonEntity {
+export interface TripFaq {
+  id?: string;
+  question: string;
+  answer: string;
+}
+
+export interface TripReview {
+  id?: string;
+  author: string;
+  country: string;
+  date?: string;
+  rating: number;
+  avatar?: string;
+  content: string;
+}
+
+@Entity('treks')
+export class Trek extends CommonEntity {
   @Column({ name: 'title' })
   title: string;
 
   @Column({ name: 'slug', unique: true })
   slug: string;
-
-  @Column({
-    name: 'category_type',
-    type: 'enum',
-    enum: PackageCategoryType,
-    default: PackageCategoryType.TREKKING,
-  })
-  categoryType: PackageCategoryType;
 
   @Column({ name: 'category_id', nullable: true })
   categoryId: string;
@@ -56,10 +58,10 @@ export class Package extends CommonEntity {
   @Column({
     name: 'status',
     type: 'enum',
-    enum: PackageStatus,
-    default: PackageStatus.ACTIVE,
+    enum: TrekStatus,
+    default: TrekStatus.ACTIVE,
   })
-  status: PackageStatus;
+  status: TrekStatus;
 
   @Column({ name: 'total_bookings', type: 'int', default: 0 })
   totalBookings: number;
@@ -99,6 +101,22 @@ export class Package extends CommonEntity {
 
   @Column({ name: 'exclusions_text', type: 'text', nullable: true })
   exclusionsText: string;
+
+  @Column({
+    name: 'faqs',
+    type: 'jsonb',
+    nullable: true,
+    default: () => "'[]'",
+  })
+  faqs: TripFaq[];
+
+  @Column({
+    name: 'reviews',
+    type: 'jsonb',
+    nullable: true,
+    default: () => "'[]'",
+  })
+  reviews: TripReview[];
 
   @Column({ name: 'meta_title', nullable: true })
   metaTitle: string;

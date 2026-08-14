@@ -1,19 +1,21 @@
 import {
   IsArray,
   IsEmail,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
 } from 'class-validator';
+import { GuideRole, GuideStatus } from '../entities/guide/Guide.entity';
 
 export class CreateGuideDto {
   @IsString()
   @IsNotEmpty({ message: 'Guide name is required' })
   name!: string;
 
-  @IsString()
+  @IsEnum(GuideRole, { message: 'Invalid guide role' })
   @IsNotEmpty({ message: 'Guide role is required' })
-  role!: string;
+  role!: GuideRole;
 
   @IsOptional()
   @IsString()
@@ -25,8 +27,8 @@ export class CreateGuideDto {
   certifications?: string[];
 
   @IsOptional()
-  @IsString()
-  status?: string;
+  @IsEnum(GuideStatus, { message: 'Invalid guide status' })
+  status?: GuideStatus;
 
   @IsString()
   @IsNotEmpty({ message: 'Phone number is required' })
@@ -51,8 +53,8 @@ export class UpdateGuideDto {
   name?: string;
 
   @IsOptional()
-  @IsString()
-  role?: string;
+  @IsEnum(GuideRole)
+  role?: GuideRole;
 
   @IsOptional()
   @IsString()
@@ -64,8 +66,8 @@ export class UpdateGuideDto {
   certifications?: string[];
 
   @IsOptional()
-  @IsString()
-  status?: string;
+  @IsEnum(GuideStatus)
+  status?: GuideStatus;
 
   @IsOptional()
   @IsString()

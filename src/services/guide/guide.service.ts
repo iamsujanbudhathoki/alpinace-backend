@@ -1,6 +1,10 @@
 import { autoInjectable } from 'tsyringe';
 import { AppDataSource } from '../../config/database.config';
-import { Guide } from '../../entities/guide/Guide.entity';
+import {
+  Guide,
+  GuideRole,
+  GuideStatus,
+} from '../../entities/guide/Guide.entity';
 import { CreateGuideDto, UpdateGuideDto } from '../../schemas/guide.schema';
 import { AppError } from '../../utils/appError.util';
 
@@ -21,10 +25,10 @@ export class GuideService {
   async create(dto: CreateGuideDto): Promise<Guide> {
     const guide = this.repo.create({
       name: dto.name,
-      role: dto.role as any,
+      role: dto.role,
       summitStats: dto.summitStats || '',
       certifications: dto.certifications || [],
-      status: (dto.status || 'Available') as any,
+      status: dto.status || GuideStatus.AVAILABLE,
       phone: dto.phone,
       email: dto.email,
       currentAssignment: dto.currentAssignment || undefined,

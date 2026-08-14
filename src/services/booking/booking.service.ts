@@ -1,6 +1,11 @@
 import { autoInjectable } from 'tsyringe';
 import { AppDataSource } from '../../config/database.config';
-import { Booking } from '../../entities/booking/Booking.entity';
+import {
+  Booking,
+  BookingPaymentStatus,
+  BookingPermitStatus,
+  BookingStatus,
+} from '../../entities/booking/Booking.entity';
 import {
   CreateBookingDto,
   UpdateBookingDto,
@@ -36,12 +41,12 @@ export class BookingService {
       endDate: dto.endDate,
       groupSize: Number(dto.groupSize),
       totalAmountUSD: Number(dto.totalAmountUSD),
-      paymentStatus: dto.paymentStatus || 'Pending',
-      bookingStatus: dto.bookingStatus || 'In Review',
+      paymentStatus: dto.paymentStatus || BookingPaymentStatus.PENDING,
+      bookingStatus: dto.bookingStatus || BookingStatus.IN_REVIEW,
       assignedGuide: dto.assignedGuide || undefined,
-      permitStatus: dto.permitStatus || 'Processing',
+      permitStatus: dto.permitStatus || BookingPermitStatus.PROCESSING,
       specialRequests: dto.specialRequests || undefined,
-    });
+    } as Partial<Booking>);
 
     return this.repo.save(booking);
   }

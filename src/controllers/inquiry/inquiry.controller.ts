@@ -11,7 +11,7 @@ import {
   Tags,
 } from 'tsoa';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
-import { Inquiry } from '../../entities/inquiry/Inquiry.entity';
+import { Inquiry, InquiryStatus } from '../../entities/inquiry/Inquiry.entity';
 import { InquiryService } from '../../services/inquiry/inquiry.service';
 import {
   CreateInquiryDto,
@@ -60,10 +60,17 @@ export class InquiryController extends Controller {
   @Middlewares(RequestValidator.validate(SendQuoteDto))
   async sendQuote(
     @Path() id: string,
-    @Body() body: SendQuoteDto & { status?: string },
+    @Body() body: SendQuoteDto & { status?: InquiryStatus },
   ): Promise<ApiResponse<Inquiry>> {
-    const data = await this.inquiryService.sendQuote(id, { message: body.message, status: body.status });
-    return { data, message: 'Custom quote email dispatched successfully', success: true };
+    const data = await this.inquiryService.sendQuote(id, {
+      message: body.message,
+      status: body.status,
+    });
+    return {
+      data,
+      message: 'Custom quote email dispatched successfully',
+      success: true,
+    };
   }
 
   @Delete('{id}')

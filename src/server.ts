@@ -4,8 +4,8 @@ import { AppDataSource } from './config/database.config';
 import { DotenvConfig } from './config/env.config';
 import { configMiddleware } from './middlewares';
 import { PathUtils } from './utils/path.util';
-// import { RedisUtil } from './utils/redis.util';
 import { seedDatabase } from './seeder/seed';
+// import { RedisUtil } from './utils/redis.util';
 
 class Server {
   constructor() {
@@ -19,7 +19,7 @@ class Server {
       .then(async () => {
         console.log('Data Source has been initialized!');
         try {
-          // await seedDatabase();
+          await seedDatabase();
         } catch (seedErr) {
           console.warn(
             'Seeding skipped or encountered non-fatal error:',
@@ -36,7 +36,7 @@ class Server {
         //   console.warn('Redis initialization skipped:', redisErr);
         // }
 
-        const port = DotenvConfig.PORT || 5000;
+        const port = DotenvConfig.PORT;
         app.listen(port, () => {
           console.log(
             `Alpine Ace Backend TCP server established on port ${port}`,

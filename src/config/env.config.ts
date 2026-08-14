@@ -11,7 +11,7 @@ dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 
 class DotenvConfig {
   // APP
-  static PORT = process.env.PORT || 5000;
+  static PORT = process.env.PORT || 5001;
   static NODE_ENV = process.env.NODE_ENV;
 
   // DB
@@ -22,8 +22,10 @@ class DotenvConfig {
     process.env.DB_SSL === 'true' ||
     Boolean(
       (process.env.DATABASE_URL || 'supabase.co').includes('supabase.co') ||
-        (process.env.DATABASE_URL || 'pooler.supabase.com').includes('pooler.supabase.com') ||
-        (process.env.DATABASE_URL || '').includes('sslmode=require'),
+      (process.env.DATABASE_URL || 'pooler.supabase.com').includes(
+        'pooler.supabase.com',
+      ) ||
+      (process.env.DATABASE_URL || '').includes('sslmode=require'),
     );
 
   // JWT
@@ -45,7 +47,7 @@ class DotenvConfig {
   static PUBLIC_URL =
     process.env.PUBLIC_URL ||
     process.env.BASE_URL ||
-    `http://localhost:${process.env.PORT || 5000}`;
+    `http://localhost:${process.env.PORT || 5001}`;
 
   // MEDIA
   static MEDIA_TEMP_PATH = process.env.MEDIA_TEMP_PATH || 'temp';

@@ -20,7 +20,7 @@ COPY . .
 RUN pnpm run build
 
 # Expose the port your app runs on
-EXPOSE 5000
+EXPOSE 5001
 
 # Start the compiled application
 CMD ["pnpm", "start"]

@@ -2,8 +2,8 @@ import { Column, Entity } from 'typeorm';
 import { CommonEntity } from '../common/common.entity';
 
 export enum AssociateStatus {
-  ACTIVE = 'Active',
-  DRAFT = 'Draft',
+  ACTIVE = 'active',
+  DRAFT = 'draft',
 }
 
 @Entity('associates')

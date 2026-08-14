@@ -2,9 +2,9 @@ import { Column, Entity } from 'typeorm';
 import { CommonEntity } from '../common/common.entity';
 
 export enum BlogStatus {
-  PUBLISHED = 'Published',
-  DRAFT = 'Draft',
-  ARCHIVED = 'Archived',
+  PUBLISHED = 'published',
+  DRAFT = 'draft',
+  ARCHIVED = 'archived',
 }
 
 @Entity('blog_articles')

@@ -1,6 +1,33 @@
 import { Column, Entity } from 'typeorm';
 import { CommonEntity } from '../common/common.entity';
 
+export enum BookingPackageType {
+  TREKKING = 'trekking',
+  EXPEDITION = 'expedition',
+  TOUR = 'tour',
+}
+
+export enum BookingPaymentStatus {
+  PAID = 'paid',
+  DEPOSIT_PAID = 'deposit_paid',
+  PENDING = 'pending',
+  REFUNDED = 'refunded',
+}
+
+export enum BookingStatus {
+  CONFIRMED = 'confirmed',
+  IN_REVIEW = 'in_review',
+  ACTIVE_TREK = 'active_trek',
+  COMPLETED = 'completed',
+  CANCELLED = 'cancelled',
+}
+
+export enum BookingPermitStatus {
+  ISSUED = 'issued',
+  PROCESSING = 'processing',
+  PENDING_DOCUMENT = 'pending_document',
+}
+
 @Entity('bookings')
 export class Booking extends CommonEntity {
   @Column({ name: 'reference', unique: true })
@@ -21,8 +48,12 @@ export class Booking extends CommonEntity {
   @Column({ name: 'package_name' })
   packageName: string;
 
-  @Column({ name: 'package_type' })
-  packageType: 'Trekking' | 'Expedition' | 'Tour';
+  @Column({
+    name: 'package_type',
+    type: 'enum',
+    enum: BookingPackageType,
+  })
+  packageType: BookingPackageType;
 
   @Column({ name: 'start_date' })
   startDate: string;
@@ -41,18 +72,32 @@ export class Booking extends CommonEntity {
   })
   totalAmountUSD: number;
 
-  @Column({ name: 'payment_status', default: 'Pending' })
-  paymentStatus: 'Paid' | 'Deposit Paid' | 'Pending' | 'Refunded';
+  @Column({
+    name: 'payment_status',
+    type: 'enum',
+    enum: BookingPaymentStatus,
+    default: BookingPaymentStatus.PENDING,
+  })
+  paymentStatus: BookingPaymentStatus;
 
-  @Column({ name: 'booking_status', default: 'In Review' })
-  bookingStatus:
-    'Confirmed' | 'In Review' | 'Active Trek' | 'Completed' | 'Cancelled';
+  @Column({
+    name: 'booking_status',
+    type: 'enum',
+    enum: BookingStatus,
+    default: BookingStatus.IN_REVIEW,
+  })
+  bookingStatus: BookingStatus;
 
   @Column({ name: 'assigned_guide', nullable: true })
   assignedGuide: string;
 
-  @Column({ name: 'permit_status', default: 'Processing' })
-  permitStatus: 'Issued' | 'Processing' | 'Pending Document';
+  @Column({
+    name: 'permit_status',
+    type: 'enum',
+    enum: BookingPermitStatus,
+    default: BookingPermitStatus.PROCESSING,
+  })
+  permitStatus: BookingPermitStatus;
 
   @Column({ name: 'special_requests', type: 'text', nullable: true })
   specialRequests: string;

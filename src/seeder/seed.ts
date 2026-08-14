@@ -5,18 +5,30 @@ import {
   CategoryStatus,
   CategoryType,
 } from '../entities/category/Category.entity';
+import { Trek, TrekStatus } from '../entities/trek/Trek.entity';
+import { Tour, TourStatus, TourType } from '../entities/tour/Tour.entity';
 import {
-  Package,
-  PackageCategoryType,
-  PackageStatus,
-} from '../entities/package/Package.entity';
-import { Guide } from '../entities/guide/Guide.entity';
-import { Booking } from '../entities/booking/Booking.entity';
-import { Inquiry } from '../entities/inquiry/Inquiry.entity';
+  Expedition,
+  ExpeditionStatus,
+  ClimbingGrade,
+} from '../entities/expedition/Expedition.entity';
+import { TripDifficulty } from '../entities/common/difficulty.enum';
+import { Guide, GuideRole, GuideStatus } from '../entities/guide/Guide.entity';
+import {
+  Booking,
+  BookingPackageType,
+  BookingPaymentStatus,
+  BookingPermitStatus,
+  BookingStatus,
+} from '../entities/booking/Booking.entity';
+import { Inquiry, InquiryStatus } from '../entities/inquiry/Inquiry.entity';
 import { BlogArticle, BlogStatus } from '../entities/blog/BlogArticle.entity';
 import { Setting } from '../entities/setting/Setting.entity';
 import { Media } from '../entities/media/media.entity';
-import { Associate, AssociateStatus } from '../entities/associate/Associate.entity';
+import {
+  Associate,
+  AssociateStatus,
+} from '../entities/associate/Associate.entity';
 import { Faq, FaqStatus } from '../entities/faq/Faq.entity';
 import { MediaType } from '../constants/appConstant';
 
@@ -30,6 +42,7 @@ export const seedDatabase = async () => {
   const adminRepo = AppDataSource.getRepository(Admin);
   const existingAdmin = await adminRepo.findOne({
     where: { email: 'admin@alpineace.com' },
+    withDeleted: true,
   });
   if (!existingAdmin) {
     const admin = adminRepo.create({
@@ -117,27 +130,85 @@ export const seedDatabase = async () => {
 
   for (const cat of categoriesData) {
     const slug = cat.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-    const exists = await categoryRepo.findOne({ where: { slug } });
+    const exists = await categoryRepo.findOne({
+      where: { slug },
+      withDeleted: true,
+    });
     if (!exists) {
       await categoryRepo.save(categoryRepo.create({ ...cat, slug }));
     }
   }
   console.log('Seeded categories');
 
-  // 3. Seed Packages
-  const packageRepo = AppDataSource.getRepository(Package);
-  const packagesData = [
+  // 3. Seed Treks
+  const trekRepo = AppDataSource.getRepository(Trek);
+  const defaultTrekFaqs = [
+    {
+      question: 'How do you manage high-altitude medical safety and AMS?',
+      answer:
+        'Every trek is led by certified IFMGA Sherpa leaders equipped with pulse oximeters, specialized high-altitude medical kits, portable supplemental oxygen, and 24/7 standby emergency helicopter evacuation coverage.',
+    },
+    {
+      question: 'What is the standard of your luxury mountain lodges?',
+      answer:
+        'We partner exclusively with premium boutique lodges (such as Yeti Mountain Home and Ker & Downey) featuring private attached heated bathrooms, electric mattress warmers, hot showers, and chef-curated organic dining.',
+    },
+    {
+      question:
+        'Can I customize the departure dates or request private helicopter transfers?',
+      answer:
+        'Yes! Our adventure directors create bespoke departures tailored to your timeframe, private helicopter transfers, and personalized dietary requirements.',
+    },
+    {
+      question: 'What luggage weight limit applies for domestic flights?',
+      answer:
+        'Domestic flights allow 15kg total per passenger (10kg duffle bag + 5kg daypack). Any extra city luggage can be safely stored free of charge at our Kathmandu luxury hotel partner.',
+    },
+  ];
+
+  const defaultTrekReviews = [
+    {
+      author: 'Jonathan Vance',
+      country: 'United States',
+      date: 'May 2026',
+      rating: 5,
+      avatar:
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+      content:
+        'The 1:1 Sherpa guide ratio and basecamp luxury made our journey unforgettable. Heated blankets and pulse-oximeter monitoring every evening set the gold standard in high-altitude mountaineering.',
+    },
+    {
+      author: 'Elena Rostova',
+      country: 'Germany',
+      date: 'April 2026',
+      rating: 5,
+      avatar:
+        'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
+      content:
+        'Heated mattresses and organic fine dining at 4,000 meters! The Sherpa team looked after our safety with pulse oximeters every evening.',
+    },
+    {
+      author: 'Jean-Pierre Dubois',
+      country: 'France',
+      date: 'March 2026',
+      rating: 5,
+      avatar:
+        'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
+      content:
+        'Bespoke planning from start to finish. Our private helicopter transfer from the high pass back to Kathmandu was breathtaking. Alpine Ace is truly in a league of its own.',
+    },
+  ];
+
+  const treksData = [
     {
       title: 'Everest Base Camp & Gokyo Lakes Luxury Trek',
       slug: 'everest-base-camp-gokyo',
-      categoryType: 'Trekking' as const,
-      category: 'Trekking',
       region: 'Everest',
       durationDays: 16,
       maxAltitudeMeters: 5545,
-      difficulty: 'Challenging',
+      difficulty: TripDifficulty.CHALLENGING,
       priceUSD: 3200,
-      status: 'Featured' as const,
+      status: TrekStatus.FEATURED,
       totalBookings: 142,
       rating: 4.95,
       reviewsCount: 48,
@@ -147,18 +218,18 @@ export const seedDatabase = async () => {
         'Experience the ultimate trek to the base of Mt. Everest, staying in handpicked premium luxury lodges with Sherpa legends.',
       bestSeason: 'March - May & September - November',
       permitsRequired: ['Sagarmatha NP Permit', 'Khumbu Pasang Lhamu Entry'],
+      faqs: defaultTrekFaqs,
+      reviews: defaultTrekReviews,
     },
     {
       title: 'Everest Base Camp Luxury Lodge Trek',
       slug: 'everest-base-camp-luxury-lodge',
-      categoryType: 'Trekking' as const,
-      category: 'Trekking',
       region: 'Everest',
       durationDays: 14,
       maxAltitudeMeters: 5545,
-      difficulty: 'Challenging',
+      difficulty: TripDifficulty.CHALLENGING,
       priceUSD: 2450,
-      status: 'Featured' as const,
+      status: TrekStatus.FEATURED,
       totalBookings: 98,
       rating: 4.9,
       reviewsCount: 48,
@@ -168,18 +239,326 @@ export const seedDatabase = async () => {
         "Experience the ultimate trek to the base of the world's highest peak, staying in handpicked premium luxury lodges with Sherpa legends.",
       bestSeason: 'March - May & September - November',
       permitsRequired: ['Sagarmatha NP Permit', 'Khumbu Pasang Lhamu Entry'],
+      faqs: defaultTrekFaqs,
+      reviews: defaultTrekReviews,
     },
+    {
+      title: 'Annapurna Circuit & Tilicho Lake High Pass',
+      slug: 'annapurna-circuit-tilicho',
+      region: 'Annapurna',
+      durationDays: 15,
+      maxAltitudeMeters: 5416,
+      difficulty: TripDifficulty.CHALLENGING,
+      priceUSD: 1650,
+      status: TrekStatus.ACTIVE,
+      totalBookings: 215,
+      rating: 4.88,
+      reviewsCount: 35,
+      image:
+        'https://images.unsplash.com/photo-1585409677983-0f6c41ca913b?auto=format&fit=crop&w=1200&q=80',
+      shortDesc:
+        'Witness the complete diversity of the Himalayas, from lush tropical valleys and pine-covered ridges to Thorong La pass.',
+      bestSeason: 'March - May & September - November',
+      permitsRequired: ['ACAP Permit', 'TIMS Card'],
+      faqs: defaultTrekFaqs,
+      reviews: defaultTrekReviews,
+    },
+    {
+      title: 'Annapurna Panoramic Luxury Circuit',
+      slug: 'annapurna-panoramic-luxury-circuit',
+      region: 'Annapurna',
+      durationDays: 10,
+      maxAltitudeMeters: 3800,
+      difficulty: TripDifficulty.MODERATE,
+      priceUSD: 1850,
+      status: TrekStatus.ACTIVE,
+      totalBookings: 112,
+      rating: 4.85,
+      reviewsCount: 31,
+      image:
+        'https://images.unsplash.com/photo-1585409677983-0f6c41ca913b?auto=format&fit=crop&w=1200&q=80',
+      shortDesc:
+        'Immerse in breathtaking panoramic views of the Annapurna Massif with private lodge accommodation, gourmet dining, and helicopter return.',
+      bestSeason: 'September - May',
+      permitsRequired: ['ACAP Permit', 'TIMS Card'],
+      faqs: defaultTrekFaqs,
+      reviews: defaultTrekReviews,
+    },
+    {
+      title: 'Manaslu Circuit Wilderness Expedition',
+      slug: 'manaslu-circuit-wilderness',
+      region: 'Manaslu',
+      durationDays: 14,
+      maxAltitudeMeters: 5106,
+      difficulty: TripDifficulty.CHALLENGING,
+      priceUSD: 2100,
+      status: TrekStatus.ACTIVE,
+      totalBookings: 78,
+      rating: 4.92,
+      reviewsCount: 24,
+      image:
+        'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80',
+      shortDesc:
+        'Circle the world’s eighth-highest peak through untouched Tibetan-influenced villages and Larkya La pass.',
+      bestSeason: 'March - May & September - November',
+      permitsRequired: [
+        'Manaslu Restricted Area Permit',
+        'MCAP Permit',
+        'ACAP Permit',
+      ],
+      faqs: defaultTrekFaqs,
+      reviews: defaultTrekReviews,
+    },
+    {
+      title: 'Langtang Valley & Gosaikunda Sacred Lakes Trek',
+      slug: 'langtang-gosaikunda-lakes',
+      region: 'Langtang',
+      durationDays: 12,
+      maxAltitudeMeters: 4610,
+      difficulty: TripDifficulty.MODERATE,
+      priceUSD: 1450,
+      status: TrekStatus.ACTIVE,
+      totalBookings: 67,
+      rating: 4.9,
+      reviewsCount: 29,
+      image:
+        'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80',
+      shortDesc:
+        'Trek through pristine rhododendron forests, Tamang mountain villages, and glacier-fed alpine lakes near Kathmandu.',
+      bestSeason: 'March - May & September - December',
+      permitsRequired: ['Langtang NP Permit', 'TIMS Card'],
+      faqs: defaultTrekFaqs,
+      reviews: defaultTrekReviews,
+    },
+  ];
+
+  for (const t of treksData) {
+    const exists = await trekRepo.findOne({
+      where: { slug: t.slug },
+      withDeleted: true,
+    });
+    if (!exists) {
+      await trekRepo.save(trekRepo.create(t));
+    } else {
+      exists.faqs = t.faqs;
+      exists.reviews = t.reviews;
+      await trekRepo.save(exists);
+    }
+  }
+  console.log('Seeded treks');
+
+  // 4. Seed Tours
+  const tourRepo = AppDataSource.getRepository(Tour);
+  const defaultTourFaqs = [
+    {
+      question:
+        'What level of physical fitness is needed for cultural & wildlife tours?',
+      answer:
+        'Our tours are designed for all ages and require gentle walking along heritage sites, gardens, and safari jeep tracks. Private air-conditioned luxury transport is provided throughout.',
+    },
+    {
+      question: 'Are heritage monument entry tickets and permits included?',
+      answer:
+        'Yes, all monument passes, museum fees, national park entries, and government taxes are 100% included in the tour package.',
+    },
+    {
+      question:
+        'Can dietary preferences be accommodated in hotels and restaurants?',
+      answer:
+        'Absolutely. Our team coordinates with boutique luxury hotels and fine dining partners to cater to vegetarian, vegan, gluten-free, and kosher requirements.',
+    },
+  ];
+
+  const defaultTourReviews = [
+    {
+      author: 'David & Sarah Miller',
+      country: 'United Kingdom',
+      date: 'April 2026',
+      rating: 5,
+      avatar:
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+      content:
+        'Our private historian in Kathmandu and the sunrise boat cruise in Pokhara were breathtaking. Impeccable luxury hospitality throughout.',
+    },
+    {
+      author: 'Aiko Tanaka',
+      country: 'Japan',
+      date: 'March 2026',
+      rating: 5,
+      avatar:
+        'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
+      content:
+        'Seeing rhinos and royal Bengal tigers up close in Chitwan while staying in a five-star jungle lodge was the trip of a lifetime.',
+    },
+  ];
+
+  const toursData = [
+    {
+      title: 'Kathmandu Valley Royal Heritage & Durbar Squares Tour',
+      slug: 'kathmandu-valley-royal-heritage',
+      tourType: TourType.CULTURAL_HERITAGE,
+      transportation: 'Private Luxury AC Vehicle',
+      region: 'Kathmandu & Pokhara',
+      durationDays: 5,
+      maxAltitudeMeters: 1400,
+      difficulty: TripDifficulty.EASY,
+      priceUSD: 1650,
+      status: TourStatus.FEATURED,
+      totalBookings: 41,
+      rating: 4.9,
+      reviewsCount: 41,
+      image:
+        'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1200&q=80',
+      shortDesc:
+        'Explore medieval durbar squares, ancient pagoda palaces, and sacred stupas with private historians.',
+      bestSeason: 'Year-round, best October - April',
+      permitsRequired: ['Monuments Entrance Fees'],
+      faqs: defaultTourFaqs,
+      reviews: defaultTourReviews,
+    },
+    {
+      title: 'Pokhara Lakeside Wellness & Serenity Retreat',
+      slug: 'pokhara-lakeside-wellness-retreat',
+      tourType: TourType.LUXURY_WELLNESS,
+      transportation: 'Private AC Van & Boat',
+      region: 'Kathmandu & Pokhara',
+      durationDays: 4,
+      maxAltitudeMeters: 1400,
+      difficulty: TripDifficulty.EASY,
+      priceUSD: 1280,
+      status: TourStatus.ACTIVE,
+      totalBookings: 33,
+      rating: 4.8,
+      reviewsCount: 33,
+      image:
+        'https://images.unsplash.com/photo-1544644181-1484b3fdfc32?auto=format&fit=crop&w=1200&q=80',
+      shortDesc:
+        'Unwind beside Phewa Lake with private sunrise cruises, mountain-view yoga sessions, and full spa treatments framed by the Annapurna range.',
+      bestSeason: 'September - May',
+      permitsRequired: ['Sarangkot Entry'],
+      faqs: defaultTourFaqs,
+      reviews: defaultTourReviews,
+    },
+    {
+      title: 'Chitwan Luxury Wildlife Safari',
+      slug: 'chitwan-luxury-wildlife-safari',
+      tourType: TourType.WILDLIFE_SAFARI,
+      transportation: '4x4 Open Safari Jeep',
+      region: 'Kathmandu & Pokhara',
+      durationDays: 3,
+      maxAltitudeMeters: 410,
+      difficulty: TripDifficulty.EASY,
+      priceUSD: 1450,
+      status: TourStatus.ACTIVE,
+      totalBookings: 27,
+      rating: 4.9,
+      reviewsCount: 27,
+      image:
+        'https://images.unsplash.com/photo-1580137189272-c9379f8864fd?auto=format&fit=crop&w=1200&q=80',
+      shortDesc:
+        'Track one-horned rhinos and Bengal tigers across Chitwan National Park, staying in luxury jungle resort.',
+      bestSeason: 'October - March',
+      permitsRequired: ['Chitwan NP Entry'],
+      faqs: defaultTourFaqs,
+      reviews: defaultTourReviews,
+    },
+    {
+      title: 'Everest Scenic Mountain Flight & Sherpa Village Day Tour',
+      slug: 'everest-scenic-flight-sherpa-village',
+      tourType: TourType.HELICOPTER_TOUR,
+      transportation: 'Airbus H125 Helicopter',
+      region: 'Everest',
+      durationDays: 1,
+      maxAltitudeMeters: 2800,
+      difficulty: TripDifficulty.EASY,
+      priceUSD: 650,
+      status: TourStatus.FEATURED,
+      totalBookings: 19,
+      rating: 5.0,
+      reviewsCount: 19,
+      image:
+        'https://images.unsplash.com/photo-1516481400365-878b508f2fea?auto=format&fit=crop&w=1200&q=80',
+      shortDesc:
+        "Fly within view of Mt. Everest's summit at dawn, then land in the Khumbu foothills for a guided day in a traditional Sherpa village.",
+      bestSeason: 'March - May & September - November',
+      permitsRequired: ['Helicopter Charter Permit'],
+      faqs: defaultTourFaqs,
+      reviews: defaultTourReviews,
+    },
+  ];
+
+  for (const tr of toursData) {
+    const exists = await tourRepo.findOne({
+      where: { slug: tr.slug },
+      withDeleted: true,
+    });
+    if (!exists) {
+      await tourRepo.save(tourRepo.create(tr));
+    } else {
+      exists.faqs = tr.faqs;
+      exists.reviews = tr.reviews;
+      await tourRepo.save(exists);
+    }
+  }
+  console.log('Seeded tours');
+
+  // 5. Seed Expeditions
+  const expeditionRepo = AppDataSource.getRepository(Expedition);
+  const defaultExpeditionFaqs = [
+    {
+      question: 'What previous mountaineering experience is required?',
+      answer:
+        'For 6,000m peaks (Island Peak, Mera Peak), basic crampon and ice axe familiarity or completing our pre-summit clinic is sufficient. For Ama Dablam and Everest, prior high-altitude ascents (6,000m+) and fixed-rope technical proficiency are mandatory.',
+    },
+    {
+      question: 'What is the guide ratio during the summit push?',
+      answer:
+        'We provide a strict 1:1 ratio with multi-summit certified IFMGA Sherpa leaders. Your dedicated Sherpa carries backup supplemental oxygen and manages rope fixing.',
+    },
+    {
+      question: 'What medical oxygen systems are provided?',
+      answer:
+        'We utilize TopOut / Summit Oxygen mask systems with Russian Poisk cylinders, tested pulse oximeters, and high-altitude hyperbaric Gamow bags at basecamp.',
+    },
+  ];
+
+  const defaultExpeditionReviews = [
+    {
+      author: 'Marcus Lindqvist',
+      country: 'Sweden',
+      date: 'May 2026',
+      rating: 5,
+      avatar:
+        'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
+      content:
+        'Summited Ama Dablam with Mingma Sherpa. Flawless rope work, heated basecamp dome tents, and gourmet chef nutrition made the hardest climb of my life safe and successful.',
+    },
+    {
+      author: 'Sophia Zhang',
+      country: 'Singapore',
+      date: 'April 2026',
+      rating: 5,
+      avatar:
+        'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
+      content:
+        'The Island Peak ascent was breathtaking. The 1:1 Sherpa support gave me total confidence on the headwall and summit ridge.',
+    },
+  ];
+
+  const expeditionsData = [
     {
       title: 'Ama Dablam Technical Expedition (6,812m)',
       slug: 'ama-dablam-expedition',
-      categoryType: 'Expedition' as const,
-      category: 'Expedition',
       region: 'Everest',
       durationDays: 28,
+      peakHeightM: 6812,
       maxAltitudeMeters: 6812,
-      difficulty: 'Extreme',
+      climbingGrade: ClimbingGrade.EXTREME_TECHNICAL_GRADE,
+      difficulty: TripDifficulty.EXTREME,
+      sherpaGuideRatio: '1:1 IFMGA Sherpa Ratio',
+      oxygenRequired: true,
       priceUSD: 9800,
-      status: 'Active' as const,
+      status: ExpeditionStatus.ACTIVE,
       totalBookings: 38,
       rating: 5.0,
       reviewsCount: 22,
@@ -193,215 +572,22 @@ export const seedDatabase = async () => {
         'Sagarmatha NP Permit',
         'Garbage Deposit',
       ],
-    },
-    {
-      title: 'Annapurna Circuit & Tilicho Lake High Pass',
-      slug: 'annapurna-circuit-tilicho',
-      categoryType: 'Trekking' as const,
-      category: 'Trekking',
-      region: 'Annapurna',
-      durationDays: 15,
-      maxAltitudeMeters: 5416,
-      difficulty: 'Challenging',
-      priceUSD: 1650,
-      status: 'Active' as const,
-      totalBookings: 215,
-      rating: 4.88,
-      reviewsCount: 35,
-      image:
-        'https://images.unsplash.com/photo-1585409677983-0f6c41ca913b?auto=format&fit=crop&w=1200&q=80',
-      shortDesc:
-        'Witness the complete diversity of the Himalayas, from lush tropical valleys and pine-covered ridges to Thorong La pass.',
-      bestSeason: 'March - May & September - November',
-      permitsRequired: ['ACAP Permit', 'TIMS Card'],
-    },
-    {
-      title: 'Annapurna Panoramic Luxury Circuit',
-      slug: 'annapurna-panoramic-luxury-circuit',
-      categoryType: 'Trekking' as const,
-      category: 'Trekking',
-      region: 'Annapurna',
-      durationDays: 10,
-      maxAltitudeMeters: 5416,
-      difficulty: 'Moderate',
-      priceUSD: 1980,
-      status: 'Active' as const,
-      totalBookings: 84,
-      rating: 4.8,
-      reviewsCount: 35,
-      image:
-        'https://images.unsplash.com/photo-1585409677983-0f6c41ca913b?auto=format&fit=crop&w=1200&q=80',
-      shortDesc:
-        'Witness the complete diversity of the Himalayas, from lush tropical valleys and pine-covered ridges to the high alpine desert of Manang.',
-      bestSeason: 'March - May & September - November',
-      permitsRequired: ['ACAP Permit', 'TIMS Card'],
-    },
-    {
-      title: 'Manaslu Circuit Restricted Area Trek',
-      slug: 'manaslu-circuit',
-      categoryType: 'Trekking' as const,
-      category: 'Trekking',
-      region: 'Manaslu',
-      durationDays: 16,
-      maxAltitudeMeters: 5160,
-      difficulty: 'Challenging',
-      priceUSD: 2100,
-      status: 'Featured' as const,
-      totalBookings: 89,
-      rating: 4.92,
-      reviewsCount: 22,
-      image:
-        'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80',
-      shortDesc:
-        'Circumnavigate Mt. Manaslu (8,163m) across Larkya La Pass (5,106m) in an unspoiled restricted borderland.',
-      bestSeason: 'March - May & September - November',
-      permitsRequired: [
-        'Manaslu Restricted Permit',
-        'MCAP Permit',
-        'ACAP Permit',
-      ],
-    },
-    {
-      title: 'Manaslu Circuit Restricted Wilderness Trek',
-      slug: 'manaslu-circuit-wilderness',
-      categoryType: 'Trekking' as const,
-      category: 'Trekking',
-      region: 'Manaslu',
-      durationDays: 16,
-      maxAltitudeMeters: 5160,
-      difficulty: 'Challenging',
-      priceUSD: 2850,
-      status: 'Featured' as const,
-      totalBookings: 45,
-      rating: 5.0,
-      reviewsCount: 22,
-      image:
-        'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80',
-      shortDesc:
-        'Circumnavigate Mt. Manaslu (8,163m) across Larkya La Pass (5,106m) in an unspoiled restricted borderland.',
-      bestSeason: 'March - May & September - November',
-      permitsRequired: [
-        'Manaslu Restricted Permit',
-        'MCAP Permit',
-        'ACAP Permit',
-      ],
-    },
-    {
-      title: 'Langtang Valley & Sacred Gosaikunda Lakes',
-      slug: 'langtang-valley-sacred-gosaikunda',
-      categoryType: 'Trekking' as const,
-      category: 'Trekking',
-      region: 'Langtang',
-      durationDays: 8,
-      maxAltitudeMeters: 4380,
-      difficulty: 'Moderate',
-      priceUSD: 1450,
-      status: 'Active' as const,
-      totalBookings: 67,
-      rating: 4.9,
-      reviewsCount: 29,
-      image:
-        'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80',
-      shortDesc:
-        'Trek through pristine rhododendron forests, Tamang mountain villages, and glacier-fed alpine lakes near Kathmandu.',
-      bestSeason: 'March - May & September - December',
-      permitsRequired: ['Langtang NP Permit', 'TIMS Card'],
-    },
-    {
-      title: 'Kathmandu Valley Royal Heritage & Durbar Squares Tour',
-      slug: 'kathmandu-valley-royal-heritage',
-      categoryType: 'Tour' as const,
-      category: 'Tour',
-      region: 'Kathmandu & Pokhara',
-      durationDays: 5,
-      maxAltitudeMeters: 1400,
-      difficulty: 'Easy',
-      priceUSD: 1650,
-      status: 'Featured' as const,
-      totalBookings: 41,
-      rating: 4.9,
-      reviewsCount: 41,
-      image:
-        'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1200&q=80',
-      shortDesc:
-        'Explore medieval durbar squares, ancient pagoda palaces, and sacred stupas with private historians.',
-      bestSeason: 'Year-round, best October - April',
-      permitsRequired: ['Monuments Entrance Fees'],
-    },
-    {
-      title: 'Pokhara Lakeside Wellness & Serenity Retreat',
-      slug: 'pokhara-lakeside-wellness-retreat',
-      categoryType: 'Tour' as const,
-      category: 'Tour',
-      region: 'Kathmandu & Pokhara',
-      durationDays: 4,
-      maxAltitudeMeters: 1400,
-      difficulty: 'Easy',
-      priceUSD: 1280,
-      status: 'Active' as const,
-      totalBookings: 33,
-      rating: 4.8,
-      reviewsCount: 33,
-      image:
-        'https://images.unsplash.com/photo-1544644181-1484b3fdfc32?auto=format&fit=crop&w=1200&q=80',
-      shortDesc:
-        'Unwind beside Phewa Lake with private sunrise cruises, mountain-view yoga sessions, and full spa treatments framed by the Annapurna range.',
-      bestSeason: 'September - May',
-      permitsRequired: ['Sarangkot Entry'],
-    },
-    {
-      title: 'Chitwan Luxury Wildlife Safari',
-      slug: 'chitwan-luxury-wildlife-safari',
-      categoryType: 'Tour' as const,
-      category: 'Tour',
-      region: 'Kathmandu & Pokhara',
-      durationDays: 3,
-      maxAltitudeMeters: 410,
-      difficulty: 'Easy',
-      priceUSD: 1450,
-      status: 'Active' as const,
-      totalBookings: 27,
-      rating: 4.9,
-      reviewsCount: 27,
-      image:
-        'https://images.unsplash.com/photo-1580137189272-c9379f8864fd?auto=format&fit=crop&w=1200&q=80',
-      shortDesc:
-        'Track one-horned rhinos and Bengal tigers across Chitwan National Park, staying in luxury jungle resort.',
-      bestSeason: 'October - March',
-      permitsRequired: ['Chitwan NP Entry'],
-    },
-    {
-      title: 'Everest Scenic Mountain Flight & Sherpa Village Day Tour',
-      slug: 'everest-scenic-flight-sherpa-village',
-      categoryType: 'Tour' as const,
-      category: 'Tour',
-      region: 'Everest',
-      durationDays: 1,
-      maxAltitudeMeters: 2800,
-      difficulty: 'Easy',
-      priceUSD: 650,
-      status: 'Featured' as const,
-      totalBookings: 19,
-      rating: 5.0,
-      reviewsCount: 19,
-      image:
-        'https://images.unsplash.com/photo-1516481400365-878b508f2fea?auto=format&fit=crop&w=1200&q=80',
-      shortDesc:
-        "Fly within view of Mt. Everest's summit at dawn, then land in the Khumbu foothills for a guided day in a traditional Sherpa village.",
-      bestSeason: 'March - May & September - November',
-      permitsRequired: ['Helicopter Charter Permit'],
+      faqs: defaultExpeditionFaqs,
+      reviews: defaultExpeditionReviews,
     },
     {
       title: 'Island Peak (Imja Tse) Climbing Expedition',
       slug: 'island-peak-imja-tse-expedition',
-      categoryType: 'Expedition' as const,
-      category: 'Expedition',
       region: 'Everest',
       durationDays: 18,
+      peakHeightM: 6189,
       maxAltitudeMeters: 6189,
-      difficulty: 'Challenging',
+      climbingGrade: ClimbingGrade.NON_TECHNICAL_TREKKING_PEAK,
+      difficulty: TripDifficulty.CHALLENGING,
+      sherpaGuideRatio: '1:2 Sherpa Ratio',
+      oxygenRequired: false,
       priceUSD: 3450,
-      status: 'Featured' as const,
+      status: ExpeditionStatus.FEATURED,
       totalBookings: 37,
       rating: 4.8,
       reviewsCount: 37,
@@ -415,18 +601,22 @@ export const seedDatabase = async () => {
         'Island Peak Climbing Permit',
         'Khumbu Pasang Lhamu Entry',
       ],
+      faqs: defaultExpeditionFaqs,
+      reviews: defaultExpeditionReviews,
     },
     {
       title: 'Mount Everest Summit Expedition (8,849m)',
       slug: 'everest-summit-expedition',
-      categoryType: 'Expedition' as const,
-      category: 'Expedition',
       region: 'Everest',
       durationDays: 63,
+      peakHeightM: 8849,
       maxAltitudeMeters: 8849,
-      difficulty: 'Extreme',
+      climbingGrade: ClimbingGrade.EXTREME_TECHNICAL_GRADE,
+      difficulty: TripDifficulty.EXTREME,
+      sherpaGuideRatio: '1:1 Elite Summit Sherpa',
+      oxygenRequired: true,
       priceUSD: 48500,
-      status: 'Featured' as const,
+      status: ExpeditionStatus.FEATURED,
       totalBookings: 11,
       rating: 5.0,
       reviewsCount: 11,
@@ -440,18 +630,22 @@ export const seedDatabase = async () => {
         'Sagarmatha NP Permit',
         'Khumbu Icefall Route Fee',
       ],
+      faqs: defaultExpeditionFaqs,
+      reviews: defaultExpeditionReviews,
     },
     {
       title: 'Mera Peak Climbing (6,476m)',
       slug: 'mera-peak-climbing',
-      categoryType: 'Expedition' as const,
-      category: 'Expedition',
       region: 'Everest',
       durationDays: 19,
+      peakHeightM: 6476,
       maxAltitudeMeters: 6476,
-      difficulty: 'Extreme',
+      climbingGrade: ClimbingGrade.EXTREME_TECHNICAL_GRADE,
+      difficulty: TripDifficulty.EXTREME,
+      sherpaGuideRatio: '1:2 Sherpa Ratio',
+      oxygenRequired: false,
       priceUSD: 3600,
-      status: 'Active' as const,
+      status: ExpeditionStatus.ACTIVE,
       totalBookings: 29,
       rating: 4.85,
       reviewsCount: 29,
@@ -461,30 +655,39 @@ export const seedDatabase = async () => {
         "Trek through remote Hinku valley and climb Nepal's highest trekking peak for panoramic views of five 8,000m summits.",
       bestSeason: 'March - May & September - November',
       permitsRequired: ['NMA Mera Peak Permit', 'Makalu Barun NP Permit'],
+      faqs: defaultExpeditionFaqs,
+      reviews: defaultExpeditionReviews,
     },
   ];
 
-  for (const pkg of packagesData) {
-    const exists = await packageRepo.findOne({ where: { slug: pkg.slug } });
+  for (const exp of expeditionsData) {
+    const exists = await expeditionRepo.findOne({
+      where: { slug: exp.slug },
+      withDeleted: true,
+    });
     if (!exists) {
-      await packageRepo.save(packageRepo.create(pkg as any));
+      await expeditionRepo.save(expeditionRepo.create(exp));
+    } else {
+      exists.faqs = exp.faqs;
+      exists.reviews = exp.reviews;
+      await expeditionRepo.save(exists);
     }
   }
-  console.log('Seeded packages');
+  console.log('Seeded expeditions');
 
-  // 4. Seed Guides
+  // 6. Seed Guides
   const guideRepo = AppDataSource.getRepository(Guide);
   const guidesData = [
     {
       name: 'Lakpa Tenzing Sherpa',
-      role: 'Lead Expedition Leader' as const,
+      role: GuideRole.LEAD_EXPEDITION_LEADER,
       summitStats: '12x Everest, 4x K2, 6x Lhotse',
       certifications: [
         'IFMGA Mountain Guide',
         'NMA Master Instructor',
         'Wilderness First Responder',
       ],
-      status: 'On Mountain' as const,
+      status: GuideStatus.ON_MOUNTAIN,
       phone: '+977 9841-234567',
       email: 'lakpa.sherpa@alpineace.com',
       currentAssignment: 'Everest Base Camp Luxury Trek (ACE-2026-0891)',
@@ -493,10 +696,10 @@ export const seedDatabase = async () => {
     },
     {
       name: 'Mingma Norbu Sherpa',
-      role: 'Lead Expedition Leader' as const,
+      role: GuideRole.LEAD_EXPEDITION_LEADER,
       summitStats: '8x Everest, 9x Ama Dablam',
       certifications: ['IFMGA Mountain Guide', 'NMA Advanced Mountaineer'],
-      status: 'Available' as const,
+      status: GuideStatus.AVAILABLE,
       phone: '+977 9851-876543',
       email: 'mingma.norbu@alpineace.com',
       avatarUrl:
@@ -504,13 +707,13 @@ export const seedDatabase = async () => {
     },
     {
       name: 'Pemba Gelje Sherpa',
-      role: 'Senior Trekking Guide' as const,
+      role: GuideRole.SENIOR_TREKKING_GUIDE,
       summitStats: '3x Island Peak, 4x Mera Peak',
       certifications: [
         'NMA Certified Trekking Guide',
         'Emergency Alpine First Aid',
       ],
-      status: 'Available' as const,
+      status: GuideStatus.AVAILABLE,
       phone: '+977 9803-345678',
       email: 'pemba.g@alpineace.com',
       avatarUrl:
@@ -518,10 +721,10 @@ export const seedDatabase = async () => {
     },
     {
       name: 'Rohan Tamang',
-      role: 'Cultural Tour Guide' as const,
+      role: GuideRole.CULTURAL_TOUR_GUIDE,
       summitStats: 'Cultural Specialist (10+ Yrs)',
       certifications: ['Nepal Tourism Board License', 'Heritage Historian'],
-      status: 'On Mountain' as const,
+      status: GuideStatus.ON_MOUNTAIN,
       phone: '+977 9818-567890',
       email: 'rohan.tamang@alpineace.com',
       currentAssignment: 'Kathmandu & Chitwan Safari (ACE-2026-0894)',
@@ -530,10 +733,10 @@ export const seedDatabase = async () => {
     },
     {
       name: 'Pasang Dawa Sherpa',
-      role: 'High Altitude Sherpa' as const,
+      role: GuideRole.HIGH_ALTITUDE_SHERPA,
       summitStats: '5x Everest, 3x Cho Oyu',
       certifications: ['NMA Climbing Guide', 'Alpine Rescue'],
-      status: 'Available' as const,
+      status: GuideStatus.AVAILABLE,
       phone: '+977 9849-112233',
       email: 'pasang.dawa@alpineace.com',
       avatarUrl:
@@ -542,14 +745,17 @@ export const seedDatabase = async () => {
   ];
 
   for (const g of guidesData) {
-    const exists = await guideRepo.findOne({ where: { email: g.email } });
+    const exists = await guideRepo.findOne({
+      where: { email: g.email },
+      withDeleted: true,
+    });
     if (!exists) {
       await guideRepo.save(guideRepo.create(g));
     }
   }
   console.log('Seeded guides');
 
-  // 5. Seed Bookings
+  // 7. Seed Bookings
   const bookingRepo = AppDataSource.getRepository(Booking);
   const bookingsData = [
     {
@@ -559,15 +765,15 @@ export const seedDatabase = async () => {
       guestPhone: '+1 (555) 234-5678',
       country: 'United States',
       packageName: 'Everest Base Camp Luxury Helicopter Trek',
-      packageType: 'Trekking' as const,
+      packageType: BookingPackageType.TREKKING,
       startDate: '2026-09-10',
       endDate: '2026-09-24',
       groupSize: 2,
       totalAmountUSD: 7600,
-      paymentStatus: 'Deposit Paid' as const,
-      bookingStatus: 'Confirmed' as const,
+      paymentStatus: BookingPaymentStatus.DEPOSIT_PAID,
+      bookingStatus: BookingStatus.CONFIRMED,
       assignedGuide: 'Lakpa Tenzing Sherpa',
-      permitStatus: 'Issued' as const,
+      permitStatus: BookingPermitStatus.ISSUED,
       specialRequests:
         'Requires gluten-free meals & single room supplement in Namche.',
     },
@@ -578,15 +784,15 @@ export const seedDatabase = async () => {
       guestPhone: '+49 170 8923145',
       country: 'Germany',
       packageName: 'Ama Dablam (6,812m) Autumn Expedition',
-      packageType: 'Expedition' as const,
+      packageType: BookingPackageType.EXPEDITION,
       startDate: '2026-10-01',
       endDate: '2026-10-28',
       groupSize: 1,
       totalAmountUSD: 9800,
-      paymentStatus: 'Paid' as const,
-      bookingStatus: 'Confirmed' as const,
+      paymentStatus: BookingPaymentStatus.PAID,
+      bookingStatus: BookingStatus.CONFIRMED,
       assignedGuide: 'Mingma Norbu Sherpa',
-      permitStatus: 'Issued' as const,
+      permitStatus: BookingPermitStatus.ISSUED,
       specialRequests: 'Personal oxygen setup request verified.',
     },
     {
@@ -596,15 +802,15 @@ export const seedDatabase = async () => {
       guestPhone: '+33 6 12 34 56 78',
       country: 'France',
       packageName: 'Annapurna Circuit High Passes',
-      packageType: 'Trekking' as const,
+      packageType: BookingPackageType.TREKKING,
       startDate: '2026-09-18',
       endDate: '2026-10-04',
       groupSize: 4,
       totalAmountUSD: 6400,
-      paymentStatus: 'Pending' as const,
-      bookingStatus: 'In Review' as const,
+      paymentStatus: BookingPaymentStatus.PENDING,
+      bookingStatus: BookingStatus.IN_REVIEW,
       assignedGuide: 'Pemba Gelje Sherpa',
-      permitStatus: 'Processing' as const,
+      permitStatus: BookingPermitStatus.PROCESSING,
     },
     {
       reference: 'ACE-2026-0894',
@@ -613,15 +819,15 @@ export const seedDatabase = async () => {
       guestPhone: '+44 7700 900077',
       country: 'United Kingdom',
       packageName: 'Kathmandu Valley & Chitwan Cultural Safari',
-      packageType: 'Tour' as const,
+      packageType: BookingPackageType.TOUR,
       startDate: '2026-08-15',
       endDate: '2026-08-25',
       groupSize: 6,
       totalAmountUSD: 7200,
-      paymentStatus: 'Paid' as const,
-      bookingStatus: 'Active Trek' as const,
+      paymentStatus: BookingPaymentStatus.PAID,
+      bookingStatus: BookingStatus.ACTIVE_TREK,
       assignedGuide: 'Rohan Tamang',
-      permitStatus: 'Issued' as const,
+      permitStatus: BookingPermitStatus.ISSUED,
     },
     {
       reference: 'ACE-2026-0895',
@@ -630,15 +836,15 @@ export const seedDatabase = async () => {
       guestPhone: '+81 90 1234 5678',
       country: 'Japan',
       packageName: 'Manaslu Circuit Wild Wilderness Trek',
-      packageType: 'Trekking' as const,
+      packageType: BookingPackageType.TREKKING,
       startDate: '2026-10-10',
       endDate: '2026-10-26',
       groupSize: 2,
       totalAmountUSD: 4200,
-      paymentStatus: 'Deposit Paid' as const,
-      bookingStatus: 'Confirmed' as const,
+      paymentStatus: BookingPaymentStatus.DEPOSIT_PAID,
+      bookingStatus: BookingStatus.CONFIRMED,
       assignedGuide: 'Pasang Dawa Sherpa',
-      permitStatus: 'Processing' as const,
+      permitStatus: BookingPermitStatus.PROCESSING,
     },
     {
       reference: 'ACE-2026-0896',
@@ -647,20 +853,21 @@ export const seedDatabase = async () => {
       guestPhone: '+34 600 123 456',
       country: 'Spain',
       packageName: 'Mera Peak Climbing (6,476m)',
-      packageType: 'Expedition' as const,
+      packageType: BookingPackageType.EXPEDITION,
       startDate: '2026-11-02',
       endDate: '2026-11-20',
       groupSize: 3,
       totalAmountUSD: 8500,
-      paymentStatus: 'Pending' as const,
-      bookingStatus: 'In Review' as const,
-      permitStatus: 'Pending Document' as const,
+      paymentStatus: BookingPaymentStatus.PENDING,
+      bookingStatus: BookingStatus.IN_REVIEW,
+      permitStatus: BookingPermitStatus.PENDING_DOCUMENT,
     },
   ];
 
   for (const b of bookingsData) {
     const exists = await bookingRepo.findOne({
       where: { reference: b.reference },
+      withDeleted: true,
     });
     if (!exists) {
       await bookingRepo.save(bookingRepo.create(b));
@@ -668,7 +875,7 @@ export const seedDatabase = async () => {
   }
   console.log('Seeded bookings');
 
-  // 6. Seed Inquiries
+  // 8. Seed Inquiries
   const inquiryRepo = AppDataSource.getRepository(Inquiry);
   const inquiriesData = [
     {
@@ -681,7 +888,7 @@ export const seedDatabase = async () => {
       groupSize: 3,
       message:
         'We are a group of 3 experienced climbers looking for a private Sherpa team for Ama Dablam. Looking for full logistics, basecamp luxury, and 1:1 Sherpa ratio.',
-      status: 'Quote Sent' as const,
+      status: InquiryStatus.QUOTE_SENT,
       notes: 'Sent $9,500/pp proposal with helicopter transfer add-on.',
     },
     {
@@ -694,7 +901,7 @@ export const seedDatabase = async () => {
       groupSize: 2,
       message:
         'Hello! My partner and I want to combine Cho La Pass with Gokyo Lakes. Are oxygen bottles available at tea houses along the route?',
-      status: 'New' as const,
+      status: InquiryStatus.NEW,
     },
     {
       guestName: "Liam O'Connor",
@@ -706,7 +913,7 @@ export const seedDatabase = async () => {
       groupSize: 5,
       message:
         'We have a group of 5 friends planning for Manaslu Circuit. Do we need 2 guides for 5 people or is 1 guide sufficient?',
-      status: 'Contacted' as const,
+      status: InquiryStatus.CONTACTED,
       notes:
         'Clarified restricted permit regulations (min 2 trekkers, licensed Sherpa guide required).',
     },
@@ -715,6 +922,7 @@ export const seedDatabase = async () => {
   for (const inq of inquiriesData) {
     const exists = await inquiryRepo.findOne({
       where: { email: inq.email, interestedTrip: inq.interestedTrip },
+      withDeleted: true,
     });
     if (!exists) {
       await inquiryRepo.save(inquiryRepo.create(inq));
@@ -722,7 +930,7 @@ export const seedDatabase = async () => {
   }
   console.log('Seeded inquiries');
 
-  // 7. Seed Blog Articles
+  // 9. Seed Blog Articles
   const blogRepo = AppDataSource.getRepository(BlogArticle);
   const blogsData = [
     {
@@ -788,14 +996,17 @@ export const seedDatabase = async () => {
   ];
 
   for (const b of blogsData) {
-    const exists = await blogRepo.findOne({ where: { slug: b.slug } });
+    const exists = await blogRepo.findOne({
+      where: { slug: b.slug },
+      withDeleted: true,
+    });
     if (!exists) {
       await blogRepo.save(blogRepo.create(b));
     }
   }
   console.log('Seeded blog articles');
 
-  // 8. Seed Settings
+  // 10. Seed Settings
   const settingRepo = AppDataSource.getRepository(Setting);
   const homeStats = [
     {
@@ -908,14 +1119,17 @@ export const seedDatabase = async () => {
   ];
 
   for (const s of defaultSettings) {
-    const exists = await settingRepo.findOne({ where: { key: s.key } });
+    const exists = await settingRepo.findOne({
+      where: { key: s.key },
+      withDeleted: true,
+    });
     if (!exists) {
       await settingRepo.save(settingRepo.create(s));
     }
   }
   console.log('Seeded site settings');
 
-  // 9. Seed Media
+  // 11. Seed Media
   const mediaRepo = AppDataSource.getRepository(Media);
   const mediaCount = await mediaRepo.count();
   if (mediaCount === 0) {
@@ -948,7 +1162,7 @@ export const seedDatabase = async () => {
     console.log('Seeded initial media records');
   }
 
-  // 10. Seed Associates & Affiliations
+  // 12. Seed Associates & Affiliations
   const associateRepo = AppDataSource.getRepository(Associate);
   const associateCount = await associateRepo.count();
   if (associateCount === 0) {
@@ -957,9 +1171,11 @@ export const seedDatabase = async () => {
         name: 'Trekking Agencies Association of Nepal (TAAN)',
         role: 'Accredited Member',
         company: 'TAAN Nepal',
-        image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=300&auto=format&fit=crop&q=80',
+        image:
+          'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=300&auto=format&fit=crop&q=80',
         websiteUrl: 'https://taan.org.np',
-        description: 'Apex body of trekking agencies in Nepal ensuring certified ethical operations.',
+        description:
+          'Apex body of trekking agencies in Nepal ensuring certified ethical operations.',
         category: 'Accreditation',
         status: AssociateStatus.ACTIVE,
         order: 1,
@@ -968,9 +1184,11 @@ export const seedDatabase = async () => {
         name: 'Nepal Mountaineering Association (NMA)',
         role: 'Certified Expedition Partner',
         company: 'NMA',
-        image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=300&auto=format&fit=crop&q=80',
+        image:
+          'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=300&auto=format&fit=crop&q=80',
         websiteUrl: 'https://nepalmountaineering.org',
-        description: 'National governing body for peak climbing permits and Sherpa mountaineering training.',
+        description:
+          'National governing body for peak climbing permits and Sherpa mountaineering training.',
         category: 'Mountaineering',
         status: AssociateStatus.ACTIVE,
         order: 2,
@@ -979,9 +1197,11 @@ export const seedDatabase = async () => {
         name: 'Himalayan Rescue Association (HRA)',
         role: 'Medical Safety Partner',
         company: 'HRA Nepal',
-        image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=300&auto=format&fit=crop&q=80',
+        image:
+          'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=300&auto=format&fit=crop&q=80',
         websiteUrl: 'https://hra.org.np',
-        description: 'Volunteer medical stations in Pheriche and Manang dedicated to AMS prevention and high-altitude rescue.',
+        description:
+          'Volunteer medical stations in Pheriche and Manang dedicated to AMS prevention and high-altitude rescue.',
         category: 'Safety & Rescue',
         status: AssociateStatus.ACTIVE,
         order: 3,
@@ -993,7 +1213,7 @@ export const seedDatabase = async () => {
     console.log('Seeded initial associate records');
   }
 
-  // 11. Seed Pre-Trip Consultation FAQs
+  // 13. Seed Pre-Trip Consultation FAQs
   const faqRepo = AppDataSource.getRepository(Faq);
   const faqCount = await faqRepo.count();
   if (faqCount === 0) {
@@ -1007,7 +1227,8 @@ export const seedDatabase = async () => {
         order: 1,
       },
       {
-        question: 'How does Alpine Ace manage altitude acclimatization and medical safety?',
+        question:
+          'How does Alpine Ace manage altitude acclimatization and medical safety?',
         answer:
           'All our itineraries follow conservative ascent profiles with dedicated acclimatization days. Guide leaders conduct twice-daily pulse-oximeter biometric checks (SpO2 & heart rate). Every high-altitude group is equipped with supplemental medical oxygen, comprehensive first-aid kits, and 24/7 direct satellite emergency dispatch for immediate helicopter evacuation when warranted.',
         category: 'Safety & Altitude',
@@ -1023,7 +1244,8 @@ export const seedDatabase = async () => {
         order: 3,
       },
       {
-        question: 'When is the optimal season for trekking and peak climbing in Nepal?',
+        question:
+          'When is the optimal season for trekking and peak climbing in Nepal?',
         answer:
           'The two primary seasons are Spring (March to May) and Autumn (September to November). Spring offers pleasant temperatures, blooming rhododendron forests, and active mountaineering summit pushes. Autumn provides the crispest blue skies, stable high-pressure windows, and extraordinary mountain panoramas.',
         category: 'Weather & Seasons',
@@ -1031,7 +1253,8 @@ export const seedDatabase = async () => {
         order: 4,
       },
       {
-        question: 'What are the accommodations and dietary arrangements on the trail?',
+        question:
+          'What are the accommodations and dietary arrangements on the trail?',
         answer:
           'We partner with the finest boutique lodges and luxury mountain retreats along the Khumbu and Annapurna trails, offering heated electric blankets, en-suite bathrooms, and hot showers. At wilderness basecamps, we provide four-season private tents and a dedicated expedition cook team serving freshly prepared, hygienic, nutrient-dense organic meals.',
         category: 'Lodges & Dining',
@@ -1064,6 +1287,3 @@ if (require.main === module) {
       process.exit(1);
     });
 }
-
-
-

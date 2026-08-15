@@ -8,12 +8,14 @@ import {
   IsString,
   IsUUID,
   Min,
+  ValidateNested,
 } from 'class-validator';
 import {
   PackageCategoryType,
   PackageStatus,
 } from '../entities/package/Package.entity';
 import { TripDifficulty } from '../entities/common/difficulty.enum';
+import { TripItineraryDayDto } from './common-trip.schema';
 
 export class CreatePackageDto {
   @IsString()
@@ -106,6 +108,12 @@ export class CreatePackageDto {
   @IsOptional()
   @IsString()
   exclusionsText?: string;
+
+  @IsOptional()
+  @IsArray({ message: 'Itinerary must be an array of day items' })
+  @ValidateNested({ each: true })
+  @Type(() => TripItineraryDayDto)
+  itinerary?: TripItineraryDayDto[];
 
   @IsOptional()
   @IsString()
@@ -217,6 +225,12 @@ export class UpdatePackageDto {
   @IsOptional()
   @IsString()
   exclusionsText?: string;
+
+  @IsOptional()
+  @IsArray({ message: 'Itinerary must be an array of day items' })
+  @ValidateNested({ each: true })
+  @Type(() => TripItineraryDayDto)
+  itinerary?: TripItineraryDayDto[];
 
   @IsOptional()
   @IsString()

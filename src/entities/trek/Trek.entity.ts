@@ -8,6 +8,22 @@ export enum TrekStatus {
   DRAFT = 'draft',
 }
 
+export interface TripItineraryDetail {
+  label: string;
+  value: string;
+}
+
+export interface TripItineraryDay {
+  day: number;
+  title: string;
+  description: string;
+  maxAltitude?: string;
+  accommodation?: string;
+  meals?: string;
+  details?: TripItineraryDetail[];
+  [key: string]: any;
+}
+
 export interface TripFaq {
   id?: string;
   question: string;
@@ -101,6 +117,14 @@ export class Trek extends CommonEntity {
 
   @Column({ name: 'exclusions_text', type: 'text', nullable: true })
   exclusionsText: string;
+
+  @Column({
+    name: 'itinerary',
+    type: 'jsonb',
+    nullable: true,
+    default: () => "'[]'",
+  })
+  itinerary: TripItineraryDay[];
 
   @Column({
     name: 'faqs',

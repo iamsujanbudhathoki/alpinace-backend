@@ -12,7 +12,7 @@ import {
 } from 'class-validator';
 import { TrekStatus } from '../entities/trek/Trek.entity';
 import { TripDifficulty } from '../entities/common/difficulty.enum';
-import { TripFaqDto, TripReviewDto } from './common-trip.schema';
+import { TripFaqDto, TripItineraryDayDto, TripReviewDto } from './common-trip.schema';
 
 export class CreateTrekDto {
   @IsString()
@@ -99,6 +99,12 @@ export class CreateTrekDto {
   @IsOptional()
   @IsString()
   exclusionsText?: string;
+
+  @IsOptional()
+  @IsArray({ message: 'Itinerary must be an array of day items' })
+  @ValidateNested({ each: true })
+  @Type(() => TripItineraryDayDto)
+  itinerary?: TripItineraryDayDto[];
 
   @IsOptional()
   @IsArray({ message: 'FAQs must be an array of FAQ items' })
@@ -205,6 +211,12 @@ export class UpdateTrekDto {
   @IsOptional()
   @IsString()
   exclusionsText?: string;
+
+  @IsOptional()
+  @IsArray({ message: 'Itinerary must be an array of day items' })
+  @ValidateNested({ each: true })
+  @Type(() => TripItineraryDayDto)
+  itinerary?: TripItineraryDayDto[];
 
   @IsOptional()
   @IsArray({ message: 'FAQs must be an array of FAQ items' })

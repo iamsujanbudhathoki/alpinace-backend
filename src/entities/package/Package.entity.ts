@@ -1,6 +1,7 @@
 import { Column, Entity } from 'typeorm';
 import { CommonEntity } from '../common/common.entity';
 import { TripDifficulty } from '../common/difficulty.enum';
+import { TripItineraryDay } from '../trek/Trek.entity';
 
 export enum PackageCategoryType {
   TREKKING = 'trekking',
@@ -99,6 +100,14 @@ export class Package extends CommonEntity {
 
   @Column({ name: 'exclusions_text', type: 'text', nullable: true })
   exclusionsText: string;
+
+  @Column({
+    name: 'itinerary',
+    type: 'jsonb',
+    nullable: true,
+    default: () => "'[]'",
+  })
+  itinerary: TripItineraryDay[];
 
   @Column({ name: 'meta_title', nullable: true })
   metaTitle: string;

@@ -178,6 +178,7 @@ export class TourService {
       permitsRequired: permitsArray,
       inclusionsText: dto.inclusionsText,
       exclusionsText: dto.exclusionsText,
+      itinerary: dto.itinerary || [],
       faqs: dto.faqs || [],
       reviews: dto.reviews || [],
       metaTitle: dto.metaTitle,
@@ -233,6 +234,7 @@ export class TourService {
       tour.inclusionsText = dto.inclusionsText;
     if (dto.exclusionsText !== undefined)
       tour.exclusionsText = dto.exclusionsText;
+    if (dto.itinerary !== undefined) tour.itinerary = dto.itinerary;
     if (dto.faqs !== undefined) tour.faqs = dto.faqs;
     if (dto.reviews !== undefined) tour.reviews = dto.reviews;
     if (dto.metaTitle !== undefined) tour.metaTitle = dto.metaTitle;

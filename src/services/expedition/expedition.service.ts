@@ -213,6 +213,7 @@ export class ExpeditionService {
       permitsRequired: permitsArray,
       inclusionsText: dto.inclusionsText,
       exclusionsText: dto.exclusionsText,
+      itinerary: dto.itinerary || [],
       faqs: dto.faqs || [],
       reviews: dto.reviews || [],
       metaTitle: dto.metaTitle,
@@ -274,6 +275,7 @@ export class ExpeditionService {
       exp.inclusionsText = dto.inclusionsText;
     if (dto.exclusionsText !== undefined)
       exp.exclusionsText = dto.exclusionsText;
+    if (dto.itinerary !== undefined) exp.itinerary = dto.itinerary;
     if (dto.faqs !== undefined) exp.faqs = dto.faqs;
     if (dto.reviews !== undefined) exp.reviews = dto.reviews;
     if (dto.metaTitle !== undefined) exp.metaTitle = dto.metaTitle;

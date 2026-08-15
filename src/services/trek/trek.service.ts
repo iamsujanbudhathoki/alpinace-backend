@@ -187,6 +187,7 @@ export class TrekService {
       permitsRequired: permitsArray,
       inclusionsText: dto.inclusionsText,
       exclusionsText: dto.exclusionsText,
+      itinerary: dto.itinerary || [],
       faqs: dto.faqs || [],
       reviews: dto.reviews || [],
       metaTitle: dto.metaTitle,
@@ -239,6 +240,7 @@ export class TrekService {
       trek.inclusionsText = dto.inclusionsText;
     if (dto.exclusionsText !== undefined)
       trek.exclusionsText = dto.exclusionsText;
+    if (dto.itinerary !== undefined) trek.itinerary = dto.itinerary;
     if (dto.faqs !== undefined) trek.faqs = dto.faqs;
     if (dto.reviews !== undefined) trek.reviews = dto.reviews;
     if (dto.metaTitle !== undefined) trek.metaTitle = dto.metaTitle;

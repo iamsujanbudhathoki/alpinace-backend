@@ -25,6 +25,58 @@
 				],
 				"type": "string"
 			},
+			"TripItineraryDetail": {
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"value": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"label",
+					"value"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TripItineraryDay": {
+				"properties": {
+					"day": {
+						"type": "number",
+						"format": "double"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"maxAltitude": {
+						"type": "string"
+					},
+					"accommodation": {
+						"type": "string"
+					},
+					"meals": {
+						"type": "string"
+					},
+					"details": {
+						"items": {
+							"$ref": "#/components/schemas/TripItineraryDetail"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"day",
+					"title",
+					"description"
+				],
+				"type": "object",
+				"additionalProperties": {}
+			},
 			"TripFaq": {
 				"properties": {
 					"id": {
@@ -166,6 +218,12 @@
 					"exclusionsText": {
 						"type": "string"
 					},
+					"itinerary": {
+						"items": {
+							"$ref": "#/components/schemas/TripItineraryDay"
+						},
+						"type": "array"
+					},
 					"faqs": {
 						"items": {
 							"$ref": "#/components/schemas/TripFaq"
@@ -214,6 +272,7 @@
 					"permitsRequired",
 					"inclusionsText",
 					"exclusionsText",
+					"itinerary",
 					"faqs",
 					"reviews",
 					"metaTitle",
@@ -314,6 +373,58 @@
 					"data",
 					"success",
 					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TripItineraryDetailDto": {
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"value": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"label",
+					"value"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TripItineraryDayDto": {
+				"properties": {
+					"day": {
+						"type": "number",
+						"format": "double"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"maxAltitude": {
+						"type": "string"
+					},
+					"accommodation": {
+						"type": "string"
+					},
+					"meals": {
+						"type": "string"
+					},
+					"details": {
+						"items": {
+							"$ref": "#/components/schemas/TripItineraryDetailDto"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"day",
+					"title",
+					"description"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -436,6 +547,12 @@
 					"exclusionsText": {
 						"type": "string"
 					},
+					"itinerary": {
+						"items": {
+							"$ref": "#/components/schemas/TripItineraryDayDto"
+						},
+						"type": "array"
+					},
 					"faqs": {
 						"items": {
 							"$ref": "#/components/schemas/TripFaqDto"
@@ -532,6 +649,12 @@
 					},
 					"exclusionsText": {
 						"type": "string"
+					},
+					"itinerary": {
+						"items": {
+							"$ref": "#/components/schemas/TripItineraryDayDto"
+						},
+						"type": "array"
 					},
 					"faqs": {
 						"items": {
@@ -702,6 +825,12 @@
 					"exclusionsText": {
 						"type": "string"
 					},
+					"itinerary": {
+						"items": {
+							"$ref": "#/components/schemas/TripItineraryDay"
+						},
+						"type": "array"
+					},
 					"faqs": {
 						"items": {
 							"$ref": "#/components/schemas/TripFaq"
@@ -752,6 +881,7 @@
 					"permitsRequired",
 					"inclusionsText",
 					"exclusionsText",
+					"itinerary",
 					"faqs",
 					"reviews",
 					"metaTitle",
@@ -900,6 +1030,12 @@
 					"exclusionsText": {
 						"type": "string"
 					},
+					"itinerary": {
+						"items": {
+							"$ref": "#/components/schemas/TripItineraryDayDto"
+						},
+						"type": "array"
+					},
 					"faqs": {
 						"items": {
 							"$ref": "#/components/schemas/TripFaqDto"
@@ -1002,6 +1138,12 @@
 					},
 					"exclusionsText": {
 						"type": "string"
+					},
+					"itinerary": {
+						"items": {
+							"$ref": "#/components/schemas/TripItineraryDayDto"
+						},
+						"type": "array"
 					},
 					"faqs": {
 						"items": {
@@ -1246,6 +1388,12 @@
 					"exclusionsText": {
 						"type": "string"
 					},
+					"itinerary": {
+						"items": {
+							"$ref": "#/components/schemas/TripItineraryDay"
+						},
+						"type": "array"
+					},
 					"metaTitle": {
 						"type": "string"
 					},
@@ -1283,6 +1431,7 @@
 					"permitsRequired",
 					"inclusionsText",
 					"exclusionsText",
+					"itinerary",
 					"metaTitle",
 					"metaDescription",
 					"keywords"
@@ -1426,6 +1575,12 @@
 					"exclusionsText": {
 						"type": "string"
 					},
+					"itinerary": {
+						"items": {
+							"$ref": "#/components/schemas/TripItineraryDayDto"
+						},
+						"type": "array"
+					},
 					"metaTitle": {
 						"type": "string"
 					},
@@ -1527,6 +1682,12 @@
 					},
 					"exclusionsText": {
 						"type": "string"
+					},
+					"itinerary": {
+						"items": {
+							"$ref": "#/components/schemas/TripItineraryDayDto"
+						},
+						"type": "array"
 					},
 					"metaTitle": {
 						"type": "string"
@@ -2580,6 +2741,12 @@
 					"exclusionsText": {
 						"type": "string"
 					},
+					"itinerary": {
+						"items": {
+							"$ref": "#/components/schemas/TripItineraryDay"
+						},
+						"type": "array"
+					},
 					"faqs": {
 						"items": {
 							"$ref": "#/components/schemas/TripFaq"
@@ -2632,6 +2799,7 @@
 					"permitsRequired",
 					"inclusionsText",
 					"exclusionsText",
+					"itinerary",
 					"faqs",
 					"reviews",
 					"metaTitle",
@@ -2787,6 +2955,12 @@
 					"exclusionsText": {
 						"type": "string"
 					},
+					"itinerary": {
+						"items": {
+							"$ref": "#/components/schemas/TripItineraryDayDto"
+						},
+						"type": "array"
+					},
 					"faqs": {
 						"items": {
 							"$ref": "#/components/schemas/TripFaqDto"
@@ -2896,6 +3070,12 @@
 					},
 					"exclusionsText": {
 						"type": "string"
+					},
+					"itinerary": {
+						"items": {
+							"$ref": "#/components/schemas/TripItineraryDayDto"
+						},
+						"type": "array"
 					},
 					"faqs": {
 						"items": {
@@ -6456,7 +6636,7 @@
 						}
 					}
 				},
-				"description": "Get all blog articles with optional status, category, and search filtering.\nPass ?status=Published to only retrieve published articles.\nPass ?categoryId=... to filter by category ID.\nPass ?search=... to search within title, excerpt, and category.",
+				"description": "Get all blog articles with optional status, category, and search filtering.\r\nPass ?status=Published to only retrieve published articles.\r\nPass ?categoryId=... to filter by category ID.\r\nPass ?search=... to search within title, excerpt, and category.",
 				"tags": [
 					"Blog Articles"
 				],

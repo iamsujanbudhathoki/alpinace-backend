@@ -1,7 +1,7 @@
 import { Column, Entity } from 'typeorm';
 import { CommonEntity } from '../common/common.entity';
 import { TripDifficulty } from '../common/difficulty.enum';
-import { TripFaq, TripReview } from '../trek/Trek.entity';
+import { TripFaq, TripItineraryDay, TripReview } from '../trek/Trek.entity';
 
 export enum TourStatus {
   ACTIVE = 'active',
@@ -106,6 +106,14 @@ export class Tour extends CommonEntity {
 
   @Column({ name: 'exclusions_text', type: 'text', nullable: true })
   exclusionsText: string;
+
+  @Column({
+    name: 'itinerary',
+    type: 'jsonb',
+    nullable: true,
+    default: () => "'[]'",
+  })
+  itinerary: TripItineraryDay[];
 
   @Column({
     name: 'faqs',

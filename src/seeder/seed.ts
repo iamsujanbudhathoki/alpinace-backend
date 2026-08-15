@@ -199,6 +199,179 @@ export const seedDatabase = async () => {
     },
   ];
 
+  const sampleEverestItinerary = [
+    {
+      day: 1,
+      title: 'Arrive in Kathmandu & VIP Luxury Airport Transfer',
+      description:
+        'Our Alpine Ace airport representative will receive you at Tribhuvan International Airport with traditional flower garlands (Khada). You will then be transferred to your 5-star heritage hotel in our private tourist vehicle for evening orientation and gear check.',
+      maxAltitude: 'Kathmandu (1,400 m)',
+      accommodation: 'Overnight at Dwarika’s Heritage Hotel / Hyatt Regency',
+      meals: 'Welcome Dinner with Cultural Show',
+      details: [
+        { label: 'Transport', value: 'Private Mercedes / Alphard Van' },
+        { label: 'Briefing', value: '6:00 PM Gear & Safety Check' },
+      ],
+    },
+    {
+      day: 2,
+      title: 'Scenic Mountain Flight to Lukla (2,860 m) & Trek to Phakding',
+      description:
+        'Early morning flight to Tenzing-Hillary Airport in Lukla. Meet your dedicated Sherpa porter team and begin a gradual 3 to 4 hour trek down to Phakding along the turquoise Dudh Koshi river valley.',
+      maxAltitude: 'Lukla (2,860 m) / Phakding (2,610 m)',
+      accommodation: 'Overnight at Yeti Mountain Home Phakding',
+      meals: 'Breakfast, Lunch & Dinner Included',
+      details: [
+        { label: 'Walking Time', value: '3 - 4 hours' },
+        { label: 'Distance', value: '7.8 km' },
+      ],
+    },
+    {
+      day: 3,
+      title: 'Trek to Namche Bazaar across Hillary Suspension Bridge',
+      description:
+        'Cross several high suspension bridges decorated with prayer flags and ascend through pine forests into Sagarmatha National Park. Catch your first panoramic glimpse of Mt. Everest before reaching the vibrant Sherpa capital of Namche.',
+      maxAltitude: 'Namche Bazaar (3,440 m)',
+      accommodation: 'Overnight at Panorama Lodge / Yeti Mountain Home',
+      meals: 'Breakfast, Lunch & Dinner Included',
+      details: [
+        { label: 'Walking Time', value: '5 - 6 hours' },
+        { label: 'Distance', value: '10.5 km' },
+      ],
+    },
+    {
+      day: 4,
+      title: 'Acclimatization Day in Namche Bazaar & Everest View Hotel Hike',
+      description:
+        'Hike up to the iconic Hotel Everest View (3,880m) for breakfast with uninterrupted views of Everest, Lhotse, and Ama Dablam. Visit Khumjung village, Hillary School, and the local monastery.',
+      maxAltitude: 'Everest View Hotel (3,880 m)',
+      accommodation: 'Overnight at Namche Boutique Lodge',
+      meals: 'Breakfast, Lunch & Dinner Included',
+      details: [
+        { label: 'Walking Time', value: '3 - 4 hours (Day Hike)' },
+        { label: 'Altitude Gain', value: '+440 m / -440 m' },
+      ],
+    },
+    {
+      day: 5,
+      title: 'Trek to Tengboche Monastery with Ama Dablam Views',
+      description:
+        'The trail winds past rhododendron forests down to Phunki Tenga, followed by a steady climb to Tengboche Monastery, the spiritual heart of the Khumbu region set against Ama Dablam.',
+      maxAltitude: 'Tengboche (3,860 m)',
+      accommodation: 'Overnight at Rivendell Boutique Lodge',
+      meals: 'Breakfast, Lunch & Dinner Included',
+      details: [
+        { label: 'Walking Time', value: '5 hours' },
+        { label: 'Highlights', value: 'Monastery Blessing & Evening Puja' },
+      ],
+    },
+    {
+      day: 6,
+      title: 'Trek to Dingboche (4,410 m) into High Alpine Valley',
+      description:
+        'Gradual ascent above the tree line through Pangboche village, crossing the Imja Khola with spectacular vistas of Island Peak and the massive south face of Lhotse.',
+      maxAltitude: 'Dingboche (4,410 m)',
+      accommodation: 'Overnight at Good Luck Lodge / Peak 38 Lodge',
+      meals: 'Breakfast, Lunch & Dinner Included',
+      details: [
+        { label: 'Walking Time', value: '5 - 6 hours' },
+        { label: 'Distance', value: '11 km' },
+      ],
+    },
+    {
+      day: 7,
+      title: 'Acclimatization Hike to Nagarjun Hill (5,100 m)',
+      description:
+        'Climb the ridge behind Dingboche to Nagarjun viewpoint overlooking Makalu, Cho Oyu, and Island Peak. Active rest afternoon with pulse oximetry health checks.',
+      maxAltitude: 'Nagarjun Hill (5,100 m)',
+      accommodation: 'Overnight at Dingboche Lodge',
+      meals: 'Breakfast, Lunch & Dinner Included',
+      details: [
+        { label: 'Walking Time', value: '4 hours' },
+        { label: 'Medical Check', value: 'Daily SpO2 & Heart Rate Log' },
+      ],
+    },
+    {
+      day: 8,
+      title: 'Trek to Lobuche past Thokla Pass Climber Memorials',
+      description:
+        'Follow the wide moraine valley up to Dughla, then climb the steep terminal moraine of Khumbu Glacier to the touching memorials for fallen Everest climbers.',
+      maxAltitude: 'Lobuche (4,940 m)',
+      accommodation: 'Overnight at Eco Lodge Lobuche',
+      meals: 'Breakfast, Lunch & Dinner Included',
+      details: [
+        { label: 'Walking Time', value: '5 hours' },
+        { label: 'Distance', value: '8.5 km' },
+      ],
+    },
+    {
+      day: 9,
+      title: 'Trek to Gorak Shep (5,164 m) & Hike to Everest Base Camp (5,364 m)',
+      description:
+        'The milestone day! Trek along the Khumbu Glacier moraine to Gorak Shep, drop main packs, and press onward to standing on Everest Base Camp under the Khumbu Icefall.',
+      maxAltitude: 'Everest Base Camp (5,364 m)',
+      accommodation: 'Overnight at Himalayan Lodge Gorak Shep',
+      meals: 'Breakfast, Lunch & Dinner Included',
+      details: [
+        { label: 'Walking Time', value: '7 - 8 hours total' },
+        { label: 'Distance', value: '13 km' },
+      ],
+    },
+    {
+      day: 10,
+      title: 'Sunrise Summit of Kala Patthar (5,545 m) & Descend to Pheriche',
+      description:
+        'Pre-dawn ascent of Kala Patthar for the most magnificent sunrise view of Mt. Everest and surrounding giants. Descend to Pheriche for heated comfort.',
+      maxAltitude: 'Kala Patthar Summit (5,545 m)',
+      accommodation: 'Overnight at Edelweiss Lodge Pheriche',
+      meals: 'Breakfast, Lunch & Dinner Included',
+      details: [
+        { label: 'Walking Time', value: '6 - 7 hours' },
+        { label: 'Summit View', value: 'Everest 8,848m, Lhotse, Nuptse' },
+      ],
+    },
+    {
+      day: 11,
+      title: 'Descend through Rhododendron Forests to Namche Bazaar',
+      description:
+        'Trek downhill past Tengboche with higher oxygen levels and warm hospitality awaiting in Namche Bazaar.',
+      maxAltitude: 'Namche Bazaar (3,440 m)',
+      accommodation: 'Overnight at Namche Boutique Hotel',
+      meals: 'Breakfast, Lunch & Dinner Included',
+      details: [{ label: 'Walking Time', value: '6 hours' }],
+    },
+    {
+      day: 12,
+      title: 'Trek Back to Lukla & Celebration with Sherpa Crew',
+      description:
+        'Final day on trail descending to Lukla. Evening celebration dinner and tipping ceremony with our incredible Sherpa climbing guides and porters.',
+      maxAltitude: 'Lukla (2,860 m)',
+      accommodation: 'Overnight at Lukla Mountain Lodge',
+      meals: 'Breakfast, Lunch & Dinner Included',
+      details: [{ label: 'Walking Time', value: '6 - 7 hours' }],
+    },
+    {
+      day: 13,
+      title: 'Morning Flight to Kathmandu & Leisure Afternoon',
+      description:
+        'Early morning flight back to Kathmandu. Private transfer to your luxury hotel for relaxing spa treatments, shopping, or city dining.',
+      maxAltitude: 'Kathmandu (1,400 m)',
+      accommodation: 'Overnight at 5-Star Hotel Kathmandu',
+      meals: 'Breakfast & Farewell Dinner Included',
+      details: [{ label: 'Flight Time', value: '35 minutes' }],
+    },
+    {
+      day: 14,
+      title: 'Final Departure & VIP Airport Drop-off',
+      description:
+        'Enjoy breakfast at hotel before our private chauffeur transfers you to Tribhuvan International Airport for your flight back home.',
+      maxAltitude: 'Kathmandu (1,400 m)',
+      accommodation: 'Departure Day',
+      meals: 'Breakfast Included',
+      details: [{ label: 'Airport Transfer', value: '3 hours before flight' }],
+    },
+  ];
+
   const treksData = [
     {
       title: 'Everest Base Camp & Gokyo Lakes Luxury Trek',
@@ -218,6 +391,7 @@ export const seedDatabase = async () => {
         'Experience the ultimate trek to the base of Mt. Everest, staying in handpicked premium luxury lodges with Sherpa legends.',
       bestSeason: 'March - May & September - November',
       permitsRequired: ['Sagarmatha NP Permit', 'Khumbu Pasang Lhamu Entry'],
+      itinerary: sampleEverestItinerary,
       faqs: defaultTrekFaqs,
       reviews: defaultTrekReviews,
     },
@@ -239,6 +413,7 @@ export const seedDatabase = async () => {
         "Experience the ultimate trek to the base of the world's highest peak, staying in handpicked premium luxury lodges with Sherpa legends.",
       bestSeason: 'March - May & September - November',
       permitsRequired: ['Sagarmatha NP Permit', 'Khumbu Pasang Lhamu Entry'],
+      itinerary: sampleEverestItinerary,
       faqs: defaultTrekFaqs,
       reviews: defaultTrekReviews,
     },
@@ -342,6 +517,9 @@ export const seedDatabase = async () => {
     } else {
       exists.faqs = t.faqs;
       exists.reviews = t.reviews;
+      if (t.itinerary && (!exists.itinerary || exists.itinerary.length === 0)) {
+        exists.itinerary = t.itinerary;
+      }
       await trekRepo.save(exists);
     }
   }

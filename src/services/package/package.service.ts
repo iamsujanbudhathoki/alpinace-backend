@@ -199,6 +199,7 @@ export class PackageService {
       permitsRequired: permitsArray,
       inclusionsText: dto.inclusionsText,
       exclusionsText: dto.exclusionsText,
+      itinerary: dto.itinerary || [],
       metaTitle: dto.metaTitle,
       metaDescription: dto.metaDescription,
       keywords: dto.keywords,
@@ -255,6 +256,7 @@ export class PackageService {
       pkg.inclusionsText = dto.inclusionsText;
     if (dto.exclusionsText !== undefined)
       pkg.exclusionsText = dto.exclusionsText;
+    if (dto.itinerary !== undefined) pkg.itinerary = dto.itinerary;
     if (dto.metaTitle !== undefined) pkg.metaTitle = dto.metaTitle;
     if (dto.metaDescription !== undefined)
       pkg.metaDescription = dto.metaDescription;

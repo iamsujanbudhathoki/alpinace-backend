@@ -17,6 +17,8 @@ import { AdminLoginResponse } from '../../interfaces/admin.interface';
 import { JwtUtil } from '../../utils/jwt.util';
 import { AppError } from '../../utils/appError.util';
 import { RequestValidator } from '../../middlewares/validator.middleware';
+import { NotificationService } from '../../services/notification/notification.service';
+import { NotificationType } from '../../entities/notification/Notification.entity';
 import EmailUtil from '../../utils/email.util';
 
 async function resolveLocation(ip: string): Promise<string> {
@@ -58,6 +60,7 @@ async function resolveLocation(ip: string): Promise<string> {
 export class AdminAuthController extends Controller {
   constructor(
     private adminAuthService: AdminAuthService = new AdminAuthService(),
+    private notificationService: NotificationService = new NotificationService(),
   ) {
     super();
   }
@@ -77,14 +80,15 @@ export class AdminAuthController extends Controller {
       req.ip ||
       '127.0.0.1';
     const cleanIp = rawIp.replace(/^::ffff:/, '');
-    const userAgent = req.headers['user-agent'] || 'Unknown Browser/Device';
+    const userAgent = (req.headers['user-agent'] as string) || 'Unknown Browser/Device';
     const now = new Date();
     const timestamp = `${now.toUTCString()} / ${now.toLocaleString('en-US', { timeZone: 'Asia/Kathmandu' })} (NPT)`;
 
-    // Asynchronously resolve location and send security notification email
+    // Asynchronously resolve location, send security email, and generate in-app notification
     resolveLocation(cleanIp)
-      .then((location) => {
-        return EmailUtil.sendLoginAlertEmail({
+      .then(async (location) => {
+        // 1. Send Security Email Alert
+        await EmailUtil.sendLoginAlertEmail({
           adminName: data.name,
           adminEmail: data.email,
           ip: cleanIp,
@@ -92,9 +96,16 @@ export class AdminAuthController extends Controller {
           location,
           timestamp,
         });
+
+        // 2. Generate In-App System Notification
+        await this.notificationService.create({
+          title: 'Admin Login Detected',
+          body: `${data.name} (${data.email}) logged in from ${location} (IP: ${cleanIp}) using ${userAgent.slice(0, 60)}.`,
+          type: NotificationType.SYSTEM,
+        });
       })
       .catch((err) =>
-        console.error('[Auth Alert] Background email notification error:', err),
+        console.error('[Auth Alert] Background notification/email dispatch error:', err),
       );
 
     return {

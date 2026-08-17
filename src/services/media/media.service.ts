@@ -4,6 +4,7 @@ import { Media } from '../../entities/media/media.entity';
 import { MediaType } from '../../constants/appConstant';
 import { DotenvConfig } from '../../config/env.config';
 import { AppError } from '../../utils/appError.util';
+import { R2Util } from '../../utils/r2.util';
 import path from 'path';
 import fs from 'fs';
 
@@ -33,32 +34,67 @@ export class MediaService {
     return uploadDir;
   }
 
-  private buildPublicUrl(filename: string): string {
+  private buildUrl(mediaPath: string): string {
+    if (mediaPath.startsWith('http://') || mediaPath.startsWith('https://')) {
+      return mediaPath;
+    }
     const baseUrl = DotenvConfig.PUBLIC_URL;
-    return `${baseUrl}/uploads/${filename}`;
+    return `${baseUrl}${mediaPath.startsWith('/') ? mediaPath : '/' + mediaPath}`;
   }
 
-  private writeToDisk(file: Express.Multer.File, targetPath: string): void {
+  private getFileBuffer(file: Express.Multer.File): Buffer {
     if (file.buffer) {
-      fs.writeFileSync(targetPath, file.buffer);
-    } else if (
-      file.path &&
-      file.path !== targetPath &&
-      fs.existsSync(file.path)
-    ) {
-      fs.copyFileSync(file.path, targetPath);
+      return file.buffer;
     }
+    if (file.path && fs.existsSync(file.path)) {
+      return fs.readFileSync(file.path);
+    }
+    throw AppError.badRequest('Uploaded file content could not be read');
   }
 
   async saveUploadedFile(
     file: Express.Multer.File,
   ): Promise<MediaUploadResult> {
-    const uploadDir = this.getUploadDirectory();
-    const ext = file.originalname ? path.extname(file.originalname) : '';
-    const filename = file.filename || `${Date.now()}-${file.originalname}`;
-    const targetPath = path.join(uploadDir, filename);
+    const sanitizedOriginalName = (file.originalname || 'upload').replace(/[^a-zA-Z0-9._-]/g, '_');
+    const filename = `${Date.now()}-${sanitizedOriginalName}`;
+    const mimeType = file.mimetype || 'application/octet-stream';
+    const fileSize = String(file.size || 0);
+    let finalPath = '';
 
-    this.writeToDisk(file, targetPath);
+    // 1. Upload to Cloudflare R2 if configured
+    if (R2Util.isConfigured()) {
+      try {
+        const fileBuffer = this.getFileBuffer(file);
+        const r2Key = `uploads/${filename}`;
+        const publicUrl = await R2Util.upload(r2Key, fileBuffer, mimeType);
+        finalPath = publicUrl;
+
+        // Clean up temporary local file if created by multer
+        if (file.path && fs.existsSync(file.path)) {
+          try {
+            fs.unlinkSync(file.path);
+          } catch {}
+        }
+      } catch (r2Error) {
+        console.error('[Cloudflare R2] Upload failed, falling back to disk:', r2Error);
+      }
+    }
+
+    // 2. Fallback to Local Disk Storage if R2 is not configured or failed
+    if (!finalPath) {
+      const uploadDir = this.getUploadDirectory();
+      const targetPath = path.join(uploadDir, filename);
+
+      if (file.buffer) {
+        fs.writeFileSync(targetPath, file.buffer);
+      } else if (file.path && file.path !== targetPath && fs.existsSync(file.path)) {
+        fs.copyFileSync(file.path, targetPath);
+        try {
+          fs.unlinkSync(file.path);
+        } catch {}
+      }
+      finalPath = `/uploads/${filename}`;
+    }
 
     const media = new Media();
     media.name = filename;
@@ -68,10 +104,10 @@ export class MediaService {
     media.category = '';
     media.description = '';
     media.altText = media.title;
-    media.mimeType = file.mimetype;
-    media.fileSize = String(file.size);
+    media.mimeType = mimeType;
+    media.fileSize = fileSize;
     media.mediaType = MediaType.BLOG_THUMBNAIL;
-    media.path = `/uploads/${filename}`;
+    media.path = finalPath;
 
     const saved = await this.mediaRepo.save(media);
 
@@ -82,7 +118,7 @@ export class MediaService {
       category: saved.category,
       description: saved.description,
       altText: saved.altText,
-      url: this.buildPublicUrl(filename),
+      url: this.buildUrl(saved.path),
       mimeType: saved.mimeType,
       fileSize: saved.fileSize,
       createdAt: saved.createdAt,
@@ -90,7 +126,6 @@ export class MediaService {
   }
 
   async getAll(): Promise<MediaUploadResult[]> {
-    const baseUrl = DotenvConfig.PUBLIC_URL;
     const records = await this.mediaRepo.find({ order: { createdAt: 'DESC' } });
 
     return records.map((m) => ({
@@ -100,7 +135,7 @@ export class MediaService {
       category: m.category,
       description: m.description,
       altText: m.altText,
-      url: `${baseUrl}${m.path.startsWith('/') ? m.path : '/' + m.path}`,
+      url: this.buildUrl(m.path),
       mimeType: m.mimeType,
       fileSize: m.fileSize,
       createdAt: m.createdAt,
@@ -127,7 +162,6 @@ export class MediaService {
     if (data.altText !== undefined) media.altText = data.altText;
 
     const saved = await this.mediaRepo.save(media);
-    const baseUrl = DotenvConfig.PUBLIC_URL;
 
     return {
       id: saved.id,
@@ -136,7 +170,7 @@ export class MediaService {
       category: saved.category,
       description: saved.description,
       altText: saved.altText,
-      url: `${baseUrl}${saved.path.startsWith('/') ? saved.path : '/' + saved.path}`,
+      url: this.buildUrl(saved.path),
       mimeType: saved.mimeType,
       fileSize: saved.fileSize,
       createdAt: saved.createdAt,
@@ -147,6 +181,12 @@ export class MediaService {
     const media = await this.mediaRepo.findOne({ where: { id } });
     if (!media) return false;
 
+    // Delete from Cloudflare R2 if it was stored there
+    if (media.path.startsWith('http')) {
+      await R2Util.delete(media.path);
+    }
+
+    // Also attempt local disk cleanup
     const uploadDir = this.getUploadDirectory();
     const filePath = path.join(uploadDir, media.name);
     if (fs.existsSync(filePath)) {
@@ -161,3 +201,4 @@ export class MediaService {
     return true;
   }
 }
+

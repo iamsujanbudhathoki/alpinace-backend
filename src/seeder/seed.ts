@@ -1278,18 +1278,51 @@ export const seedDatabase = async () => {
   ];
 
   const defaultSettings = [
-    { key: 'siteName', value: 'AlpineAce' },
+    { key: 'siteName', value: 'AlpineAce Expeditions' },
+    { key: 'tagline', value: 'Venture Beyond the Ordinary' },
     {
       key: 'siteTitle',
       value: 'AlpineAce | Nepal Trekking, Historical Tours & Peak Expeditions',
     },
-    { key: 'contactEmail', value: 'concierge@alpineacetreks.com' },
-    { key: 'contactPhone', value: '+977 1 4410988 / +977 98511 23456' },
+    { key: 'contactEmail', value: 'info@alpineace.com' },
+    { key: 'contactPhone', value: '+977 1 4700543' },
+    { key: 'emergencyPhone', value: '+977 9851000000' },
+    { key: 'whatsappNumber', value: '9779851000000' },
     {
       key: 'companyAddress',
-      value: 'Tridevi Marg, Thamel, Kathmandu, Nepal 44600',
+      value: 'Thamel Marg, Ward 26, Kathmandu, Nepal 44600',
     },
-    { key: 'whatsappNumber', value: '9770000000000' },
+    {
+      key: 'googleMapsUrl',
+      value: 'https://maps.google.com/?q=Thamel+Kathmandu+Nepal',
+    },
+    {
+      key: 'officeHours',
+      value: 'Sun - Fri: 09:00 AM - 06:00 PM (NPT)',
+    },
+    {
+      key: 'metaTitle',
+      value: 'AlpineAce | Nepal Trekking, Historical Tours & Peak Expeditions',
+    },
+    {
+      key: 'metaDescription',
+      value:
+        "Experience Nepal's spectacular trekking routes, historical tours, and elite peak expeditions under the safe guidance of multi-summit Sherpas.",
+    },
+    {
+      key: 'metaKeywords',
+      value:
+        'Nepal trekking, Everest Base Camp, Annapurna Circuit, peak climbing, Sherpa guides, luxury mountain lodges',
+    },
+    { key: 'canonicalUrl', value: 'https://alpineace.com' },
+    { key: 'facebookUrl', value: 'https://facebook.com/alpineacenepal' },
+    { key: 'instagramUrl', value: 'https://instagram.com/alpineacenepal' },
+    { key: 'youtubeUrl', value: 'https://youtube.com/@alpineacenepal' },
+    { key: 'tripadvisorUrl', value: 'https://tripadvisor.com' },
+    {
+      key: 'linkedinUrl',
+      value: 'https://linkedin.com/company/alpine-ace-expeditions',
+    },
     { key: 'homeStats', value: JSON.stringify(homeStats) },
     { key: 'companyFaqs', value: JSON.stringify(companyFaqs) },
     { key: 'testimonials', value: JSON.stringify(testimonials) },

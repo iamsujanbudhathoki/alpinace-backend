@@ -49,12 +49,11 @@ class Server {
   }
 
   async initializePath() {
-    if (DotenvConfig.TEMP_FOLDER_PATH)
-      await PathUtils.ensureDir(DotenvConfig.TEMP_FOLDER_PATH);
-    if (DotenvConfig.MEDIA_TEMP_PATH)
-      await PathUtils.ensureDir(DotenvConfig.MEDIA_TEMP_PATH);
-    if (DotenvConfig.MEDIA_UPLOAD_PATH)
-      await PathUtils.ensureDir(DotenvConfig.MEDIA_UPLOAD_PATH);
+    // Cloudflare R2 is the primary cloud storage.
+    // Local directory is only ensured as a fallback if R2 credentials are not configured.
+    if (!DotenvConfig.R2_BUCKET_NAME) {
+      await PathUtils.ensureDir('uploads');
+    }
   }
 }
 

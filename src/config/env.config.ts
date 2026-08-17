@@ -49,10 +49,17 @@ class DotenvConfig {
     process.env.BASE_URL ||
     `http://localhost:${process.env.PORT || 5001}`;
 
-  // MEDIA
+  // MEDIA & STORAGE
   static MEDIA_TEMP_PATH = process.env.MEDIA_TEMP_PATH || 'temp';
   static MEDIA_UPLOAD_PATH = process.env.MEDIA_UPLOAD_PATH || 'uploads';
   static TEMP_FOLDER_PATH = process.env.TEMP_FOLDER_PATH || 'temp';
+
+  // CLOUDFLARE R2 STORAGE
+  static R2_ACCOUNT_ID = process.env.R2_ACCOUNT_ID || '';
+  static R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID || '';
+  static R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY || '';
+  static R2_BUCKET_NAME = process.env.R2_BUCKET_NAME || '';
+  static R2_PUBLIC_DOMAIN = process.env.R2_PUBLIC_DOMAIN || '';
 }
 
 export { DotenvConfig };

@@ -1,4 +1,5 @@
 import express, { urlencoded } from 'express';
+import helmet from 'helmet';
 import swaggerUi from 'swagger-ui-express';
 import { RegisterRoutes } from '../routes/routes';
 import errorHandler from '../middlewares/errorhandler.middleware';
@@ -7,9 +8,20 @@ import { AppDataSource } from '../config/database.config';
 import cors from 'cors';
 import swaggerDocument from '../../public/swagger.json';
 import compression from 'compression';
-import { rateLimit } from 'express-rate-limit';
+import { authLimiter, generalLimiter, inquiryLimiter } from './rate-limiter.middleware';
 
 export const configMiddleware = (app: express.Application) => {
+  // Trust proxy for rate limiting behind reverse proxies (Vercel, Render, Nginx, Cloudflare)
+  app.set('trust proxy', 1);
+
+  // 1. Helmet HTTP Security Headers
+  app.use(
+    helmet({
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
+      contentSecurityPolicy: false, // Managed by frontend or disabled for pure API
+    }),
+  );
+
   const allowedOrigins = [
     'https://alpineace.vercel.app',
     'http://localhost:3000',
@@ -40,13 +52,12 @@ export const configMiddleware = (app: express.Application) => {
   app.use(cors(corsOptions));
   app.use(express.json(), compression());
 
-  const limiter = rateLimit({
-    windowMs: 1 * 60 * 1000,
-    max: 1000,
-    standardHeaders: 'draft-7',
-    legacyHeaders: false,
-  });
-  app.use(limiter);
+  // 2. Global Rate Limiter
+  app.use(generalLimiter);
+
+  // 3. Sensitive Endpoint Rate Limiters
+  app.use('/admin/auth/login', authLimiter);
+  app.use('/inquiries', inquiryLimiter);
 
   app.use(
     urlencoded({

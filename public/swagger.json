@@ -2162,6 +2162,12 @@
 					},
 					"message": {
 						"type": "string"
+					},
+					"status": {
+						"$ref": "#/components/schemas/InquiryStatus"
+					},
+					"notes": {
+						"type": "string"
 					}
 				},
 				"required": [

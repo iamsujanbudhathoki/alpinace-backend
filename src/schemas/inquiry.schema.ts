@@ -43,6 +43,16 @@ export class CreateInquiryDto {
   @IsString()
   @IsNotEmpty({ message: 'Message is required' })
   message!: string;
+
+  @IsOptional()
+  @IsEnum(InquiryStatus, {
+    message: 'Invalid inquiry status',
+  })
+  status?: InquiryStatus;
+
+  @IsOptional()
+  @IsString()
+  notes?: string;
 }
 
 export class UpdateInquiryDto {

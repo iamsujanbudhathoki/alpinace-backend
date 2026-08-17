@@ -35,7 +35,8 @@ export class InquiryService {
       travelDates: dto.travelDates,
       groupSize: Number(dto.groupSize),
       message: dto.message,
-      status: InquiryStatus.NEW,
+      status: dto.status || InquiryStatus.NEW,
+      notes: dto.notes,
     });
 
     const saved = await this.repo.save(inquiry);

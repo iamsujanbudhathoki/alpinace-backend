@@ -764,6 +764,8 @@ const models: TsoaRoute.Models = {
             "travelDates": {"dataType":"string","required":true},
             "groupSize": {"dataType":"double","required":true},
             "message": {"dataType":"string","required":true},
+            "status": {"ref":"InquiryStatus"},
+            "notes": {"dataType":"string"},
         },
         "additionalProperties": false,
     },

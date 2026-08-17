@@ -35,6 +35,12 @@ export class NotificationController extends Controller {
     return { data, message: 'Notifications retrieved successfully', success: true };
   }
 
+  @Get('unread-count')
+  async getUnreadCount(): Promise<ApiResponse<number>> {
+    const data = await this.svc.getUnreadCount();
+    return { data, message: 'Unread notifications count retrieved', success: true };
+  }
+
   @Put('read-all')
   async markAllRead(): Promise<ApiResponse<boolean>> {
     const data = await this.svc.markAllRead();

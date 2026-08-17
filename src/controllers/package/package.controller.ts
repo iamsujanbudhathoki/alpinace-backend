@@ -24,6 +24,7 @@ import {
   UpdatePackageDto,
 } from '../../schemas/package.schema';
 import { RequestValidator } from '../../middlewares/validator.middleware';
+import { paginateResponse } from '../../utils/pageAndLimit';
 
 @Route('packages')
 @Tags('Packages (Treks, Tours, Expeditions)')
@@ -48,7 +49,7 @@ export class PackageController extends Controller {
     @Query() limit?: number,
     @Query() page?: number,
   ): Promise<ApiResponse<Package[]>> {
-    const data = await this.packageService.getAll({
+    const dataTotalCount = await this.packageService.getAll({
       categoryType,
       categoryId,
       region,
@@ -63,7 +64,8 @@ export class PackageController extends Controller {
       limit,
       page,
     });
-    return { data, message: 'Packages retrieved successfully', success: true };
+    const { data, pagination } = paginateResponse(dataTotalCount, limit, page);
+    return { data, pagination, message: 'Packages retrieved successfully', success: true };
   }
 
   @Get('filter-options')

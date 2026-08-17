@@ -17,6 +17,7 @@ import { TripDifficulty } from '../../entities/common/difficulty.enum';
 import { TrekService } from '../../services/trek/trek.service';
 import { CreateTrekDto, UpdateTrekDto } from '../../schemas/trek.schema';
 import { RequestValidator } from '../../middlewares/validator.middleware';
+import { paginateResponse } from '../../utils/pageAndLimit';
 
 @Route('treks')
 @Tags('Trekking')
@@ -45,7 +46,7 @@ export class TrekkingController extends Controller {
     @Query() limit?: number,
     @Query() page?: number,
   ): Promise<ApiResponse<Trek[]>> {
-    const data = await this.trekService.getAll({
+    const dataTotalCount = await this.trekService.getAll({
       categoryId,
       region,
       difficulty,
@@ -61,8 +62,10 @@ export class TrekkingController extends Controller {
       limit,
       page,
     });
+    const { data, pagination } = paginateResponse(dataTotalCount, limit, page);
     return {
       data,
+      pagination,
       message: 'Trekking packages retrieved successfully',
       success: true,
     };

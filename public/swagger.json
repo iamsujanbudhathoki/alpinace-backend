@@ -282,6 +282,41 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"PaginationMeta": {
+				"properties": {
+					"count": {
+						"type": "number",
+						"format": "double"
+					},
+					"currentPage": {
+						"type": "number",
+						"format": "double"
+					},
+					"nextPage": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"prevPage": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"lastPage": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"count",
+					"currentPage",
+					"nextPage",
+					"prevPage",
+					"lastPage"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ApiResponse_Trek-Array_": {
 				"properties": {
 					"data": {
@@ -303,6 +338,9 @@
 							}
 						],
 						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
 					},
 					"success": {
 						"type": "boolean"
@@ -330,6 +368,9 @@
 							}
 						],
 						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
 					},
 					"success": {
 						"type": "boolean"
@@ -361,6 +402,9 @@
 							}
 						],
 						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
 					},
 					"success": {
 						"type": "boolean"
@@ -697,6 +741,9 @@
 						],
 						"nullable": true
 					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
 					"success": {
 						"type": "boolean"
 					},
@@ -913,6 +960,9 @@
 						],
 						"nullable": true
 					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
 					"success": {
 						"type": "boolean"
 					},
@@ -943,6 +993,9 @@
 							}
 						],
 						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
 					},
 					"success": {
 						"type": "boolean"
@@ -1193,6 +1246,9 @@
 							}
 						],
 						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
 					},
 					"success": {
 						"type": "boolean"
@@ -1461,6 +1517,9 @@
 						],
 						"nullable": true
 					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
 					"success": {
 						"type": "boolean"
 					},
@@ -1491,6 +1550,9 @@
 							}
 						],
 						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
 					},
 					"success": {
 						"type": "boolean"
@@ -1785,6 +1847,9 @@
 						],
 						"nullable": true
 					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
 					"success": {
 						"type": "boolean"
 					},
@@ -1812,6 +1877,10 @@
 						"type": "number",
 						"format": "double"
 					},
+					"unreadCount": {
+						"type": "number",
+						"format": "double"
+					},
 					"limit": {
 						"type": "number",
 						"format": "double"
@@ -1824,6 +1893,7 @@
 				"required": [
 					"items",
 					"total",
+					"unreadCount",
 					"limit",
 					"offset"
 				],
@@ -1845,6 +1915,45 @@
 							}
 						],
 						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_number_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"type": "number",
+								"format": "double"
+							},
+							{
+								"items": {
+									"type": "number",
+									"format": "double"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
 					},
 					"success": {
 						"type": "boolean"
@@ -1925,6 +2034,9 @@
 						],
 						"nullable": true
 					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
 					"success": {
 						"type": "boolean"
 					},
@@ -1961,6 +2073,9 @@
 							}
 						],
 						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
 					},
 					"success": {
 						"type": "boolean"
@@ -2090,6 +2205,9 @@
 						],
 						"nullable": true
 					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
 					"success": {
 						"type": "boolean"
 					},
@@ -2120,6 +2238,9 @@
 							}
 						],
 						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
 					},
 					"success": {
 						"type": "boolean"
@@ -2307,6 +2428,9 @@
 						],
 						"nullable": true
 					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
 					"success": {
 						"type": "boolean"
 					},
@@ -2337,6 +2461,9 @@
 							}
 						],
 						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
 					},
 					"success": {
 						"type": "boolean"
@@ -2504,6 +2631,9 @@
 						],
 						"nullable": true
 					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
 					"success": {
 						"type": "boolean"
 					},
@@ -2566,6 +2696,9 @@
 							}
 						],
 						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
 					},
 					"success": {
 						"type": "boolean"
@@ -2837,6 +2970,9 @@
 						],
 						"nullable": true
 					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
 					"success": {
 						"type": "boolean"
 					},
@@ -2867,6 +3003,9 @@
 							}
 						],
 						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
 					},
 					"success": {
 						"type": "boolean"
@@ -3302,6 +3441,9 @@
 						],
 						"nullable": true
 					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
 					"success": {
 						"type": "boolean"
 					},
@@ -3403,6 +3545,9 @@
 						],
 						"nullable": true
 					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
 					"success": {
 						"type": "boolean"
 					},
@@ -3433,6 +3578,9 @@
 							}
 						],
 						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
 					},
 					"success": {
 						"type": "boolean"
@@ -3513,6 +3661,9 @@
 						],
 						"nullable": true
 					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
 					"success": {
 						"type": "boolean"
 					},
@@ -3543,6 +3694,9 @@
 							}
 						],
 						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
 					},
 					"success": {
 						"type": "boolean"
@@ -3779,6 +3933,9 @@
 						],
 						"nullable": true
 					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
 					"success": {
 						"type": "boolean"
 					},
@@ -3809,6 +3966,9 @@
 							}
 						],
 						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
 					},
 					"success": {
 						"type": "boolean"
@@ -4006,6 +4166,9 @@
 						],
 						"nullable": true
 					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
 					"success": {
 						"type": "boolean"
 					},
@@ -4036,6 +4199,9 @@
 							}
 						],
 						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
 					},
 					"success": {
 						"type": "boolean"
@@ -4170,6 +4336,9 @@
 						],
 						"nullable": true
 					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
 					"success": {
 						"type": "boolean"
 					},
@@ -4213,6 +4382,9 @@
 						},
 						"type": "array",
 						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
 					},
 					"success": {
 						"type": "boolean"
@@ -5247,6 +5419,28 @@
 				]
 			}
 		},
+		"/notifications/unread-count": {
+			"get": {
+				"operationId": "GetUnreadCount",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_number_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Notifications"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
 		"/notifications/read-all": {
 			"put": {
 				"operationId": "MarkAllRead",
@@ -5347,7 +5541,7 @@
 					}
 				},
 				"tags": [
-					"Media Uploads"
+					"Media Library"
 				],
 				"security": [],
 				"parameters": [],
@@ -5388,10 +5582,45 @@
 					}
 				},
 				"tags": [
-					"Media Uploads"
+					"Media Library"
 				],
 				"security": [],
-				"parameters": []
+				"parameters": [
+					{
+						"in": "query",
+						"name": "category",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
 			}
 		},
 		"/media/{id}": {
@@ -5410,7 +5639,7 @@
 					}
 				},
 				"tags": [
-					"Media Uploads"
+					"Media Library"
 				],
 				"security": [],
 				"parameters": [
@@ -5449,7 +5678,7 @@
 					}
 				},
 				"tags": [
-					"Media Uploads"
+					"Media Library"
 				],
 				"security": [],
 				"parameters": [
@@ -5483,7 +5712,42 @@
 					"Inquiries & Leads"
 				],
 				"security": [],
-				"parameters": []
+				"parameters": [
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/InquiryStatus"
+						}
+					},
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
 			},
 			"post": {
 				"operationId": "Create",
@@ -5845,6 +6109,40 @@
 						"required": false,
 						"schema": {
 							"$ref": "#/components/schemas/FaqStatus"
+						}
+					},
+					{
+						"in": "query",
+						"name": "category",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
 						}
 					}
 				]
@@ -6370,6 +6668,32 @@
 						"schema": {
 							"$ref": "#/components/schemas/CategoryType"
 						}
+					},
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
 					}
 				]
 			},
@@ -6522,7 +6846,58 @@
 					"Bookings"
 				],
 				"security": [],
-				"parameters": []
+				"parameters": [
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/BookingStatus"
+						}
+					},
+					{
+						"in": "query",
+						"name": "packageType",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/BookingPackageType"
+						}
+					},
+					{
+						"in": "query",
+						"name": "paymentStatus",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/BookingPaymentStatus"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
 			},
 			"post": {
 				"operationId": "Create",
@@ -6705,6 +7080,24 @@
 						"required": false,
 						"schema": {
 							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
 						}
 					}
 				]

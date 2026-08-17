@@ -15,8 +15,36 @@ export class InquiryService {
   private repo = AppDataSource.getRepository(Inquiry);
   private notifSvc = new NotificationService();
 
-  async getAll(): Promise<Inquiry[]> {
-    return this.repo.find({ order: { createdAt: 'DESC' } });
+  async getAll(params?: {
+    status?: InquiryStatus;
+    search?: string;
+    limit?: number;
+    page?: number;
+  }): Promise<[Inquiry[], number]> {
+    const qb = this.repo.createQueryBuilder('inq');
+
+    if (params?.status && (params.status as any) !== 'All') {
+      qb.andWhere('inq.status = :status', { status: params.status });
+    }
+
+    if (params?.search && params.search.trim()) {
+      const term = `%${params.search.trim().toLowerCase()}%`;
+      qb.andWhere(
+        '(LOWER(inq.guestName) LIKE :term OR LOWER(inq.email) LIKE :term OR LOWER(inq.interestedTrip) LIKE :term OR LOWER(inq.country) LIKE :term)',
+        { term },
+      );
+    }
+
+    qb.orderBy('inq.createdAt', 'DESC');
+
+    if (params?.limit) {
+      qb.take(params.limit);
+      if (params.page && params.page > 1) {
+        qb.skip((params.page - 1) * params.limit);
+      }
+    }
+
+    return qb.getManyAndCount();
   }
 
   async getById(id: string): Promise<Inquiry> {

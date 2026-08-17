@@ -5,6 +5,7 @@ import { Notification, NotificationType } from '../../entities/notification/Noti
 export interface PaginatedNotifications {
   items: Notification[];
   total: number;
+  unreadCount: number;
   limit: number;
   offset: number;
 }
@@ -23,7 +24,12 @@ export class NotificationService {
       take: limit,
       skip: offset,
     });
-    return { items, total, limit, offset };
+    const unreadCount = await this.repo.count({ where: { isRead: false } });
+    return { items, total, unreadCount, limit, offset };
+  }
+
+  async getUnreadCount(): Promise<number> {
+    return this.repo.count({ where: { isRead: false } });
   }
 
   async create(dto: {

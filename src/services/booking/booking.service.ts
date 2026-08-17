@@ -2,6 +2,7 @@ import { autoInjectable } from 'tsyringe';
 import { AppDataSource } from '../../config/database.config';
 import {
   Booking,
+  BookingPackageType,
   BookingPaymentStatus,
   BookingPermitStatus,
   BookingStatus,
@@ -16,8 +17,50 @@ import { AppError } from '../../utils/appError.util';
 export class BookingService {
   private repo = AppDataSource.getRepository(Booking);
 
-  async getAll(): Promise<Booking[]> {
-    return this.repo.find({ order: { createdAt: 'DESC' } });
+  async getAll(params?: {
+    search?: string;
+    status?: BookingStatus;
+    packageType?: BookingPackageType;
+    paymentStatus?: BookingPaymentStatus;
+    limit?: number;
+    page?: number;
+  }): Promise<[Booking[], number]> {
+    const qb = this.repo.createQueryBuilder('booking');
+
+    if (params?.status && (params.status as any) !== 'All') {
+      qb.andWhere('booking.bookingStatus = :status', { status: params.status });
+    }
+
+    if (params?.packageType && (params.packageType as any) !== 'All') {
+      qb.andWhere('booking.packageType = :packageType', {
+        packageType: params.packageType,
+      });
+    }
+
+    if (params?.paymentStatus && (params.paymentStatus as any) !== 'All') {
+      qb.andWhere('booking.paymentStatus = :paymentStatus', {
+        paymentStatus: params.paymentStatus,
+      });
+    }
+
+    if (params?.search && params.search.trim()) {
+      const term = `%${params.search.trim().toLowerCase()}%`;
+      qb.andWhere(
+        '(LOWER(booking.guestName) LIKE :term OR LOWER(booking.guestEmail) LIKE :term OR LOWER(booking.reference) LIKE :term OR LOWER(booking.packageName) LIKE :term OR LOWER(booking.country) LIKE :term)',
+        { term },
+      );
+    }
+
+    qb.orderBy('booking.createdAt', 'DESC');
+
+    if (params?.limit) {
+      qb.take(params.limit);
+      if (params.page && params.page > 1) {
+        qb.skip((params.page - 1) * params.limit);
+      }
+    }
+
+    return qb.getManyAndCount();
   }
 
   async getById(id: string): Promise<Booking> {

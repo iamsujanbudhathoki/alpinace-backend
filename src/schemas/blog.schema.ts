@@ -25,6 +25,16 @@ export class GetBlogsQueryDto {
   @IsOptional()
   @IsString()
   search?: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  limit?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  page?: number;
 }
 
 export class CreateBlogArticleDto {

@@ -17,6 +17,7 @@ import { TripDifficulty } from '../../entities/common/difficulty.enum';
 import { TourService } from '../../services/tour/tour.service';
 import { CreateTourDto, UpdateTourDto } from '../../schemas/tour.schema';
 import { RequestValidator } from '../../middlewares/validator.middleware';
+import { paginateResponse } from '../../utils/pageAndLimit';
 
 @Route('tours')
 @Tags('Tours')
@@ -44,7 +45,7 @@ export class TourController extends Controller {
     @Query() limit?: number,
     @Query() page?: number,
   ): Promise<ApiResponse<Tour[]>> {
-    const data = await this.tourService.getAll({
+    const dataTotalCount = await this.tourService.getAll({
       categoryId,
       region,
       tourType,
@@ -59,7 +60,8 @@ export class TourController extends Controller {
       limit,
       page,
     });
-    return { data, message: 'Tours retrieved successfully', success: true };
+    const { data, pagination } = paginateResponse(dataTotalCount, limit, page);
+    return { data, pagination, message: 'Tours retrieved successfully', success: true };
   }
 
   /**

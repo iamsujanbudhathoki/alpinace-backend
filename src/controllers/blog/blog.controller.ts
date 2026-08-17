@@ -20,6 +20,7 @@ import {
   UpdateBlogArticleDto,
 } from '../../schemas/blog.schema';
 import { RequestValidator } from '../../middlewares/validator.middleware';
+import { paginateResponse } from '../../utils/pageAndLimit';
 
 @Route('blogs')
 @Tags('Blog Articles')
@@ -41,15 +42,21 @@ export class BlogController extends Controller {
     @Query() categoryId?: string,
     @Query() category?: string,
     @Query() search?: string,
+    @Query() limit?: number,
+    @Query() page?: number,
   ): Promise<ApiResponse<BlogArticle[]>> {
-    const data = await this.blogService.getAll(
+    const dataTotalCount = await this.blogService.getAll(
       status,
       categoryId,
       category,
       search,
+      limit,
+      page,
     );
+    const { data, pagination } = paginateResponse(dataTotalCount, limit, page);
     return {
       data,
+      pagination,
       message: 'Blog articles retrieved successfully',
       success: true,
     };

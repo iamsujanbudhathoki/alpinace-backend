@@ -16,6 +16,7 @@ import { Faq, FaqStatus } from '../../entities/faq/Faq.entity';
 import { FaqService } from '../../services/faq/faq.service';
 import { CreateFaqDto, UpdateFaqDto, ReorderFaqsDto } from '../../schemas/faq.schema';
 import { RequestValidator } from '../../middlewares/validator.middleware';
+import { paginateResponse } from '../../utils/pageAndLimit';
 
 @Route('faqs')
 @Tags('FAQs & Consultations')
@@ -25,9 +26,22 @@ export class FaqController extends Controller {
   }
 
   @Get('')
-  async getAll(@Query() status?: FaqStatus): Promise<ApiResponse<Faq[]>> {
-    const data = await this.faqService.getAll(status);
-    return { data, message: 'FAQs retrieved successfully', success: true };
+  async getAll(
+    @Query() status?: FaqStatus,
+    @Query() category?: string,
+    @Query() search?: string,
+    @Query() limit?: number,
+    @Query() page?: number,
+  ): Promise<ApiResponse<Faq[]>> {
+    const dataTotalCount = await this.faqService.getAll({
+      status,
+      category,
+      search,
+      limit,
+      page,
+    });
+    const { data, pagination } = paginateResponse(dataTotalCount, limit, page);
+    return { data, pagination, message: 'FAQs retrieved successfully', success: true };
   }
 
   @Put('reorder')

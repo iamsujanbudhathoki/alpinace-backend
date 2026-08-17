@@ -15,8 +15,36 @@ import { AppError } from '../../utils/appError.util';
 export class CategoryService {
   private repo = AppDataSource.getRepository(Category);
 
-  async getAll(): Promise<Category[]> {
-    return this.repo.find({ order: { createdAt: 'DESC' } });
+  async getAll(params?: {
+    type?: CategoryType;
+    search?: string;
+    limit?: number;
+    page?: number;
+  }): Promise<[Category[], number]> {
+    const qb = this.repo.createQueryBuilder('cat');
+
+    if (params?.type && (params.type as any) !== 'All') {
+      qb.andWhere('cat.type = :type', { type: params.type });
+    }
+
+    if (params?.search && params.search.trim()) {
+      const term = `%${params.search.trim().toLowerCase()}%`;
+      qb.andWhere(
+        '(LOWER(cat.name) LIKE :term OR LOWER(cat.description) LIKE :term OR LOWER(cat.slug) LIKE :term)',
+        { term },
+      );
+    }
+
+    qb.orderBy('cat.createdAt', 'DESC');
+
+    if (params?.limit) {
+      qb.take(params.limit);
+      if (params.page && params.page > 1) {
+        qb.skip((params.page - 1) * params.limit);
+      }
+    }
+
+    return qb.getManyAndCount();
   }
 
   async getByType(type: CategoryType): Promise<Category[]> {

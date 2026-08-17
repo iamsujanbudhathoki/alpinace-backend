@@ -13,17 +13,17 @@ export const paginateResponse = <T>(
 ) => {
   const [data, total] = dataTotalCount;
 
-  page = parseInt(page?.toString() ?? '1');
-  limit = parseInt(limit?.toString() ?? '0');
-  const lastPage = Math.ceil(total / limit);
-  const nextPage = page + 1 > lastPage ? null : page + 1;
-  const prevPage = page - 1 < 1 ? null : page - 1;
+  const parsedPage = Math.max(1, parseInt(page?.toString() ?? '1', 10) || 1);
+  const parsedLimit = parseInt(limit?.toString() ?? '0', 10) || (total > 0 ? total : appConstants.DEFAULT_LIMIT);
+  const lastPage = Math.max(1, Math.ceil(total / parsedLimit));
+  const nextPage = parsedPage + 1 > lastPage ? null : parsedPage + 1;
+  const prevPage = parsedPage - 1 < 1 ? null : parsedPage - 1;
 
   return {
     data,
     pagination: {
       count: total,
-      currentPage: page,
+      currentPage: parsedPage,
       nextPage: nextPage,
       prevPage: prevPage,
       lastPage: lastPage,

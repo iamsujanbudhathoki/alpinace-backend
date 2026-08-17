@@ -38,7 +38,7 @@ export class ExpeditionService {
     sortBy?: string;
     limit?: number;
     page?: number;
-  }): Promise<Expedition[]> {
+  }): Promise<[Expedition[], number]> {
     const qb = this.repo.createQueryBuilder('exp');
 
     if (params?.categoryId && params.categoryId !== 'All') {
@@ -139,7 +139,7 @@ export class ExpeditionService {
       }
     }
 
-    return qb.getMany();
+    return qb.getManyAndCount();
   }
 
   async getByIdOrSlug(idOrSlug: string): Promise<Expedition> {

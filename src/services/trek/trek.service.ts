@@ -30,7 +30,7 @@ export class TrekService {
     sortBy?: string;
     limit?: number;
     page?: number;
-  }): Promise<Trek[]> {
+  }): Promise<[Trek[], number]> {
     const qb = this.repo.createQueryBuilder('trek');
 
     if (params?.categoryId && params.categoryId !== 'All') {
@@ -122,7 +122,7 @@ export class TrekService {
       }
     }
 
-    return qb.getMany();
+    return qb.getManyAndCount();
   }
 
   async getByIdOrSlug(idOrSlug: string): Promise<Trek> {

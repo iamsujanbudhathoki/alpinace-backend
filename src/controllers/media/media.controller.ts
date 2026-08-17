@@ -1,15 +1,16 @@
 import {
+  Body,
   Controller,
-  Post,
-  Get,
-  Put,
   Delete,
+  Get,
+  Middlewares,
+  Path,
+  Post,
+  Put,
+  Query,
   Route,
   Tags,
   UploadedFile,
-  Path,
-  Body,
-  Middlewares,
 } from 'tsoa';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
 import {
@@ -18,9 +19,10 @@ import {
 } from '../../services/media/media.service';
 import { UpdateMediaDto } from '../../schemas/media.schema';
 import { RequestValidator } from '../../middlewares/validator.middleware';
+import { paginateResponse } from '../../utils/pageAndLimit';
 
 @Route('media')
-@Tags('Media Uploads')
+@Tags('Media Library')
 export class MediaController extends Controller {
   constructor(private mediaService: MediaService = new MediaService()) {
     super();
@@ -39,10 +41,22 @@ export class MediaController extends Controller {
   }
 
   @Get()
-  async getAllMedia(): Promise<ApiResponse<MediaUploadResult[]>> {
-    const data = await this.mediaService.getAll();
+  async getAllMedia(
+    @Query() category?: string,
+    @Query() search?: string,
+    @Query() limit?: number,
+    @Query() page?: number,
+  ): Promise<ApiResponse<MediaUploadResult[]>> {
+    const dataTotalCount = await this.mediaService.getAll({
+      category,
+      search,
+      limit,
+      page,
+    });
+    const { data, pagination } = paginateResponse(dataTotalCount, limit, page);
     return {
       data,
+      pagination,
       message: 'Media assets retrieved successfully',
       success: true,
     };

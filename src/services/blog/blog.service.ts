@@ -18,7 +18,9 @@ export class BlogService {
     categoryId?: string,
     category?: string,
     search?: string,
-  ): Promise<BlogArticle[]> {
+    limit?: number,
+    page?: number,
+  ): Promise<[BlogArticle[], number]> {
     const qb = this.repo.createQueryBuilder('blog');
 
     if (status) {
@@ -53,7 +55,15 @@ export class BlogService {
     }
 
     qb.orderBy('blog.createdAt', 'DESC');
-    return qb.getMany();
+
+    if (limit) {
+      qb.take(limit);
+      if (page && page > 1) {
+        qb.skip((page - 1) * limit);
+      }
+    }
+
+    return qb.getManyAndCount();
   }
 
   async getByIdOrSlug(idOrSlug: string): Promise<BlogArticle> {

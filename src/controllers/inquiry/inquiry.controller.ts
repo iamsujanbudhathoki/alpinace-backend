@@ -7,6 +7,7 @@ import {
   Path,
   Post,
   Put,
+  Query,
   Route,
   Tags,
 } from 'tsoa';
@@ -19,6 +20,7 @@ import {
   SendQuoteDto,
 } from '../../schemas/inquiry.schema';
 import { RequestValidator } from '../../middlewares/validator.middleware';
+import { paginateResponse } from '../../utils/pageAndLimit';
 
 @Route('inquiries')
 @Tags('Inquiries & Leads')
@@ -28,9 +30,20 @@ export class InquiryController extends Controller {
   }
 
   @Get('')
-  async getAll(): Promise<ApiResponse<Inquiry[]>> {
-    const data = await this.inquiryService.getAll();
-    return { data, message: 'Inquiries retrieved successfully', success: true };
+  async getAll(
+    @Query() status?: InquiryStatus,
+    @Query() search?: string,
+    @Query() limit?: number,
+    @Query() page?: number,
+  ): Promise<ApiResponse<Inquiry[]>> {
+    const dataTotalCount = await this.inquiryService.getAll({
+      status,
+      search,
+      limit,
+      page,
+    });
+    const { data, pagination } = paginateResponse(dataTotalCount, limit, page);
+    return { data, pagination, message: 'Inquiries retrieved successfully', success: true };
   }
 
   @Get('{id}')

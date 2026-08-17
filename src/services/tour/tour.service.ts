@@ -29,7 +29,7 @@ export class TourService {
     sortBy?: string;
     limit?: number;
     page?: number;
-  }): Promise<Tour[]> {
+  }): Promise<[Tour[], number]> {
     const qb = this.repo.createQueryBuilder('tour');
 
     if (params?.categoryId && params.categoryId !== 'All') {
@@ -111,7 +111,7 @@ export class TourService {
       }
     }
 
-    return qb.getMany();
+    return qb.getManyAndCount();
   }
 
   async getByIdOrSlug(idOrSlug: string): Promise<Tour> {

@@ -22,6 +22,7 @@ import {
   UpdateCategoryDto,
 } from '../../schemas/category.schema';
 import { RequestValidator } from '../../middlewares/validator.middleware';
+import { paginateResponse } from '../../utils/pageAndLimit';
 
 @Route('categories')
 @Tags('Categories')
@@ -33,12 +34,22 @@ export class CategoryController extends Controller {
   }
 
   @Get('')
-  async getAll(@Query() type?: CategoryType): Promise<ApiResponse<Category[]>> {
-    const data = type
-      ? await this.categoryService.getByType(type)
-      : await this.categoryService.getAll();
+  async getAll(
+    @Query() type?: CategoryType,
+    @Query() search?: string,
+    @Query() limit?: number,
+    @Query() page?: number,
+  ): Promise<ApiResponse<Category[]>> {
+    const dataTotalCount = await this.categoryService.getAll({
+      type,
+      search,
+      limit,
+      page,
+    });
+    const { data, pagination } = paginateResponse(dataTotalCount, limit, page);
     return {
       data,
+      pagination,
       message: 'Categories retrieved successfully',
       success: true,
     };

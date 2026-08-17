@@ -125,10 +125,38 @@ export class MediaService {
     };
   }
 
-  async getAll(): Promise<MediaUploadResult[]> {
-    const records = await this.mediaRepo.find({ order: { createdAt: 'DESC' } });
+  async getAll(params?: {
+    category?: string;
+    search?: string;
+    limit?: number;
+    page?: number;
+  }): Promise<[MediaUploadResult[], number]> {
+    const qb = this.mediaRepo.createQueryBuilder('media');
 
-    return records.map((m) => ({
+    if (params?.category && params.category !== 'All') {
+      qb.andWhere('media.category = :category', { category: params.category });
+    }
+
+    if (params?.search && params.search.trim()) {
+      const term = `%${params.search.trim().toLowerCase()}%`;
+      qb.andWhere(
+        '(LOWER(media.name) LIKE :term OR LOWER(media.title) LIKE :term OR LOWER(media.category) LIKE :term OR LOWER(media.description) LIKE :term)',
+        { term },
+      );
+    }
+
+    qb.orderBy('media.createdAt', 'DESC');
+
+    if (params?.limit) {
+      qb.take(params.limit);
+      if (params.page && params.page > 1) {
+        qb.skip((params.page - 1) * params.limit);
+      }
+    }
+
+    const [records, total] = await qb.getManyAndCount();
+
+    const items = records.map((m) => ({
       id: m.id,
       name: m.name,
       title: m.title,
@@ -140,6 +168,8 @@ export class MediaService {
       fileSize: m.fileSize,
       createdAt: m.createdAt,
     }));
+
+    return [items, total];
   }
 
   async update(

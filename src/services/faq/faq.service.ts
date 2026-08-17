@@ -8,14 +8,41 @@ import { AppError } from '../../utils/appError.util';
 export class FaqService {
   private repo = AppDataSource.getRepository(Faq);
 
-  async getAll(status?: FaqStatus): Promise<Faq[]> {
-    if (status) {
-      return this.repo.find({
-        where: { status },
-        order: { order: 'ASC', createdAt: 'ASC' },
-      });
+  async getAll(params?: {
+    status?: FaqStatus;
+    category?: string;
+    search?: string;
+    limit?: number;
+    page?: number;
+  }): Promise<[Faq[], number]> {
+    const qb = this.repo.createQueryBuilder('faq');
+
+    if (params?.status && (params.status as any) !== 'All') {
+      qb.andWhere('faq.status = :status', { status: params.status });
     }
-    return this.repo.find({ order: { order: 'ASC', createdAt: 'ASC' } });
+
+    if (params?.category && params.category !== 'All') {
+      qb.andWhere('faq.category = :category', { category: params.category });
+    }
+
+    if (params?.search && params.search.trim()) {
+      const term = `%${params.search.trim().toLowerCase()}%`;
+      qb.andWhere(
+        '(LOWER(faq.question) LIKE :term OR LOWER(faq.answer) LIKE :term OR LOWER(faq.category) LIKE :term)',
+        { term },
+      );
+    }
+
+    qb.orderBy('faq.order', 'ASC').addOrderBy('faq.createdAt', 'ASC');
+
+    if (params?.limit) {
+      qb.take(params.limit);
+      if (params.page && params.page > 1) {
+        qb.skip((params.page - 1) * params.limit);
+      }
+    }
+
+    return qb.getManyAndCount();
   }
 
   async getById(id: string): Promise<Faq> {

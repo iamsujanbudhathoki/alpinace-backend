@@ -7,17 +7,24 @@ import {
   Path,
   Post,
   Put,
+  Query,
   Route,
   Tags,
 } from 'tsoa';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
-import { Booking } from '../../entities/booking/Booking.entity';
+import {
+  Booking,
+  BookingPackageType,
+  BookingPaymentStatus,
+  BookingStatus,
+} from '../../entities/booking/Booking.entity';
 import { BookingService } from '../../services/booking/booking.service';
 import {
   CreateBookingDto,
   UpdateBookingDto,
 } from '../../schemas/booking.schema';
 import { RequestValidator } from '../../middlewares/validator.middleware';
+import { paginateResponse } from '../../utils/pageAndLimit';
 
 @Route('bookings')
 @Tags('Bookings')
@@ -27,9 +34,24 @@ export class BookingController extends Controller {
   }
 
   @Get('')
-  async getAll(): Promise<ApiResponse<Booking[]>> {
-    const data = await this.bookingService.getAll();
-    return { data, message: 'Bookings retrieved successfully', success: true };
+  async getAll(
+    @Query() search?: string,
+    @Query() status?: BookingStatus,
+    @Query() packageType?: BookingPackageType,
+    @Query() paymentStatus?: BookingPaymentStatus,
+    @Query() limit?: number,
+    @Query() page?: number,
+  ): Promise<ApiResponse<Booking[]>> {
+    const dataTotalCount = await this.bookingService.getAll({
+      search,
+      status,
+      packageType,
+      paymentStatus,
+      limit,
+      page,
+    });
+    const { data, pagination } = paginateResponse(dataTotalCount, limit, page);
+    return { data, pagination, message: 'Bookings retrieved successfully', success: true };
   }
 
   @Get('{id}')

@@ -39,7 +39,7 @@ export class PackageService {
     sortBy?: string;
     limit?: number;
     page?: number;
-  }): Promise<Package[]> {
+  }): Promise<[Package[], number]> {
     const qb = this.repo.createQueryBuilder('pkg');
 
     if (params?.categoryType) {
@@ -133,7 +133,7 @@ export class PackageService {
       }
     }
 
-    return qb.getMany();
+    return qb.getManyAndCount();
   }
 
   async getByIdOrSlug(idOrSlug: string): Promise<Package> {

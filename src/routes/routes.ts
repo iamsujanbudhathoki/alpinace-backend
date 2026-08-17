@@ -139,10 +139,23 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PaginationMeta": {
+        "dataType": "refObject",
+        "properties": {
+            "count": {"dataType":"double","required":true},
+            "currentPage": {"dataType":"double","required":true},
+            "nextPage": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "prevPage": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "lastPage": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ApiResponse_Trek-Array_": {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"Trek"}},{"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"Trek"}}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -153,6 +166,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"dataType":"any"},{"dataType":"array","array":{"dataType":"any"}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -163,6 +177,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"ref":"Trek"},{"dataType":"array","array":{"dataType":"refObject","ref":"Trek"}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -284,6 +299,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"dataType":"boolean"},{"dataType":"array","array":{"dataType":"boolean"}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -344,6 +360,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"Tour"}},{"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"Tour"}}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -354,6 +371,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"ref":"Tour"},{"dataType":"array","array":{"dataType":"refObject","ref":"Tour"}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -437,6 +455,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"ref":"Record_string.string_"},{"dataType":"array","array":{"dataType":"refAlias","ref":"Record_string.string_"}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -525,6 +544,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"Package"}},{"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"Package"}}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -535,6 +555,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"ref":"Package"},{"dataType":"array","array":{"dataType":"refObject","ref":"Package"}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -633,6 +654,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"Notification"}},{"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"Notification"}}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -644,6 +666,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "items": {"dataType":"array","array":{"dataType":"refObject","ref":"Notification"},"required":true},
             "total": {"dataType":"double","required":true},
+            "unreadCount": {"dataType":"double","required":true},
             "limit": {"dataType":"double","required":true},
             "offset": {"dataType":"double","required":true},
         },
@@ -654,6 +677,18 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"ref":"PaginatedNotifications"},{"dataType":"array","array":{"dataType":"refObject","ref":"PaginatedNotifications"}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
+            "success": {"dataType":"boolean","required":true},
+            "message": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ApiResponse_number_": {
+        "dataType": "refObject",
+        "properties": {
+            "data": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"array","array":{"dataType":"double"}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -681,6 +716,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"ref":"MediaUploadResult"},{"dataType":"array","array":{"dataType":"refObject","ref":"MediaUploadResult"}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -691,6 +727,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"MediaUploadResult"}},{"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"MediaUploadResult"}}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -737,6 +774,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"Inquiry"}},{"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"Inquiry"}}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -747,6 +785,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"ref":"Inquiry"},{"dataType":"array","array":{"dataType":"refObject","ref":"Inquiry"}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -820,6 +859,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"Guide"}},{"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"Guide"}}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -830,6 +870,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"ref":"Guide"},{"dataType":"array","array":{"dataType":"refObject","ref":"Guide"}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -892,6 +933,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"Faq"}},{"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"Faq"}}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -919,6 +961,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"ref":"Faq"},{"dataType":"array","array":{"dataType":"refObject","ref":"Faq"}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -1005,6 +1048,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"Expedition"}},{"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"Expedition"}}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -1015,6 +1059,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"ref":"Expedition"},{"dataType":"array","array":{"dataType":"refObject","ref":"Expedition"}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -1159,6 +1204,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"ref":"DashboardMetricsResponse"},{"dataType":"array","array":{"dataType":"refObject","ref":"DashboardMetricsResponse"}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -1195,6 +1241,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"Category"}},{"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"Category"}}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -1205,6 +1252,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"ref":"Category"},{"dataType":"array","array":{"dataType":"refObject","ref":"Category"}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -1237,6 +1285,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"Booking"}},{"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"Booking"}}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -1247,6 +1296,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"ref":"Booking"},{"dataType":"array","array":{"dataType":"refObject","ref":"Booking"}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -1329,6 +1379,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"BlogArticle"}},{"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"BlogArticle"}}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -1339,6 +1390,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"ref":"BlogArticle"},{"dataType":"array","array":{"dataType":"refObject","ref":"BlogArticle"}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -1412,6 +1464,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"Associate"}},{"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"Associate"}}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -1422,6 +1475,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"ref":"Associate"},{"dataType":"array","array":{"dataType":"refObject","ref":"Associate"}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -1477,6 +1531,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"ref":"AdminLoginResponse"},{"dataType":"array","array":{"dataType":"refObject","ref":"AdminLoginResponse"}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -1496,6 +1551,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":[null]},{"dataType":"array","array":{"dataType":"enum","enums":[null]}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
         },
@@ -2217,6 +2273,35 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsNotificationController_getUnreadCount: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/notifications/unread-count',
+            ...(fetchMiddlewares<RequestHandler>(NotificationController)),
+            ...(fetchMiddlewares<RequestHandler>(NotificationController.prototype.getUnreadCount)),
+
+            async function NotificationController_getUnreadCount(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsNotificationController_getUnreadCount, request, response });
+
+                const controller = new NotificationController();
+
+              await templateService.apiHandler({
+                methodName: 'getUnreadCount',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsNotificationController_markAllRead: Record<string, TsoaRoute.ParameterSchema> = {
         };
         app.put('/notifications/read-all',
@@ -2343,6 +2428,10 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsMediaController_getAllMedia: Record<string, TsoaRoute.ParameterSchema> = {
+                category: {"in":"query","name":"category","dataType":"string"},
+                search: {"in":"query","name":"search","dataType":"string"},
+                limit: {"in":"query","name":"limit","dataType":"double"},
+                page: {"in":"query","name":"page","dataType":"double"},
         };
         app.get('/media',
             ...(fetchMiddlewares<RequestHandler>(MediaController)),
@@ -2433,6 +2522,10 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsInquiryController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
+                status: {"in":"query","name":"status","ref":"InquiryStatus"},
+                search: {"in":"query","name":"search","dataType":"string"},
+                limit: {"in":"query","name":"limit","dataType":"double"},
+                page: {"in":"query","name":"page","dataType":"double"},
         };
         app.get('/inquiries',
             ...(fetchMiddlewares<RequestHandler>(InquiryController)),
@@ -2765,6 +2858,10 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsFaqController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
                 status: {"in":"query","name":"status","ref":"FaqStatus"},
+                category: {"in":"query","name":"category","dataType":"string"},
+                search: {"in":"query","name":"search","dataType":"string"},
+                limit: {"in":"query","name":"limit","dataType":"double"},
+                page: {"in":"query","name":"page","dataType":"double"},
         };
         app.get('/faqs',
             ...(fetchMiddlewares<RequestHandler>(FaqController)),
@@ -3169,6 +3266,9 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsCategoryController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
                 type: {"in":"query","name":"type","ref":"CategoryType"},
+                search: {"in":"query","name":"search","dataType":"string"},
+                limit: {"in":"query","name":"limit","dataType":"double"},
+                page: {"in":"query","name":"page","dataType":"double"},
         };
         app.get('/categories',
             ...(fetchMiddlewares<RequestHandler>(CategoryController)),
@@ -3319,6 +3419,12 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsBookingController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
+                search: {"in":"query","name":"search","dataType":"string"},
+                status: {"in":"query","name":"status","ref":"BookingStatus"},
+                packageType: {"in":"query","name":"packageType","ref":"BookingPackageType"},
+                paymentStatus: {"in":"query","name":"paymentStatus","ref":"BookingPaymentStatus"},
+                limit: {"in":"query","name":"limit","dataType":"double"},
+                page: {"in":"query","name":"page","dataType":"double"},
         };
         app.get('/bookings',
             ...(fetchMiddlewares<RequestHandler>(BookingController)),
@@ -3473,6 +3579,8 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 categoryId: {"in":"query","name":"categoryId","dataType":"string"},
                 category: {"in":"query","name":"category","dataType":"string"},
                 search: {"in":"query","name":"search","dataType":"string"},
+                limit: {"in":"query","name":"limit","dataType":"double"},
+                page: {"in":"query","name":"page","dataType":"double"},
         };
         app.get('/blogs',
             ...(fetchMiddlewares<RequestHandler>(BlogController)),

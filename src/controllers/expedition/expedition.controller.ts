@@ -24,6 +24,7 @@ import {
   UpdateExpeditionDto,
 } from '../../schemas/expedition.schema';
 import { RequestValidator } from '../../middlewares/validator.middleware';
+import { paginateResponse } from '../../utils/pageAndLimit';
 
 @Route('expeditions')
 @Tags('Expeditions')
@@ -55,7 +56,7 @@ export class ExpeditionController extends Controller {
     @Query() limit?: number,
     @Query() page?: number,
   ): Promise<ApiResponse<Expedition[]>> {
-    const data = await this.expeditionService.getAll({
+    const dataTotalCount = await this.expeditionService.getAll({
       categoryId,
       region,
       difficulty,
@@ -72,8 +73,10 @@ export class ExpeditionController extends Controller {
       limit,
       page,
     });
+    const { data, pagination } = paginateResponse(dataTotalCount, limit, page);
     return {
       data,
+      pagination,
       message: 'Expeditions retrieved successfully',
       success: true,
     };

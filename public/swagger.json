@@ -3728,6 +3728,15 @@
 					},
 					"image": {
 						"type": "string"
+					},
+					"metaTitle": {
+						"type": "string"
+					},
+					"metaDescription": {
+						"type": "string"
+					},
+					"keywords": {
+						"type": "string"
 					}
 				},
 				"required": [
@@ -3844,6 +3853,15 @@
 					},
 					"image": {
 						"type": "string"
+					},
+					"metaTitle": {
+						"type": "string"
+					},
+					"metaDescription": {
+						"type": "string"
+					},
+					"keywords": {
+						"type": "string"
 					}
 				},
 				"required": [
@@ -3886,6 +3904,15 @@
 					"views": {
 						"type": "number",
 						"format": "double"
+					},
+					"metaTitle": {
+						"type": "string"
+					},
+					"metaDescription": {
+						"type": "string"
+					},
+					"keywords": {
+						"type": "string"
 					}
 				},
 				"type": "object",

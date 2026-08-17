@@ -91,6 +91,9 @@ export class BlogService {
       excerpt: dto.excerpt || '',
       content: dto.content || '',
       image: dto.image || '',
+      metaTitle: dto.metaTitle,
+      metaDescription: dto.metaDescription,
+      keywords: dto.keywords,
     });
 
     return this.repo.save(blog);
@@ -113,6 +116,9 @@ export class BlogService {
     if (dto.content !== undefined) article.content = dto.content;
     if (dto.image !== undefined) article.image = dto.image;
     if (dto.views !== undefined) article.views = dto.views;
+    if (dto.metaTitle !== undefined) article.metaTitle = dto.metaTitle;
+    if (dto.metaDescription !== undefined) article.metaDescription = dto.metaDescription;
+    if (dto.keywords !== undefined) article.keywords = dto.keywords;
 
     return this.repo.save(article);
   }

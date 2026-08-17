@@ -306,7 +306,8 @@ export const seedDatabase = async () => {
     },
     {
       day: 9,
-      title: 'Trek to Gorak Shep (5,164 m) & Hike to Everest Base Camp (5,364 m)',
+      title:
+        'Trek to Gorak Shep (5,164 m) & Hike to Everest Base Camp (5,364 m)',
       description:
         'The milestone day! Trek along the Khumbu Glacier moraine to Gorak Shep, drop main packs, and press onward to standing on Everest Base Camp under the Khumbu Icefall.',
       maxAltitude: 'Everest Base Camp (5,364 m)',
@@ -1314,7 +1315,7 @@ export const seedDatabase = async () => {
       value:
         'Nepal trekking, Everest Base Camp, Annapurna Circuit, peak climbing, Sherpa guides, luxury mountain lodges',
     },
-    { key: 'canonicalUrl', value: 'https://alpineace.com' },
+    { key: 'canonicalUrl', value: 'https://alpineacetreks.com' },
     { key: 'facebookUrl', value: 'https://facebook.com/alpineacenepal' },
     { key: 'instagramUrl', value: 'https://instagram.com/alpineacenepal' },
     { key: 'youtubeUrl', value: 'https://youtube.com/@alpineacenepal' },

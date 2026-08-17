@@ -63,6 +63,18 @@ export class CreateBlogArticleDto {
   @IsOptional()
   @IsString()
   image?: string;
+
+  @IsOptional()
+  @IsString()
+  metaTitle?: string;
+
+  @IsOptional()
+  @IsString()
+  metaDescription?: string;
+
+  @IsOptional()
+  @IsString()
+  keywords?: string;
 }
 
 export class UpdateBlogArticleDto {
@@ -106,4 +118,16 @@ export class UpdateBlogArticleDto {
   @Type(() => Number)
   @IsNumber()
   views?: number;
+
+  @IsOptional()
+  @IsString()
+  metaTitle?: string;
+
+  @IsOptional()
+  @IsString()
+  metaDescription?: string;
+
+  @IsOptional()
+  @IsString()
+  keywords?: string;
 }

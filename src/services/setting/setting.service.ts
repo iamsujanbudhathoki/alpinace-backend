@@ -28,7 +28,7 @@ export class SettingService {
         "Experience Nepal's spectacular trekking routes, historical tours, and elite peak expeditions under the safe guidance of multi-summit Sherpas.",
       metaKeywords:
         'Nepal trekking, Everest Base Camp, Annapurna Circuit, peak climbing, Sherpa guides, luxury mountain lodges',
-      canonicalUrl: 'https://alpineace.com',
+      canonicalUrl: 'https://alpineacetreks.com',
       googleAnalyticsId: '',
       googleSiteVerification: '',
 

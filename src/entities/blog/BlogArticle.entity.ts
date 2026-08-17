@@ -43,4 +43,13 @@ export class BlogArticle extends CommonEntity {
 
   @Column({ name: 'image', type: 'text', nullable: true })
   image: string;
+
+  @Column({ name: 'meta_title', type: 'text', nullable: true })
+  metaTitle?: string;
+
+  @Column({ name: 'meta_description', type: 'text', nullable: true })
+  metaDescription?: string;
+
+  @Column({ name: 'keywords', type: 'text', nullable: true })
+  keywords?: string;
 }

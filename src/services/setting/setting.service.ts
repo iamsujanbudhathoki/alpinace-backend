@@ -1,6 +1,7 @@
 import { autoInjectable } from 'tsyringe';
 import { AppDataSource } from '../../config/database.config';
 import { Setting } from '../../entities/setting/Setting.entity';
+import { Media } from '../../entities/media/media.entity';
 import { UpdateSettingsDto } from '../../schemas/setting.schema';
 
 @autoInjectable()
@@ -40,9 +41,35 @@ export class SettingService {
       linkedinUrl: 'https://linkedin.com/company/alpine-ace-expeditions',
     };
 
-    settings.forEach((s) => {
+    const mediaRepo = AppDataSource.getRepository(Media);
+
+    for (const s of settings) {
+      if (s.key === 'testimonials' && s.value) {
+        try {
+          const list = JSON.parse(s.value);
+          if (Array.isArray(list)) {
+            const updatedList = await Promise.all(
+              list.map(async (item: any) => {
+                if (item.avatarMediaId) {
+                  const media = await mediaRepo.findOne({
+                    where: { id: item.avatarMediaId },
+                  });
+                  if (media) {
+                    item.avatar = media.path;
+                  }
+                }
+                return item;
+              }),
+            );
+            map[s.key] = JSON.stringify(updatedList);
+            continue;
+          }
+        } catch {
+          // ignore parse error
+        }
+      }
       map[s.key] = s.value;
-    });
+    }
 
     return map;
   }

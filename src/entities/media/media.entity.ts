@@ -1,6 +1,7 @@
-import { BeforeRemove, Column, Entity } from 'typeorm';
+import { BeforeRemove, Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { CommonEntity } from '../common/common.entity';
 import { MediaType } from '../../constants/appConstant';
+import { Category } from '../category/Category.entity';
 
 @Entity()
 export class Media extends CommonEntity {
@@ -13,8 +14,12 @@ export class Media extends CommonEntity {
   @Column({ name: 'title', nullable: true })
   title: string;
 
-  @Column({ name: 'category', nullable: true })
-  category: string;
+  @Column({ name: 'category_id', nullable: true })
+  categoryId?: string;
+
+  @ManyToOne(() => Category, { onDelete: 'SET NULL', nullable: true })
+  @JoinColumn({ name: 'category_id' })
+  category?: Category;
 
   @Column({ name: 'description', type: 'text', nullable: true })
   description: string;

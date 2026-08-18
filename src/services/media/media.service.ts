@@ -1,3 +1,4 @@
+import { In } from 'typeorm';
 import { autoInjectable } from 'tsyringe';
 import { AppDataSource } from '../../config/database.config';
 import { Media } from '../../entities/media/media.entity';
@@ -7,12 +8,15 @@ import { AppError } from '../../utils/appError.util';
 import { R2Util } from '../../utils/r2.util';
 import path from 'path';
 import fs from 'fs';
+import { Category } from '../../entities/category/Category.entity';
 
 export interface MediaUploadResult {
   id: string;
   name: string;
   title: string;
-  category: string;
+  categoryId?: string;
+  categoryName?: string;
+  category?: Category;
   description: string;
   altText: string;
   url: string;
@@ -54,6 +58,7 @@ export class MediaService {
 
   async saveUploadedFile(
     file: Express.Multer.File,
+    categoryId?: string,
   ): Promise<MediaUploadResult> {
     const sanitizedOriginalName = (file.originalname || 'upload').replace(/[^a-zA-Z0-9._-]/g, '_');
     const filename = `${Date.now()}-${sanitizedOriginalName}`;
@@ -101,7 +106,7 @@ export class MediaService {
     media.title = file.originalname
       ? file.originalname.replace(/\.[^/.]+$/, '')
       : filename;
-    media.category = '';
+    if (categoryId) media.categoryId = categoryId;
     media.description = '';
     media.altText = media.title;
     media.mimeType = mimeType;
@@ -110,37 +115,51 @@ export class MediaService {
     media.path = finalPath;
 
     const saved = await this.mediaRepo.save(media);
+    const reloaded = await this.mediaRepo.findOne({
+      where: { id: saved.id },
+      relations: ['category'],
+    });
+    const target = reloaded || saved;
 
     return {
-      id: saved.id,
-      name: saved.name,
-      title: saved.title,
-      category: saved.category,
-      description: saved.description,
-      altText: saved.altText,
-      url: this.buildUrl(saved.path),
-      mimeType: saved.mimeType,
-      fileSize: saved.fileSize,
-      createdAt: saved.createdAt,
+      id: target.id,
+      name: target.name,
+      title: target.title,
+      categoryId: target.categoryId,
+      categoryName: target.category?.name || '',
+      category: target.category,
+      description: target.description,
+      altText: target.altText,
+      url: this.buildUrl(target.path),
+      mimeType: target.mimeType,
+      fileSize: target.fileSize,
+      createdAt: target.createdAt,
     };
   }
 
   async getAll(params?: {
+    categoryId?: string;
     category?: string;
     search?: string;
     limit?: number;
     page?: number;
   }): Promise<[MediaUploadResult[], number]> {
-    const qb = this.mediaRepo.createQueryBuilder('media');
+    const qb = this.mediaRepo
+      .createQueryBuilder('media')
+      .leftJoinAndSelect('media.category', 'category');
 
-    if (params?.category && params.category !== 'All') {
-      qb.andWhere('media.category = :category', { category: params.category });
+    if (params?.categoryId && params.categoryId !== 'All') {
+      qb.andWhere('media.categoryId = :categoryId', { categoryId: params.categoryId });
+    } else if (params?.category && params.category !== 'All') {
+      qb.andWhere('(category.name = :category OR media.categoryId = :category)', {
+        category: params.category,
+      });
     }
 
     if (params?.search && params.search.trim()) {
       const term = `%${params.search.trim().toLowerCase()}%`;
       qb.andWhere(
-        '(LOWER(media.name) LIKE :term OR LOWER(media.title) LIKE :term OR LOWER(media.category) LIKE :term OR LOWER(media.description) LIKE :term)',
+        '(LOWER(media.name) LIKE :term OR LOWER(media.title) LIKE :term OR LOWER(category.name) LIKE :term OR LOWER(media.description) LIKE :term)',
         { term },
       );
     }
@@ -160,6 +179,8 @@ export class MediaService {
       id: m.id,
       name: m.name,
       title: m.title,
+      categoryId: m.categoryId,
+      categoryName: m.category?.name || '',
       category: m.category,
       description: m.description,
       altText: m.altText,
@@ -176,34 +197,44 @@ export class MediaService {
     id: string,
     data: {
       title?: string;
-      category?: string;
+      categoryId?: string;
       description?: string;
       altText?: string;
     },
   ): Promise<MediaUploadResult> {
-    const media = await this.mediaRepo.findOne({ where: { id } });
+    const media = await this.mediaRepo.findOne({
+      where: { id },
+      relations: ['category'],
+    });
     if (!media) {
       throw AppError.notFound('Media asset not found');
     }
 
     if (data.title !== undefined) media.title = data.title;
-    if (data.category !== undefined) media.category = data.category;
+    if (data.categoryId !== undefined) media.categoryId = data.categoryId;
     if (data.description !== undefined) media.description = data.description;
     if (data.altText !== undefined) media.altText = data.altText;
 
     const saved = await this.mediaRepo.save(media);
+    const reloaded = await this.mediaRepo.findOne({
+      where: { id: saved.id },
+      relations: ['category'],
+    });
+    const target = reloaded || saved;
 
     return {
-      id: saved.id,
-      name: saved.name,
-      title: saved.title,
-      category: saved.category,
-      description: saved.description,
-      altText: saved.altText,
-      url: this.buildUrl(saved.path),
-      mimeType: saved.mimeType,
-      fileSize: saved.fileSize,
-      createdAt: saved.createdAt,
+      id: target.id,
+      name: target.name,
+      title: target.title,
+      categoryId: target.categoryId,
+      categoryName: target.category?.name || '',
+      category: target.category,
+      description: target.description,
+      altText: target.altText,
+      url: this.buildUrl(target.path),
+      mimeType: target.mimeType,
+      fileSize: target.fileSize,
+      createdAt: target.createdAt,
     };
   }
 
@@ -229,6 +260,127 @@ export class MediaService {
 
     await this.mediaRepo.remove(media);
     return true;
+  }
+
+  async resolveMediaById(id: string): Promise<MediaUploadResult | null> {
+    if (!id) return null;
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+    let media: Media | null = null;
+    if (isUuid) {
+      media = await this.mediaRepo.findOne({ where: { id }, relations: ['category'] });
+    } else {
+      media = await this.mediaRepo.findOne({ where: { path: id }, relations: ['category'] });
+    }
+    if (!media) return null;
+    return {
+      id: media.id,
+      name: media.name,
+      title: media.title,
+      categoryId: media.categoryId,
+      categoryName: media.category?.name || '',
+      category: media.category,
+      description: media.description,
+      altText: media.altText,
+      url: this.buildUrl(media.path),
+      mimeType: media.mimeType,
+      fileSize: media.fileSize,
+      createdAt: media.createdAt,
+    };
+  }
+
+  async resolveMediaByIds(ids: string[]): Promise<Map<string, MediaUploadResult>> {
+    const map = new Map<string, MediaUploadResult>();
+    if (!ids || ids.length === 0) return map;
+
+    const validIds = ids.filter(Boolean);
+    if (validIds.length === 0) return map;
+
+    const uuids = validIds.filter((id) =>
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id),
+    );
+    if (uuids.length > 0) {
+      const records = await this.mediaRepo.find({ where: { id: In(uuids) }, relations: ['category'] });
+      for (const m of records) {
+        map.set(m.id, {
+          id: m.id,
+          name: m.name,
+          title: m.title,
+          categoryId: m.categoryId,
+          categoryName: m.category?.name || '',
+          category: m.category,
+          description: m.description,
+          altText: m.altText,
+          url: this.buildUrl(m.path),
+          mimeType: m.mimeType,
+          fileSize: m.fileSize,
+          createdAt: m.createdAt,
+        });
+      }
+    }
+    return map;
+  }
+
+  async resolveItemMedia(item: any): Promise<any> {
+    if (!item) return item;
+
+    const mediaIdsToFetch: string[] = [];
+
+    if (item.coverMediaId) mediaIdsToFetch.push(item.coverMediaId);
+    if (item.mapMediaId) mediaIdsToFetch.push(item.mapMediaId);
+
+    if (Array.isArray(item.galleryMediaIds)) {
+      item.galleryMediaIds.forEach((id: string) => {
+        if (id) mediaIdsToFetch.push(id);
+      });
+    }
+
+    if (Array.isArray(item.packageFiles)) {
+      item.packageFiles.forEach((pf: any) => {
+        if (pf?.mediaId) mediaIdsToFetch.push(pf.mediaId);
+      });
+    }
+
+    if (mediaIdsToFetch.length === 0) return item;
+
+    const mediaMap = await this.resolveMediaByIds(mediaIdsToFetch);
+
+    // Resolve Cover Image
+    if (item.coverMediaId && mediaMap.has(item.coverMediaId)) {
+      item.image = mediaMap.get(item.coverMediaId)!.url;
+    }
+
+    // Resolve Trek Map
+    if (item.mapMediaId && mediaMap.has(item.mapMediaId)) {
+      item.mapImage = mediaMap.get(item.mapMediaId)!.url;
+    }
+
+    // Resolve Gallery Images
+    if (Array.isArray(item.galleryMediaIds) && item.galleryMediaIds.length > 0) {
+      item.galleryImages = item.galleryMediaIds.map((id: string) =>
+        mediaMap.has(id) ? mediaMap.get(id)!.url : id,
+      );
+    }
+
+    // Resolve Package Files
+    if (Array.isArray(item.packageFiles)) {
+      item.packageFiles = item.packageFiles.map((pf: any) => {
+        if (pf?.mediaId && mediaMap.has(pf.mediaId)) {
+          const media = mediaMap.get(pf.mediaId)!;
+          const ext = media.name.split('.').pop()?.toLowerCase() || 'pdf';
+          return {
+            ...pf,
+            mediaId: pf.mediaId,
+            fileUrl: media.url,
+            fileName: media.name,
+            fileSize: media.fileSize ? `${(Number(media.fileSize) / (1024 * 1024)).toFixed(1)} MB` : 'File',
+            fileType: ext,
+          };
+        }
+        return pf;
+      });
+    }
+
+    return item;
   }
 }
 

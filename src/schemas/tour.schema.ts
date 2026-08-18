@@ -12,7 +12,13 @@ import {
 } from 'class-validator';
 import { TourStatus, TourType } from '../entities/tour/Tour.entity';
 import { TripDifficulty } from '../entities/common/difficulty.enum';
-import { TripFaqDto, TripItineraryDayDto, TripReviewDto } from './common-trip.schema';
+import {
+  TripDepartureDateDto,
+  TripFaqDto,
+  TripItineraryDayDto,
+  TripPackageFileDto,
+  TripReviewDto,
+} from './common-trip.schema';
 
 export class CreateTourDto {
   @IsString()
@@ -128,6 +134,48 @@ export class CreateTourDto {
   @ValidateNested({ each: true })
   @Type(() => TripReviewDto)
   reviews?: TripReviewDto[];
+
+  @IsOptional()
+  @IsString()
+  addonsText?: string;
+
+  @IsOptional()
+  @IsString()
+  usefulInfoText?: string;
+
+  @IsOptional()
+  @IsArray({ message: 'Departure dates must be an array' })
+  @ValidateNested({ each: true })
+  @Type(() => TripDepartureDateDto)
+  departureDates?: TripDepartureDateDto[];
+
+  @IsOptional()
+  @IsArray({ message: 'Gallery images must be an array' })
+  @IsString({ each: true })
+  galleryImages?: string[];
+
+  @IsOptional()
+  @IsString()
+  mapImage?: string;
+
+  @IsOptional()
+  @IsArray({ message: 'Package files must be an array' })
+  @ValidateNested({ each: true })
+  @Type(() => TripPackageFileDto)
+  packageFiles?: TripPackageFileDto[];
+
+  @IsOptional()
+  @IsString()
+  coverMediaId?: string;
+
+  @IsOptional()
+  @IsString()
+  mapMediaId?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  galleryMediaIds?: string[];
 
   @IsOptional()
   @IsString()
@@ -248,6 +296,48 @@ export class UpdateTourDto {
   @ValidateNested({ each: true })
   @Type(() => TripReviewDto)
   reviews?: TripReviewDto[];
+
+  @IsOptional()
+  @IsString()
+  addonsText?: string;
+
+  @IsOptional()
+  @IsString()
+  usefulInfoText?: string;
+
+  @IsOptional()
+  @IsArray({ message: 'Departure dates must be an array' })
+  @ValidateNested({ each: true })
+  @Type(() => TripDepartureDateDto)
+  departureDates?: TripDepartureDateDto[];
+
+  @IsOptional()
+  @IsArray({ message: 'Gallery images must be an array' })
+  @IsString({ each: true })
+  galleryImages?: string[];
+
+  @IsOptional()
+  @IsString()
+  mapImage?: string;
+
+  @IsOptional()
+  @IsArray({ message: 'Package files must be an array' })
+  @ValidateNested({ each: true })
+  @Type(() => TripPackageFileDto)
+  packageFiles?: TripPackageFileDto[];
+
+  @IsOptional()
+  @IsString()
+  coverMediaId?: string;
+
+  @IsOptional()
+  @IsString()
+  mapMediaId?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  galleryMediaIds?: string[];
 
   @IsOptional()
   @IsString()

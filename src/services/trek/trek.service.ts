@@ -10,10 +10,14 @@ import {
 import { CreateTrekDto, UpdateTrekDto } from '../../schemas/trek.schema';
 import { AppError } from '../../utils/appError.util';
 
+import { MediaService } from '../media/media.service';
+
 @autoInjectable()
 export class TrekService {
   private repo = AppDataSource.getRepository(Trek);
   private categoryRepo = AppDataSource.getRepository(Category);
+
+  constructor(private mediaService: MediaService = new MediaService()) {}
 
   async getAll(params?: {
     categoryId?: string;
@@ -122,7 +126,11 @@ export class TrekService {
       }
     }
 
-    return qb.getManyAndCount();
+    const [items, count] = await qb.getManyAndCount();
+    const resolved = await Promise.all(
+      items.map((i) => this.mediaService.resolveItemMedia(i)),
+    );
+    return [resolved, count];
   }
 
   async getByIdOrSlug(idOrSlug: string): Promise<Trek> {
@@ -140,7 +148,7 @@ export class TrekService {
     }
 
     if (!item) throw AppError.notFound(`Trek package ${idOrSlug} not found`);
-    return item;
+    return this.mediaService.resolveItemMedia(item);
   }
 
   async create(dto: CreateTrekDto): Promise<Trek> {
@@ -179,6 +187,7 @@ export class TrekService {
       status: dto.status || TrekStatus.ACTIVE,
       shortDesc: dto.shortDesc,
       image: dto.image,
+      coverMediaId: dto.coverMediaId,
       bestSeason: dto.bestSeason,
       startEndLocation: dto.startEndLocation,
       accommodation: dto.accommodation,
@@ -190,6 +199,14 @@ export class TrekService {
       itinerary: dto.itinerary || [],
       faqs: dto.faqs || [],
       reviews: dto.reviews || [],
+      addonsText: dto.addonsText,
+      usefulInfoText: dto.usefulInfoText,
+      departureDates: dto.departureDates || [],
+      galleryImages: dto.galleryImages || [],
+      galleryMediaIds: dto.galleryMediaIds || [],
+      mapImage: dto.mapImage,
+      mapMediaId: dto.mapMediaId,
+      packageFiles: dto.packageFiles || [],
       metaTitle: dto.metaTitle,
       metaDescription: dto.metaDescription,
       keywords: dto.keywords,
@@ -198,7 +215,8 @@ export class TrekService {
       totalBookings: 0,
     } as Partial<Trek>);
 
-    return this.repo.save(trek);
+    const saved = await this.repo.save(trek);
+    return this.mediaService.resolveItemMedia(saved);
   }
 
   async update(id: string, dto: UpdateTrekDto): Promise<Trek> {
@@ -219,8 +237,9 @@ export class TrekService {
     if (dto.difficulty) trek.difficulty = dto.difficulty;
     if (dto.priceUSD !== undefined) trek.priceUSD = Number(dto.priceUSD);
     if (dto.status) trek.status = dto.status;
-    if (dto.shortDesc) trek.shortDesc = dto.shortDesc;
-    if (dto.image) trek.image = dto.image;
+    if (dto.shortDesc !== undefined) trek.shortDesc = dto.shortDesc;
+    if (dto.image !== undefined) trek.image = dto.image;
+    if (dto.coverMediaId !== undefined) trek.coverMediaId = dto.coverMediaId;
     if (dto.bestSeason !== undefined) trek.bestSeason = dto.bestSeason;
     if (dto.startEndLocation !== undefined)
       trek.startEndLocation = dto.startEndLocation;
@@ -243,12 +262,21 @@ export class TrekService {
     if (dto.itinerary !== undefined) trek.itinerary = dto.itinerary;
     if (dto.faqs !== undefined) trek.faqs = dto.faqs;
     if (dto.reviews !== undefined) trek.reviews = dto.reviews;
+    if (dto.addonsText !== undefined) trek.addonsText = dto.addonsText;
+    if (dto.usefulInfoText !== undefined) trek.usefulInfoText = dto.usefulInfoText;
+    if (dto.departureDates !== undefined) trek.departureDates = dto.departureDates;
+    if (dto.galleryImages !== undefined) trek.galleryImages = dto.galleryImages;
+    if (dto.galleryMediaIds !== undefined) trek.galleryMediaIds = dto.galleryMediaIds;
+    if (dto.mapImage !== undefined) trek.mapImage = dto.mapImage;
+    if (dto.mapMediaId !== undefined) trek.mapMediaId = dto.mapMediaId;
+    if (dto.packageFiles !== undefined) trek.packageFiles = dto.packageFiles;
     if (dto.metaTitle !== undefined) trek.metaTitle = dto.metaTitle;
     if (dto.metaDescription !== undefined)
       trek.metaDescription = dto.metaDescription;
     if (dto.keywords !== undefined) trek.keywords = dto.keywords;
 
-    return this.repo.save(trek);
+    const saved = await this.repo.save(trek);
+    return this.mediaService.resolveItemMedia(saved);
   }
 
   async delete(id: string): Promise<boolean> {

@@ -76,6 +76,10 @@ export class CreateBlogArticleDto {
 
   @IsOptional()
   @IsString()
+  coverMediaId?: string;
+
+  @IsOptional()
+  @IsString()
   metaTitle?: string;
 
   @IsOptional()
@@ -123,6 +127,10 @@ export class UpdateBlogArticleDto {
   @IsOptional()
   @IsString()
   image?: string;
+
+  @IsOptional()
+  @IsString()
+  coverMediaId?: string;
 
   @IsOptional()
   @Type(() => Number)

@@ -40,8 +40,42 @@ export interface TripReview {
   content: string;
 }
 
+export interface TripDepartureDate {
+  id?: string;
+  startDate: string;
+  endDate: string;
+  priceUSD?: number;
+  status?: string;
+  seatsAvailable?: number;
+  notes?: string;
+}
+
+export interface TripPackageFile {
+  id?: string;
+  mediaId?: string;
+  title: string;
+  fileUrl?: string;
+  fileName?: string;
+  fileSize?: string;
+  fileType?: string;
+  uploadedAt?: string;
+}
+
 @Entity('treks')
 export class Trek extends CommonEntity {
+  @Column({ name: 'cover_media_id', nullable: true })
+  coverMediaId?: string;
+
+  @Column({ name: 'map_media_id', nullable: true })
+  mapMediaId?: string;
+
+  @Column({
+    name: 'gallery_media_ids',
+    type: 'jsonb',
+    nullable: true,
+    default: () => "'[]'",
+  })
+  galleryMediaIds?: string[];
   @Column({ name: 'title' })
   title: string;
 
@@ -88,8 +122,11 @@ export class Trek extends CommonEntity {
   @Column({ name: 'reviews_count', type: 'int', default: 0 })
   reviewsCount: number;
 
-  @Column({ name: 'image', type: 'text' })
-  image: string;
+  image?: string;
+  galleryImages?: string[];
+  mapImage?: string;
+
+
 
   @Column({ name: 'short_desc', type: 'text' })
   shortDesc: string;
@@ -141,6 +178,30 @@ export class Trek extends CommonEntity {
     default: () => "'[]'",
   })
   reviews: TripReview[];
+
+  @Column({ name: 'addons_text', type: 'text', nullable: true })
+  addonsText: string;
+
+  @Column({ name: 'useful_info_text', type: 'text', nullable: true })
+  usefulInfoText: string;
+
+  @Column({
+    name: 'departure_dates',
+    type: 'jsonb',
+    nullable: true,
+    default: () => "'[]'",
+  })
+  departureDates: TripDepartureDate[];
+
+
+
+  @Column({
+    name: 'package_files',
+    type: 'jsonb',
+    nullable: true,
+    default: () => "'[]'",
+  })
+  packageFiles: TripPackageFile[];
 
   @Column({ name: 'meta_title', nullable: true })
   metaTitle: string;

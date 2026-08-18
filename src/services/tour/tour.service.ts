@@ -10,10 +10,14 @@ import {
 import { CreateTourDto, UpdateTourDto } from '../../schemas/tour.schema';
 import { AppError } from '../../utils/appError.util';
 
+import { MediaService } from '../media/media.service';
+
 @autoInjectable()
 export class TourService {
   private repo = AppDataSource.getRepository(Tour);
   private categoryRepo = AppDataSource.getRepository(Category);
+
+  constructor(private mediaService: MediaService = new MediaService()) {}
 
   async getAll(params?: {
     categoryId?: string;
@@ -111,7 +115,11 @@ export class TourService {
       }
     }
 
-    return qb.getManyAndCount();
+    const [items, count] = await qb.getManyAndCount();
+    const resolved = await Promise.all(
+      items.map((i) => this.mediaService.resolveItemMedia(i)),
+    );
+    return [resolved, count];
   }
 
   async getByIdOrSlug(idOrSlug: string): Promise<Tour> {
@@ -129,7 +137,7 @@ export class TourService {
     }
 
     if (!item) throw AppError.notFound(`Tour package ${idOrSlug} not found`);
-    return item;
+    return this.mediaService.resolveItemMedia(item);
   }
 
   async create(dto: CreateTourDto): Promise<Tour> {
@@ -170,6 +178,7 @@ export class TourService {
       status: dto.status || TourStatus.ACTIVE,
       shortDesc: dto.shortDesc,
       image: dto.image,
+      coverMediaId: dto.coverMediaId,
       bestSeason: dto.bestSeason,
       startEndLocation: dto.startEndLocation,
       accommodation: dto.accommodation,
@@ -181,6 +190,14 @@ export class TourService {
       itinerary: dto.itinerary || [],
       faqs: dto.faqs || [],
       reviews: dto.reviews || [],
+      addonsText: dto.addonsText,
+      usefulInfoText: dto.usefulInfoText,
+      departureDates: dto.departureDates || [],
+      galleryImages: dto.galleryImages || [],
+      galleryMediaIds: dto.galleryMediaIds || [],
+      mapImage: dto.mapImage,
+      mapMediaId: dto.mapMediaId,
+      packageFiles: dto.packageFiles || [],
       metaTitle: dto.metaTitle,
       metaDescription: dto.metaDescription,
       keywords: dto.keywords,
@@ -189,7 +206,8 @@ export class TourService {
       totalBookings: 0,
     } as Partial<Tour>);
 
-    return this.repo.save(tour);
+    const saved = await this.repo.save(tour);
+    return this.mediaService.resolveItemMedia(saved);
   }
 
   async update(id: string, dto: UpdateTourDto): Promise<Tour> {
@@ -204,8 +222,7 @@ export class TourService {
     }
     if (dto.region) tour.region = dto.region;
     if (dto.tourType) tour.tourType = dto.tourType;
-    if (dto.transportation !== undefined)
-      tour.transportation = dto.transportation;
+    if (dto.transportation !== undefined) tour.transportation = dto.transportation;
     if (dto.durationDays !== undefined)
       tour.durationDays = Number(dto.durationDays);
     if (dto.maxAltitudeMeters !== undefined)
@@ -213,8 +230,9 @@ export class TourService {
     if (dto.difficulty) tour.difficulty = dto.difficulty;
     if (dto.priceUSD !== undefined) tour.priceUSD = Number(dto.priceUSD);
     if (dto.status) tour.status = dto.status;
-    if (dto.shortDesc) tour.shortDesc = dto.shortDesc;
-    if (dto.image) tour.image = dto.image;
+    if (dto.shortDesc !== undefined) tour.shortDesc = dto.shortDesc;
+    if (dto.image !== undefined) tour.image = dto.image;
+    if (dto.coverMediaId !== undefined) tour.coverMediaId = dto.coverMediaId;
     if (dto.bestSeason !== undefined) tour.bestSeason = dto.bestSeason;
     if (dto.startEndLocation !== undefined)
       tour.startEndLocation = dto.startEndLocation;
@@ -237,12 +255,21 @@ export class TourService {
     if (dto.itinerary !== undefined) tour.itinerary = dto.itinerary;
     if (dto.faqs !== undefined) tour.faqs = dto.faqs;
     if (dto.reviews !== undefined) tour.reviews = dto.reviews;
+    if (dto.addonsText !== undefined) tour.addonsText = dto.addonsText;
+    if (dto.usefulInfoText !== undefined) tour.usefulInfoText = dto.usefulInfoText;
+    if (dto.departureDates !== undefined) tour.departureDates = dto.departureDates;
+    if (dto.galleryImages !== undefined) tour.galleryImages = dto.galleryImages;
+    if (dto.galleryMediaIds !== undefined) tour.galleryMediaIds = dto.galleryMediaIds;
+    if (dto.mapImage !== undefined) tour.mapImage = dto.mapImage;
+    if (dto.mapMediaId !== undefined) tour.mapMediaId = dto.mapMediaId;
+    if (dto.packageFiles !== undefined) tour.packageFiles = dto.packageFiles;
     if (dto.metaTitle !== undefined) tour.metaTitle = dto.metaTitle;
     if (dto.metaDescription !== undefined)
       tour.metaDescription = dto.metaDescription;
     if (dto.keywords !== undefined) tour.keywords = dto.keywords;
 
-    return this.repo.save(tour);
+    const saved = await this.repo.save(tour);
+    return this.mediaService.resolveItemMedia(saved);
   }
 
   async delete(id: string): Promise<boolean> {

@@ -8,10 +8,14 @@ import {
 } from '../../schemas/blog.schema';
 import { AppError } from '../../utils/appError.util';
 
+import { MediaService } from '../media/media.service';
+
 @autoInjectable()
 export class BlogService {
   private repo = AppDataSource.getRepository(BlogArticle);
   private categoryRepo = AppDataSource.getRepository(Category);
+
+  constructor(private mediaService: MediaService = new MediaService()) {}
 
   async getAll(
     status?: BlogStatus,
@@ -63,7 +67,11 @@ export class BlogService {
       }
     }
 
-    return qb.getManyAndCount();
+    const [items, count] = await qb.getManyAndCount();
+    const resolved = await Promise.all(
+      items.map((i) => this.mediaService.resolveItemMedia(i)),
+    );
+    return [resolved, count];
   }
 
   async getByIdOrSlug(idOrSlug: string): Promise<BlogArticle> {
@@ -81,7 +89,7 @@ export class BlogService {
     }
 
     if (!item) throw AppError.notFound(`Blog article ${idOrSlug} not found`);
-    return item;
+    return this.mediaService.resolveItemMedia(item);
   }
 
   async create(dto: CreateBlogArticleDto): Promise<BlogArticle> {
@@ -101,18 +109,19 @@ export class BlogService {
       excerpt: dto.excerpt || '',
       content: dto.content || '',
       image: dto.image || '',
+      coverMediaId: dto.coverMediaId,
       metaTitle: dto.metaTitle,
       metaDescription: dto.metaDescription,
       keywords: dto.keywords,
     });
 
-    return this.repo.save(blog);
+    const saved = await this.repo.save(blog);
+    return this.mediaService.resolveItemMedia(saved);
   }
 
   async update(id: string, dto: UpdateBlogArticleDto): Promise<BlogArticle> {
     const article = await this.getByIdOrSlug(id);
 
-    // Update slug only when title changes
     if (dto.title && dto.title !== article.title) {
       article.title = dto.title;
       article.slug = dto.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -125,19 +134,22 @@ export class BlogService {
     if (dto.excerpt !== undefined) article.excerpt = dto.excerpt;
     if (dto.content !== undefined) article.content = dto.content;
     if (dto.image !== undefined) article.image = dto.image;
+    if (dto.coverMediaId !== undefined) article.coverMediaId = dto.coverMediaId;
     if (dto.views !== undefined) article.views = dto.views;
     if (dto.metaTitle !== undefined) article.metaTitle = dto.metaTitle;
     if (dto.metaDescription !== undefined) article.metaDescription = dto.metaDescription;
     if (dto.keywords !== undefined) article.keywords = dto.keywords;
 
-    return this.repo.save(article);
+    const saved = await this.repo.save(article);
+    return this.mediaService.resolveItemMedia(saved);
   }
 
   async getPublished(): Promise<BlogArticle[]> {
-    return this.repo.find({
+    const items = await this.repo.find({
       where: { status: BlogStatus.PUBLISHED },
       order: { createdAt: 'DESC' },
     });
+    return Promise.all(items.map((i) => this.mediaService.resolveItemMedia(i)));
   }
 
   async delete(id: string): Promise<boolean> {

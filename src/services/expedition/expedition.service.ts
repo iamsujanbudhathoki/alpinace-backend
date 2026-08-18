@@ -17,10 +17,14 @@ import {
 } from '../../schemas/expedition.schema';
 import { AppError } from '../../utils/appError.util';
 
+import { MediaService } from '../media/media.service';
+
 @autoInjectable()
 export class ExpeditionService {
   private repo = AppDataSource.getRepository(Expedition);
   private categoryRepo = AppDataSource.getRepository(Category);
+
+  constructor(private mediaService: MediaService = new MediaService()) {}
 
   async getAll(params?: {
     categoryId?: string;
@@ -139,7 +143,11 @@ export class ExpeditionService {
       }
     }
 
-    return qb.getManyAndCount();
+    const [items, count] = await qb.getManyAndCount();
+    const resolved = await Promise.all(
+      items.map((i) => this.mediaService.resolveItemMedia(i)),
+    );
+    return [resolved, count];
   }
 
   async getByIdOrSlug(idOrSlug: string): Promise<Expedition> {
@@ -158,7 +166,7 @@ export class ExpeditionService {
 
     if (!item)
       throw AppError.notFound(`Expedition package ${idOrSlug} not found`);
-    return item;
+    return this.mediaService.resolveItemMedia(item);
   }
 
   async create(dto: CreateExpeditionDto): Promise<Expedition> {
@@ -186,7 +194,11 @@ export class ExpeditionService {
         : [];
 
     const altitude =
-      Number(dto.peakHeightM) || Number(dto.maxAltitudeMeters) || 6000;
+      dto.peakHeightM !== undefined
+        ? Number(dto.peakHeightM)
+        : dto.maxAltitudeMeters !== undefined
+          ? Number(dto.maxAltitudeMeters)
+          : 6000;
 
     const exp = this.repo.create({
       title: dto.title,
@@ -205,6 +217,7 @@ export class ExpeditionService {
       status: dto.status || ExpeditionStatus.ACTIVE,
       shortDesc: dto.shortDesc,
       image: dto.image,
+      coverMediaId: dto.coverMediaId,
       bestSeason: dto.bestSeason,
       startEndLocation: dto.startEndLocation,
       accommodation: dto.accommodation,
@@ -216,6 +229,14 @@ export class ExpeditionService {
       itinerary: dto.itinerary || [],
       faqs: dto.faqs || [],
       reviews: dto.reviews || [],
+      addonsText: dto.addonsText,
+      usefulInfoText: dto.usefulInfoText,
+      departureDates: dto.departureDates || [],
+      galleryImages: dto.galleryImages || [],
+      galleryMediaIds: dto.galleryMediaIds || [],
+      mapImage: dto.mapImage,
+      mapMediaId: dto.mapMediaId,
+      packageFiles: dto.packageFiles || [],
       metaTitle: dto.metaTitle,
       metaDescription: dto.metaDescription,
       keywords: dto.keywords,
@@ -224,7 +245,8 @@ export class ExpeditionService {
       totalBookings: 0,
     } as Partial<Expedition>);
 
-    return this.repo.save(exp);
+    const saved = await this.repo.save(exp);
+    return this.mediaService.resolveItemMedia(saved);
   }
 
   async update(id: string, dto: UpdateExpeditionDto): Promise<Expedition> {
@@ -242,10 +264,9 @@ export class ExpeditionService {
       exp.durationDays = Number(dto.durationDays);
     if (dto.peakHeightM !== undefined) {
       exp.peakHeightM = Number(dto.peakHeightM);
-      exp.maxAltitudeMeters = Number(dto.peakHeightM);
-    } else if (dto.maxAltitudeMeters !== undefined) {
+    }
+    if (dto.maxAltitudeMeters !== undefined) {
       exp.maxAltitudeMeters = Number(dto.maxAltitudeMeters);
-      exp.peakHeightM = Number(dto.maxAltitudeMeters);
     }
     if (dto.climbingGrade) exp.climbingGrade = dto.climbingGrade;
     if (dto.difficulty) exp.difficulty = dto.difficulty;
@@ -254,8 +275,9 @@ export class ExpeditionService {
       exp.oxygenRequired = dto.oxygenRequired;
     if (dto.priceUSD !== undefined) exp.priceUSD = Number(dto.priceUSD);
     if (dto.status) exp.status = dto.status;
-    if (dto.shortDesc) exp.shortDesc = dto.shortDesc;
-    if (dto.image) exp.image = dto.image;
+    if (dto.shortDesc !== undefined) exp.shortDesc = dto.shortDesc;
+    if (dto.image !== undefined) exp.image = dto.image;
+    if (dto.coverMediaId !== undefined) exp.coverMediaId = dto.coverMediaId;
     if (dto.bestSeason !== undefined) exp.bestSeason = dto.bestSeason;
     if (dto.startEndLocation !== undefined)
       exp.startEndLocation = dto.startEndLocation;
@@ -278,12 +300,21 @@ export class ExpeditionService {
     if (dto.itinerary !== undefined) exp.itinerary = dto.itinerary;
     if (dto.faqs !== undefined) exp.faqs = dto.faqs;
     if (dto.reviews !== undefined) exp.reviews = dto.reviews;
+    if (dto.addonsText !== undefined) exp.addonsText = dto.addonsText;
+    if (dto.usefulInfoText !== undefined) exp.usefulInfoText = dto.usefulInfoText;
+    if (dto.departureDates !== undefined) exp.departureDates = dto.departureDates;
+    if (dto.galleryImages !== undefined) exp.galleryImages = dto.galleryImages;
+    if (dto.galleryMediaIds !== undefined) exp.galleryMediaIds = dto.galleryMediaIds;
+    if (dto.mapImage !== undefined) exp.mapImage = dto.mapImage;
+    if (dto.mapMediaId !== undefined) exp.mapMediaId = dto.mapMediaId;
+    if (dto.packageFiles !== undefined) exp.packageFiles = dto.packageFiles;
     if (dto.metaTitle !== undefined) exp.metaTitle = dto.metaTitle;
     if (dto.metaDescription !== undefined)
       exp.metaDescription = dto.metaDescription;
     if (dto.keywords !== undefined) exp.keywords = dto.keywords;
 
-    return this.repo.save(exp);
+    const saved = await this.repo.save(exp);
+    return this.mediaService.resolveItemMedia(saved);
   }
 
   async delete(id: string): Promise<boolean> {

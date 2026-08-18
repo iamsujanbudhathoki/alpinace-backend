@@ -38,28 +38,7 @@ export const seedDatabase = async () => {
   }
   console.log('Database initialized for seeding...');
 
-  // 1. Seed Admin
-  const adminRepo = AppDataSource.getRepository(Admin);
-  const existingAdmin = await adminRepo.findOne({
-    where: { email: 'admin@alpineace.com' },
-    withDeleted: true,
-  });
-  if (!existingAdmin) {
-    const admin = adminRepo.create({
-      name: 'Sujan Budhathoki',
-      email: 'admin@alpineace.com',
-      password: 'admin123',
-      role: 'Expedition Director',
-      avatarUrl:
-        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
-      phoneNumber: '+977 9841-234567',
-      isActive: true,
-    });
-    await adminRepo.save(admin);
-    console.log('Seeded admin: admin@alpineace.com');
-  }
-
-  // 2. Seed Categories
+  // 1. Seed Categories
   const categoryRepo = AppDataSource.getRepository(Category);
   const categoriesData = [
     {
@@ -140,7 +119,109 @@ export const seedDatabase = async () => {
   }
   console.log('Seeded categories');
 
-  // 3. Seed Treks
+  // 3. Seed Centralized Media First
+  const mediaRepo = AppDataSource.getRepository(Media);
+  const mediaMap = new Map<string, Media>();
+  const mediaCategory = await categoryRepo.findOne({ where: { type: CategoryType.MEDIA } });
+
+  const seedMediaDefinitions = [
+    // Treks Covers
+    { key: 'ebc-gokyo-cover', name: 'ebc-gokyo-cover.jpg', path: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=80', title: 'Everest Base Camp & Gokyo Cover' },
+    { key: 'ebc-luxury-cover', name: 'ebc-luxury-cover.jpg', path: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=80', title: 'Everest Luxury Lodge Cover' },
+    { key: 'annapurna-circuit-cover', name: 'annapurna-circuit-cover.jpg', path: 'https://images.unsplash.com/photo-1585409677983-0f6c41ca913b?auto=format&fit=crop&w=1200&q=80', title: 'Annapurna Circuit Cover' },
+    { key: 'annapurna-panoramic-cover', name: 'annapurna-panoramic-cover.jpg', path: 'https://images.unsplash.com/photo-1585409677983-0f6c41ca913b?auto=format&fit=crop&w=1200&q=80', title: 'Annapurna Panoramic Cover' },
+    { key: 'manaslu-cover', name: 'manaslu-cover.jpg', path: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80', title: 'Manaslu Circuit Cover' },
+    { key: 'langtang-cover', name: 'langtang-cover.jpg', path: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80', title: 'Langtang Valley Cover' },
+
+    // Maps, Galleries & Package Files
+    { key: 'himalayan-route-map', name: 'himalayan-route-map.jpg', path: 'https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=1200&q=80', title: 'Himalayan Route Map' },
+    { key: 'himalayan-gallery-1', name: 'himalayan-gallery-1.jpg', path: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=80', title: 'Himalayan Gallery 1' },
+    { key: 'himalayan-gallery-2', name: 'himalayan-gallery-2.jpg', path: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80', title: 'Himalayan Gallery 2' },
+    { key: 'expedition-dossier-pdf', name: 'expedition-dossier.pdf', path: 'https://example.com/docs/expedition-dossier.pdf', title: 'Official Expedition Dossier', mimeType: 'application/pdf', fileSize: '1500000' },
+    { key: 'tour-itinerary-pdf', name: 'tour-itinerary.pdf', path: 'https://example.com/docs/tour-itinerary.pdf', title: 'Official Tour Itinerary', mimeType: 'application/pdf', fileSize: '1200000' },
+    { key: 'climbing-guide-pdf', name: 'climbing-guide.pdf', path: 'https://example.com/docs/climbing-guide.pdf', title: 'Official Climbing Guide', mimeType: 'application/pdf', fileSize: '2100000' },
+
+    // Tours Covers
+    { key: 'kathmandu-heritage-cover', name: 'kathmandu-heritage-cover.jpg', path: 'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1200&q=80', title: 'Kathmandu Royal Heritage Cover' },
+    { key: 'pokhara-lakeside-cover', name: 'pokhara-lakeside-cover.jpg', path: 'https://images.unsplash.com/photo-1544644181-1484b3fdfc32?auto=format&fit=crop&w=1200&q=80', title: 'Pokhara Lakeside Retreat Cover' },
+    { key: 'chitwan-safari-cover', name: 'chitwan-safari-cover.jpg', path: 'https://images.unsplash.com/photo-1580137189272-c9379f8864fd?auto=format&fit=crop&w=1200&q=80', title: 'Chitwan Luxury Safari Cover' },
+    { key: 'everest-scenic-flight-cover', name: 'everest-scenic-flight-cover.jpg', path: 'https://images.unsplash.com/photo-1516481400365-878b508f2fea?auto=format&fit=crop&w=1200&q=80', title: 'Everest Scenic Flight Cover' },
+
+    // Expeditions Covers
+    { key: 'ama-dablam-cover', name: 'ama-dablam-cover.jpg', path: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80', title: 'Ama Dablam Expedition Cover' },
+    { key: 'island-peak-cover', name: 'island-peak-cover.jpg', path: 'https://images.unsplash.com/photo-1516482498816-ba38689e1c14?auto=format&fit=crop&w=1200&q=80', title: 'Island Peak Expedition Cover' },
+    { key: 'everest-summit-cover', name: 'everest-summit-cover.jpg', path: 'https://images.unsplash.com/photo-1583870908408-3f9c6f8a9e0f?auto=format&fit=crop&w=1200&q=80', title: 'Everest Summit Expedition Cover' },
+    { key: 'mera-peak-cover', name: 'mera-peak-cover.jpg', path: 'https://images.unsplash.com/photo-1516482498816-ba38689e1c14?auto=format&fit=crop&w=1200&q=80', title: 'Mera Peak Expedition Cover' },
+
+    // Blogs Covers
+    { key: 'blog-high-altitude-prep-cover', name: 'blog-high-altitude-prep.jpg', path: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80', title: 'High Altitude Prep Cover' },
+    { key: 'blog-packing-list-cover', name: 'blog-packing-list.jpg', path: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80', title: 'Packing List Cover' },
+    { key: 'blog-sherpa-culture-cover', name: 'blog-sherpa-culture.jpg', path: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=800&q=80', title: 'Sherpa Culture Cover' },
+    { key: 'blog-ama-vs-island-cover', name: 'blog-ama-vs-island.jpg', path: 'https://images.unsplash.com/photo-1516482498816-ba38689e1c14?auto=format&fit=crop&w=800&q=80', title: 'Ama Dablam vs Island Peak Cover' },
+
+    // Avatars & Logos
+    { key: 'guide-lakpa-avatar', name: 'guide-lakpa-avatar.jpg', path: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80', title: 'Lakpa Avatar' },
+    { key: 'guide-mingma-avatar', name: 'guide-mingma-avatar.jpg', path: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80', title: 'Mingma Avatar' },
+    { key: 'guide-pemba-avatar', name: 'guide-pemba-avatar.jpg', path: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80', title: 'Pemba Avatar' },
+    { key: 'guide-rohan-avatar', name: 'guide-rohan-avatar.jpg', path: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80', title: 'Rohan Avatar' },
+    { key: 'guide-pasang-avatar', name: 'guide-pasang-avatar.jpg', path: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&auto=format&fit=crop&q=80', title: 'Pasang Avatar' },
+    { key: 'assoc-taan-logo', name: 'assoc-taan-logo.jpg', path: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=300&auto=format&fit=crop&w=300&q=80', title: 'TAAN Logo' },
+    { key: 'assoc-nma-logo', name: 'assoc-nma-logo.jpg', path: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=300&auto=format&fit=crop&w=300&q=80', title: 'NMA Logo' },
+    { key: 'assoc-hra-logo', name: 'assoc-hra-logo.jpg', path: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=300&auto=format&fit=crop&w=300&q=80', title: 'HRA Logo' },
+  ];
+
+  for (const mDef of seedMediaDefinitions) {
+    let m = await mediaRepo.findOne({ where: { path: mDef.path } });
+    if (!m) {
+      m = await mediaRepo.save(
+        mediaRepo.create({
+          name: mDef.name,
+          title: mDef.title,
+          path: mDef.path,
+          mimeType: mDef.mimeType || 'image/jpeg',
+          fileSize: mDef.fileSize || '500000',
+          categoryId: mediaCategory ? mediaCategory.id : undefined,
+          mediaType: MediaType.BLOG_THUMBNAIL,
+        }),
+      );
+    }
+    mediaMap.set(mDef.key, m);
+  }
+  console.log('Seeded centralized media records first');
+
+  const getMediaId = (key: string): string => {
+    const m = mediaMap.get(key);
+    if (!m) throw new Error(`Media key ${key} not found`);
+    return m.id;
+  };
+
+  const getMediaUrl = (key: string): string => {
+    const m = mediaMap.get(key);
+    if (!m) throw new Error(`Media key ${key} not found`);
+    return m.path;
+  };
+
+  // Seed Admin User
+  const adminRepo = AppDataSource.getRepository(Admin);
+  const existingAdmin = await adminRepo.findOne({
+    where: { email: 'admin@alpineace.com' },
+    withDeleted: true,
+  });
+  if (!existingAdmin) {
+    const admin = adminRepo.create({
+      name: 'Sujan Budhathoki',
+      email: 'admin@alpineace.com',
+      password: 'admin123',
+      role: 'Expedition Director',
+      avatarUrl: getMediaUrl('guide-mingma-avatar'),
+      phoneNumber: '+977 9841-234567',
+      isActive: true,
+    });
+    await adminRepo.save(admin);
+    console.log('Seeded admin: admin@alpineace.com');
+  }
+
+  // 4. Seed Treks
   const trekRepo = AppDataSource.getRepository(Trek);
   const defaultTrekFaqs = [
     {
@@ -172,8 +253,7 @@ export const seedDatabase = async () => {
       country: 'United States',
       date: 'May 2026',
       rating: 5,
-      avatar:
-        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+      avatar: getMediaUrl('guide-mingma-avatar'),
       content:
         'The 1:1 Sherpa guide ratio and basecamp luxury made our journey unforgettable. Heated blankets and pulse-oximeter monitoring every evening set the gold standard in high-altitude mountaineering.',
     },
@@ -182,8 +262,7 @@ export const seedDatabase = async () => {
       country: 'Germany',
       date: 'April 2026',
       rating: 5,
-      avatar:
-        'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
+      avatar: getMediaUrl('guide-lakpa-avatar'),
       content:
         'Heated mattresses and organic fine dining at 4,000 meters! The Sherpa team looked after our safety with pulse oximeters every evening.',
     },
@@ -192,8 +271,7 @@ export const seedDatabase = async () => {
       country: 'France',
       date: 'March 2026',
       rating: 5,
-      avatar:
-        'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
+      avatar: getMediaUrl('guide-pemba-avatar'),
       content:
         'Bespoke planning from start to finish. Our private helicopter transfer from the high pass back to Kathmandu was breathtaking. Alpine Ace is truly in a league of its own.',
     },
@@ -386,8 +464,21 @@ export const seedDatabase = async () => {
       totalBookings: 142,
       rating: 4.95,
       reviewsCount: 48,
-      image:
-        'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=80',
+      coverMediaId: getMediaId('ebc-gokyo-cover'),
+      mapMediaId: getMediaId('himalayan-route-map'),
+      galleryMediaIds: [getMediaId('himalayan-gallery-1'), getMediaId('himalayan-gallery-2')],
+      packageFiles: [
+        {
+          id: 'everest-base-camp-gokyo-file-1',
+          mediaId: getMediaId('expedition-dossier-pdf'),
+          title: 'Everest Base Camp Route & Gear Dossier',
+          fileUrl: getMediaUrl('expedition-dossier-pdf'),
+          fileName: 'expedition-dossier.pdf',
+          fileSize: '1.5 MB',
+          fileType: 'pdf',
+          uploadedAt: '2026-08-01',
+        },
+      ],
       shortDesc:
         'Experience the ultimate trek to the base of Mt. Everest, staying in handpicked premium luxury lodges with Sherpa legends.',
       bestSeason: 'March - May & September - November',
@@ -408,8 +499,21 @@ export const seedDatabase = async () => {
       totalBookings: 98,
       rating: 4.9,
       reviewsCount: 48,
-      image:
-        'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=80',
+      coverMediaId: getMediaId('ebc-luxury-cover'),
+      mapMediaId: getMediaId('himalayan-route-map'),
+      galleryMediaIds: [getMediaId('himalayan-gallery-1'), getMediaId('himalayan-gallery-2')],
+      packageFiles: [
+        {
+          id: 'everest-base-camp-luxury-lodge-file-1',
+          mediaId: getMediaId('expedition-dossier-pdf'),
+          title: 'Everest Luxury Lodge Route Dossier',
+          fileUrl: getMediaUrl('expedition-dossier-pdf'),
+          fileName: 'expedition-dossier.pdf',
+          fileSize: '1.5 MB',
+          fileType: 'pdf',
+          uploadedAt: '2026-08-01',
+        },
+      ],
       shortDesc:
         "Experience the ultimate trek to the base of the world's highest peak, staying in handpicked premium luxury lodges with Sherpa legends.",
       bestSeason: 'March - May & September - November',
@@ -430,8 +534,21 @@ export const seedDatabase = async () => {
       totalBookings: 215,
       rating: 4.88,
       reviewsCount: 35,
-      image:
-        'https://images.unsplash.com/photo-1585409677983-0f6c41ca913b?auto=format&fit=crop&w=1200&q=80',
+      coverMediaId: getMediaId('annapurna-circuit-cover'),
+      mapMediaId: getMediaId('himalayan-route-map'),
+      galleryMediaIds: [getMediaId('himalayan-gallery-1'), getMediaId('himalayan-gallery-2')],
+      packageFiles: [
+        {
+          id: 'annapurna-circuit-tilicho-file-1',
+          mediaId: getMediaId('expedition-dossier-pdf'),
+          title: 'Annapurna Circuit Route Dossier',
+          fileUrl: getMediaUrl('expedition-dossier-pdf'),
+          fileName: 'expedition-dossier.pdf',
+          fileSize: '1.5 MB',
+          fileType: 'pdf',
+          uploadedAt: '2026-08-01',
+        },
+      ],
       shortDesc:
         'Witness the complete diversity of the Himalayas, from lush tropical valleys and pine-covered ridges to Thorong La pass.',
       bestSeason: 'March - May & September - November',
@@ -451,8 +568,21 @@ export const seedDatabase = async () => {
       totalBookings: 112,
       rating: 4.85,
       reviewsCount: 31,
-      image:
-        'https://images.unsplash.com/photo-1585409677983-0f6c41ca913b?auto=format&fit=crop&w=1200&q=80',
+      coverMediaId: getMediaId('annapurna-panoramic-cover'),
+      mapMediaId: getMediaId('himalayan-route-map'),
+      galleryMediaIds: [getMediaId('himalayan-gallery-1'), getMediaId('himalayan-gallery-2')],
+      packageFiles: [
+        {
+          id: 'annapurna-panoramic-luxury-circuit-file-1',
+          mediaId: getMediaId('expedition-dossier-pdf'),
+          title: 'Annapurna Panoramic Route Dossier',
+          fileUrl: getMediaUrl('expedition-dossier-pdf'),
+          fileName: 'expedition-dossier.pdf',
+          fileSize: '1.5 MB',
+          fileType: 'pdf',
+          uploadedAt: '2026-08-01',
+        },
+      ],
       shortDesc:
         'Immerse in breathtaking panoramic views of the Annapurna Massif with private lodge accommodation, gourmet dining, and helicopter return.',
       bestSeason: 'September - May',
@@ -472,8 +602,21 @@ export const seedDatabase = async () => {
       totalBookings: 78,
       rating: 4.92,
       reviewsCount: 24,
-      image:
-        'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80',
+      coverMediaId: getMediaId('manaslu-cover'),
+      mapMediaId: getMediaId('himalayan-route-map'),
+      galleryMediaIds: [getMediaId('himalayan-gallery-1'), getMediaId('himalayan-gallery-2')],
+      packageFiles: [
+        {
+          id: 'manaslu-circuit-wilderness-file-1',
+          mediaId: getMediaId('expedition-dossier-pdf'),
+          title: 'Manaslu Circuit Route Dossier',
+          fileUrl: getMediaUrl('expedition-dossier-pdf'),
+          fileName: 'expedition-dossier.pdf',
+          fileSize: '1.5 MB',
+          fileType: 'pdf',
+          uploadedAt: '2026-08-01',
+        },
+      ],
       shortDesc:
         'Circle the world’s eighth-highest peak through untouched Tibetan-influenced villages and Larkya La pass.',
       bestSeason: 'March - May & September - November',
@@ -497,8 +640,21 @@ export const seedDatabase = async () => {
       totalBookings: 67,
       rating: 4.9,
       reviewsCount: 29,
-      image:
-        'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80',
+      coverMediaId: getMediaId('langtang-cover'),
+      mapMediaId: getMediaId('himalayan-route-map'),
+      galleryMediaIds: [getMediaId('himalayan-gallery-1'), getMediaId('himalayan-gallery-2')],
+      packageFiles: [
+        {
+          id: 'langtang-gosaikunda-lakes-file-1',
+          mediaId: getMediaId('expedition-dossier-pdf'),
+          title: 'Langtang Valley Route Dossier',
+          fileUrl: getMediaUrl('expedition-dossier-pdf'),
+          fileName: 'expedition-dossier.pdf',
+          fileSize: '1.5 MB',
+          fileType: 'pdf',
+          uploadedAt: '2026-08-01',
+        },
+      ],
       shortDesc:
         'Trek through pristine rhododendron forests, Tamang mountain villages, and glacier-fed alpine lakes near Kathmandu.',
       bestSeason: 'March - May & September - December',
@@ -518,6 +674,10 @@ export const seedDatabase = async () => {
     } else {
       exists.faqs = t.faqs;
       exists.reviews = t.reviews;
+      exists.coverMediaId = t.coverMediaId;
+      exists.mapMediaId = t.mapMediaId;
+      exists.galleryMediaIds = t.galleryMediaIds;
+      exists.packageFiles = t.packageFiles;
       if (t.itinerary && (!exists.itinerary || exists.itinerary.length === 0)) {
         exists.itinerary = t.itinerary;
       }
@@ -554,8 +714,7 @@ export const seedDatabase = async () => {
       country: 'United Kingdom',
       date: 'April 2026',
       rating: 5,
-      avatar:
-        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+      avatar: getMediaUrl('guide-mingma-avatar'),
       content:
         'Our private historian in Kathmandu and the sunrise boat cruise in Pokhara were breathtaking. Impeccable luxury hospitality throughout.',
     },
@@ -564,8 +723,7 @@ export const seedDatabase = async () => {
       country: 'Japan',
       date: 'March 2026',
       rating: 5,
-      avatar:
-        'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
+      avatar: getMediaUrl('guide-lakpa-avatar'),
       content:
         'Seeing rhinos and royal Bengal tigers up close in Chitwan while staying in a five-star jungle lodge was the trip of a lifetime.',
     },
@@ -586,8 +744,21 @@ export const seedDatabase = async () => {
       totalBookings: 41,
       rating: 4.9,
       reviewsCount: 41,
-      image:
-        'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1200&q=80',
+      coverMediaId: getMediaId('kathmandu-heritage-cover'),
+      mapMediaId: getMediaId('himalayan-route-map'),
+      galleryMediaIds: [getMediaId('himalayan-gallery-1'), getMediaId('himalayan-gallery-2')],
+      packageFiles: [
+        {
+          id: 'kathmandu-valley-royal-heritage-file-1',
+          mediaId: getMediaId('tour-itinerary-pdf'),
+          title: 'Kathmandu Heritage Tour Overview',
+          fileUrl: getMediaUrl('tour-itinerary-pdf'),
+          fileName: 'tour-itinerary.pdf',
+          fileSize: '1.2 MB',
+          fileType: 'pdf',
+          uploadedAt: '2026-08-01',
+        },
+      ],
       shortDesc:
         'Explore medieval durbar squares, ancient pagoda palaces, and sacred stupas with private historians.',
       bestSeason: 'Year-round, best October - April',
@@ -609,8 +780,21 @@ export const seedDatabase = async () => {
       totalBookings: 33,
       rating: 4.8,
       reviewsCount: 33,
-      image:
-        'https://images.unsplash.com/photo-1544644181-1484b3fdfc32?auto=format&fit=crop&w=1200&q=80',
+      coverMediaId: getMediaId('pokhara-lakeside-cover'),
+      mapMediaId: getMediaId('himalayan-route-map'),
+      galleryMediaIds: [getMediaId('himalayan-gallery-1'), getMediaId('himalayan-gallery-2')],
+      packageFiles: [
+        {
+          id: 'pokhara-lakeside-wellness-retreat-file-1',
+          mediaId: getMediaId('tour-itinerary-pdf'),
+          title: 'Pokhara Wellness Retreat Overview',
+          fileUrl: getMediaUrl('tour-itinerary-pdf'),
+          fileName: 'tour-itinerary.pdf',
+          fileSize: '1.2 MB',
+          fileType: 'pdf',
+          uploadedAt: '2026-08-01',
+        },
+      ],
       shortDesc:
         'Unwind beside Phewa Lake with private sunrise cruises, mountain-view yoga sessions, and full spa treatments framed by the Annapurna range.',
       bestSeason: 'September - May',
@@ -632,8 +816,21 @@ export const seedDatabase = async () => {
       totalBookings: 27,
       rating: 4.9,
       reviewsCount: 27,
-      image:
-        'https://images.unsplash.com/photo-1580137189272-c9379f8864fd?auto=format&fit=crop&w=1200&q=80',
+      coverMediaId: getMediaId('chitwan-safari-cover'),
+      mapMediaId: getMediaId('himalayan-route-map'),
+      galleryMediaIds: [getMediaId('himalayan-gallery-1'), getMediaId('himalayan-gallery-2')],
+      packageFiles: [
+        {
+          id: 'chitwan-luxury-wildlife-safari-file-1',
+          mediaId: getMediaId('tour-itinerary-pdf'),
+          title: 'Chitwan Safari Tour Overview',
+          fileUrl: getMediaUrl('tour-itinerary-pdf'),
+          fileName: 'tour-itinerary.pdf',
+          fileSize: '1.2 MB',
+          fileType: 'pdf',
+          uploadedAt: '2026-08-01',
+        },
+      ],
       shortDesc:
         'Track one-horned rhinos and Bengal tigers across Chitwan National Park, staying in luxury jungle resort.',
       bestSeason: 'October - March',
@@ -655,8 +852,21 @@ export const seedDatabase = async () => {
       totalBookings: 19,
       rating: 5.0,
       reviewsCount: 19,
-      image:
-        'https://images.unsplash.com/photo-1516481400365-878b508f2fea?auto=format&fit=crop&w=1200&q=80',
+      coverMediaId: getMediaId('everest-scenic-flight-cover'),
+      mapMediaId: getMediaId('himalayan-route-map'),
+      galleryMediaIds: [getMediaId('himalayan-gallery-1'), getMediaId('himalayan-gallery-2')],
+      packageFiles: [
+        {
+          id: 'everest-scenic-flight-sherpa-village-file-1',
+          mediaId: getMediaId('tour-itinerary-pdf'),
+          title: 'Everest Scenic Flight Overview',
+          fileUrl: getMediaUrl('tour-itinerary-pdf'),
+          fileName: 'tour-itinerary.pdf',
+          fileSize: '1.2 MB',
+          fileType: 'pdf',
+          uploadedAt: '2026-08-01',
+        },
+      ],
       shortDesc:
         "Fly within view of Mt. Everest's summit at dawn, then land in the Khumbu foothills for a guided day in a traditional Sherpa village.",
       bestSeason: 'March - May & September - November',
@@ -676,6 +886,10 @@ export const seedDatabase = async () => {
     } else {
       exists.faqs = tr.faqs;
       exists.reviews = tr.reviews;
+      exists.coverMediaId = tr.coverMediaId;
+      exists.mapMediaId = tr.mapMediaId;
+      exists.galleryMediaIds = tr.galleryMediaIds;
+      exists.packageFiles = tr.packageFiles;
       await tourRepo.save(exists);
     }
   }
@@ -707,8 +921,7 @@ export const seedDatabase = async () => {
       country: 'Sweden',
       date: 'May 2026',
       rating: 5,
-      avatar:
-        'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
+      avatar: getMediaUrl('guide-pemba-avatar'),
       content:
         'Summited Ama Dablam with Mingma Sherpa. Flawless rope work, heated basecamp dome tents, and gourmet chef nutrition made the hardest climb of my life safe and successful.',
     },
@@ -717,8 +930,7 @@ export const seedDatabase = async () => {
       country: 'Singapore',
       date: 'April 2026',
       rating: 5,
-      avatar:
-        'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
+      avatar: getMediaUrl('guide-lakpa-avatar'),
       content:
         'The Island Peak ascent was breathtaking. The 1:1 Sherpa support gave me total confidence on the headwall and summit ridge.',
     },
@@ -741,8 +953,21 @@ export const seedDatabase = async () => {
       totalBookings: 38,
       rating: 5.0,
       reviewsCount: 22,
-      image:
-        'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80',
+      coverMediaId: getMediaId('ama-dablam-cover'),
+      mapMediaId: getMediaId('himalayan-route-map'),
+      galleryMediaIds: [getMediaId('himalayan-gallery-1'), getMediaId('himalayan-gallery-2')],
+      packageFiles: [
+        {
+          id: 'ama-dablam-expedition-file-1',
+          mediaId: getMediaId('climbing-guide-pdf'),
+          title: 'Ama Dablam Expedition Manual & Permits',
+          fileUrl: getMediaUrl('climbing-guide-pdf'),
+          fileName: 'climbing-guide.pdf',
+          fileSize: '2.1 MB',
+          fileType: 'pdf',
+          uploadedAt: '2026-08-01',
+        },
+      ],
       shortDesc:
         'Climb the Matterhorn of the Himalayas with 1:1 IFMGA Sherpa summit leaders and high-altitude luxury basecamp support.',
       bestSeason: 'March - May & September - November',
@@ -770,8 +995,21 @@ export const seedDatabase = async () => {
       totalBookings: 37,
       rating: 4.8,
       reviewsCount: 37,
-      image:
-        'https://images.unsplash.com/photo-1516482498816-ba38689e1c14?auto=format&fit=crop&w=1200&q=80',
+      coverMediaId: getMediaId('island-peak-cover'),
+      mapMediaId: getMediaId('himalayan-route-map'),
+      galleryMediaIds: [getMediaId('himalayan-gallery-1'), getMediaId('himalayan-gallery-2')],
+      packageFiles: [
+        {
+          id: 'island-peak-imja-tse-expedition-file-1',
+          mediaId: getMediaId('climbing-guide-pdf'),
+          title: 'Island Peak Expedition Manual & Permits',
+          fileUrl: getMediaUrl('climbing-guide-pdf'),
+          fileName: 'climbing-guide.pdf',
+          fileSize: '2.1 MB',
+          fileType: 'pdf',
+          uploadedAt: '2026-08-01',
+        },
+      ],
       shortDesc:
         'An ideal introductory Himalayan summit, combining the classic Everest Base Camp approach with a guided technical ascent of Island Peak.',
       bestSeason: 'March - May & September - November',
@@ -799,8 +1037,21 @@ export const seedDatabase = async () => {
       totalBookings: 11,
       rating: 5.0,
       reviewsCount: 11,
-      image:
-        'https://images.unsplash.com/photo-1583870908408-3f9c6f8a9e0f?auto=format&fit=crop&w=1200&q=80',
+      coverMediaId: getMediaId('everest-summit-cover'),
+      mapMediaId: getMediaId('himalayan-route-map'),
+      galleryMediaIds: [getMediaId('himalayan-gallery-1'), getMediaId('himalayan-gallery-2')],
+      packageFiles: [
+        {
+          id: 'everest-summit-expedition-file-1',
+          mediaId: getMediaId('climbing-guide-pdf'),
+          title: 'Everest Summit Expedition Manual & Permits',
+          fileUrl: getMediaUrl('climbing-guide-pdf'),
+          fileName: 'climbing-guide.pdf',
+          fileSize: '2.1 MB',
+          fileType: 'pdf',
+          uploadedAt: '2026-08-01',
+        },
+      ],
       shortDesc:
         'The ultimate mountaineering achievement. A full South Col expedition with 1:1 Sherpa support and bottled oxygen.',
       bestSeason: 'April - May',
@@ -828,8 +1079,21 @@ export const seedDatabase = async () => {
       totalBookings: 29,
       rating: 4.85,
       reviewsCount: 29,
-      image:
-        'https://images.unsplash.com/photo-1516482498816-ba38689e1c14?auto=format&fit=crop&w=1200&q=80',
+      coverMediaId: getMediaId('mera-peak-cover'),
+      mapMediaId: getMediaId('himalayan-route-map'),
+      galleryMediaIds: [getMediaId('himalayan-gallery-1'), getMediaId('himalayan-gallery-2')],
+      packageFiles: [
+        {
+          id: 'mera-peak-climbing-file-1',
+          mediaId: getMediaId('climbing-guide-pdf'),
+          title: 'Mera Peak Expedition Manual & Permits',
+          fileUrl: getMediaUrl('climbing-guide-pdf'),
+          fileName: 'climbing-guide.pdf',
+          fileSize: '2.1 MB',
+          fileType: 'pdf',
+          uploadedAt: '2026-08-01',
+        },
+      ],
       shortDesc:
         "Trek through remote Hinku valley and climb Nepal's highest trekking peak for panoramic views of five 8,000m summits.",
       bestSeason: 'March - May & September - November',
@@ -849,6 +1113,10 @@ export const seedDatabase = async () => {
     } else {
       exists.faqs = exp.faqs;
       exists.reviews = exp.reviews;
+      exists.coverMediaId = exp.coverMediaId;
+      exists.mapMediaId = exp.mapMediaId;
+      exists.galleryMediaIds = exp.galleryMediaIds;
+      exists.packageFiles = exp.packageFiles;
       await expeditionRepo.save(exists);
     }
   }
@@ -870,8 +1138,7 @@ export const seedDatabase = async () => {
       phone: '+977 9841-234567',
       email: 'lakpa.sherpa@alpineace.com',
       currentAssignment: 'Everest Base Camp Luxury Trek (ACE-2026-0891)',
-      avatarUrl:
-        'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
+      avatarUrl: getMediaUrl('guide-lakpa-avatar'),
     },
     {
       name: 'Mingma Norbu Sherpa',
@@ -881,8 +1148,7 @@ export const seedDatabase = async () => {
       status: GuideStatus.AVAILABLE,
       phone: '+977 9851-876543',
       email: 'mingma.norbu@alpineace.com',
-      avatarUrl:
-        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+      avatarUrl: getMediaUrl('guide-mingma-avatar'),
     },
     {
       name: 'Pemba Gelje Sherpa',
@@ -895,8 +1161,7 @@ export const seedDatabase = async () => {
       status: GuideStatus.AVAILABLE,
       phone: '+977 9803-345678',
       email: 'pemba.g@alpineace.com',
-      avatarUrl:
-        'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
+      avatarUrl: getMediaUrl('guide-pemba-avatar'),
     },
     {
       name: 'Rohan Tamang',
@@ -907,8 +1172,7 @@ export const seedDatabase = async () => {
       phone: '+977 9818-567890',
       email: 'rohan.tamang@alpineace.com',
       currentAssignment: 'Kathmandu & Chitwan Safari (ACE-2026-0894)',
-      avatarUrl:
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80',
+      avatarUrl: getMediaUrl('guide-rohan-avatar'),
     },
     {
       name: 'Pasang Dawa Sherpa',
@@ -918,8 +1182,7 @@ export const seedDatabase = async () => {
       status: GuideStatus.AVAILABLE,
       phone: '+977 9849-112233',
       email: 'pasang.dawa@alpineace.com',
-      avatarUrl:
-        'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&auto=format&fit=crop&q=80',
+      avatarUrl: getMediaUrl('guide-pasang-avatar'),
     },
   ];
 
@@ -1120,12 +1383,11 @@ export const seedDatabase = async () => {
       status: BlogStatus.PUBLISHED,
       publishedDate: '2026-07-12',
       views: 1420,
+      coverMediaId: getMediaId('blog-high-altitude-prep-cover'),
       excerpt:
         'Essential advice on cardiovascular training, altitude acclimatization schedules, and preventing AMS on the Everest trail.',
       content:
         'Preparing for a Himalayan trek is as much mental as it is physical. Over our years of leading premium itineraries, we have found that high altitude readiness depends heavily on gradual pacing and proper hydration. Build cardiovascular fitness for at least 8 weeks before departure, prioritize acclimatization days at 3,000m and 4,000m, and watch for early symptoms of acute mountain sickness such as headache, nausea, and disrupted sleep. Ascending no more than 300-500m in sleeping altitude per day above 3,000m is the single most effective way to prevent AMS.',
-      image:
-        'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80',
     },
     {
       title: 'Top 5 Essential Packing Items for Everest Base Camp',
@@ -1135,12 +1397,11 @@ export const seedDatabase = async () => {
       status: BlogStatus.PUBLISHED,
       publishedDate: '2026-06-28',
       views: 980,
+      coverMediaId: getMediaId('blog-packing-list-cover'),
       excerpt:
         "Don't leave Kathmandu without these critical gear items — from thermal layering to down sleeping bags and solar power packs.",
       content:
         "Don't leave Kathmandu without these critical gear items: a -20°C rated down sleeping bag, moisture-wicking thermal base layers, a reliable headlamp with spare batteries, a water filtration bottle to cut down on plastic waste, and a portable solar charging pack for keeping cameras and phones running above 4,000m where power is scarce. Quality trekking boots that are already broken in matter more than almost anything else on this list.",
-      image:
-        'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80',
     },
     {
       title: 'Understanding Sherpa Culture and Sacred Himalayan Peaks',
@@ -1150,12 +1411,11 @@ export const seedDatabase = async () => {
       status: BlogStatus.PUBLISHED,
       publishedDate: '2026-06-15',
       views: 2150,
+      coverMediaId: getMediaId('blog-sherpa-culture-cover'),
       excerpt:
         'A deep dive into Tibetan Buddhism, Mani stones, prayer flags, and the spiritual respect guiding multi-summit Sherpas.',
       content:
         "Many of the Himalaya's highest peaks are considered sacred by the Sherpa people, and mountaineers are expected to observe local customs before any expedition. Prayer flags carry mantras on the wind, Mani stones inscribed with Buddhist scripture line the trails, and basecamp Puja ceremonies ask for safe passage before a climbing season begins. Understanding this cultural context transforms a trek from a physical challenge into a much deeper journey through one of the world's most spiritually significant landscapes.",
-      image:
-        'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=800&q=80',
     },
     {
       title: 'Ama Dablam vs Island Peak: Choosing Your First Peak Climb',
@@ -1165,12 +1425,11 @@ export const seedDatabase = async () => {
       status: BlogStatus.PUBLISHED,
       publishedDate: '2026-07-25',
       views: 540,
+      coverMediaId: getMediaId('blog-ama-vs-island-cover'),
       excerpt:
         'Comparing technical difficulty, training requirements, and climbing permits for Island Peak vs Ama Dablam.',
       content:
         'Island Peak (6,189m) is the ideal introductory 6,000m peak for strong trekkers, whereas Ama Dablam (6,812m) is a serious technical alpine climb requiring steep rock and ice proficiency. Choose Island Peak if you want to experience crampon work and fixed ropes for the first time, and advance to Ama Dablam after completing at least two 6,000m summits.',
-      image:
-        'https://images.unsplash.com/photo-1516482498816-ba38689e1c14?auto=format&fit=crop&w=800&q=80',
     },
   ];
 
@@ -1181,6 +1440,9 @@ export const seedDatabase = async () => {
     });
     if (!exists) {
       await blogRepo.save(blogRepo.create(b));
+    } else {
+      exists.coverMediaId = b.coverMediaId;
+      await blogRepo.save(exists);
     }
   }
   console.log('Seeded blog articles');
@@ -1248,8 +1510,8 @@ export const seedDatabase = async () => {
       tripName: 'Ama Dablam Expedition',
       content:
         'The 1:1 Sherpa guide ratio and basecamp luxury made our summit push unforgettable. AlpineAce sets the gold standard in high-altitude mountaineering.',
-      avatar:
-        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+      avatarMediaId: getMediaId('guide-mingma-avatar'),
+      avatar: getMediaUrl('guide-mingma-avatar'),
       rating: 5,
     },
     {
@@ -1260,8 +1522,8 @@ export const seedDatabase = async () => {
       tripName: 'Everest Luxury Lodge Trek',
       content:
         'Heated mattresses and organic fine dining at 4,000 meters! The Sherpa team looked after our safety with pulse oximeters every evening.',
-      avatar:
-        'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
+      avatarMediaId: getMediaId('guide-lakpa-avatar'),
+      avatar: getMediaUrl('guide-lakpa-avatar'),
       rating: 5,
     },
     {
@@ -1272,8 +1534,8 @@ export const seedDatabase = async () => {
       tripName: 'Annapurna Circuit & Heli Tour',
       content:
         'Bespoke planning from start to finish. Our private helicopter transfer from Manang back to Kathmandu was seamless and breathtaking.',
-      avatar:
-        'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
+      avatarMediaId: getMediaId('guide-pemba-avatar'),
+      avatar: getMediaUrl('guide-pemba-avatar'),
       rating: 5,
     },
   ];
@@ -1341,38 +1603,40 @@ export const seedDatabase = async () => {
   }
   console.log('Seeded site settings');
 
-  // 11. Seed Media
-  const mediaRepo = AppDataSource.getRepository(Media);
-  const mediaCount = await mediaRepo.count();
-  if (mediaCount === 0) {
-    const defaultMedia = [
-      {
-        name: 'everest-basecamp.jpg',
-        mimeType: 'image/jpeg',
-        fileSize: '482100',
-        mediaType: MediaType.BLOG_THUMBNAIL,
-        path: '/uploads/everest-basecamp.jpg',
-      },
-      {
-        name: 'annapurna-circuit.jpg',
-        mimeType: 'image/jpeg',
-        fileSize: '512000',
-        mediaType: MediaType.BLOG_THUMBNAIL,
-        path: '/uploads/annapurna-circuit.jpg',
-      },
-      {
-        name: 'ama-dablam-summit.jpg',
-        mimeType: 'image/jpeg',
-        fileSize: '620000',
-        mediaType: MediaType.BLOG_THUMBNAIL,
-        path: '/uploads/ama-dablam-summit.jpg',
-      },
-    ];
-    for (const m of defaultMedia) {
+  // 11. Seed Initial Standalone Media
+  const defaultMedia = [
+    {
+      name: 'everest-basecamp.jpg',
+      title: 'Everest Basecamp Header',
+      mimeType: 'image/jpeg',
+      fileSize: '482100',
+      mediaType: MediaType.BLOG_THUMBNAIL,
+      path: '/uploads/everest-basecamp.jpg',
+    },
+    {
+      name: 'annapurna-circuit.jpg',
+      title: 'Annapurna Circuit Header',
+      mimeType: 'image/jpeg',
+      fileSize: '512000',
+      mediaType: MediaType.BLOG_THUMBNAIL,
+      path: '/uploads/annapurna-circuit.jpg',
+    },
+    {
+      name: 'ama-dablam-summit.jpg',
+      title: 'Ama Dablam Summit Header',
+      mimeType: 'image/jpeg',
+      fileSize: '620000',
+      mediaType: MediaType.BLOG_THUMBNAIL,
+      path: '/uploads/ama-dablam-summit.jpg',
+    },
+  ];
+  for (const m of defaultMedia) {
+    let media = await mediaRepo.findOne({ where: { path: m.path } });
+    if (!media) {
       await mediaRepo.save(mediaRepo.create(m));
     }
-    console.log('Seeded initial media records');
   }
+  console.log('Seeded initial media records');
 
   // 12. Seed Associates & Affiliations
   const associateRepo = AppDataSource.getRepository(Associate);
@@ -1383,8 +1647,7 @@ export const seedDatabase = async () => {
         name: 'Trekking Agencies Association of Nepal (TAAN)',
         role: 'Accredited Member',
         company: 'TAAN Nepal',
-        image:
-          'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=300&auto=format&fit=crop&q=80',
+        image: getMediaUrl('assoc-taan-logo'),
         websiteUrl: 'https://taan.org.np',
         description:
           'Apex body of trekking agencies in Nepal ensuring certified ethical operations.',
@@ -1396,8 +1659,7 @@ export const seedDatabase = async () => {
         name: 'Nepal Mountaineering Association (NMA)',
         role: 'Certified Expedition Partner',
         company: 'NMA',
-        image:
-          'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=300&auto=format&fit=crop&q=80',
+        image: getMediaUrl('assoc-nma-logo'),
         websiteUrl: 'https://nepalmountaineering.org',
         description:
           'National governing body for peak climbing permits and Sherpa mountaineering training.',
@@ -1409,8 +1671,7 @@ export const seedDatabase = async () => {
         name: 'Himalayan Rescue Association (HRA)',
         role: 'Medical Safety Partner',
         company: 'HRA Nepal',
-        image:
-          'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=300&auto=format&fit=crop&q=80',
+        image: getMediaUrl('assoc-hra-logo'),
         websiteUrl: 'https://hra.org.np',
         description:
           'Volunteer medical stations in Pheriche and Manang dedicated to AMS prevention and high-altitude rescue.',

@@ -130,6 +130,72 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"TripDepartureDate": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"startDate": {
+						"type": "string"
+					},
+					"endDate": {
+						"type": "string"
+					},
+					"priceUSD": {
+						"type": "number",
+						"format": "double"
+					},
+					"status": {
+						"type": "string"
+					},
+					"seatsAvailable": {
+						"type": "number",
+						"format": "double"
+					},
+					"notes": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"startDate",
+					"endDate"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TripPackageFile": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"mediaId": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"fileUrl": {
+						"type": "string"
+					},
+					"fileName": {
+						"type": "string"
+					},
+					"fileSize": {
+						"type": "string"
+					},
+					"fileType": {
+						"type": "string"
+					},
+					"uploadedAt": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"title"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"Trek": {
 				"properties": {
 					"id": {
@@ -142,6 +208,18 @@
 					"deletedAt": {
 						"type": "string",
 						"format": "date-time"
+					},
+					"coverMediaId": {
+						"type": "string"
+					},
+					"mapMediaId": {
+						"type": "string"
+					},
+					"galleryMediaIds": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
 					},
 					"title": {
 						"type": "string"
@@ -186,6 +264,15 @@
 						"format": "double"
 					},
 					"image": {
+						"type": "string"
+					},
+					"galleryImages": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"mapImage": {
 						"type": "string"
 					},
 					"shortDesc": {
@@ -236,6 +323,24 @@
 						},
 						"type": "array"
 					},
+					"addonsText": {
+						"type": "string"
+					},
+					"usefulInfoText": {
+						"type": "string"
+					},
+					"departureDates": {
+						"items": {
+							"$ref": "#/components/schemas/TripDepartureDate"
+						},
+						"type": "array"
+					},
+					"packageFiles": {
+						"items": {
+							"$ref": "#/components/schemas/TripPackageFile"
+						},
+						"type": "array"
+					},
 					"metaTitle": {
 						"type": "string"
 					},
@@ -262,7 +367,6 @@
 					"totalBookings",
 					"rating",
 					"reviewsCount",
-					"image",
 					"shortDesc",
 					"bestSeason",
 					"startEndLocation",
@@ -275,6 +379,10 @@
 					"itinerary",
 					"faqs",
 					"reviews",
+					"addonsText",
+					"usefulInfoText",
+					"departureDates",
+					"packageFiles",
 					"metaTitle",
 					"metaDescription",
 					"keywords"
@@ -526,6 +634,72 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"TripDepartureDateDto": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"startDate": {
+						"type": "string"
+					},
+					"endDate": {
+						"type": "string"
+					},
+					"priceUSD": {
+						"type": "number",
+						"format": "double"
+					},
+					"status": {
+						"type": "string"
+					},
+					"seatsAvailable": {
+						"type": "number",
+						"format": "double"
+					},
+					"notes": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"startDate",
+					"endDate"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TripPackageFileDto": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"mediaId": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"fileUrl": {
+						"type": "string"
+					},
+					"fileName": {
+						"type": "string"
+					},
+					"fileSize": {
+						"type": "string"
+					},
+					"fileType": {
+						"type": "string"
+					},
+					"uploadedAt": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"title"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"CreateTrekDto": {
 				"properties": {
 					"title": {
@@ -606,6 +780,45 @@
 					"reviews": {
 						"items": {
 							"$ref": "#/components/schemas/TripReviewDto"
+						},
+						"type": "array"
+					},
+					"addonsText": {
+						"type": "string"
+					},
+					"usefulInfoText": {
+						"type": "string"
+					},
+					"departureDates": {
+						"items": {
+							"$ref": "#/components/schemas/TripDepartureDateDto"
+						},
+						"type": "array"
+					},
+					"galleryImages": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"mapImage": {
+						"type": "string"
+					},
+					"packageFiles": {
+						"items": {
+							"$ref": "#/components/schemas/TripPackageFileDto"
+						},
+						"type": "array"
+					},
+					"coverMediaId": {
+						"type": "string"
+					},
+					"mapMediaId": {
+						"type": "string"
+					},
+					"galleryMediaIds": {
+						"items": {
+							"type": "string"
 						},
 						"type": "array"
 					},
@@ -712,6 +925,45 @@
 						},
 						"type": "array"
 					},
+					"addonsText": {
+						"type": "string"
+					},
+					"usefulInfoText": {
+						"type": "string"
+					},
+					"departureDates": {
+						"items": {
+							"$ref": "#/components/schemas/TripDepartureDateDto"
+						},
+						"type": "array"
+					},
+					"galleryImages": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"mapImage": {
+						"type": "string"
+					},
+					"packageFiles": {
+						"items": {
+							"$ref": "#/components/schemas/TripPackageFileDto"
+						},
+						"type": "array"
+					},
+					"coverMediaId": {
+						"type": "string"
+					},
+					"mapMediaId": {
+						"type": "string"
+					},
+					"galleryMediaIds": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
 					"metaTitle": {
 						"type": "string"
 					},
@@ -791,6 +1043,18 @@
 						"type": "string",
 						"format": "date-time"
 					},
+					"coverMediaId": {
+						"type": "string"
+					},
+					"mapMediaId": {
+						"type": "string"
+					},
+					"galleryMediaIds": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
 					"title": {
 						"type": "string"
 					},
@@ -842,6 +1106,15 @@
 					"image": {
 						"type": "string"
 					},
+					"galleryImages": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"mapImage": {
+						"type": "string"
+					},
 					"shortDesc": {
 						"type": "string"
 					},
@@ -890,6 +1163,24 @@
 						},
 						"type": "array"
 					},
+					"addonsText": {
+						"type": "string"
+					},
+					"usefulInfoText": {
+						"type": "string"
+					},
+					"departureDates": {
+						"items": {
+							"$ref": "#/components/schemas/TripDepartureDate"
+						},
+						"type": "array"
+					},
+					"packageFiles": {
+						"items": {
+							"$ref": "#/components/schemas/TripPackageFile"
+						},
+						"type": "array"
+					},
 					"metaTitle": {
 						"type": "string"
 					},
@@ -918,7 +1209,6 @@
 					"totalBookings",
 					"rating",
 					"reviewsCount",
-					"image",
 					"shortDesc",
 					"bestSeason",
 					"startEndLocation",
@@ -931,6 +1221,10 @@
 					"itinerary",
 					"faqs",
 					"reviews",
+					"addonsText",
+					"usefulInfoText",
+					"departureDates",
+					"packageFiles",
 					"metaTitle",
 					"metaDescription",
 					"keywords"
@@ -1101,6 +1395,45 @@
 						},
 						"type": "array"
 					},
+					"addonsText": {
+						"type": "string"
+					},
+					"usefulInfoText": {
+						"type": "string"
+					},
+					"departureDates": {
+						"items": {
+							"$ref": "#/components/schemas/TripDepartureDateDto"
+						},
+						"type": "array"
+					},
+					"galleryImages": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"mapImage": {
+						"type": "string"
+					},
+					"packageFiles": {
+						"items": {
+							"$ref": "#/components/schemas/TripPackageFileDto"
+						},
+						"type": "array"
+					},
+					"coverMediaId": {
+						"type": "string"
+					},
+					"mapMediaId": {
+						"type": "string"
+					},
+					"galleryMediaIds": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
 					"metaTitle": {
 						"type": "string"
 					},
@@ -1207,6 +1540,45 @@
 					"reviews": {
 						"items": {
 							"$ref": "#/components/schemas/TripReviewDto"
+						},
+						"type": "array"
+					},
+					"addonsText": {
+						"type": "string"
+					},
+					"usefulInfoText": {
+						"type": "string"
+					},
+					"departureDates": {
+						"items": {
+							"$ref": "#/components/schemas/TripDepartureDateDto"
+						},
+						"type": "array"
+					},
+					"galleryImages": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"mapImage": {
+						"type": "string"
+					},
+					"packageFiles": {
+						"items": {
+							"$ref": "#/components/schemas/TripPackageFileDto"
+						},
+						"type": "array"
+					},
+					"coverMediaId": {
+						"type": "string"
+					},
+					"mapMediaId": {
+						"type": "string"
+					},
+					"galleryMediaIds": {
+						"items": {
+							"type": "string"
 						},
 						"type": "array"
 					},
@@ -1333,443 +1705,6 @@
 					"homeStats": {},
 					"companyFaqs": {},
 					"testimonials": {}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"PackageCategoryType": {
-				"enum": [
-					"trekking",
-					"expedition",
-					"tour"
-				],
-				"type": "string"
-			},
-			"PackageStatus": {
-				"enum": [
-					"active",
-					"featured",
-					"draft"
-				],
-				"type": "string"
-			},
-			"Package": {
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"deletedAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"title": {
-						"type": "string"
-					},
-					"slug": {
-						"type": "string"
-					},
-					"categoryType": {
-						"$ref": "#/components/schemas/PackageCategoryType"
-					},
-					"categoryId": {
-						"type": "string"
-					},
-					"region": {
-						"type": "string"
-					},
-					"durationDays": {
-						"type": "number",
-						"format": "double"
-					},
-					"maxAltitudeMeters": {
-						"type": "number",
-						"format": "double"
-					},
-					"difficulty": {
-						"$ref": "#/components/schemas/TripDifficulty"
-					},
-					"priceUSD": {
-						"type": "number",
-						"format": "double"
-					},
-					"status": {
-						"$ref": "#/components/schemas/PackageStatus"
-					},
-					"totalBookings": {
-						"type": "number",
-						"format": "double"
-					},
-					"rating": {
-						"type": "number",
-						"format": "double"
-					},
-					"reviewsCount": {
-						"type": "number",
-						"format": "double"
-					},
-					"image": {
-						"type": "string"
-					},
-					"shortDesc": {
-						"type": "string"
-					},
-					"bestSeason": {
-						"type": "string"
-					},
-					"startEndLocation": {
-						"type": "string"
-					},
-					"accommodation": {
-						"type": "string"
-					},
-					"meals": {
-						"type": "string"
-					},
-					"groupSizeRange": {
-						"type": "string"
-					},
-					"permitsRequired": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"inclusionsText": {
-						"type": "string"
-					},
-					"exclusionsText": {
-						"type": "string"
-					},
-					"itinerary": {
-						"items": {
-							"$ref": "#/components/schemas/TripItineraryDay"
-						},
-						"type": "array"
-					},
-					"metaTitle": {
-						"type": "string"
-					},
-					"metaDescription": {
-						"type": "string"
-					},
-					"keywords": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"deletedAt",
-					"title",
-					"slug",
-					"categoryType",
-					"categoryId",
-					"region",
-					"durationDays",
-					"maxAltitudeMeters",
-					"difficulty",
-					"priceUSD",
-					"status",
-					"totalBookings",
-					"rating",
-					"reviewsCount",
-					"image",
-					"shortDesc",
-					"bestSeason",
-					"startEndLocation",
-					"accommodation",
-					"meals",
-					"groupSizeRange",
-					"permitsRequired",
-					"inclusionsText",
-					"exclusionsText",
-					"itinerary",
-					"metaTitle",
-					"metaDescription",
-					"keywords"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ApiResponse_Package-Array_": {
-				"properties": {
-					"data": {
-						"anyOf": [
-							{
-								"items": {
-									"$ref": "#/components/schemas/Package"
-								},
-								"type": "array"
-							},
-							{
-								"items": {
-									"items": {
-										"$ref": "#/components/schemas/Package"
-									},
-									"type": "array"
-								},
-								"type": "array"
-							}
-						],
-						"nullable": true
-					},
-					"pagination": {
-						"$ref": "#/components/schemas/PaginationMeta"
-					},
-					"success": {
-						"type": "boolean"
-					},
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"data",
-					"success",
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ApiResponse_Package_": {
-				"properties": {
-					"data": {
-						"anyOf": [
-							{
-								"$ref": "#/components/schemas/Package"
-							},
-							{
-								"items": {
-									"$ref": "#/components/schemas/Package"
-								},
-								"type": "array"
-							}
-						],
-						"nullable": true
-					},
-					"pagination": {
-						"$ref": "#/components/schemas/PaginationMeta"
-					},
-					"success": {
-						"type": "boolean"
-					},
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"data",
-					"success",
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"CreatePackageDto": {
-				"properties": {
-					"title": {
-						"type": "string"
-					},
-					"categoryType": {
-						"$ref": "#/components/schemas/PackageCategoryType"
-					},
-					"categoryId": {
-						"type": "string"
-					},
-					"region": {
-						"type": "string"
-					},
-					"durationDays": {
-						"type": "number",
-						"format": "double"
-					},
-					"maxAltitudeMeters": {
-						"type": "number",
-						"format": "double"
-					},
-					"difficulty": {
-						"$ref": "#/components/schemas/TripDifficulty"
-					},
-					"priceUSD": {
-						"type": "number",
-						"format": "double"
-					},
-					"status": {
-						"$ref": "#/components/schemas/PackageStatus"
-					},
-					"shortDesc": {
-						"type": "string"
-					},
-					"image": {
-						"type": "string"
-					},
-					"bestSeason": {
-						"type": "string"
-					},
-					"startEndLocation": {
-						"type": "string"
-					},
-					"accommodation": {
-						"type": "string"
-					},
-					"meals": {
-						"type": "string"
-					},
-					"groupSizeRange": {
-						"type": "string"
-					},
-					"permitsText": {
-						"type": "string"
-					},
-					"permitsRequired": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"inclusionsText": {
-						"type": "string"
-					},
-					"exclusionsText": {
-						"type": "string"
-					},
-					"itinerary": {
-						"items": {
-							"$ref": "#/components/schemas/TripItineraryDayDto"
-						},
-						"type": "array"
-					},
-					"metaTitle": {
-						"type": "string"
-					},
-					"metaDescription": {
-						"type": "string"
-					},
-					"keywords": {
-						"type": "string"
-					},
-					"tourType": {
-						"type": "string"
-					},
-					"climbingGrade": {
-						"type": "string"
-					},
-					"peakHeightM": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"title",
-					"categoryType",
-					"categoryId",
-					"region",
-					"durationDays",
-					"difficulty",
-					"priceUSD",
-					"status",
-					"image"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"UpdatePackageDto": {
-				"properties": {
-					"title": {
-						"type": "string"
-					},
-					"categoryType": {
-						"$ref": "#/components/schemas/PackageCategoryType"
-					},
-					"categoryId": {
-						"type": "string"
-					},
-					"region": {
-						"type": "string"
-					},
-					"durationDays": {
-						"type": "number",
-						"format": "double"
-					},
-					"maxAltitudeMeters": {
-						"type": "number",
-						"format": "double"
-					},
-					"difficulty": {
-						"$ref": "#/components/schemas/TripDifficulty"
-					},
-					"priceUSD": {
-						"type": "number",
-						"format": "double"
-					},
-					"status": {
-						"$ref": "#/components/schemas/PackageStatus"
-					},
-					"shortDesc": {
-						"type": "string"
-					},
-					"image": {
-						"type": "string"
-					},
-					"bestSeason": {
-						"type": "string"
-					},
-					"startEndLocation": {
-						"type": "string"
-					},
-					"accommodation": {
-						"type": "string"
-					},
-					"meals": {
-						"type": "string"
-					},
-					"groupSizeRange": {
-						"type": "string"
-					},
-					"permitsText": {
-						"type": "string"
-					},
-					"permitsRequired": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"inclusionsText": {
-						"type": "string"
-					},
-					"exclusionsText": {
-						"type": "string"
-					},
-					"itinerary": {
-						"items": {
-							"$ref": "#/components/schemas/TripItineraryDayDto"
-						},
-						"type": "array"
-					},
-					"metaTitle": {
-						"type": "string"
-					},
-					"metaDescription": {
-						"type": "string"
-					},
-					"keywords": {
-						"type": "string"
-					},
-					"tourType": {
-						"type": "string"
-					},
-					"climbingGrade": {
-						"type": "string"
-					},
-					"peakHeightM": {
-						"type": "number",
-						"format": "double"
-					}
 				},
 				"type": "object",
 				"additionalProperties": false
@@ -1970,6 +1905,70 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"CategoryType": {
+				"enum": [
+					"trekking",
+					"tours",
+					"expeditions",
+					"blogs",
+					"media"
+				],
+				"type": "string"
+			},
+			"CategoryStatus": {
+				"enum": [
+					"active",
+					"draft"
+				],
+				"type": "string"
+			},
+			"Category": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"deletedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"name": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"type": {
+						"$ref": "#/components/schemas/CategoryType"
+					},
+					"description": {
+						"type": "string"
+					},
+					"itemCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"status": {
+						"$ref": "#/components/schemas/CategoryStatus"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"deletedAt",
+					"name",
+					"slug",
+					"type",
+					"description",
+					"itemCount",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"MediaUploadResult": {
 				"properties": {
 					"id": {
@@ -1981,8 +1980,14 @@
 					"title": {
 						"type": "string"
 					},
-					"category": {
+					"categoryId": {
 						"type": "string"
+					},
+					"categoryName": {
+						"type": "string"
+					},
+					"category": {
+						"$ref": "#/components/schemas/Category"
 					},
 					"description": {
 						"type": "string"
@@ -2008,7 +2013,6 @@
 					"id",
 					"name",
 					"title",
-					"category",
 					"description",
 					"altText",
 					"url",
@@ -2097,7 +2101,7 @@
 					"title": {
 						"type": "string"
 					},
-					"category": {
+					"categoryId": {
 						"type": "string"
 					},
 					"description": {
@@ -2792,6 +2796,18 @@
 						"type": "string",
 						"format": "date-time"
 					},
+					"coverMediaId": {
+						"type": "string"
+					},
+					"mapMediaId": {
+						"type": "string"
+					},
+					"galleryMediaIds": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
 					"title": {
 						"type": "string"
 					},
@@ -2850,6 +2866,15 @@
 					"image": {
 						"type": "string"
 					},
+					"galleryImages": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"mapImage": {
+						"type": "string"
+					},
 					"shortDesc": {
 						"type": "string"
 					},
@@ -2898,6 +2923,24 @@
 						},
 						"type": "array"
 					},
+					"addonsText": {
+						"type": "string"
+					},
+					"usefulInfoText": {
+						"type": "string"
+					},
+					"departureDates": {
+						"items": {
+							"$ref": "#/components/schemas/TripDepartureDate"
+						},
+						"type": "array"
+					},
+					"packageFiles": {
+						"items": {
+							"$ref": "#/components/schemas/TripPackageFile"
+						},
+						"type": "array"
+					},
 					"metaTitle": {
 						"type": "string"
 					},
@@ -2928,7 +2971,6 @@
 					"totalBookings",
 					"rating",
 					"reviewsCount",
-					"image",
 					"shortDesc",
 					"bestSeason",
 					"startEndLocation",
@@ -2941,6 +2983,10 @@
 					"itinerary",
 					"faqs",
 					"reviews",
+					"addonsText",
+					"usefulInfoText",
+					"departureDates",
+					"packageFiles",
 					"metaTitle",
 					"metaDescription",
 					"keywords"
@@ -3118,6 +3164,45 @@
 						},
 						"type": "array"
 					},
+					"addonsText": {
+						"type": "string"
+					},
+					"usefulInfoText": {
+						"type": "string"
+					},
+					"departureDates": {
+						"items": {
+							"$ref": "#/components/schemas/TripDepartureDateDto"
+						},
+						"type": "array"
+					},
+					"galleryImages": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"mapImage": {
+						"type": "string"
+					},
+					"packageFiles": {
+						"items": {
+							"$ref": "#/components/schemas/TripPackageFileDto"
+						},
+						"type": "array"
+					},
+					"coverMediaId": {
+						"type": "string"
+					},
+					"mapMediaId": {
+						"type": "string"
+					},
+					"galleryMediaIds": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
 					"metaTitle": {
 						"type": "string"
 					},
@@ -3231,6 +3316,45 @@
 					"reviews": {
 						"items": {
 							"$ref": "#/components/schemas/TripReviewDto"
+						},
+						"type": "array"
+					},
+					"addonsText": {
+						"type": "string"
+					},
+					"usefulInfoText": {
+						"type": "string"
+					},
+					"departureDates": {
+						"items": {
+							"$ref": "#/components/schemas/TripDepartureDateDto"
+						},
+						"type": "array"
+					},
+					"galleryImages": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"mapImage": {
+						"type": "string"
+					},
+					"packageFiles": {
+						"items": {
+							"$ref": "#/components/schemas/TripPackageFileDto"
+						},
+						"type": "array"
+					},
+					"coverMediaId": {
+						"type": "string"
+					},
+					"mapMediaId": {
+						"type": "string"
+					},
+					"galleryMediaIds": {
+						"items": {
+							"type": "string"
 						},
 						"type": "array"
 					},
@@ -3455,70 +3579,6 @@
 					"data",
 					"success",
 					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"CategoryType": {
-				"enum": [
-					"trekking",
-					"tours",
-					"expeditions",
-					"blogs",
-					"media"
-				],
-				"type": "string"
-			},
-			"CategoryStatus": {
-				"enum": [
-					"active",
-					"draft"
-				],
-				"type": "string"
-			},
-			"Category": {
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"deletedAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"name": {
-						"type": "string"
-					},
-					"slug": {
-						"type": "string"
-					},
-					"type": {
-						"$ref": "#/components/schemas/CategoryType"
-					},
-					"description": {
-						"type": "string"
-					},
-					"itemCount": {
-						"type": "number",
-						"format": "double"
-					},
-					"status": {
-						"$ref": "#/components/schemas/CategoryStatus"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"deletedAt",
-					"name",
-					"slug",
-					"type",
-					"description",
-					"itemCount",
-					"status"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -3880,6 +3940,9 @@
 					"content": {
 						"type": "string"
 					},
+					"coverMediaId": {
+						"type": "string"
+					},
 					"image": {
 						"type": "string"
 					},
@@ -3905,8 +3968,7 @@
 					"publishedDate",
 					"views",
 					"excerpt",
-					"content",
-					"image"
+					"content"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -4014,6 +4076,9 @@
 					"image": {
 						"type": "string"
 					},
+					"coverMediaId": {
+						"type": "string"
+					},
 					"metaTitle": {
 						"type": "string"
 					},
@@ -4059,6 +4124,9 @@
 						"type": "string"
 					},
 					"image": {
+						"type": "string"
+					},
+					"coverMediaId": {
 						"type": "string"
 					},
 					"views": {
@@ -5059,301 +5127,6 @@
 				}
 			}
 		},
-		"/packages": {
-			"get": {
-				"operationId": "GetAll",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Package-Array_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Packages (Treks, Tours, Expeditions)"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "categoryType",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/PackageCategoryType"
-						}
-					},
-					{
-						"in": "query",
-						"name": "categoryId",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "region",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "difficulty",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/TripDifficulty"
-						}
-					},
-					{
-						"in": "query",
-						"name": "status",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/PackageStatus"
-						}
-					},
-					{
-						"in": "query",
-						"name": "search",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "minPrice",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "maxPrice",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "minDuration",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "maxDuration",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "sortBy",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "limit",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "page",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			},
-			"post": {
-				"operationId": "Create",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Package_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Packages (Treks, Tours, Expeditions)"
-				],
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/CreatePackageDto"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/packages/filter-options": {
-			"get": {
-				"operationId": "GetFilterOptions",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_any_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Packages (Treks, Tours, Expeditions)"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "categoryType",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/PackageCategoryType"
-						}
-					}
-				]
-			}
-		},
-		"/packages/{idOrSlug}": {
-			"get": {
-				"operationId": "GetByIdOrSlug",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Package_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Packages (Treks, Tours, Expeditions)"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "idOrSlug",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
-		"/packages/{id}": {
-			"put": {
-				"operationId": "Update",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Package_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Packages (Treks, Tours, Expeditions)"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/UpdatePackageDto"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "Delete",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_boolean_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Packages (Treks, Tours, Expeditions)"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
 		"/notifications": {
 			"get": {
 				"operationId": "GetAll",
@@ -5544,7 +5317,16 @@
 					"Media Library"
 				],
 				"security": [],
-				"parameters": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "categoryId",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
 				"requestBody": {
 					"required": true,
 					"content": {
@@ -5586,6 +5368,14 @@
 				],
 				"security": [],
 				"parameters": [
+					{
+						"in": "query",
+						"name": "categoryId",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"in": "query",
 						"name": "category",
@@ -7044,7 +6834,7 @@
 						}
 					}
 				},
-				"description": "Get all blog articles with optional status, category, and search filtering.\r\nPass ?status=Published to only retrieve published articles.\r\nPass ?categoryId=... to filter by category ID.\r\nPass ?search=... to search within title, excerpt, and category.",
+				"description": "Get all blog articles with optional status, category, and search filtering.\nPass ?status=Published to only retrieve published articles.\nPass ?categoryId=... to filter by category ID.\nPass ?search=... to search within title, excerpt, and category.",
 				"tags": [
 					"Blog Articles"
 				],

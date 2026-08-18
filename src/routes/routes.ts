@@ -10,8 +10,6 @@ import { TourController } from './../controllers/tour/tour.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { SettingController } from './../controllers/setting/setting.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { PackageController } from './../controllers/package/package.controller';
-// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { NotificationController } from './../controllers/notification/notification.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { MediaController } from './../controllers/media/media.controller';
@@ -101,12 +99,44 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "TripDepartureDate": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string"},
+            "startDate": {"dataType":"string","required":true},
+            "endDate": {"dataType":"string","required":true},
+            "priceUSD": {"dataType":"double"},
+            "status": {"dataType":"string"},
+            "seatsAvailable": {"dataType":"double"},
+            "notes": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "TripPackageFile": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string"},
+            "mediaId": {"dataType":"string"},
+            "title": {"dataType":"string","required":true},
+            "fileUrl": {"dataType":"string"},
+            "fileName": {"dataType":"string"},
+            "fileSize": {"dataType":"string"},
+            "fileType": {"dataType":"string"},
+            "uploadedAt": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Trek": {
         "dataType": "refObject",
         "properties": {
             "id": {"dataType":"string","required":true},
             "createdAt": {"dataType":"datetime","required":true},
             "deletedAt": {"dataType":"datetime","required":true},
+            "coverMediaId": {"dataType":"string"},
+            "mapMediaId": {"dataType":"string"},
+            "galleryMediaIds": {"dataType":"array","array":{"dataType":"string"}},
             "title": {"dataType":"string","required":true},
             "slug": {"dataType":"string","required":true},
             "categoryId": {"dataType":"string","required":true},
@@ -119,7 +149,9 @@ const models: TsoaRoute.Models = {
             "totalBookings": {"dataType":"double","required":true},
             "rating": {"dataType":"double","required":true},
             "reviewsCount": {"dataType":"double","required":true},
-            "image": {"dataType":"string","required":true},
+            "image": {"dataType":"string"},
+            "galleryImages": {"dataType":"array","array":{"dataType":"string"}},
+            "mapImage": {"dataType":"string"},
             "shortDesc": {"dataType":"string","required":true},
             "bestSeason": {"dataType":"string","required":true},
             "startEndLocation": {"dataType":"string","required":true},
@@ -132,6 +164,10 @@ const models: TsoaRoute.Models = {
             "itinerary": {"dataType":"array","array":{"dataType":"refObject","ref":"TripItineraryDay"},"required":true},
             "faqs": {"dataType":"array","array":{"dataType":"refObject","ref":"TripFaq"},"required":true},
             "reviews": {"dataType":"array","array":{"dataType":"refObject","ref":"TripReview"},"required":true},
+            "addonsText": {"dataType":"string","required":true},
+            "usefulInfoText": {"dataType":"string","required":true},
+            "departureDates": {"dataType":"array","array":{"dataType":"refObject","ref":"TripDepartureDate"},"required":true},
+            "packageFiles": {"dataType":"array","array":{"dataType":"refObject","ref":"TripPackageFile"},"required":true},
             "metaTitle": {"dataType":"string","required":true},
             "metaDescription": {"dataType":"string","required":true},
             "keywords": {"dataType":"string","required":true},
@@ -231,6 +267,35 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "TripDepartureDateDto": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string"},
+            "startDate": {"dataType":"string","required":true},
+            "endDate": {"dataType":"string","required":true},
+            "priceUSD": {"dataType":"double"},
+            "status": {"dataType":"string"},
+            "seatsAvailable": {"dataType":"double"},
+            "notes": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "TripPackageFileDto": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string"},
+            "mediaId": {"dataType":"string"},
+            "title": {"dataType":"string","required":true},
+            "fileUrl": {"dataType":"string"},
+            "fileName": {"dataType":"string"},
+            "fileSize": {"dataType":"string"},
+            "fileType": {"dataType":"string"},
+            "uploadedAt": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "CreateTrekDto": {
         "dataType": "refObject",
         "properties": {
@@ -256,6 +321,15 @@ const models: TsoaRoute.Models = {
             "itinerary": {"dataType":"array","array":{"dataType":"refObject","ref":"TripItineraryDayDto"}},
             "faqs": {"dataType":"array","array":{"dataType":"refObject","ref":"TripFaqDto"}},
             "reviews": {"dataType":"array","array":{"dataType":"refObject","ref":"TripReviewDto"}},
+            "addonsText": {"dataType":"string"},
+            "usefulInfoText": {"dataType":"string"},
+            "departureDates": {"dataType":"array","array":{"dataType":"refObject","ref":"TripDepartureDateDto"}},
+            "galleryImages": {"dataType":"array","array":{"dataType":"string"}},
+            "mapImage": {"dataType":"string"},
+            "packageFiles": {"dataType":"array","array":{"dataType":"refObject","ref":"TripPackageFileDto"}},
+            "coverMediaId": {"dataType":"string"},
+            "mapMediaId": {"dataType":"string"},
+            "galleryMediaIds": {"dataType":"array","array":{"dataType":"string"}},
             "metaTitle": {"dataType":"string"},
             "metaDescription": {"dataType":"string"},
             "keywords": {"dataType":"string"},
@@ -288,6 +362,15 @@ const models: TsoaRoute.Models = {
             "itinerary": {"dataType":"array","array":{"dataType":"refObject","ref":"TripItineraryDayDto"}},
             "faqs": {"dataType":"array","array":{"dataType":"refObject","ref":"TripFaqDto"}},
             "reviews": {"dataType":"array","array":{"dataType":"refObject","ref":"TripReviewDto"}},
+            "addonsText": {"dataType":"string"},
+            "usefulInfoText": {"dataType":"string"},
+            "departureDates": {"dataType":"array","array":{"dataType":"refObject","ref":"TripDepartureDateDto"}},
+            "galleryImages": {"dataType":"array","array":{"dataType":"string"}},
+            "mapImage": {"dataType":"string"},
+            "packageFiles": {"dataType":"array","array":{"dataType":"refObject","ref":"TripPackageFileDto"}},
+            "coverMediaId": {"dataType":"string"},
+            "mapMediaId": {"dataType":"string"},
+            "galleryMediaIds": {"dataType":"array","array":{"dataType":"string"}},
             "metaTitle": {"dataType":"string"},
             "metaDescription": {"dataType":"string"},
             "keywords": {"dataType":"string"},
@@ -322,6 +405,9 @@ const models: TsoaRoute.Models = {
             "id": {"dataType":"string","required":true},
             "createdAt": {"dataType":"datetime","required":true},
             "deletedAt": {"dataType":"datetime","required":true},
+            "coverMediaId": {"dataType":"string"},
+            "mapMediaId": {"dataType":"string"},
+            "galleryMediaIds": {"dataType":"array","array":{"dataType":"string"}},
             "title": {"dataType":"string","required":true},
             "slug": {"dataType":"string","required":true},
             "categoryId": {"dataType":"string","required":true},
@@ -336,7 +422,9 @@ const models: TsoaRoute.Models = {
             "totalBookings": {"dataType":"double","required":true},
             "rating": {"dataType":"double","required":true},
             "reviewsCount": {"dataType":"double","required":true},
-            "image": {"dataType":"string","required":true},
+            "image": {"dataType":"string"},
+            "galleryImages": {"dataType":"array","array":{"dataType":"string"}},
+            "mapImage": {"dataType":"string"},
             "shortDesc": {"dataType":"string","required":true},
             "bestSeason": {"dataType":"string","required":true},
             "startEndLocation": {"dataType":"string","required":true},
@@ -349,6 +437,10 @@ const models: TsoaRoute.Models = {
             "itinerary": {"dataType":"array","array":{"dataType":"refObject","ref":"TripItineraryDay"},"required":true},
             "faqs": {"dataType":"array","array":{"dataType":"refObject","ref":"TripFaq"},"required":true},
             "reviews": {"dataType":"array","array":{"dataType":"refObject","ref":"TripReview"},"required":true},
+            "addonsText": {"dataType":"string","required":true},
+            "usefulInfoText": {"dataType":"string","required":true},
+            "departureDates": {"dataType":"array","array":{"dataType":"refObject","ref":"TripDepartureDate"},"required":true},
+            "packageFiles": {"dataType":"array","array":{"dataType":"refObject","ref":"TripPackageFile"},"required":true},
             "metaTitle": {"dataType":"string","required":true},
             "metaDescription": {"dataType":"string","required":true},
             "keywords": {"dataType":"string","required":true},
@@ -405,6 +497,15 @@ const models: TsoaRoute.Models = {
             "itinerary": {"dataType":"array","array":{"dataType":"refObject","ref":"TripItineraryDayDto"}},
             "faqs": {"dataType":"array","array":{"dataType":"refObject","ref":"TripFaqDto"}},
             "reviews": {"dataType":"array","array":{"dataType":"refObject","ref":"TripReviewDto"}},
+            "addonsText": {"dataType":"string"},
+            "usefulInfoText": {"dataType":"string"},
+            "departureDates": {"dataType":"array","array":{"dataType":"refObject","ref":"TripDepartureDateDto"}},
+            "galleryImages": {"dataType":"array","array":{"dataType":"string"}},
+            "mapImage": {"dataType":"string"},
+            "packageFiles": {"dataType":"array","array":{"dataType":"refObject","ref":"TripPackageFileDto"}},
+            "coverMediaId": {"dataType":"string"},
+            "mapMediaId": {"dataType":"string"},
+            "galleryMediaIds": {"dataType":"array","array":{"dataType":"string"}},
             "metaTitle": {"dataType":"string"},
             "metaDescription": {"dataType":"string"},
             "keywords": {"dataType":"string"},
@@ -439,6 +540,15 @@ const models: TsoaRoute.Models = {
             "itinerary": {"dataType":"array","array":{"dataType":"refObject","ref":"TripItineraryDayDto"}},
             "faqs": {"dataType":"array","array":{"dataType":"refObject","ref":"TripFaqDto"}},
             "reviews": {"dataType":"array","array":{"dataType":"refObject","ref":"TripReviewDto"}},
+            "addonsText": {"dataType":"string"},
+            "usefulInfoText": {"dataType":"string"},
+            "departureDates": {"dataType":"array","array":{"dataType":"refObject","ref":"TripDepartureDateDto"}},
+            "galleryImages": {"dataType":"array","array":{"dataType":"string"}},
+            "mapImage": {"dataType":"string"},
+            "packageFiles": {"dataType":"array","array":{"dataType":"refObject","ref":"TripPackageFileDto"}},
+            "coverMediaId": {"dataType":"string"},
+            "mapMediaId": {"dataType":"string"},
+            "galleryMediaIds": {"dataType":"array","array":{"dataType":"string"}},
             "metaTitle": {"dataType":"string"},
             "metaDescription": {"dataType":"string"},
             "keywords": {"dataType":"string"},
@@ -489,143 +599,6 @@ const models: TsoaRoute.Models = {
             "homeStats": {"dataType":"any"},
             "companyFaqs": {"dataType":"any"},
             "testimonials": {"dataType":"any"},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "PackageCategoryType": {
-        "dataType": "refEnum",
-        "enums": ["trekking","expedition","tour"],
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "PackageStatus": {
-        "dataType": "refEnum",
-        "enums": ["active","featured","draft"],
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Package": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"string","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "deletedAt": {"dataType":"datetime","required":true},
-            "title": {"dataType":"string","required":true},
-            "slug": {"dataType":"string","required":true},
-            "categoryType": {"ref":"PackageCategoryType","required":true},
-            "categoryId": {"dataType":"string","required":true},
-            "region": {"dataType":"string","required":true},
-            "durationDays": {"dataType":"double","required":true},
-            "maxAltitudeMeters": {"dataType":"double","required":true},
-            "difficulty": {"ref":"TripDifficulty","required":true},
-            "priceUSD": {"dataType":"double","required":true},
-            "status": {"ref":"PackageStatus","required":true},
-            "totalBookings": {"dataType":"double","required":true},
-            "rating": {"dataType":"double","required":true},
-            "reviewsCount": {"dataType":"double","required":true},
-            "image": {"dataType":"string","required":true},
-            "shortDesc": {"dataType":"string","required":true},
-            "bestSeason": {"dataType":"string","required":true},
-            "startEndLocation": {"dataType":"string","required":true},
-            "accommodation": {"dataType":"string","required":true},
-            "meals": {"dataType":"string","required":true},
-            "groupSizeRange": {"dataType":"string","required":true},
-            "permitsRequired": {"dataType":"array","array":{"dataType":"string"},"required":true},
-            "inclusionsText": {"dataType":"string","required":true},
-            "exclusionsText": {"dataType":"string","required":true},
-            "itinerary": {"dataType":"array","array":{"dataType":"refObject","ref":"TripItineraryDay"},"required":true},
-            "metaTitle": {"dataType":"string","required":true},
-            "metaDescription": {"dataType":"string","required":true},
-            "keywords": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ApiResponse_Package-Array_": {
-        "dataType": "refObject",
-        "properties": {
-            "data": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"Package"}},{"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"Package"}}},{"dataType":"enum","enums":[null]}],"required":true},
-            "pagination": {"ref":"PaginationMeta"},
-            "success": {"dataType":"boolean","required":true},
-            "message": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ApiResponse_Package_": {
-        "dataType": "refObject",
-        "properties": {
-            "data": {"dataType":"union","subSchemas":[{"ref":"Package"},{"dataType":"array","array":{"dataType":"refObject","ref":"Package"}},{"dataType":"enum","enums":[null]}],"required":true},
-            "pagination": {"ref":"PaginationMeta"},
-            "success": {"dataType":"boolean","required":true},
-            "message": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "CreatePackageDto": {
-        "dataType": "refObject",
-        "properties": {
-            "title": {"dataType":"string","required":true},
-            "categoryType": {"ref":"PackageCategoryType","required":true},
-            "categoryId": {"dataType":"string","required":true},
-            "region": {"dataType":"string","required":true},
-            "durationDays": {"dataType":"double","required":true},
-            "maxAltitudeMeters": {"dataType":"double"},
-            "difficulty": {"ref":"TripDifficulty","required":true},
-            "priceUSD": {"dataType":"double","required":true},
-            "status": {"ref":"PackageStatus","required":true},
-            "shortDesc": {"dataType":"string"},
-            "image": {"dataType":"string","required":true},
-            "bestSeason": {"dataType":"string"},
-            "startEndLocation": {"dataType":"string"},
-            "accommodation": {"dataType":"string"},
-            "meals": {"dataType":"string"},
-            "groupSizeRange": {"dataType":"string"},
-            "permitsText": {"dataType":"string"},
-            "permitsRequired": {"dataType":"array","array":{"dataType":"string"}},
-            "inclusionsText": {"dataType":"string"},
-            "exclusionsText": {"dataType":"string"},
-            "itinerary": {"dataType":"array","array":{"dataType":"refObject","ref":"TripItineraryDayDto"}},
-            "metaTitle": {"dataType":"string"},
-            "metaDescription": {"dataType":"string"},
-            "keywords": {"dataType":"string"},
-            "tourType": {"dataType":"string"},
-            "climbingGrade": {"dataType":"string"},
-            "peakHeightM": {"dataType":"double"},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "UpdatePackageDto": {
-        "dataType": "refObject",
-        "properties": {
-            "title": {"dataType":"string"},
-            "categoryType": {"ref":"PackageCategoryType"},
-            "categoryId": {"dataType":"string"},
-            "region": {"dataType":"string"},
-            "durationDays": {"dataType":"double"},
-            "maxAltitudeMeters": {"dataType":"double"},
-            "difficulty": {"ref":"TripDifficulty"},
-            "priceUSD": {"dataType":"double"},
-            "status": {"ref":"PackageStatus"},
-            "shortDesc": {"dataType":"string"},
-            "image": {"dataType":"string"},
-            "bestSeason": {"dataType":"string"},
-            "startEndLocation": {"dataType":"string"},
-            "accommodation": {"dataType":"string"},
-            "meals": {"dataType":"string"},
-            "groupSizeRange": {"dataType":"string"},
-            "permitsText": {"dataType":"string"},
-            "permitsRequired": {"dataType":"array","array":{"dataType":"string"}},
-            "inclusionsText": {"dataType":"string"},
-            "exclusionsText": {"dataType":"string"},
-            "itinerary": {"dataType":"array","array":{"dataType":"refObject","ref":"TripItineraryDayDto"}},
-            "metaTitle": {"dataType":"string"},
-            "metaDescription": {"dataType":"string"},
-            "keywords": {"dataType":"string"},
-            "tourType": {"dataType":"string"},
-            "climbingGrade": {"dataType":"string"},
-            "peakHeightM": {"dataType":"double"},
         },
         "additionalProperties": false,
     },
@@ -695,13 +668,41 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CategoryType": {
+        "dataType": "refEnum",
+        "enums": ["trekking","tours","expeditions","blogs","media"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CategoryStatus": {
+        "dataType": "refEnum",
+        "enums": ["active","draft"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Category": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "deletedAt": {"dataType":"datetime","required":true},
+            "name": {"dataType":"string","required":true},
+            "slug": {"dataType":"string","required":true},
+            "type": {"ref":"CategoryType","required":true},
+            "description": {"dataType":"string","required":true},
+            "itemCount": {"dataType":"double","required":true},
+            "status": {"ref":"CategoryStatus","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "MediaUploadResult": {
         "dataType": "refObject",
         "properties": {
             "id": {"dataType":"string","required":true},
             "name": {"dataType":"string","required":true},
             "title": {"dataType":"string","required":true},
-            "category": {"dataType":"string","required":true},
+            "categoryId": {"dataType":"string"},
+            "categoryName": {"dataType":"string"},
+            "category": {"ref":"Category"},
             "description": {"dataType":"string","required":true},
             "altText": {"dataType":"string","required":true},
             "url": {"dataType":"string","required":true},
@@ -738,7 +739,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "title": {"dataType":"string"},
-            "category": {"dataType":"string"},
+            "categoryId": {"dataType":"string"},
             "description": {"dataType":"string"},
             "altText": {"dataType":"string"},
         },
@@ -1008,6 +1009,9 @@ const models: TsoaRoute.Models = {
             "id": {"dataType":"string","required":true},
             "createdAt": {"dataType":"datetime","required":true},
             "deletedAt": {"dataType":"datetime","required":true},
+            "coverMediaId": {"dataType":"string"},
+            "mapMediaId": {"dataType":"string"},
+            "galleryMediaIds": {"dataType":"array","array":{"dataType":"string"}},
             "title": {"dataType":"string","required":true},
             "slug": {"dataType":"string","required":true},
             "categoryId": {"dataType":"string","required":true},
@@ -1024,7 +1028,9 @@ const models: TsoaRoute.Models = {
             "totalBookings": {"dataType":"double","required":true},
             "rating": {"dataType":"double","required":true},
             "reviewsCount": {"dataType":"double","required":true},
-            "image": {"dataType":"string","required":true},
+            "image": {"dataType":"string"},
+            "galleryImages": {"dataType":"array","array":{"dataType":"string"}},
+            "mapImage": {"dataType":"string"},
             "shortDesc": {"dataType":"string","required":true},
             "bestSeason": {"dataType":"string","required":true},
             "startEndLocation": {"dataType":"string","required":true},
@@ -1037,6 +1043,10 @@ const models: TsoaRoute.Models = {
             "itinerary": {"dataType":"array","array":{"dataType":"refObject","ref":"TripItineraryDay"},"required":true},
             "faqs": {"dataType":"array","array":{"dataType":"refObject","ref":"TripFaq"},"required":true},
             "reviews": {"dataType":"array","array":{"dataType":"refObject","ref":"TripReview"},"required":true},
+            "addonsText": {"dataType":"string","required":true},
+            "usefulInfoText": {"dataType":"string","required":true},
+            "departureDates": {"dataType":"array","array":{"dataType":"refObject","ref":"TripDepartureDate"},"required":true},
+            "packageFiles": {"dataType":"array","array":{"dataType":"refObject","ref":"TripPackageFile"},"required":true},
             "metaTitle": {"dataType":"string","required":true},
             "metaDescription": {"dataType":"string","required":true},
             "keywords": {"dataType":"string","required":true},
@@ -1095,6 +1105,15 @@ const models: TsoaRoute.Models = {
             "itinerary": {"dataType":"array","array":{"dataType":"refObject","ref":"TripItineraryDayDto"}},
             "faqs": {"dataType":"array","array":{"dataType":"refObject","ref":"TripFaqDto"}},
             "reviews": {"dataType":"array","array":{"dataType":"refObject","ref":"TripReviewDto"}},
+            "addonsText": {"dataType":"string"},
+            "usefulInfoText": {"dataType":"string"},
+            "departureDates": {"dataType":"array","array":{"dataType":"refObject","ref":"TripDepartureDateDto"}},
+            "galleryImages": {"dataType":"array","array":{"dataType":"string"}},
+            "mapImage": {"dataType":"string"},
+            "packageFiles": {"dataType":"array","array":{"dataType":"refObject","ref":"TripPackageFileDto"}},
+            "coverMediaId": {"dataType":"string"},
+            "mapMediaId": {"dataType":"string"},
+            "galleryMediaIds": {"dataType":"array","array":{"dataType":"string"}},
             "metaTitle": {"dataType":"string"},
             "metaDescription": {"dataType":"string"},
             "keywords": {"dataType":"string"},
@@ -1131,6 +1150,15 @@ const models: TsoaRoute.Models = {
             "itinerary": {"dataType":"array","array":{"dataType":"refObject","ref":"TripItineraryDayDto"}},
             "faqs": {"dataType":"array","array":{"dataType":"refObject","ref":"TripFaqDto"}},
             "reviews": {"dataType":"array","array":{"dataType":"refObject","ref":"TripReviewDto"}},
+            "addonsText": {"dataType":"string"},
+            "usefulInfoText": {"dataType":"string"},
+            "departureDates": {"dataType":"array","array":{"dataType":"refObject","ref":"TripDepartureDateDto"}},
+            "galleryImages": {"dataType":"array","array":{"dataType":"string"}},
+            "mapImage": {"dataType":"string"},
+            "packageFiles": {"dataType":"array","array":{"dataType":"refObject","ref":"TripPackageFileDto"}},
+            "coverMediaId": {"dataType":"string"},
+            "mapMediaId": {"dataType":"string"},
+            "galleryMediaIds": {"dataType":"array","array":{"dataType":"string"}},
             "metaTitle": {"dataType":"string"},
             "metaDescription": {"dataType":"string"},
             "keywords": {"dataType":"string"},
@@ -1207,32 +1235,6 @@ const models: TsoaRoute.Models = {
             "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "CategoryType": {
-        "dataType": "refEnum",
-        "enums": ["trekking","tours","expeditions","blogs","media"],
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "CategoryStatus": {
-        "dataType": "refEnum",
-        "enums": ["active","draft"],
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Category": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"string","required":true},
-            "createdAt": {"dataType":"datetime","required":true},
-            "deletedAt": {"dataType":"datetime","required":true},
-            "name": {"dataType":"string","required":true},
-            "slug": {"dataType":"string","required":true},
-            "type": {"ref":"CategoryType","required":true},
-            "description": {"dataType":"string","required":true},
-            "itemCount": {"dataType":"double","required":true},
-            "status": {"ref":"CategoryStatus","required":true},
         },
         "additionalProperties": false,
     },
@@ -1367,7 +1369,8 @@ const models: TsoaRoute.Models = {
             "views": {"dataType":"double","required":true},
             "excerpt": {"dataType":"string","required":true},
             "content": {"dataType":"string","required":true},
-            "image": {"dataType":"string","required":true},
+            "coverMediaId": {"dataType":"string"},
+            "image": {"dataType":"string"},
             "metaTitle": {"dataType":"string"},
             "metaDescription": {"dataType":"string"},
             "keywords": {"dataType":"string"},
@@ -1409,6 +1412,7 @@ const models: TsoaRoute.Models = {
             "excerpt": {"dataType":"string"},
             "content": {"dataType":"string"},
             "image": {"dataType":"string"},
+            "coverMediaId": {"dataType":"string"},
             "metaTitle": {"dataType":"string"},
             "metaDescription": {"dataType":"string"},
             "keywords": {"dataType":"string"},
@@ -1428,6 +1432,7 @@ const models: TsoaRoute.Models = {
             "excerpt": {"dataType":"string"},
             "content": {"dataType":"string"},
             "image": {"dataType":"string"},
+            "coverMediaId": {"dataType":"string"},
             "views": {"dataType":"double"},
             "metaTitle": {"dataType":"string"},
             "metaDescription": {"dataType":"string"},
@@ -2020,199 +2025,6 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsPackageController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
-                categoryType: {"in":"query","name":"categoryType","ref":"PackageCategoryType"},
-                categoryId: {"in":"query","name":"categoryId","dataType":"string"},
-                region: {"in":"query","name":"region","dataType":"string"},
-                difficulty: {"in":"query","name":"difficulty","ref":"TripDifficulty"},
-                status: {"in":"query","name":"status","ref":"PackageStatus"},
-                search: {"in":"query","name":"search","dataType":"string"},
-                minPrice: {"in":"query","name":"minPrice","dataType":"double"},
-                maxPrice: {"in":"query","name":"maxPrice","dataType":"double"},
-                minDuration: {"in":"query","name":"minDuration","dataType":"double"},
-                maxDuration: {"in":"query","name":"maxDuration","dataType":"double"},
-                sortBy: {"in":"query","name":"sortBy","dataType":"string"},
-                limit: {"in":"query","name":"limit","dataType":"double"},
-                page: {"in":"query","name":"page","dataType":"double"},
-        };
-        app.get('/packages',
-            ...(fetchMiddlewares<RequestHandler>(PackageController)),
-            ...(fetchMiddlewares<RequestHandler>(PackageController.prototype.getAll)),
-
-            async function PackageController_getAll(request: ExRequest, response: ExResponse, next: any) {
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsPackageController_getAll, request, response });
-
-                const controller = new PackageController();
-
-              await templateService.apiHandler({
-                methodName: 'getAll',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsPackageController_getFilterOptions: Record<string, TsoaRoute.ParameterSchema> = {
-                categoryType: {"in":"query","name":"categoryType","ref":"PackageCategoryType"},
-        };
-        app.get('/packages/filter-options',
-            ...(fetchMiddlewares<RequestHandler>(PackageController)),
-            ...(fetchMiddlewares<RequestHandler>(PackageController.prototype.getFilterOptions)),
-
-            async function PackageController_getFilterOptions(request: ExRequest, response: ExResponse, next: any) {
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsPackageController_getFilterOptions, request, response });
-
-                const controller = new PackageController();
-
-              await templateService.apiHandler({
-                methodName: 'getFilterOptions',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsPackageController_getByIdOrSlug: Record<string, TsoaRoute.ParameterSchema> = {
-                idOrSlug: {"in":"path","name":"idOrSlug","required":true,"dataType":"string"},
-        };
-        app.get('/packages/:idOrSlug',
-            ...(fetchMiddlewares<RequestHandler>(PackageController)),
-            ...(fetchMiddlewares<RequestHandler>(PackageController.prototype.getByIdOrSlug)),
-
-            async function PackageController_getByIdOrSlug(request: ExRequest, response: ExResponse, next: any) {
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsPackageController_getByIdOrSlug, request, response });
-
-                const controller = new PackageController();
-
-              await templateService.apiHandler({
-                methodName: 'getByIdOrSlug',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsPackageController_create: Record<string, TsoaRoute.ParameterSchema> = {
-                body: {"in":"body","name":"body","required":true,"ref":"CreatePackageDto"},
-        };
-        app.post('/packages',
-            ...(fetchMiddlewares<RequestHandler>(PackageController)),
-            ...(fetchMiddlewares<RequestHandler>(PackageController.prototype.create)),
-
-            async function PackageController_create(request: ExRequest, response: ExResponse, next: any) {
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsPackageController_create, request, response });
-
-                const controller = new PackageController();
-
-              await templateService.apiHandler({
-                methodName: 'create',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsPackageController_update: Record<string, TsoaRoute.ParameterSchema> = {
-                id: {"in":"path","name":"id","required":true,"dataType":"string"},
-                body: {"in":"body","name":"body","required":true,"ref":"UpdatePackageDto"},
-        };
-        app.put('/packages/:id',
-            ...(fetchMiddlewares<RequestHandler>(PackageController)),
-            ...(fetchMiddlewares<RequestHandler>(PackageController.prototype.update)),
-
-            async function PackageController_update(request: ExRequest, response: ExResponse, next: any) {
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsPackageController_update, request, response });
-
-                const controller = new PackageController();
-
-              await templateService.apiHandler({
-                methodName: 'update',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsPackageController_delete: Record<string, TsoaRoute.ParameterSchema> = {
-                id: {"in":"path","name":"id","required":true,"dataType":"string"},
-        };
-        app.delete('/packages/:id',
-            ...(fetchMiddlewares<RequestHandler>(PackageController)),
-            ...(fetchMiddlewares<RequestHandler>(PackageController.prototype.delete)),
-
-            async function PackageController_delete(request: ExRequest, response: ExResponse, next: any) {
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsPackageController_delete, request, response });
-
-                const controller = new PackageController();
-
-              await templateService.apiHandler({
-                methodName: 'delete',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsNotificationController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
         };
         app.get('/notifications',
@@ -2393,6 +2205,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsMediaController_uploadFile: Record<string, TsoaRoute.ParameterSchema> = {
                 file: {"in":"formData","name":"file","required":true,"dataType":"file"},
+                categoryId: {"in":"query","name":"categoryId","dataType":"string"},
         };
         app.post('/media/upload',
             upload.fields([
@@ -2428,6 +2241,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsMediaController_getAllMedia: Record<string, TsoaRoute.ParameterSchema> = {
+                categoryId: {"in":"query","name":"categoryId","dataType":"string"},
                 category: {"in":"query","name":"category","dataType":"string"},
                 search: {"in":"query","name":"search","dataType":"string"},
                 limit: {"in":"query","name":"limit","dataType":"double"},

@@ -98,3 +98,69 @@ export class TripReviewDto {
   @IsNotEmpty({ message: 'Review content is required' })
   content!: string;
 }
+
+export class TripDepartureDateDto {
+  @IsOptional()
+  @IsString()
+  id?: string;
+
+  @IsString({ message: 'Start date must be a string' })
+  @IsNotEmpty({ message: 'Start date is required' })
+  startDate!: string;
+
+  @IsString({ message: 'End date must be a string' })
+  @IsNotEmpty({ message: 'End date is required' })
+  endDate!: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  priceUSD?: number;
+
+  @IsOptional()
+  @IsString()
+  status?: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  seatsAvailable?: number;
+
+  @IsOptional()
+  @IsString()
+  notes?: string;
+}
+
+export class TripPackageFileDto {
+  @IsOptional()
+  @IsString()
+  id?: string;
+
+  @IsOptional()
+  @IsString()
+  mediaId?: string;
+
+  @IsString({ message: 'File title must be a string' })
+  @IsNotEmpty({ message: 'File title is required' })
+  title!: string;
+
+  @IsOptional()
+  @IsString()
+  fileUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  fileName?: string;
+
+  @IsOptional()
+  @IsString()
+  fileSize?: string;
+
+  @IsOptional()
+  @IsString()
+  fileType?: string;
+
+  @IsOptional()
+  @IsString()
+  uploadedAt?: string;
+}

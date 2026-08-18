@@ -7,7 +7,7 @@ export class UpdateMediaDto {
 
   @IsOptional()
   @IsString()
-  category?: string;
+  categoryId?: string;
 
   @IsOptional()
   @IsString()

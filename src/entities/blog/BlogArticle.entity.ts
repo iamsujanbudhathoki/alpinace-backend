@@ -41,8 +41,10 @@ export class BlogArticle extends CommonEntity {
   @Column({ name: 'content', type: 'text', nullable: true })
   content: string;
 
-  @Column({ name: 'image', type: 'text', nullable: true })
-  image: string;
+  @Column({ name: 'cover_media_id', nullable: true })
+  coverMediaId?: string;
+
+  image?: string;
 
   @Column({ name: 'meta_title', type: 'text', nullable: true })
   metaTitle?: string;

@@ -31,8 +31,9 @@ export class MediaController extends Controller {
   @Post('upload')
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
+    @Query() categoryId?: string,
   ): Promise<ApiResponse<MediaUploadResult>> {
-    const data = await this.mediaService.saveUploadedFile(file);
+    const data = await this.mediaService.saveUploadedFile(file, categoryId);
     return {
       data,
       message: 'File uploaded and saved to database successfully',
@@ -42,12 +43,14 @@ export class MediaController extends Controller {
 
   @Get()
   async getAllMedia(
+    @Query() categoryId?: string,
     @Query() category?: string,
     @Query() search?: string,
     @Query() limit?: number,
     @Query() page?: number,
   ): Promise<ApiResponse<MediaUploadResult[]>> {
     const dataTotalCount = await this.mediaService.getAll({
+      categoryId,
       category,
       search,
       limit,

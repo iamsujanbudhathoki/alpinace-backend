@@ -2,7 +2,6 @@ export * from './admin/Admin.entity';
 export * from './category/Category.entity';
 export * from './common/common.entity';
 export * from './common/difficulty.enum';
-export * from './package/Package.entity';
 export * from './trek/Trek.entity';
 export * from './tour/Tour.entity';
 export * from './expedition/Expedition.entity';

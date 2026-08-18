@@ -8,10 +8,11 @@ export default crons.schedule('0 0 * * 0', async () => {
   console.log('Removing temp media files...');
   // loop through all the files of temp directory and check their modified time.
   // if the modified time is greater than 1 day then remove it.
-  // As, temp file is not required after 1 day. (max, it can be for session of the user.)
-  const files = fs.readdirSync(DotenvConfig.MEDIA_TEMP_PATH);
+  const tempDir = path.join(process.cwd(), 'temp');
+  if (!fs.existsSync(tempDir)) return;
+  const files = fs.readdirSync(tempDir);
   files.forEach((file) => {
-    const filePath = path.join(DotenvConfig.MEDIA_TEMP_PATH, file);
+    const filePath = path.join(tempDir, file);
     const stats = fs.statSync(filePath);
     const now = new Date().getTime();
     const endTime = new Date(stats.mtime).getTime();

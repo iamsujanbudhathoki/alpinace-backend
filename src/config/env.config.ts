@@ -49,11 +49,6 @@ class DotenvConfig {
     process.env.BASE_URL ||
     `http://localhost:${process.env.PORT || 5001}`;
 
-  // MEDIA & STORAGE
-  static MEDIA_TEMP_PATH = process.env.MEDIA_TEMP_PATH || 'temp';
-  static MEDIA_UPLOAD_PATH = process.env.MEDIA_UPLOAD_PATH || 'uploads';
-  static TEMP_FOLDER_PATH = process.env.TEMP_FOLDER_PATH || 'temp';
-
   // CLOUDFLARE R2 STORAGE
   static R2_ACCOUNT_ID = process.env.R2_ACCOUNT_ID || '';
   static R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID || '';

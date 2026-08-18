@@ -1,4 +1,5 @@
 import express, { urlencoded } from 'express';
+import path from 'path';
 import helmet from 'helmet';
 import swaggerUi from 'swagger-ui-express';
 import { RegisterRoutes } from '../routes/routes';
@@ -71,7 +72,7 @@ export const configMiddleware = (app: express.Application) => {
   }
 
   // Static file serving for local image uploads
-  const uploadPath = DotenvConfig.MEDIA_UPLOAD_PATH || 'uploads';
+  const uploadPath = path.join(process.cwd(), 'uploads');
   app.use('/uploads', express.static(uploadPath));
 
   // Root and Health Check routes (showing DB connection status)

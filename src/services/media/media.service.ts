@@ -30,8 +30,7 @@ export class MediaService {
   private mediaRepo = AppDataSource.getRepository(Media);
 
   private getUploadDirectory(): string {
-    const uploadDir =
-      DotenvConfig.MEDIA_UPLOAD_PATH || path.join(process.cwd(), 'uploads');
+    const uploadDir = path.join(process.cwd(), 'uploads');
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }

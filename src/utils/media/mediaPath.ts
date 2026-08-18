@@ -1,8 +1,8 @@
 import { DotenvConfig } from '../../config/env.config';
 import path from 'path';
 class MediaPathUtil {
-  static TEMP_FOLDER_PATH = DotenvConfig.MEDIA_TEMP_PATH;
-  static UPLOADS_FOLDER_PATH = DotenvConfig.MEDIA_UPLOAD_PATH!;
+  static TEMP_FOLDER_PATH = 'temp';
+  static UPLOADS_FOLDER_PATH = 'uploads';
 
   static generateMediaPathForProduct(id: string) {
     return path.join(MediaPathUtil.UPLOADS_FOLDER_PATH, 'product', id);

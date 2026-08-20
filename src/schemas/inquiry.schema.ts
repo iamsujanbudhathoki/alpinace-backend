@@ -23,17 +23,17 @@ export class CreateInquiryDto {
   @IsNotEmpty({ message: 'Phone number is required' })
   phone!: string;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty({ message: 'Country is required' })
-  country!: string;
+  country?: string;
 
   @IsString()
   @IsNotEmpty({ message: 'Interested trip is required' })
   interestedTrip!: string;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty({ message: 'Travel dates are required' })
-  travelDates!: string;
+  travelDates?: string;
 
   @Type(() => Number)
   @IsNumber({}, { message: 'Group size must be a number' })

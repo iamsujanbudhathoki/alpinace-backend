@@ -1,6 +1,6 @@
 import { autoInjectable } from 'tsyringe';
 import { AppDataSource } from '../../config/database.config';
-import { Inquiry, InquiryStatus } from '../../entities/inquiry/Inquiry.entity';
+import { Inquiry, InquiryStatus, InquiryType } from '../../entities/inquiry/Inquiry.entity';
 import { NotificationType } from '../../entities/notification/Notification.entity';
 import {
   CreateInquiryDto,
@@ -17,6 +17,7 @@ export class InquiryService {
 
   async getAll(params?: {
     status?: InquiryStatus;
+    type?: InquiryType;
     search?: string;
     limit?: number;
     page?: number;
@@ -25,6 +26,10 @@ export class InquiryService {
 
     if (params?.status && (params.status as any) !== 'All') {
       qb.andWhere('inq.status = :status', { status: params.status });
+    }
+
+    if (params?.type && (params.type as any) !== 'All') {
+      qb.andWhere('inq.type = :type', { type: params.type });
     }
 
     if (params?.search && params.search.trim()) {
@@ -64,6 +69,7 @@ export class InquiryService {
       groupSize: Number(dto.groupSize),
       message: dto.message,
       status: dto.status || InquiryStatus.NEW,
+      type: dto.type || InquiryType.GENERAL,
       notes: dto.notes,
     });
 
@@ -72,8 +78,8 @@ export class InquiryService {
     // Create a notification for the new inquiry
     this.notifSvc
       .create({
-        title: `New Inquiry from ${dto.guestName}`,
-        body: `${dto.guestName} from ${dto.country} is interested in "${dto.interestedTrip}".`,
+        title: `New ${saved.type} Inquiry from ${dto.guestName}`,
+        body: `${dto.guestName} from ${dto.country || 'N/A'} is interested in "${dto.interestedTrip}".`,
         type: NotificationType.INQUIRY,
         refId: saved.id,
       })
@@ -100,6 +106,7 @@ export class InquiryService {
   async update(id: string, dto: UpdateInquiryDto): Promise<Inquiry> {
     const inquiry = await this.getById(id);
     if (dto.status) inquiry.status = dto.status;
+    if (dto.type) inquiry.type = dto.type;
     if (dto.notes !== undefined) inquiry.notes = dto.notes;
     return this.repo.save(inquiry);
   }

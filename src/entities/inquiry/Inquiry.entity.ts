@@ -9,6 +9,13 @@ export enum InquiryStatus {
   CLOSED = 'Closed',
 }
 
+export enum InquiryType {
+  TREKKING = 'Trekking',
+  TOUR = 'Tour',
+  EXPEDITION = 'Expedition',
+  GENERAL = 'General',
+}
+
 @Entity('inquiries')
 export class Inquiry extends CommonEntity {
   @Column({ name: 'guest_name' })
@@ -42,6 +49,14 @@ export class Inquiry extends CommonEntity {
     default: InquiryStatus.NEW,
   })
   status: InquiryStatus;
+
+  @Column({
+    name: 'type',
+    type: 'enum',
+    enum: InquiryType,
+    default: InquiryType.GENERAL,
+  })
+  type: InquiryType;
 
   @Column({ name: 'notes', type: 'text', nullable: true })
   notes: string;

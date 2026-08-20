@@ -8,7 +8,7 @@ import {
   IsString,
   Min,
 } from 'class-validator';
-import { InquiryStatus } from '../entities/inquiry/Inquiry.entity';
+import { InquiryStatus, InquiryType } from '../entities/inquiry/Inquiry.entity';
 
 export class CreateInquiryDto {
   @IsString()
@@ -51,6 +51,12 @@ export class CreateInquiryDto {
   status?: InquiryStatus;
 
   @IsOptional()
+  @IsEnum(InquiryType, {
+    message: 'Invalid inquiry type. Must be Trekking, Tour, Expedition, or General',
+  })
+  type?: InquiryType;
+
+  @IsOptional()
   @IsString()
   notes?: string;
 }
@@ -61,6 +67,12 @@ export class UpdateInquiryDto {
     message: 'Invalid inquiry status',
   })
   status?: InquiryStatus;
+
+  @IsOptional()
+  @IsEnum(InquiryType, {
+    message: 'Invalid inquiry type',
+  })
+  type?: InquiryType;
 
   @IsOptional()
   @IsString()

@@ -24,8 +24,13 @@ export const configMiddleware = (app: express.Application) => {
   );
 
   const allowedOrigins = [
+    'https://alpineacetreks.com',
+    'https://www.alpineacetreks.com',
+    'http://alpineacetreks.com',
+    'http://www.alpineacetreks.com',
     'https://alpineace.vercel.app',
     'http://localhost:3000',
+    'http://localhost:3001',
     'http://localhost:5001',
   ];
   if (DotenvConfig.FRONTEND_BASE_URL) {
@@ -39,6 +44,7 @@ export const configMiddleware = (app: express.Application) => {
       if (
         allowedOrigins.includes(cleanOrigin) ||
         cleanOrigin.endsWith('.vercel.app') ||
+        cleanOrigin.endsWith('alpineacetreks.com') ||
         cleanOrigin.includes('localhost')
       ) {
         return callback(null, true);

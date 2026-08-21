@@ -4,13 +4,12 @@ import { DotenvConfig } from './env.config';
 const isSslEnabled =
   DotenvConfig.DB_SSL ||
   Boolean(
-    DotenvConfig.DATABASE_URL?.includes('supabase.co') ||
-    DotenvConfig.DATABASE_URL?.includes('supabase.com') ||
-    DotenvConfig.DATABASE_URL?.includes('sslmode=require'),
+    DotenvConfig.DATABASE_URL?.includes('sslmode=require') ||
+    DotenvConfig.DATABASE_URL?.includes('ssl=true'),
   );
 
 export const AppDataSource = new DataSource({
-  type: 'postgres',
+  type: 'mysql',
   url: DotenvConfig.DATABASE_URL,
   entities: [`${__dirname}/../entities/**/*.entity.{ts,js}`],
   synchronize: true,

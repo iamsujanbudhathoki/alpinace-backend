@@ -751,6 +751,11 @@ const models: TsoaRoute.Models = {
         "enums": ["New","Contacted","Quote Sent","Booked","Closed"],
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "InquiryType": {
+        "dataType": "refEnum",
+        "enums": ["Trekking","Tour","Expedition","General"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Inquiry": {
         "dataType": "refObject",
         "properties": {
@@ -766,6 +771,7 @@ const models: TsoaRoute.Models = {
             "groupSize": {"dataType":"double","required":true},
             "message": {"dataType":"string","required":true},
             "status": {"ref":"InquiryStatus","required":true},
+            "type": {"ref":"InquiryType","required":true},
             "notes": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
@@ -799,12 +805,13 @@ const models: TsoaRoute.Models = {
             "guestName": {"dataType":"string","required":true},
             "email": {"dataType":"string","required":true},
             "phone": {"dataType":"string","required":true},
-            "country": {"dataType":"string","required":true},
+            "country": {"dataType":"string"},
             "interestedTrip": {"dataType":"string","required":true},
-            "travelDates": {"dataType":"string","required":true},
+            "travelDates": {"dataType":"string"},
             "groupSize": {"dataType":"double","required":true},
             "message": {"dataType":"string","required":true},
             "status": {"ref":"InquiryStatus"},
+            "type": {"ref":"InquiryType"},
             "notes": {"dataType":"string"},
         },
         "additionalProperties": false,
@@ -814,6 +821,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "status": {"ref":"InquiryStatus"},
+            "type": {"ref":"InquiryType"},
             "notes": {"dataType":"string"},
         },
         "additionalProperties": false,

@@ -71,7 +71,7 @@ export class Trek extends CommonEntity {
 
   @Column({
     name: 'gallery_media_ids',
-    type: 'jsonb',
+    type: 'json',
     nullable: true,
     default: () => "'[]'",
   })
@@ -157,7 +157,7 @@ export class Trek extends CommonEntity {
 
   @Column({
     name: 'itinerary',
-    type: 'jsonb',
+    type: 'json',
     nullable: true,
     default: () => "'[]'",
   })
@@ -165,7 +165,7 @@ export class Trek extends CommonEntity {
 
   @Column({
     name: 'faqs',
-    type: 'jsonb',
+    type: 'json',
     nullable: true,
     default: () => "'[]'",
   })
@@ -173,7 +173,7 @@ export class Trek extends CommonEntity {
 
   @Column({
     name: 'reviews',
-    type: 'jsonb',
+    type: 'json',
     nullable: true,
     default: () => "'[]'",
   })
@@ -187,7 +187,7 @@ export class Trek extends CommonEntity {
 
   @Column({
     name: 'departure_dates',
-    type: 'jsonb',
+    type: 'json',
     nullable: true,
     default: () => "'[]'",
   })
@@ -197,7 +197,7 @@ export class Trek extends CommonEntity {
 
   @Column({
     name: 'package_files',
-    type: 'jsonb',
+    type: 'json',
     nullable: true,
     default: () => "'[]'",
   })

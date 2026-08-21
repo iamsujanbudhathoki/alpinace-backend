@@ -100,8 +100,7 @@ export const configMiddleware = (app: express.Application) => {
         status: dbStatus,
         isInitialized: AppDataSource.isInitialized,
       },
-      environment: DotenvConfig.NODE_ENV || 'DEVELOPMENT',
-      allowedCorsOrigins: allowedOrigins,
+      environment: DotenvConfig.NODE_ENV,
       timestamp: new Date().toISOString(),
     });
   });

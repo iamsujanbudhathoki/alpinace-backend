@@ -8,25 +8,7 @@ services:
       - "5001:5001"
     environment:
       NODE_ENV: development
-      DATABASE_URL: postgres://postgres:postgres@db:5432/prasant_advisory
-    depends_on:
-      - db
+      DATABASE_URL: mysql://alpineac_admin:Alpineace_123@135.181.141.188:3306/alpineac_alpineace
     volumes:
       - .:/app
       - /app/node_modules
-
-  db:
-    image: postgres:15-alpine
-    container_name: postgres_db
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: prasant_advisory
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
-volumes:
-  pgdata:

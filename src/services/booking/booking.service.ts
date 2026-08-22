@@ -12,10 +12,14 @@ import {
   UpdateBookingDto,
 } from '../../schemas/booking.schema';
 import { AppError } from '../../utils/appError.util';
+import { NotificationService } from '../notification/notification.service';
+import { TurnstileService } from '../turnstile/turnstile.service';
 
 @autoInjectable()
 export class BookingService {
   private repo = AppDataSource.getRepository(Booking);
+  private notifSvc = new NotificationService();
+  private turnstileSvc = new TurnstileService();
 
   async getAll(params?: {
     search?: string;
@@ -70,6 +74,8 @@ export class BookingService {
   }
 
   async create(dto: CreateBookingDto): Promise<Booking> {
+    await this.turnstileSvc.verifyToken(dto.cfTurnstileToken);
+
     const reference = `ACE-2026-${Math.floor(1000 + Math.random() * 9000)}`;
 
     const booking = this.repo.create({

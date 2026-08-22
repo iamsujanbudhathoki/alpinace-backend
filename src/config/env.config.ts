@@ -47,6 +47,10 @@ class DotenvConfig {
   static R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY || '';
   static R2_BUCKET_NAME = process.env.R2_BUCKET_NAME || '';
   static R2_PUBLIC_DOMAIN = process.env.R2_PUBLIC_DOMAIN || '';
+
+  // CLOUDFLARE TURNSTILE
+  static TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY  ;
+  static TURNSTILE_ENABLED = process.env.TURNSTILE_ENABLED !== 'false';
 }
 
 export { DotenvConfig };

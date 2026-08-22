@@ -59,6 +59,10 @@ export class CreateInquiryDto {
   @IsOptional()
   @IsString()
   notes?: string;
+
+  @IsString({ message: 'Turnstile CAPTCHA verification is required' })
+  @IsNotEmpty({ message: 'Turnstile CAPTCHA verification token is required' })
+  cfTurnstileToken!: string;
 }
 
 export class UpdateInquiryDto {

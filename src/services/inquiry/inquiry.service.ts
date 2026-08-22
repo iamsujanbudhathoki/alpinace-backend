@@ -9,11 +9,13 @@ import {
 import { AppError } from '../../utils/appError.util';
 import emailUtil from '../../utils/email.util';
 import { NotificationService } from '../notification/notification.service';
+import { TurnstileService } from '../turnstile/turnstile.service';
 
 @autoInjectable()
 export class InquiryService {
   private repo = AppDataSource.getRepository(Inquiry);
   private notifSvc = new NotificationService();
+  private turnstileSvc = new TurnstileService();
 
   async getAll(params?: {
     status?: InquiryStatus;
@@ -59,6 +61,8 @@ export class InquiryService {
   }
 
   async create(dto: CreateInquiryDto): Promise<Inquiry> {
+    await this.turnstileSvc.verifyToken(dto.cfTurnstileToken);
+
     const inquiry = this.repo.create({
       guestName: dto.guestName,
       email: dto.email,

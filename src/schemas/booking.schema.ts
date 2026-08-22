@@ -85,6 +85,10 @@ export class CreateBookingDto {
   @IsOptional()
   @IsString()
   specialRequests?: string;
+
+  @IsString({ message: 'Turnstile CAPTCHA verification is required' })
+  @IsNotEmpty({ message: 'Turnstile CAPTCHA verification token is required' })
+  cfTurnstileToken!: string;
 }
 
 export class UpdateBookingDto {

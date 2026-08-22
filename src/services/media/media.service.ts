@@ -42,10 +42,8 @@ export class MediaService {
     if (mediaPath.startsWith('http://') || mediaPath.startsWith('https://')) {
       return mediaPath;
     }
-    const baseUrl = DotenvConfig.R2_PUBLIC_DOMAIN || DotenvConfig.PUBLIC_URL;
-    const cleanDomain = baseUrl.replace(/\/$/, '');
-    const cleanPath = mediaPath.startsWith('/') ? mediaPath : '/' + mediaPath;
-    return `${cleanDomain}${cleanPath}`;
+    const baseUrl = DotenvConfig.PUBLIC_URL;
+    return `${baseUrl}${mediaPath.startsWith('/') ? mediaPath : '/' + mediaPath}`;
   }
 
   private getFileBuffer(file: Express.Multer.File): Buffer {
@@ -80,7 +78,7 @@ export class MediaService {
         if (file.path && fs.existsSync(file.path)) {
           try {
             fs.unlinkSync(file.path);
-          } catch {}
+          } catch { }
         }
       } catch (r2Error) {
         console.error('[Cloudflare R2] Upload failed, falling back to disk:', r2Error);
@@ -98,7 +96,7 @@ export class MediaService {
         fs.copyFileSync(file.path, targetPath);
         try {
           fs.unlinkSync(file.path);
-        } catch {}
+        } catch { }
       }
       finalPath = `/uploads/${filename}`;
     }

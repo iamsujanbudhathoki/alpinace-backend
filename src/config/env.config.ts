@@ -39,11 +39,7 @@ class DotenvConfig {
   // URL
   static FRONTEND_BASE_URL = process.env.FRONTEND_BASE_URL;
   static BASE_URL = process.env.BASE_URL;
-  static PUBLIC_URL =
-    process.env.PUBLIC_URL ||
-    process.env.R2_PUBLIC_DOMAIN ||
-    process.env.BASE_URL ||
-    `http://localhost:${process.env.PORT || 5001}`;
+    static PUBLIC_URL = process.env.R2_PUBLIC_DOMAIN
 
   // CLOUDFLARE R2 STORAGE
   static R2_ACCOUNT_ID = process.env.R2_ACCOUNT_ID || '';

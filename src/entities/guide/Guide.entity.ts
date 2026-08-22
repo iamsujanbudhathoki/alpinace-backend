@@ -30,7 +30,7 @@ export class Guide extends CommonEntity {
   @Column({ name: 'summit_stats', nullable: true })
   summitStats: string;
 
-  @Column({ name: 'certifications', type: 'simple-array', default: [] })
+  @Column({ name: 'certifications', type: 'simple-array', nullable: true })
   certifications: string[];
 
   @Column({

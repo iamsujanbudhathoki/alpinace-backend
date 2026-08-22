@@ -38,11 +38,14 @@ export class MediaService {
   }
 
   private buildUrl(mediaPath: string): string {
+    if (!mediaPath) return '';
     if (mediaPath.startsWith('http://') || mediaPath.startsWith('https://')) {
       return mediaPath;
     }
-    const baseUrl = DotenvConfig.PUBLIC_URL;
-    return `${baseUrl}${mediaPath.startsWith('/') ? mediaPath : '/' + mediaPath}`;
+    const baseUrl = DotenvConfig.R2_PUBLIC_DOMAIN || DotenvConfig.PUBLIC_URL;
+    const cleanDomain = baseUrl.replace(/\/$/, '');
+    const cleanPath = mediaPath.startsWith('/') ? mediaPath : '/' + mediaPath;
+    return `${cleanDomain}${cleanPath}`;
   }
 
   private getFileBuffer(file: Express.Multer.File): Buffer {

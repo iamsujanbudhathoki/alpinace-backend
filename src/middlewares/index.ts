@@ -3,7 +3,7 @@ import path from 'path';
 import helmet from 'helmet';
 import swaggerUi from 'swagger-ui-express';
 import { RegisterRoutes } from '../routes/routes';
-import errorHandler from '../middlewares/errorhandler.middleware';
+import errorHandler from './errorhandler.middleware';
 import { DotenvConfig, Environment } from '../config/env.config';
 import { AppDataSource } from '../config/database.config';
 import cors from 'cors';

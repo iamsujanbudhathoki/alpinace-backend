@@ -41,6 +41,7 @@ class DotenvConfig {
   static BASE_URL = process.env.BASE_URL;
   static PUBLIC_URL =
     process.env.PUBLIC_URL ||
+    process.env.R2_PUBLIC_DOMAIN ||
     process.env.BASE_URL ||
     `http://localhost:${process.env.PORT || 5001}`;
 

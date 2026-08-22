@@ -33,7 +33,6 @@ export class Expedition extends CommonEntity {
     name: 'gallery_media_ids',
     type: 'json',
     nullable: true,
-    default: () => "'[]'",
   })
   galleryMediaIds?: string[];
   @Column({ name: 'title' })
@@ -123,7 +122,7 @@ export class Expedition extends CommonEntity {
   @Column({ name: 'group_size_range', nullable: true })
   groupSizeRange: string;
 
-  @Column({ name: 'permits_required', type: 'simple-array', default: [] })
+  @Column({ name: 'permits_required', type: 'simple-array', nullable: true })
   permitsRequired: string[];
 
   @Column({ name: 'inclusions_text', type: 'text', nullable: true })
@@ -136,7 +135,6 @@ export class Expedition extends CommonEntity {
     name: 'itinerary',
     type: 'json',
     nullable: true,
-    default: () => "'[]'",
   })
   itinerary: TripItineraryDay[];
 
@@ -144,7 +142,6 @@ export class Expedition extends CommonEntity {
     name: 'faqs',
     type: 'json',
     nullable: true,
-    default: () => "'[]'",
   })
   faqs: TripFaq[];
 
@@ -152,7 +149,6 @@ export class Expedition extends CommonEntity {
     name: 'reviews',
     type: 'json',
     nullable: true,
-    default: () => "'[]'",
   })
   reviews: TripReview[];
 
@@ -166,7 +162,6 @@ export class Expedition extends CommonEntity {
     name: 'departure_dates',
     type: 'json',
     nullable: true,
-    default: () => "'[]'",
   })
   departureDates: TripDepartureDate[];
 
@@ -176,7 +171,6 @@ export class Expedition extends CommonEntity {
     name: 'package_files',
     type: 'json',
     nullable: true,
-    default: () => "'[]'",
   })
   packageFiles: TripPackageFile[];
 

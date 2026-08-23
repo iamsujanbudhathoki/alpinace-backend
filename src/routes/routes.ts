@@ -33,10 +33,21 @@ import { BlogController } from './../controllers/blog/blog.controller';
 import { AssociateController } from './../controllers/associate/associate.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminAuthController } from './../controllers/admin/auth.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { AdminTrekkingController } from './../controllers/admin/admin-trek.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { AdminTourController } from './../controllers/admin/admin-tour.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { AdminExpeditionController } from './../controllers/admin/admin-expedition.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { AdminBlogController } from './../controllers/admin/admin-blog.controller';
+import { expressAuthentication } from './../middlewares/auth.middleware';
+// @ts-ignore - no great way to install types from subpackage
 import type { Request as ExRequest, Response as ExResponse, RequestHandler, Router } from 'express';
 const multer = require('multer');
 
 
+const expressAuthenticationRecasted = expressAuthentication as (req: ExRequest, securityName: string, scopes?: string[], res?: ExResponse) => Promise<any>;
 
 
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -813,6 +824,7 @@ const models: TsoaRoute.Models = {
             "status": {"ref":"InquiryStatus"},
             "type": {"ref":"InquiryType"},
             "notes": {"dataType":"string"},
+            "cfTurnstileToken": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
@@ -1331,6 +1343,7 @@ const models: TsoaRoute.Models = {
             "assignedGuide": {"dataType":"string"},
             "permitStatus": {"ref":"BookingPermitStatus"},
             "specialRequests": {"dataType":"string"},
+            "cfTurnstileToken": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
@@ -1632,6 +1645,50 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsTrekkingController_getAdminAll: Record<string, TsoaRoute.ParameterSchema> = {
+                categoryId: {"in":"query","name":"categoryId","dataType":"string"},
+                region: {"in":"query","name":"region","dataType":"string"},
+                difficulty: {"in":"query","name":"difficulty","ref":"TripDifficulty"},
+                status: {"in":"query","name":"status","ref":"TrekStatus"},
+                search: {"in":"query","name":"search","dataType":"string"},
+                minPrice: {"in":"query","name":"minPrice","dataType":"double"},
+                maxPrice: {"in":"query","name":"maxPrice","dataType":"double"},
+                minDuration: {"in":"query","name":"minDuration","dataType":"double"},
+                maxDuration: {"in":"query","name":"maxDuration","dataType":"double"},
+                minAltitude: {"in":"query","name":"minAltitude","dataType":"double"},
+                maxAltitude: {"in":"query","name":"maxAltitude","dataType":"double"},
+                sortBy: {"in":"query","name":"sortBy","dataType":"string"},
+                limit: {"in":"query","name":"limit","dataType":"double"},
+                page: {"in":"query","name":"page","dataType":"double"},
+        };
+        app.get('/treks/admin',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(TrekkingController)),
+            ...(fetchMiddlewares<RequestHandler>(TrekkingController.prototype.getAdminAll)),
+
+            async function TrekkingController_getAdminAll(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsTrekkingController_getAdminAll, request, response });
+
+                const controller = new TrekkingController();
+
+              await templateService.apiHandler({
+                methodName: 'getAdminAll',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsTrekkingController_getFilterOptions: Record<string, TsoaRoute.ParameterSchema> = {
         };
         app.get('/treks/filter-options',
@@ -1695,6 +1752,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 body: {"in":"body","name":"body","required":true,"ref":"CreateTrekDto"},
         };
         app.post('/treks',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(TrekkingController)),
             ...(fetchMiddlewares<RequestHandler>(TrekkingController.prototype.create)),
 
@@ -1726,6 +1784,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 body: {"in":"body","name":"body","required":true,"ref":"UpdateTrekDto"},
         };
         app.put('/treks/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(TrekkingController)),
             ...(fetchMiddlewares<RequestHandler>(TrekkingController.prototype.update)),
 
@@ -1756,6 +1815,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 id: {"in":"path","name":"id","required":true,"dataType":"string"},
         };
         app.delete('/treks/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(TrekkingController)),
             ...(fetchMiddlewares<RequestHandler>(TrekkingController.prototype.delete)),
 
@@ -1813,6 +1873,49 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
               await templateService.apiHandler({
                 methodName: 'getAll',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsTourController_getAdminAll: Record<string, TsoaRoute.ParameterSchema> = {
+                categoryId: {"in":"query","name":"categoryId","dataType":"string"},
+                region: {"in":"query","name":"region","dataType":"string"},
+                tourType: {"in":"query","name":"tourType","ref":"TourType"},
+                difficulty: {"in":"query","name":"difficulty","ref":"TripDifficulty"},
+                status: {"in":"query","name":"status","ref":"TourStatus"},
+                search: {"in":"query","name":"search","dataType":"string"},
+                minPrice: {"in":"query","name":"minPrice","dataType":"double"},
+                maxPrice: {"in":"query","name":"maxPrice","dataType":"double"},
+                minDuration: {"in":"query","name":"minDuration","dataType":"double"},
+                maxDuration: {"in":"query","name":"maxDuration","dataType":"double"},
+                sortBy: {"in":"query","name":"sortBy","dataType":"string"},
+                limit: {"in":"query","name":"limit","dataType":"double"},
+                page: {"in":"query","name":"page","dataType":"double"},
+        };
+        app.get('/tours/admin',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(TourController)),
+            ...(fetchMiddlewares<RequestHandler>(TourController.prototype.getAdminAll)),
+
+            async function TourController_getAdminAll(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsTourController_getAdminAll, request, response });
+
+                const controller = new TourController();
+
+              await templateService.apiHandler({
+                methodName: 'getAdminAll',
                 controller,
                 response,
                 next,
@@ -1887,6 +1990,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 body: {"in":"body","name":"body","required":true,"ref":"CreateTourDto"},
         };
         app.post('/tours',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(TourController)),
             ...(fetchMiddlewares<RequestHandler>(TourController.prototype.create)),
 
@@ -1918,6 +2022,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 body: {"in":"body","name":"body","required":true,"ref":"UpdateTourDto"},
         };
         app.put('/tours/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(TourController)),
             ...(fetchMiddlewares<RequestHandler>(TourController.prototype.update)),
 
@@ -1948,6 +2053,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 id: {"in":"path","name":"id","required":true,"dataType":"string"},
         };
         app.delete('/tours/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(TourController)),
             ...(fetchMiddlewares<RequestHandler>(TourController.prototype.delete)),
 
@@ -2007,6 +2113,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 body: {"in":"body","name":"body","required":true,"ref":"UpdateSettingsDto"},
         };
         app.put('/settings',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(SettingController)),
             ...(fetchMiddlewares<RequestHandler>(SettingController.prototype.update)),
 
@@ -2036,6 +2143,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         const argsNotificationController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
         };
         app.get('/notifications',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(NotificationController)),
             ...(fetchMiddlewares<RequestHandler>(NotificationController.prototype.getAll)),
 
@@ -2067,6 +2175,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 offset: {"default":0,"in":"query","name":"offset","dataType":"double"},
         };
         app.get('/notifications/paged',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(NotificationController)),
             ...(fetchMiddlewares<RequestHandler>(NotificationController.prototype.getPaged)),
 
@@ -2096,6 +2205,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         const argsNotificationController_getUnreadCount: Record<string, TsoaRoute.ParameterSchema> = {
         };
         app.get('/notifications/unread-count',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(NotificationController)),
             ...(fetchMiddlewares<RequestHandler>(NotificationController.prototype.getUnreadCount)),
 
@@ -2125,6 +2235,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         const argsNotificationController_markAllRead: Record<string, TsoaRoute.ParameterSchema> = {
         };
         app.put('/notifications/read-all',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(NotificationController)),
             ...(fetchMiddlewares<RequestHandler>(NotificationController.prototype.markAllRead)),
 
@@ -2155,6 +2266,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 id: {"in":"path","name":"id","required":true,"dataType":"string"},
         };
         app.put('/notifications/:id/read',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(NotificationController)),
             ...(fetchMiddlewares<RequestHandler>(NotificationController.prototype.markRead)),
 
@@ -2185,6 +2297,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 id: {"in":"path","name":"id","required":true,"dataType":"string"},
         };
         app.delete('/notifications/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(NotificationController)),
             ...(fetchMiddlewares<RequestHandler>(NotificationController.prototype.delete)),
 
@@ -2216,6 +2329,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 categoryId: {"in":"query","name":"categoryId","dataType":"string"},
         };
         app.post('/media/upload',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             upload.fields([
                 {
                     name: "file",
@@ -2256,6 +2370,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 page: {"in":"query","name":"page","dataType":"double"},
         };
         app.get('/media',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(MediaController)),
             ...(fetchMiddlewares<RequestHandler>(MediaController.prototype.getAllMedia)),
 
@@ -2287,6 +2402,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 body: {"in":"body","name":"body","required":true,"ref":"UpdateMediaDto"},
         };
         app.put('/media/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(MediaController)),
             ...(fetchMiddlewares<RequestHandler>(MediaController.prototype.updateMedia)),
 
@@ -2317,6 +2433,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 id: {"in":"path","name":"id","required":true,"dataType":"string"},
         };
         app.delete('/media/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(MediaController)),
             ...(fetchMiddlewares<RequestHandler>(MediaController.prototype.deleteMedia)),
 
@@ -2350,6 +2467,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 page: {"in":"query","name":"page","dataType":"double"},
         };
         app.get('/inquiries',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(InquiryController)),
             ...(fetchMiddlewares<RequestHandler>(InquiryController.prototype.getAll)),
 
@@ -2380,6 +2498,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 id: {"in":"path","name":"id","required":true,"dataType":"string"},
         };
         app.get('/inquiries/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(InquiryController)),
             ...(fetchMiddlewares<RequestHandler>(InquiryController.prototype.getById)),
 
@@ -2441,6 +2560,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 body: {"in":"body","name":"body","required":true,"ref":"UpdateInquiryDto"},
         };
         app.put('/inquiries/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(InquiryController)),
             ...(fetchMiddlewares<RequestHandler>(InquiryController.prototype.update)),
 
@@ -2472,6 +2592,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 body: {"in":"body","name":"body","required":true,"dataType":"intersection","subSchemas":[{"ref":"SendQuoteDto"},{"dataType":"nestedObjectLiteral","nestedProperties":{"status":{"ref":"InquiryStatus"}}}]},
         };
         app.post('/inquiries/:id/quote',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(InquiryController)),
             ...(fetchMiddlewares<RequestHandler>(InquiryController.prototype.sendQuote)),
 
@@ -2502,6 +2623,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 id: {"in":"path","name":"id","required":true,"dataType":"string"},
         };
         app.delete('/inquiries/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(InquiryController)),
             ...(fetchMiddlewares<RequestHandler>(InquiryController.prototype.delete)),
 
@@ -2591,6 +2713,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 body: {"in":"body","name":"body","required":true,"ref":"CreateGuideDto"},
         };
         app.post('/guides',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(GuideController)),
             ...(fetchMiddlewares<RequestHandler>(GuideController.prototype.create)),
 
@@ -2622,6 +2745,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 body: {"in":"body","name":"body","required":true,"ref":"UpdateGuideDto"},
         };
         app.put('/guides/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(GuideController)),
             ...(fetchMiddlewares<RequestHandler>(GuideController.prototype.update)),
 
@@ -2652,6 +2776,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 id: {"in":"path","name":"id","required":true,"dataType":"string"},
         };
         app.delete('/guides/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(GuideController)),
             ...(fetchMiddlewares<RequestHandler>(GuideController.prototype.delete)),
 
@@ -2716,6 +2841,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 body: {"in":"body","name":"body","required":true,"ref":"ReorderFaqsDto"},
         };
         app.put('/faqs/reorder',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(FaqController)),
             ...(fetchMiddlewares<RequestHandler>(FaqController.prototype.reorder)),
 
@@ -2776,6 +2902,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 body: {"in":"body","name":"body","required":true,"ref":"CreateFaqDto"},
         };
         app.post('/faqs',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(FaqController)),
             ...(fetchMiddlewares<RequestHandler>(FaqController.prototype.create)),
 
@@ -2807,6 +2934,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 body: {"in":"body","name":"body","required":true,"ref":"UpdateFaqDto"},
         };
         app.put('/faqs/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(FaqController)),
             ...(fetchMiddlewares<RequestHandler>(FaqController.prototype.update)),
 
@@ -2837,6 +2965,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 id: {"in":"path","name":"id","required":true,"dataType":"string"},
         };
         app.delete('/faqs/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(FaqController)),
             ...(fetchMiddlewares<RequestHandler>(FaqController.prototype.delete)),
 
@@ -2896,6 +3025,51 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
               await templateService.apiHandler({
                 methodName: 'getAll',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsExpeditionController_getAdminAll: Record<string, TsoaRoute.ParameterSchema> = {
+                categoryId: {"in":"query","name":"categoryId","dataType":"string"},
+                region: {"in":"query","name":"region","dataType":"string"},
+                difficulty: {"in":"query","name":"difficulty","ref":"TripDifficulty"},
+                climbingGrade: {"in":"query","name":"climbingGrade","ref":"ClimbingGrade"},
+                status: {"in":"query","name":"status","ref":"ExpeditionStatus"},
+                search: {"in":"query","name":"search","dataType":"string"},
+                minPrice: {"in":"query","name":"minPrice","dataType":"double"},
+                maxPrice: {"in":"query","name":"maxPrice","dataType":"double"},
+                minAltitude: {"in":"query","name":"minAltitude","dataType":"double"},
+                maxAltitude: {"in":"query","name":"maxAltitude","dataType":"double"},
+                minPeakHeight: {"in":"query","name":"minPeakHeight","dataType":"double"},
+                maxPeakHeight: {"in":"query","name":"maxPeakHeight","dataType":"double"},
+                sortBy: {"in":"query","name":"sortBy","dataType":"string"},
+                limit: {"in":"query","name":"limit","dataType":"double"},
+                page: {"in":"query","name":"page","dataType":"double"},
+        };
+        app.get('/expeditions/admin',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(ExpeditionController)),
+            ...(fetchMiddlewares<RequestHandler>(ExpeditionController.prototype.getAdminAll)),
+
+            async function ExpeditionController_getAdminAll(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsExpeditionController_getAdminAll, request, response });
+
+                const controller = new ExpeditionController();
+
+              await templateService.apiHandler({
+                methodName: 'getAdminAll',
                 controller,
                 response,
                 next,
@@ -2970,6 +3144,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 body: {"in":"body","name":"body","required":true,"ref":"CreateExpeditionDto"},
         };
         app.post('/expeditions',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(ExpeditionController)),
             ...(fetchMiddlewares<RequestHandler>(ExpeditionController.prototype.create)),
 
@@ -3001,6 +3176,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 body: {"in":"body","name":"body","required":true,"ref":"UpdateExpeditionDto"},
         };
         app.put('/expeditions/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(ExpeditionController)),
             ...(fetchMiddlewares<RequestHandler>(ExpeditionController.prototype.update)),
 
@@ -3031,6 +3207,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 id: {"in":"path","name":"id","required":true,"dataType":"string"},
         };
         app.delete('/expeditions/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(ExpeditionController)),
             ...(fetchMiddlewares<RequestHandler>(ExpeditionController.prototype.delete)),
 
@@ -3060,6 +3237,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         const argsDashboardController_getMetrics: Record<string, TsoaRoute.ParameterSchema> = {
         };
         app.get('/admin/dashboard',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(DashboardController)),
             ...(fetchMiddlewares<RequestHandler>(DashboardController.prototype.getMetrics)),
 
@@ -3153,6 +3331,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 body: {"in":"body","name":"body","required":true,"ref":"CreateCategoryDto"},
         };
         app.post('/categories',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(CategoryController)),
             ...(fetchMiddlewares<RequestHandler>(CategoryController.prototype.create)),
 
@@ -3184,6 +3363,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 body: {"in":"body","name":"body","required":true,"ref":"UpdateCategoryDto"},
         };
         app.put('/categories/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(CategoryController)),
             ...(fetchMiddlewares<RequestHandler>(CategoryController.prototype.update)),
 
@@ -3214,6 +3394,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 id: {"in":"path","name":"id","required":true,"dataType":"string"},
         };
         app.delete('/categories/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(CategoryController)),
             ...(fetchMiddlewares<RequestHandler>(CategoryController.prototype.delete)),
 
@@ -3249,6 +3430,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 page: {"in":"query","name":"page","dataType":"double"},
         };
         app.get('/bookings',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(BookingController)),
             ...(fetchMiddlewares<RequestHandler>(BookingController.prototype.getAll)),
 
@@ -3279,6 +3461,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 id: {"in":"path","name":"id","required":true,"dataType":"string"},
         };
         app.get('/bookings/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(BookingController)),
             ...(fetchMiddlewares<RequestHandler>(BookingController.prototype.getById)),
 
@@ -3340,6 +3523,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 body: {"in":"body","name":"body","required":true,"ref":"UpdateBookingDto"},
         };
         app.put('/bookings/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(BookingController)),
             ...(fetchMiddlewares<RequestHandler>(BookingController.prototype.update)),
 
@@ -3370,6 +3554,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 id: {"in":"path","name":"id","required":true,"dataType":"string"},
         };
         app.delete('/bookings/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(BookingController)),
             ...(fetchMiddlewares<RequestHandler>(BookingController.prototype.delete)),
 
@@ -3431,6 +3616,42 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsBlogController_getAdminAll: Record<string, TsoaRoute.ParameterSchema> = {
+                status: {"in":"query","name":"status","ref":"BlogStatus"},
+                categoryId: {"in":"query","name":"categoryId","dataType":"string"},
+                category: {"in":"query","name":"category","dataType":"string"},
+                search: {"in":"query","name":"search","dataType":"string"},
+                limit: {"in":"query","name":"limit","dataType":"double"},
+                page: {"in":"query","name":"page","dataType":"double"},
+        };
+        app.get('/blogs/admin',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(BlogController)),
+            ...(fetchMiddlewares<RequestHandler>(BlogController.prototype.getAdminAll)),
+
+            async function BlogController_getAdminAll(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsBlogController_getAdminAll, request, response });
+
+                const controller = new BlogController();
+
+              await templateService.apiHandler({
+                methodName: 'getAdminAll',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsBlogController_getByIdOrSlug: Record<string, TsoaRoute.ParameterSchema> = {
                 idOrSlug: {"in":"path","name":"idOrSlug","required":true,"dataType":"string"},
         };
@@ -3465,6 +3686,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 body: {"in":"body","name":"body","required":true,"ref":"CreateBlogArticleDto"},
         };
         app.post('/blogs',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(BlogController)),
             ...(fetchMiddlewares<RequestHandler>(BlogController.prototype.create)),
 
@@ -3496,6 +3718,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 body: {"in":"body","name":"body","required":true,"ref":"UpdateBlogArticleDto"},
         };
         app.put('/blogs/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(BlogController)),
             ...(fetchMiddlewares<RequestHandler>(BlogController.prototype.update)),
 
@@ -3526,6 +3749,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 id: {"in":"path","name":"id","required":true,"dataType":"string"},
         };
         app.delete('/blogs/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(BlogController)),
             ...(fetchMiddlewares<RequestHandler>(BlogController.prototype.delete)),
 
@@ -3616,6 +3840,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 body: {"in":"body","name":"body","required":true,"ref":"CreateAssociateDto"},
         };
         app.post('/associates',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(AssociateController)),
             ...(fetchMiddlewares<RequestHandler>(AssociateController.prototype.create)),
 
@@ -3647,6 +3872,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 body: {"in":"body","name":"body","required":true,"ref":"UpdateAssociateDto"},
         };
         app.put('/associates/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(AssociateController)),
             ...(fetchMiddlewares<RequestHandler>(AssociateController.prototype.update)),
 
@@ -3677,6 +3903,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 id: {"in":"path","name":"id","required":true,"dataType":"string"},
         };
         app.delete('/associates/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(AssociateController)),
             ...(fetchMiddlewares<RequestHandler>(AssociateController.prototype.delete)),
 
@@ -3735,9 +3962,10 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsAdminAuthController_getCurrentUser: Record<string, TsoaRoute.ParameterSchema> = {
-                authHeader: {"in":"header","name":"Authorization","dataType":"string"},
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
         };
         app.get('/admin/auth/me',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(AdminAuthController)),
             ...(fetchMiddlewares<RequestHandler>(AdminAuthController.prototype.getCurrentUser)),
 
@@ -3765,8 +3993,10 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsAdminAuthController_logout: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
         };
         app.post('/admin/auth/logout',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(AdminAuthController)),
             ...(fetchMiddlewares<RequestHandler>(AdminAuthController.prototype.logout)),
 
@@ -3793,9 +4023,747 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminTrekkingController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
+                categoryId: {"in":"query","name":"categoryId","dataType":"string"},
+                region: {"in":"query","name":"region","dataType":"string"},
+                difficulty: {"in":"query","name":"difficulty","ref":"TripDifficulty"},
+                status: {"in":"query","name":"status","ref":"TrekStatus"},
+                search: {"in":"query","name":"search","dataType":"string"},
+                minPrice: {"in":"query","name":"minPrice","dataType":"double"},
+                maxPrice: {"in":"query","name":"maxPrice","dataType":"double"},
+                minDuration: {"in":"query","name":"minDuration","dataType":"double"},
+                maxDuration: {"in":"query","name":"maxDuration","dataType":"double"},
+                minAltitude: {"in":"query","name":"minAltitude","dataType":"double"},
+                maxAltitude: {"in":"query","name":"maxAltitude","dataType":"double"},
+                sortBy: {"in":"query","name":"sortBy","dataType":"string"},
+                limit: {"in":"query","name":"limit","dataType":"double"},
+                page: {"in":"query","name":"page","dataType":"double"},
+        };
+        app.get('/admin/treks',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminTrekkingController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminTrekkingController.prototype.getAll)),
+
+            async function AdminTrekkingController_getAll(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminTrekkingController_getAll, request, response });
+
+                const controller = new AdminTrekkingController();
+
+              await templateService.apiHandler({
+                methodName: 'getAll',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminTrekkingController_getByIdOrSlug: Record<string, TsoaRoute.ParameterSchema> = {
+                idOrSlug: {"in":"path","name":"idOrSlug","required":true,"dataType":"string"},
+        };
+        app.get('/admin/treks/:idOrSlug',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminTrekkingController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminTrekkingController.prototype.getByIdOrSlug)),
+
+            async function AdminTrekkingController_getByIdOrSlug(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminTrekkingController_getByIdOrSlug, request, response });
+
+                const controller = new AdminTrekkingController();
+
+              await templateService.apiHandler({
+                methodName: 'getByIdOrSlug',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminTrekkingController_create: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"CreateTrekDto"},
+        };
+        app.post('/admin/treks',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminTrekkingController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminTrekkingController.prototype.create)),
+
+            async function AdminTrekkingController_create(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminTrekkingController_create, request, response });
+
+                const controller = new AdminTrekkingController();
+
+              await templateService.apiHandler({
+                methodName: 'create',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminTrekkingController_update: Record<string, TsoaRoute.ParameterSchema> = {
+                id: {"in":"path","name":"id","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"UpdateTrekDto"},
+        };
+        app.put('/admin/treks/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminTrekkingController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminTrekkingController.prototype.update)),
+
+            async function AdminTrekkingController_update(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminTrekkingController_update, request, response });
+
+                const controller = new AdminTrekkingController();
+
+              await templateService.apiHandler({
+                methodName: 'update',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminTrekkingController_delete: Record<string, TsoaRoute.ParameterSchema> = {
+                id: {"in":"path","name":"id","required":true,"dataType":"string"},
+        };
+        app.delete('/admin/treks/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminTrekkingController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminTrekkingController.prototype.delete)),
+
+            async function AdminTrekkingController_delete(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminTrekkingController_delete, request, response });
+
+                const controller = new AdminTrekkingController();
+
+              await templateService.apiHandler({
+                methodName: 'delete',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminTourController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
+                categoryId: {"in":"query","name":"categoryId","dataType":"string"},
+                region: {"in":"query","name":"region","dataType":"string"},
+                tourType: {"in":"query","name":"tourType","ref":"TourType"},
+                difficulty: {"in":"query","name":"difficulty","ref":"TripDifficulty"},
+                status: {"in":"query","name":"status","ref":"TourStatus"},
+                search: {"in":"query","name":"search","dataType":"string"},
+                minPrice: {"in":"query","name":"minPrice","dataType":"double"},
+                maxPrice: {"in":"query","name":"maxPrice","dataType":"double"},
+                minDuration: {"in":"query","name":"minDuration","dataType":"double"},
+                maxDuration: {"in":"query","name":"maxDuration","dataType":"double"},
+                sortBy: {"in":"query","name":"sortBy","dataType":"string"},
+                limit: {"in":"query","name":"limit","dataType":"double"},
+                page: {"in":"query","name":"page","dataType":"double"},
+        };
+        app.get('/admin/tours',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminTourController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminTourController.prototype.getAll)),
+
+            async function AdminTourController_getAll(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminTourController_getAll, request, response });
+
+                const controller = new AdminTourController();
+
+              await templateService.apiHandler({
+                methodName: 'getAll',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminTourController_getByIdOrSlug: Record<string, TsoaRoute.ParameterSchema> = {
+                idOrSlug: {"in":"path","name":"idOrSlug","required":true,"dataType":"string"},
+        };
+        app.get('/admin/tours/:idOrSlug',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminTourController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminTourController.prototype.getByIdOrSlug)),
+
+            async function AdminTourController_getByIdOrSlug(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminTourController_getByIdOrSlug, request, response });
+
+                const controller = new AdminTourController();
+
+              await templateService.apiHandler({
+                methodName: 'getByIdOrSlug',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminTourController_create: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"CreateTourDto"},
+        };
+        app.post('/admin/tours',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminTourController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminTourController.prototype.create)),
+
+            async function AdminTourController_create(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminTourController_create, request, response });
+
+                const controller = new AdminTourController();
+
+              await templateService.apiHandler({
+                methodName: 'create',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminTourController_update: Record<string, TsoaRoute.ParameterSchema> = {
+                id: {"in":"path","name":"id","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"UpdateTourDto"},
+        };
+        app.put('/admin/tours/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminTourController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminTourController.prototype.update)),
+
+            async function AdminTourController_update(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminTourController_update, request, response });
+
+                const controller = new AdminTourController();
+
+              await templateService.apiHandler({
+                methodName: 'update',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminTourController_delete: Record<string, TsoaRoute.ParameterSchema> = {
+                id: {"in":"path","name":"id","required":true,"dataType":"string"},
+        };
+        app.delete('/admin/tours/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminTourController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminTourController.prototype.delete)),
+
+            async function AdminTourController_delete(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminTourController_delete, request, response });
+
+                const controller = new AdminTourController();
+
+              await templateService.apiHandler({
+                methodName: 'delete',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminExpeditionController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
+                categoryId: {"in":"query","name":"categoryId","dataType":"string"},
+                region: {"in":"query","name":"region","dataType":"string"},
+                difficulty: {"in":"query","name":"difficulty","ref":"TripDifficulty"},
+                climbingGrade: {"in":"query","name":"climbingGrade","ref":"ClimbingGrade"},
+                status: {"in":"query","name":"status","ref":"ExpeditionStatus"},
+                search: {"in":"query","name":"search","dataType":"string"},
+                minPrice: {"in":"query","name":"minPrice","dataType":"double"},
+                maxPrice: {"in":"query","name":"maxPrice","dataType":"double"},
+                minAltitude: {"in":"query","name":"minAltitude","dataType":"double"},
+                maxAltitude: {"in":"query","name":"maxAltitude","dataType":"double"},
+                minPeakHeight: {"in":"query","name":"minPeakHeight","dataType":"double"},
+                maxPeakHeight: {"in":"query","name":"maxPeakHeight","dataType":"double"},
+                sortBy: {"in":"query","name":"sortBy","dataType":"string"},
+                limit: {"in":"query","name":"limit","dataType":"double"},
+                page: {"in":"query","name":"page","dataType":"double"},
+        };
+        app.get('/admin/expeditions',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminExpeditionController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminExpeditionController.prototype.getAll)),
+
+            async function AdminExpeditionController_getAll(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminExpeditionController_getAll, request, response });
+
+                const controller = new AdminExpeditionController();
+
+              await templateService.apiHandler({
+                methodName: 'getAll',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminExpeditionController_getByIdOrSlug: Record<string, TsoaRoute.ParameterSchema> = {
+                idOrSlug: {"in":"path","name":"idOrSlug","required":true,"dataType":"string"},
+        };
+        app.get('/admin/expeditions/:idOrSlug',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminExpeditionController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminExpeditionController.prototype.getByIdOrSlug)),
+
+            async function AdminExpeditionController_getByIdOrSlug(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminExpeditionController_getByIdOrSlug, request, response });
+
+                const controller = new AdminExpeditionController();
+
+              await templateService.apiHandler({
+                methodName: 'getByIdOrSlug',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminExpeditionController_create: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"CreateExpeditionDto"},
+        };
+        app.post('/admin/expeditions',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminExpeditionController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminExpeditionController.prototype.create)),
+
+            async function AdminExpeditionController_create(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminExpeditionController_create, request, response });
+
+                const controller = new AdminExpeditionController();
+
+              await templateService.apiHandler({
+                methodName: 'create',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminExpeditionController_update: Record<string, TsoaRoute.ParameterSchema> = {
+                id: {"in":"path","name":"id","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"UpdateExpeditionDto"},
+        };
+        app.put('/admin/expeditions/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminExpeditionController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminExpeditionController.prototype.update)),
+
+            async function AdminExpeditionController_update(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminExpeditionController_update, request, response });
+
+                const controller = new AdminExpeditionController();
+
+              await templateService.apiHandler({
+                methodName: 'update',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminExpeditionController_delete: Record<string, TsoaRoute.ParameterSchema> = {
+                id: {"in":"path","name":"id","required":true,"dataType":"string"},
+        };
+        app.delete('/admin/expeditions/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminExpeditionController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminExpeditionController.prototype.delete)),
+
+            async function AdminExpeditionController_delete(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminExpeditionController_delete, request, response });
+
+                const controller = new AdminExpeditionController();
+
+              await templateService.apiHandler({
+                methodName: 'delete',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminBlogController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
+                status: {"in":"query","name":"status","ref":"BlogStatus"},
+                categoryId: {"in":"query","name":"categoryId","dataType":"string"},
+                category: {"in":"query","name":"category","dataType":"string"},
+                search: {"in":"query","name":"search","dataType":"string"},
+                limit: {"in":"query","name":"limit","dataType":"double"},
+                page: {"in":"query","name":"page","dataType":"double"},
+        };
+        app.get('/admin/blogs',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminBlogController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminBlogController.prototype.getAll)),
+
+            async function AdminBlogController_getAll(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminBlogController_getAll, request, response });
+
+                const controller = new AdminBlogController();
+
+              await templateService.apiHandler({
+                methodName: 'getAll',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminBlogController_getByIdOrSlug: Record<string, TsoaRoute.ParameterSchema> = {
+                idOrSlug: {"in":"path","name":"idOrSlug","required":true,"dataType":"string"},
+        };
+        app.get('/admin/blogs/:idOrSlug',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminBlogController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminBlogController.prototype.getByIdOrSlug)),
+
+            async function AdminBlogController_getByIdOrSlug(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminBlogController_getByIdOrSlug, request, response });
+
+                const controller = new AdminBlogController();
+
+              await templateService.apiHandler({
+                methodName: 'getByIdOrSlug',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminBlogController_create: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"CreateBlogArticleDto"},
+        };
+        app.post('/admin/blogs',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminBlogController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminBlogController.prototype.create)),
+
+            async function AdminBlogController_create(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminBlogController_create, request, response });
+
+                const controller = new AdminBlogController();
+
+              await templateService.apiHandler({
+                methodName: 'create',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminBlogController_update: Record<string, TsoaRoute.ParameterSchema> = {
+                id: {"in":"path","name":"id","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"UpdateBlogArticleDto"},
+        };
+        app.put('/admin/blogs/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminBlogController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminBlogController.prototype.update)),
+
+            async function AdminBlogController_update(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminBlogController_update, request, response });
+
+                const controller = new AdminBlogController();
+
+              await templateService.apiHandler({
+                methodName: 'update',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminBlogController_delete: Record<string, TsoaRoute.ParameterSchema> = {
+                id: {"in":"path","name":"id","required":true,"dataType":"string"},
+        };
+        app.delete('/admin/blogs/:id',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminBlogController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminBlogController.prototype.delete)),
+
+            async function AdminBlogController_delete(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminBlogController_delete, request, response });
+
+                const controller = new AdminBlogController();
+
+              await templateService.apiHandler({
+                methodName: 'delete',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
+
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+    function authenticateMiddleware(security: TsoaRoute.Security[] = []) {
+        return async function runAuthenticationMiddleware(request: any, response: any, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            // keep track of failed auth attempts so we can hand back the most
+            // recent one.  This behavior was previously existing so preserving it
+            // here
+            const failedAttempts: any[] = [];
+            const pushAndRethrow = (error: any) => {
+                failedAttempts.push(error);
+                throw error;
+            };
+
+            const secMethodOrPromises: Promise<any>[] = [];
+            for (const secMethod of security) {
+                if (Object.keys(secMethod).length > 1) {
+                    const secMethodAndPromises: Promise<any>[] = [];
+
+                    for (const name in secMethod) {
+                        secMethodAndPromises.push(
+                            expressAuthenticationRecasted(request, name, secMethod[name], response)
+                                .catch(pushAndRethrow)
+                        );
+                    }
+
+                    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+                    secMethodOrPromises.push(Promise.all(secMethodAndPromises)
+                        .then(users => { return users[0]; }));
+                } else {
+                    for (const name in secMethod) {
+                        secMethodOrPromises.push(
+                            expressAuthenticationRecasted(request, name, secMethod[name], response)
+                                .catch(pushAndRethrow)
+                        );
+                    }
+                }
+            }
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            try {
+                request['user'] = await Promise.any(secMethodOrPromises);
+
+                // Response was sent in middleware, abort
+                if (response.writableEnded) {
+                    return;
+                }
+
+                next();
+            }
+            catch(err) {
+                // Show most recent error as response
+                const error = failedAttempts.pop();
+                error.status = error.status || 401;
+
+                // Response was sent in middleware, abort
+                if (response.writableEnded) {
+                    return;
+                }
+                next(error);
+            }
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        }
+    }
 
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 }

@@ -4,11 +4,13 @@ import {
   Delete,
   Get,
   Middlewares,
+  NoSecurity,
   Path,
   Post,
   Put,
   Query,
   Route,
+  Security,
   Tags,
 } from 'tsoa';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
@@ -28,6 +30,7 @@ import { paginateResponse } from '../../utils/pageAndLimit';
 
 @Route('bookings')
 @Tags('Bookings')
+@Security('jwt', ['admin'])
 export class BookingController extends Controller {
   constructor(private bookingService: BookingService = new BookingService()) {
     super();
@@ -61,6 +64,7 @@ export class BookingController extends Controller {
   }
 
   @Post('')
+  @NoSecurity()
   @Middlewares(RequestValidator.validate(CreateBookingDto))
   async create(@Body() body: CreateBookingDto): Promise<ApiResponse<Booking>> {
     const data = await this.bookingService.create(body);

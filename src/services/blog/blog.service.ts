@@ -17,7 +17,7 @@ export class BlogService {
 
   constructor(private mediaService: MediaService = new MediaService()) {}
 
-  async getAll(
+  async getPublicAll(
     status?: BlogStatus,
     categoryId?: string,
     category?: string,
@@ -25,9 +25,44 @@ export class BlogService {
     limit?: number,
     page?: number,
   ): Promise<[BlogArticle[], number]> {
+    return this.getAll(
+      status || BlogStatus.PUBLISHED,
+      categoryId,
+      category,
+      search,
+      limit,
+      page,
+      true,
+    );
+  }
+
+  async getAdminAll(
+    status?: BlogStatus,
+    categoryId?: string,
+    category?: string,
+    search?: string,
+    limit?: number,
+    page?: number,
+  ): Promise<[BlogArticle[], number]> {
+    return this.getAll(status, categoryId, category, search, limit, page, false);
+  }
+
+  async getAll(
+    status?: BlogStatus,
+    categoryId?: string,
+    category?: string,
+    search?: string,
+    limit?: number,
+    page?: number,
+    isPublic?: boolean,
+  ): Promise<[BlogArticle[], number]> {
     const qb = this.repo.createQueryBuilder('blog');
 
-    if (status) {
+    if (isPublic) {
+      qb.andWhere('blog.status = :status', {
+        status: status || BlogStatus.PUBLISHED,
+      });
+    } else if (status) {
       qb.andWhere('blog.status = :status', { status });
     }
 
@@ -90,6 +125,14 @@ export class BlogService {
 
     if (!item) throw AppError.notFound(`Blog article ${idOrSlug} not found`);
     return this.mediaService.resolveItemMedia(item);
+  }
+
+  async getPublicByIdOrSlug(idOrSlug: string): Promise<BlogArticle> {
+    const item = await this.getByIdOrSlug(idOrSlug);
+    if (item.status !== BlogStatus.PUBLISHED) {
+      throw AppError.notFound(`Blog article ${idOrSlug} not found`);
+    }
+    return item;
   }
 
   async create(dto: CreateBlogArticleDto): Promise<BlogArticle> {

@@ -25,6 +25,7 @@
     }
   },
   "routes": {
-    "routesDir": "src/routes"
+    "routesDir": "src/routes",
+    "authenticationModule": "src/middlewares/auth.middleware.ts"
   }
 }

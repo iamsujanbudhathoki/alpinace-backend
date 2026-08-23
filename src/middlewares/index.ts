@@ -2,6 +2,7 @@ import express, { urlencoded } from 'express';
 import path from 'path';
 import helmet from 'helmet';
 import swaggerUi from 'swagger-ui-express';
+import cookieParser from 'cookie-parser';
 import { RegisterRoutes } from '../routes/routes';
 import errorHandler from './errorhandler.middleware';
 import { DotenvConfig, Environment } from '../config/env.config';
@@ -56,6 +57,7 @@ export const configMiddleware = (app: express.Application) => {
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   };
 
+  app.use(cookieParser());
   app.use(cors(corsOptions));
   app.use(express.json(), compression());
 

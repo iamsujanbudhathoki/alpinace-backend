@@ -9,6 +9,7 @@ import {
   Put,
   Query,
   Route,
+  Security,
   Tags,
   UploadedFile,
 } from 'tsoa';
@@ -23,6 +24,7 @@ import { paginateResponse } from '../../utils/pageAndLimit';
 
 @Route('media')
 @Tags('Media Library')
+@Security('jwt', ['admin'])
 export class MediaController extends Controller {
   constructor(private mediaService: MediaService = new MediaService()) {
     super();

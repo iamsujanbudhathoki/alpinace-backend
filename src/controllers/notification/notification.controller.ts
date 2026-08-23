@@ -7,6 +7,7 @@ import {
   Put,
   Query,
   Route,
+  Security,
   Tags,
 } from 'tsoa';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
@@ -15,6 +16,7 @@ import { NotificationService, PaginatedNotifications } from '../../services/noti
 
 @Route('notifications')
 @Tags('Notifications')
+@Security('jwt', ['admin'])
 export class NotificationController extends Controller {
   constructor(private svc: NotificationService = new NotificationService()) {
     super();

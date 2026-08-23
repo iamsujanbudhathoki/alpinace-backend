@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Middlewares,
-  NoSecurity,
   Path,
   Post,
   Put,
@@ -24,54 +23,20 @@ import {
 import { RequestValidator } from '../../middlewares/validator.middleware';
 import { paginateResponse } from '../../utils/pageAndLimit';
 
-@Route('blogs')
-@Tags('Blog Articles')
+@Route('admin/blogs')
+@Tags('Admin Blogs Management')
 @Security('jwt', ['admin'])
-export class BlogController extends Controller {
+export class AdminBlogController extends Controller {
   constructor(private blogService: BlogService = new BlogService()) {
     super();
   }
 
   /**
-   * Get all blog articles with optional status, category, and search filtering.
-   * Pass ?status=Published to only retrieve published articles.
-   * Pass ?categoryId=... to filter by category ID.
-   * Pass ?search=... to search within title, excerpt, and category.
-   */
-  @Get('')
-  @NoSecurity()
-  @Middlewares(RequestValidator.validateQuery(GetBlogsQueryDto))
-  async getAll(
-    @Query() status?: BlogStatus,
-    @Query() categoryId?: string,
-    @Query() category?: string,
-    @Query() search?: string,
-    @Query() limit?: number,
-    @Query() page?: number,
-  ): Promise<ApiResponse<BlogArticle[]>> {
-    const dataTotalCount = await this.blogService.getPublicAll(
-      status,
-      categoryId,
-      category,
-      search,
-      limit,
-      page,
-    );
-    const { data, pagination } = paginateResponse(dataTotalCount, limit, page);
-    return {
-      data,
-      pagination,
-      message: 'Blog articles retrieved successfully',
-      success: true,
-    };
-  }
-
-  /**
    * Admin-only listing of ALL blog articles (including DRAFT, PUBLISHED, and ARCHIVED).
    */
-  @Get('admin')
+  @Get('')
   @Middlewares(RequestValidator.validateQuery(GetBlogsQueryDto))
-  async getAdminAll(
+  async getAll(
     @Query() status?: BlogStatus,
     @Query() categoryId?: string,
     @Query() category?: string,
@@ -96,19 +61,24 @@ export class BlogController extends Controller {
     };
   }
 
+  /**
+   * Admin retrieve blog article by ID or Slug.
+   */
   @Get('{idOrSlug}')
-  @NoSecurity()
   async getByIdOrSlug(
     @Path() idOrSlug: string,
   ): Promise<ApiResponse<BlogArticle>> {
-    const data = await this.blogService.getPublicByIdOrSlug(idOrSlug);
+    const data = await this.blogService.getByIdOrSlug(idOrSlug);
     return {
       data,
-      message: 'Blog article retrieved successfully',
+      message: 'Admin blog article retrieved successfully',
       success: true,
     };
   }
 
+  /**
+   * Create a new blog article.
+   */
   @Post('')
   @Middlewares(RequestValidator.validate(CreateBlogArticleDto))
   async create(
@@ -122,6 +92,9 @@ export class BlogController extends Controller {
     };
   }
 
+  /**
+   * Update an existing blog article.
+   */
   @Put('{id}')
   @Middlewares(RequestValidator.validate(UpdateBlogArticleDto))
   async update(
@@ -136,6 +109,9 @@ export class BlogController extends Controller {
     };
   }
 
+  /**
+   * Delete a blog article.
+   */
   @Delete('{id}')
   async delete(@Path() id: string): Promise<ApiResponse<boolean>> {
     const data = await this.blogService.delete(id);

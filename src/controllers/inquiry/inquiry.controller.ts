@@ -4,11 +4,13 @@ import {
   Delete,
   Get,
   Middlewares,
+  NoSecurity,
   Path,
   Post,
   Put,
   Query,
   Route,
+  Security,
   Tags,
 } from 'tsoa';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
@@ -24,6 +26,7 @@ import { paginateResponse } from '../../utils/pageAndLimit';
 
 @Route('inquiries')
 @Tags('Inquiries & Leads')
+@Security('jwt', ['admin'])
 export class InquiryController extends Controller {
   constructor(private inquiryService: InquiryService = new InquiryService()) {
     super();
@@ -53,6 +56,7 @@ export class InquiryController extends Controller {
   }
 
   @Post('')
+  @NoSecurity()
   @Middlewares(RequestValidator.validate(CreateInquiryDto))
   async create(@Body() body: CreateInquiryDto): Promise<ApiResponse<Inquiry>> {
     const data = await this.inquiryService.create(body);

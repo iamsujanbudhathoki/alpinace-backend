@@ -1,4 +1,4 @@
-import { Controller, Get, Route, Tags } from 'tsoa';
+import { Controller, Get, Route, Security, Tags } from 'tsoa';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
 import {
   DashboardMetricsResponse,
@@ -7,6 +7,7 @@ import {
 
 @Route('admin/dashboard')
 @Tags('Admin Dashboard')
+@Security('jwt', ['admin'])
 export class DashboardController extends Controller {
   constructor(
     private dashboardService: DashboardService = new DashboardService(),

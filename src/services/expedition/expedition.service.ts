@@ -26,12 +26,59 @@ export class ExpeditionService {
 
   constructor(private mediaService: MediaService = new MediaService()) {}
 
+  async getPublicAll(params?: {
+    categoryId?: string;
+    region?: string;
+    difficulty?: TripDifficulty;
+    climbingGrade?: ClimbingGrade;
+    status?: ExpeditionStatus;
+    search?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    minAltitude?: number;
+    maxAltitude?: number;
+    minPeakHeight?: number;
+    maxPeakHeight?: number;
+    sortBy?: string;
+    limit?: number;
+    page?: number;
+  }): Promise<[Expedition[], number]> {
+    return this.getAll({
+      ...params,
+      isPublic: true,
+    });
+  }
+
+  async getAdminAll(params?: {
+    categoryId?: string;
+    region?: string;
+    difficulty?: TripDifficulty;
+    climbingGrade?: ClimbingGrade;
+    status?: ExpeditionStatus;
+    search?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    minAltitude?: number;
+    maxAltitude?: number;
+    minPeakHeight?: number;
+    maxPeakHeight?: number;
+    sortBy?: string;
+    limit?: number;
+    page?: number;
+  }): Promise<[Expedition[], number]> {
+    return this.getAll({
+      ...params,
+      isPublic: false,
+    });
+  }
+
   async getAll(params?: {
     categoryId?: string;
     region?: string;
     difficulty?: TripDifficulty;
     climbingGrade?: ClimbingGrade;
     status?: ExpeditionStatus;
+    isPublic?: boolean;
     search?: string;
     minPrice?: number;
     maxPrice?: number;
@@ -65,7 +112,15 @@ export class ExpeditionService {
         climbingGrade: params.climbingGrade,
       });
     }
-    if (params?.status) {
+    if (params?.isPublic) {
+      if (params?.status && (params.status === ExpeditionStatus.ACTIVE || params.status === ExpeditionStatus.FEATURED)) {
+        qb.andWhere('exp.status = :status', { status: params.status });
+      } else {
+        qb.andWhere('exp.status IN (:...publicStatuses)', {
+          publicStatuses: [ExpeditionStatus.ACTIVE, ExpeditionStatus.FEATURED],
+        });
+      }
+    } else if (params?.status) {
       qb.andWhere('exp.status = :status', { status: params.status });
     }
     if (params?.search && params.search.trim()) {
@@ -167,6 +222,14 @@ export class ExpeditionService {
     if (!item)
       throw AppError.notFound(`Expedition package ${idOrSlug} not found`);
     return this.mediaService.resolveItemMedia(item);
+  }
+
+  async getPublicByIdOrSlug(idOrSlug: string): Promise<Expedition> {
+    const item = await this.getByIdOrSlug(idOrSlug);
+    if (item.status !== ExpeditionStatus.ACTIVE && item.status !== ExpeditionStatus.FEATURED) {
+      throw AppError.notFound(`Expedition package ${idOrSlug} not found`);
+    }
+    return item;
   }
 
   async create(dto: CreateExpeditionDto): Promise<Expedition> {

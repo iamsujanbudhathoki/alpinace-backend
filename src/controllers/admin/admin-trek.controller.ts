@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Middlewares,
-  NoSecurity,
   Path,
   Post,
   Put,
@@ -21,65 +20,19 @@ import { CreateTrekDto, UpdateTrekDto } from '../../schemas/trek.schema';
 import { RequestValidator } from '../../middlewares/validator.middleware';
 import { paginateResponse } from '../../utils/pageAndLimit';
 
-@Route('treks')
-@Tags('Trekking')
+@Route('admin/treks')
+@Tags('Admin Trekking Management')
 @Security('jwt', ['admin'])
-export class TrekkingController extends Controller {
+export class AdminTrekkingController extends Controller {
   constructor(private trekService: TrekService = new TrekService()) {
     super();
   }
 
   /**
-   * Get all trekking packages with dynamic filtering.
+   * Admin listing of ALL trekking packages (including DRAFT, ACTIVE, and FEATURED).
    */
   @Get('')
-  @NoSecurity()
   async getAll(
-    @Query() categoryId?: string,
-    @Query() region?: string,
-    @Query() difficulty?: TripDifficulty,
-    @Query() status?: TrekStatus,
-    @Query() search?: string,
-    @Query() minPrice?: number,
-    @Query() maxPrice?: number,
-    @Query() minDuration?: number,
-    @Query() maxDuration?: number,
-    @Query() minAltitude?: number,
-    @Query() maxAltitude?: number,
-    @Query() sortBy?: string,
-    @Query() limit?: number,
-    @Query() page?: number,
-  ): Promise<ApiResponse<Trek[]>> {
-    const dataTotalCount = await this.trekService.getPublicAll({
-      categoryId,
-      region,
-      difficulty,
-      status,
-      search,
-      minPrice,
-      maxPrice,
-      minDuration,
-      maxDuration,
-      minAltitude,
-      maxAltitude,
-      sortBy,
-      limit,
-      page,
-    });
-    const { data, pagination } = paginateResponse(dataTotalCount, limit, page);
-    return {
-      data,
-      pagination,
-      message: 'Trekking packages retrieved successfully',
-      success: true,
-    };
-  }
-
-  /**
-   * Admin-only listing of ALL trekking packages (including DRAFT, ACTIVE, and FEATURED).
-   */
-  @Get('admin')
-  async getAdminAll(
     @Query() categoryId?: string,
     @Query() region?: string,
     @Query() difficulty?: TripDifficulty,
@@ -121,29 +74,14 @@ export class TrekkingController extends Controller {
   }
 
   /**
-   * Get dynamic filter options for trekking (difficulties, categories, regions, sort options, ranges).
-   */
-  @Get('filter-options')
-  @NoSecurity()
-  async getFilterOptions(): Promise<ApiResponse<any>> {
-    const data = await this.trekService.getFilterOptions();
-    return {
-      data,
-      message: 'Trekking filter options retrieved successfully',
-      success: true,
-    };
-  }
-
-  /**
-   * Get trekking package by ID or Slug (public active/featured only).
+   * Admin retrieve trekking package by ID or Slug.
    */
   @Get('{idOrSlug}')
-  @NoSecurity()
   async getByIdOrSlug(@Path() idOrSlug: string): Promise<ApiResponse<Trek>> {
-    const data = await this.trekService.getPublicByIdOrSlug(idOrSlug);
+    const data = await this.trekService.getByIdOrSlug(idOrSlug);
     return {
       data,
-      message: 'Trekking package retrieved successfully',
+      message: 'Admin trekking package retrieved successfully',
       success: true,
     };
   }

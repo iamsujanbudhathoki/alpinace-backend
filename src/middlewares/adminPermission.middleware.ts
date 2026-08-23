@@ -1,4 +1,5 @@
 import express from 'express';
+import { expressAuthentication } from './auth.middleware';
 
 const verifyAdminPermissions = (permission?: string) => {
   return async (
@@ -6,15 +7,18 @@ const verifyAdminPermissions = (permission?: string) => {
     res: express.Response,
     next: express.NextFunction,
   ) => {
-    if (!req.user) {
-      return res.status(401).json({
-        message: 'Unauthorized',
-        data: null,
-        success: false,
-      });
+    try {
+      await expressAuthentication(
+        req,
+        'jwt',
+        permission ? [permission] : undefined,
+      );
+      return next();
+    } catch (err: any) {
+      return next(err);
     }
-    return next();
   };
 };
 
 export default verifyAdminPermissions;
+

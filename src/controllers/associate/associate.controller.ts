@@ -4,11 +4,13 @@ import {
   Delete,
   Get,
   Middlewares,
+  NoSecurity,
   Path,
   Post,
   Put,
   Query,
   Route,
+  Security,
   Tags,
 } from 'tsoa';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
@@ -22,6 +24,7 @@ import { RequestValidator } from '../../middlewares/validator.middleware';
 
 @Route('associates')
 @Tags('Associates & Partners')
+@Security('jwt', ['admin'])
 export class AssociateController extends Controller {
   constructor(
     private associateService: AssociateService = new AssociateService(),
@@ -30,6 +33,7 @@ export class AssociateController extends Controller {
   }
 
   @Get('')
+  @NoSecurity()
   async getAll(
     @Query() status?: AssociateStatus,
   ): Promise<ApiResponse<Associate[]>> {
@@ -42,6 +46,7 @@ export class AssociateController extends Controller {
   }
 
   @Get('{id}')
+  @NoSecurity()
   async getById(@Path() id: string): Promise<ApiResponse<Associate>> {
     const data = await this.associateService.getById(id);
     return {

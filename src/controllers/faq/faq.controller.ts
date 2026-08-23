@@ -4,11 +4,13 @@ import {
   Delete,
   Get,
   Middlewares,
+  NoSecurity,
   Path,
   Post,
   Put,
   Query,
   Route,
+  Security,
   Tags,
 } from 'tsoa';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
@@ -20,12 +22,14 @@ import { paginateResponse } from '../../utils/pageAndLimit';
 
 @Route('faqs')
 @Tags('FAQs & Consultations')
+@Security('jwt', ['admin'])
 export class FaqController extends Controller {
   constructor(private faqService: FaqService = new FaqService()) {
     super();
   }
 
   @Get('')
+  @NoSecurity()
   async getAll(
     @Query() status?: FaqStatus,
     @Query() category?: string,
@@ -51,6 +55,7 @@ export class FaqController extends Controller {
   }
 
   @Get('{id}')
+  @NoSecurity()
   async getById(@Path() id: string): Promise<ApiResponse<Faq>> {
     const data = await this.faqService.getById(id);
     return { data, message: 'FAQ retrieved successfully', success: true };

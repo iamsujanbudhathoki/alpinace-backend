@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Middlewares,
-  NoSecurity,
   Path,
   Post,
   Put,
@@ -21,58 +20,19 @@ import { CreateTourDto, UpdateTourDto } from '../../schemas/tour.schema';
 import { RequestValidator } from '../../middlewares/validator.middleware';
 import { paginateResponse } from '../../utils/pageAndLimit';
 
-@Route('tours')
-@Tags('Tours')
+@Route('admin/tours')
+@Tags('Admin Tours Management')
 @Security('jwt', ['admin'])
-export class TourController extends Controller {
+export class AdminTourController extends Controller {
   constructor(private tourService: TourService = new TourService()) {
     super();
   }
 
   /**
-   * Get all tour packages with dynamic filtering.
-   */
-  @Get('')
-  @NoSecurity()
-  async getAll(
-    @Query() categoryId?: string,
-    @Query() region?: string,
-    @Query() tourType?: TourType,
-    @Query() difficulty?: TripDifficulty,
-    @Query() status?: TourStatus,
-    @Query() search?: string,
-    @Query() minPrice?: number,
-    @Query() maxPrice?: number,
-    @Query() minDuration?: number,
-    @Query() maxDuration?: number,
-    @Query() sortBy?: string,
-    @Query() limit?: number,
-    @Query() page?: number,
-  ): Promise<ApiResponse<Tour[]>> {
-    const dataTotalCount = await this.tourService.getPublicAll({
-      categoryId,
-      region,
-      tourType,
-      difficulty,
-      status,
-      search,
-      minPrice,
-      maxPrice,
-      minDuration,
-      maxDuration,
-      sortBy,
-      limit,
-      page,
-    });
-    const { data, pagination } = paginateResponse(dataTotalCount, limit, page);
-    return { data, pagination, message: 'Tours retrieved successfully', success: true };
-  }
-
-  /**
    * Admin-only listing of ALL tour packages (including DRAFT, ACTIVE, and FEATURED).
    */
-  @Get('admin')
-  async getAdminAll(
+  @Get('')
+  async getAll(
     @Query() categoryId?: string,
     @Query() region?: string,
     @Query() tourType?: TourType,
@@ -107,27 +67,12 @@ export class TourController extends Controller {
   }
 
   /**
-   * Get dynamic filter options for tours (styles, categories, tour types, regions, sort options, ranges).
-   */
-  @Get('filter-options')
-  @NoSecurity()
-  async getFilterOptions(): Promise<ApiResponse<any>> {
-    const data = await this.tourService.getFilterOptions();
-    return {
-      data,
-      message: 'Tour filter options retrieved successfully',
-      success: true,
-    };
-  }
-
-  /**
-   * Get tour package by ID or Slug (public active/featured only).
+   * Admin retrieve tour package by ID or Slug.
    */
   @Get('{idOrSlug}')
-  @NoSecurity()
   async getByIdOrSlug(@Path() idOrSlug: string): Promise<ApiResponse<Tour>> {
-    const data = await this.tourService.getPublicByIdOrSlug(idOrSlug);
-    return { data, message: 'Tour retrieved successfully', success: true };
+    const data = await this.tourService.getByIdOrSlug(idOrSlug);
+    return { data, message: 'Admin tour retrieved successfully', success: true };
   }
 
   /**

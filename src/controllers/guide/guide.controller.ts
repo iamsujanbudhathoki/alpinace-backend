@@ -4,10 +4,12 @@ import {
   Delete,
   Get,
   Middlewares,
+  NoSecurity,
   Path,
   Post,
   Put,
   Route,
+  Security,
   Tags,
 } from 'tsoa';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
@@ -18,18 +20,21 @@ import { RequestValidator } from '../../middlewares/validator.middleware';
 
 @Route('guides')
 @Tags('Guides')
+@Security('jwt', ['admin'])
 export class GuideController extends Controller {
   constructor(private guideService: GuideService = new GuideService()) {
     super();
   }
 
   @Get('')
+  @NoSecurity()
   async getAll(): Promise<ApiResponse<Guide[]>> {
     const data = await this.guideService.getAll();
     return { data, message: 'Guides retrieved successfully', success: true };
   }
 
   @Get('{id}')
+  @NoSecurity()
   async getById(@Path() id: string): Promise<ApiResponse<Guide>> {
     const data = await this.guideService.getById(id);
     return { data, message: 'Guide retrieved successfully', success: true };

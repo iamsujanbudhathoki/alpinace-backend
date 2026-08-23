@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Middlewares,
-  NoSecurity,
   Path,
   Post,
   Put,
@@ -28,10 +27,10 @@ import {
 import { RequestValidator } from '../../middlewares/validator.middleware';
 import { paginateResponse } from '../../utils/pageAndLimit';
 
-@Route('expeditions')
-@Tags('Expeditions')
+@Route('admin/expeditions')
+@Tags('Admin Expeditions Management')
 @Security('jwt', ['admin'])
-export class ExpeditionController extends Controller {
+export class AdminExpeditionController extends Controller {
   constructor(
     private expeditionService: ExpeditionService = new ExpeditionService(),
   ) {
@@ -39,58 +38,10 @@ export class ExpeditionController extends Controller {
   }
 
   /**
-   * Get all active expedition packages with dynamic filtering.
-   */
-  @Get('')
-  @NoSecurity()
-  async getAll(
-    @Query() categoryId?: string,
-    @Query() region?: string,
-    @Query() difficulty?: TripDifficulty,
-    @Query() climbingGrade?: ClimbingGrade,
-    @Query() status?: ExpeditionStatus,
-    @Query() search?: string,
-    @Query() minPrice?: number,
-    @Query() maxPrice?: number,
-    @Query() minAltitude?: number,
-    @Query() maxAltitude?: number,
-    @Query() minPeakHeight?: number,
-    @Query() maxPeakHeight?: number,
-    @Query() sortBy?: string,
-    @Query() limit?: number,
-    @Query() page?: number,
-  ): Promise<ApiResponse<Expedition[]>> {
-    const dataTotalCount = await this.expeditionService.getPublicAll({
-      categoryId,
-      region,
-      difficulty,
-      climbingGrade,
-      status,
-      search,
-      minPrice,
-      maxPrice,
-      minAltitude,
-      maxAltitude,
-      minPeakHeight,
-      maxPeakHeight,
-      sortBy,
-      limit,
-      page,
-    });
-    const { data, pagination } = paginateResponse(dataTotalCount, limit, page);
-    return {
-      data,
-      pagination,
-      message: 'Expeditions retrieved successfully',
-      success: true,
-    };
-  }
-
-  /**
    * Admin-only listing of ALL expedition packages (including DRAFT, ACTIVE, and FEATURED).
    */
-  @Get('admin')
-  async getAdminAll(
+  @Get('')
+  async getAll(
     @Query() categoryId?: string,
     @Query() region?: string,
     @Query() difficulty?: TripDifficulty,
@@ -134,31 +85,16 @@ export class ExpeditionController extends Controller {
   }
 
   /**
-   * Get dynamic filter options for expeditions (alpine grades, categories, peaks, regions, sort options, ranges).
-   */
-  @Get('filter-options')
-  @NoSecurity()
-  async getFilterOptions(): Promise<ApiResponse<any>> {
-    const data = await this.expeditionService.getFilterOptions();
-    return {
-      data,
-      message: 'Expedition filter options retrieved successfully',
-      success: true,
-    };
-  }
-
-  /**
-   * Get expedition package by ID or Slug (public active/featured only).
+   * Admin retrieve expedition package by ID or Slug.
    */
   @Get('{idOrSlug}')
-  @NoSecurity()
   async getByIdOrSlug(
     @Path() idOrSlug: string,
   ): Promise<ApiResponse<Expedition>> {
-    const data = await this.expeditionService.getPublicByIdOrSlug(idOrSlug);
+    const data = await this.expeditionService.getByIdOrSlug(idOrSlug);
     return {
       data,
-      message: 'Expedition retrieved successfully',
+      message: 'Admin expedition retrieved successfully',
       success: true,
     };
   }

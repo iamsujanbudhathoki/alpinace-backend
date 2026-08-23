@@ -49,7 +49,7 @@ class DotenvConfig {
   static R2_PUBLIC_DOMAIN = process.env.R2_PUBLIC_DOMAIN || '';
 
   // CLOUDFLARE TURNSTILE
-  static TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY  ;
+  static TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY || '1x0000000000000000000000000000000AA';
   static TURNSTILE_ENABLED = process.env.TURNSTILE_ENABLED !== 'false';
 }
 

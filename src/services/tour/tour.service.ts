@@ -19,12 +19,55 @@ export class TourService {
 
   constructor(private mediaService: MediaService = new MediaService()) {}
 
+  async getPublicAll(params?: {
+    categoryId?: string;
+    region?: string;
+    tourType?: TourType;
+    difficulty?: TripDifficulty;
+    status?: TourStatus;
+    search?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    minDuration?: number;
+    maxDuration?: number;
+    sortBy?: string;
+    limit?: number;
+    page?: number;
+  }): Promise<[Tour[], number]> {
+    return this.getAll({
+      ...params,
+      isPublic: true,
+    });
+  }
+
+  async getAdminAll(params?: {
+    categoryId?: string;
+    region?: string;
+    tourType?: TourType;
+    difficulty?: TripDifficulty;
+    status?: TourStatus;
+    search?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    minDuration?: number;
+    maxDuration?: number;
+    sortBy?: string;
+    limit?: number;
+    page?: number;
+  }): Promise<[Tour[], number]> {
+    return this.getAll({
+      ...params,
+      isPublic: false,
+    });
+  }
+
   async getAll(params?: {
     categoryId?: string;
     region?: string;
     tourType?: TourType;
     difficulty?: TripDifficulty;
     status?: TourStatus;
+    isPublic?: boolean;
     search?: string;
     minPrice?: number;
     maxPrice?: number;
@@ -54,7 +97,15 @@ export class TourService {
         difficulty: params.difficulty,
       });
     }
-    if (params?.status) {
+    if (params?.isPublic) {
+      if (params?.status && (params.status === TourStatus.ACTIVE || params.status === TourStatus.FEATURED)) {
+        qb.andWhere('tour.status = :status', { status: params.status });
+      } else {
+        qb.andWhere('tour.status IN (:...publicStatuses)', {
+          publicStatuses: [TourStatus.ACTIVE, TourStatus.FEATURED],
+        });
+      }
+    } else if (params?.status) {
       qb.andWhere('tour.status = :status', { status: params.status });
     }
     if (params?.search && params.search.trim()) {
@@ -138,6 +189,14 @@ export class TourService {
 
     if (!item) throw AppError.notFound(`Tour package ${idOrSlug} not found`);
     return this.mediaService.resolveItemMedia(item);
+  }
+
+  async getPublicByIdOrSlug(idOrSlug: string): Promise<Tour> {
+    const item = await this.getByIdOrSlug(idOrSlug);
+    if (item.status !== TourStatus.ACTIVE && item.status !== TourStatus.FEATURED) {
+      throw AppError.notFound(`Tour package ${idOrSlug} not found`);
+    }
+    return item;
   }
 
   async create(dto: CreateTourDto): Promise<Tour> {

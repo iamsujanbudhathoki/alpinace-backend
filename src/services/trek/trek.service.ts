@@ -19,7 +19,7 @@ export class TrekService {
 
   constructor(private mediaService: MediaService = new MediaService()) {}
 
-  async getAll(params?: {
+  async getPublicAll(params?: {
     categoryId?: string;
     region?: string;
     difficulty?: TripDifficulty;
@@ -35,24 +35,62 @@ export class TrekService {
     limit?: number;
     page?: number;
   }): Promise<[Trek[], number]> {
+    return this.getAll({
+      ...params,
+      isPublic: true,
+    });
+  }
+
+  async getAdminAll(params?: {
+    categoryId?: string;
+    region?: string;
+    difficulty?: TripDifficulty;
+    status?: TrekStatus;
+    search?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    minDuration?: number;
+    maxDuration?: number;
+    minAltitude?: number;
+    maxAltitude?: number;
+    sortBy?: string;
+    limit?: number;
+    page?: number;
+  }): Promise<[Trek[], number]> {
+    return this.getAll({
+      ...params,
+      isPublic: false,
+    });
+  }
+
+  async getAll(params?: {
+    categoryId?: string;
+    region?: string;
+    difficulty?: TripDifficulty;
+    status?: TrekStatus;
+    isPublic?: boolean;
+    search?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    minDuration?: number;
+    maxDuration?: number;
+    minAltitude?: number;
+    maxAltitude?: number;
+    sortBy?: string;
+    limit?: number;
+    page?: number;
+  }): Promise<[Trek[], number]> {
     const qb = this.repo.createQueryBuilder('trek');
 
-    if (params?.categoryId && params.categoryId !== 'All') {
-      qb.andWhere('trek.categoryId = :categoryId', {
-        categoryId: params.categoryId,
-      });
-    }
-    if (params?.region && params.region !== 'All') {
-      qb.andWhere('LOWER(trek.region) = LOWER(:region)', {
-        region: params.region,
-      });
-    }
-    if (params?.difficulty && (params.difficulty as any) !== 'All') {
-      qb.andWhere('LOWER(trek.difficulty) = LOWER(:difficulty)', {
-        difficulty: params.difficulty,
-      });
-    }
-    if (params?.status) {
+    if (params?.isPublic) {
+      if (params?.status && (params.status === TrekStatus.ACTIVE || params.status === TrekStatus.FEATURED)) {
+        qb.andWhere('trek.status = :status', { status: params.status });
+      } else {
+        qb.andWhere('trek.status IN (:...publicStatuses)', {
+          publicStatuses: [TrekStatus.ACTIVE, TrekStatus.FEATURED],
+        });
+      }
+    } else if (params?.status) {
       qb.andWhere('trek.status = :status', { status: params.status });
     }
     if (params?.search && params.search.trim()) {
@@ -149,6 +187,14 @@ export class TrekService {
 
     if (!item) throw AppError.notFound(`Trek package ${idOrSlug} not found`);
     return this.mediaService.resolveItemMedia(item);
+  }
+
+  async getPublicByIdOrSlug(idOrSlug: string): Promise<Trek> {
+    const item = await this.getByIdOrSlug(idOrSlug);
+    if (item.status !== TrekStatus.ACTIVE && item.status !== TrekStatus.FEATURED) {
+      throw AppError.notFound(`Trek package ${idOrSlug} not found`);
+    }
+    return item;
   }
 
   async create(dto: CreateTrekDto): Promise<Trek> {

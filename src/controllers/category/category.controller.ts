@@ -4,11 +4,13 @@ import {
   Delete,
   Get,
   Middlewares,
+  NoSecurity,
   Path,
   Post,
   Put,
   Query,
   Route,
+  Security,
   Tags,
 } from 'tsoa';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
@@ -26,6 +28,7 @@ import { paginateResponse } from '../../utils/pageAndLimit';
 
 @Route('categories')
 @Tags('Categories')
+@Security('jwt', ['admin'])
 export class CategoryController extends Controller {
   constructor(
     private categoryService: CategoryService = new CategoryService(),
@@ -34,6 +37,7 @@ export class CategoryController extends Controller {
   }
 
   @Get('')
+  @NoSecurity()
   async getAll(
     @Query() type?: CategoryType,
     @Query() search?: string,
@@ -56,6 +60,7 @@ export class CategoryController extends Controller {
   }
 
   @Get('{id}')
+  @NoSecurity()
   async getById(@Path() id: string): Promise<ApiResponse<Category>> {
     const data = await this.categoryService.getById(id);
     return { data, message: 'Category retrieved successfully', success: true };

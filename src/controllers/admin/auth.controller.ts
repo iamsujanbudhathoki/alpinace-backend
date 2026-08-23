@@ -4,9 +4,11 @@ import {
   Get,
   Header,
   Middlewares,
+  NoSecurity,
   Post,
   Request,
   Route,
+  Security,
   Tags,
 } from 'tsoa';
 import express from 'express';
@@ -20,6 +22,7 @@ import { RequestValidator } from '../../middlewares/validator.middleware';
 import { NotificationService } from '../../services/notification/notification.service';
 import { NotificationType } from '../../entities/notification/Notification.entity';
 import EmailUtil from '../../utils/email.util';
+import { DotenvConfig, Environment } from '../../config/env.config';
 
 async function resolveLocation(ip: string): Promise<string> {
   if (
@@ -57,6 +60,7 @@ async function resolveLocation(ip: string): Promise<string> {
 
 @Route('admin/auth')
 @Tags('Admin Auth System')
+@Security('jwt')
 export class AdminAuthController extends Controller {
   constructor(
     private adminAuthService: AdminAuthService = new AdminAuthService(),
@@ -66,12 +70,24 @@ export class AdminAuthController extends Controller {
   }
 
   @Post('login')
+  @NoSecurity()
   @Middlewares(RequestValidator.validate(AdminAuthSchema))
   async login(
     @Body() body: AdminAuthSchema,
     @Request() req: express.Request,
   ): Promise<ApiResponse<AdminLoginResponse>> {
     const data = await this.adminAuthService.login(body);
+
+    const isProd = DotenvConfig.NODE_ENV === Environment.PRODUCTION;
+    if (req.res) {
+      req.res.cookie('auth_token', data.token, {
+        httpOnly: true,
+        secure: isProd,
+        sameSite: isProd ? 'none' : 'lax',
+        path: '/',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+    }
 
     // Extract IP address
     const rawIp =
@@ -117,15 +133,21 @@ export class AdminAuthController extends Controller {
 
   @Get('me')
   async getCurrentUser(
-    @Header('Authorization') authHeader?: string,
+    @Request() req: express.Request,
   ): Promise<ApiResponse<AdminLoginResponse>> {
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    const authUser = (req as any).user;
+    if (!authUser || !authUser.id) {
       throw AppError.unAuthorized('Unauthorized');
     }
-    const token = authHeader.split(' ')[1];
-    const payload = JwtUtil.verifyToken(token);
-    const admin = await this.adminAuthService.getById(payload.id);
+    const admin = await this.adminAuthService.getById(authUser.id);
     if (!admin) throw AppError.notFound('User not found');
+
+    const cookies = req.cookies || {};
+    let token = cookies.auth_token || cookies.token || '';
+    if (!token && req.headers.authorization) {
+      const header = req.headers.authorization.trim();
+      token = header.startsWith('Bearer ') ? header.slice(7).trim() : header;
+    }
 
     return {
       data: {
@@ -142,7 +164,23 @@ export class AdminAuthController extends Controller {
   }
 
   @Post('logout')
-  async logout(): Promise<ApiResponse<null>> {
+  async logout(@Request() req: express.Request): Promise<ApiResponse<null>> {
+    const isProd = DotenvConfig.NODE_ENV === Environment.PRODUCTION;
+    if (req.res) {
+      req.res.clearCookie('auth_token', {
+        httpOnly: true,
+        secure: isProd,
+        sameSite: isProd ? 'none' : 'lax',
+        path: '/',
+      });
+      req.res.clearCookie('token', {
+        httpOnly: true,
+        secure: isProd,
+        sameSite: isProd ? 'none' : 'lax',
+        path: '/',
+      });
+    }
+
     return {
       data: null,
       message: 'Logged out successfully',

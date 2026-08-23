@@ -7,6 +7,7 @@ import {
   ExpeditionStatus,
 } from '../../entities/expedition/Expedition.entity';
 import { TripDifficulty } from '../../entities/common/difficulty.enum';
+import { TripActivity } from '../../entities/common/activity.enum';
 import {
   Category,
   CategoryType,
@@ -281,6 +282,8 @@ export class ExpeditionService {
       shortDesc: dto.shortDesc,
       image: dto.image,
       coverMediaId: dto.coverMediaId,
+      country: dto.country || 'Nepal',
+      activity: dto.activity || TripActivity.PEAK_CLIMBING,
       bestSeason: dto.bestSeason,
       startEndLocation: dto.startEndLocation,
       accommodation: dto.accommodation,
@@ -341,6 +344,8 @@ export class ExpeditionService {
     if (dto.shortDesc !== undefined) exp.shortDesc = dto.shortDesc;
     if (dto.image !== undefined) exp.image = dto.image;
     if (dto.coverMediaId !== undefined) exp.coverMediaId = dto.coverMediaId;
+    if (dto.country !== undefined) exp.country = dto.country;
+    if (dto.activity !== undefined) exp.activity = dto.activity;
     if (dto.bestSeason !== undefined) exp.bestSeason = dto.bestSeason;
     if (dto.startEndLocation !== undefined)
       exp.startEndLocation = dto.startEndLocation;

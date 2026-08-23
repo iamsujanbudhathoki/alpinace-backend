@@ -12,6 +12,7 @@ import {
 } from 'class-validator';
 import { TrekStatus } from '../entities/trek/Trek.entity';
 import { TripDifficulty } from '../entities/common/difficulty.enum';
+import { TripActivity } from '../entities/common/activity.enum';
 import {
   TripDepartureDateDto,
   TripFaqDto,
@@ -68,6 +69,14 @@ export class CreateTrekDto {
   @IsString()
   @IsNotEmpty({ message: 'Image URL is required' })
   image!: string;
+
+  @IsOptional()
+  @IsString()
+  country?: string;
+
+  @IsOptional()
+  @IsEnum(TripActivity)
+  activity?: TripActivity;
 
   @IsOptional()
   @IsString()
@@ -222,6 +231,14 @@ export class UpdateTrekDto {
   @IsOptional()
   @IsString()
   image?: string;
+
+  @IsOptional()
+  @IsString()
+  country?: string;
+
+  @IsOptional()
+  @IsEnum(TripActivity)
+  activity?: TripActivity;
 
   @IsOptional()
   @IsString()

@@ -3,6 +3,7 @@ import { autoInjectable } from 'tsyringe';
 import { AppDataSource } from '../../config/database.config';
 import { Trek, TrekStatus } from '../../entities/trek/Trek.entity';
 import { TripDifficulty } from '../../entities/common/difficulty.enum';
+import { TripActivity } from '../../entities/common/activity.enum';
 import {
   Category,
   CategoryType,
@@ -234,6 +235,8 @@ export class TrekService {
       shortDesc: dto.shortDesc,
       image: dto.image,
       coverMediaId: dto.coverMediaId,
+      country: dto.country || 'Nepal',
+      activity: dto.activity || TripActivity.TREKKING_HIKING,
       bestSeason: dto.bestSeason,
       startEndLocation: dto.startEndLocation,
       accommodation: dto.accommodation,
@@ -286,6 +289,8 @@ export class TrekService {
     if (dto.shortDesc !== undefined) trek.shortDesc = dto.shortDesc;
     if (dto.image !== undefined) trek.image = dto.image;
     if (dto.coverMediaId !== undefined) trek.coverMediaId = dto.coverMediaId;
+    if (dto.country !== undefined) trek.country = dto.country;
+    if (dto.activity !== undefined) trek.activity = dto.activity;
     if (dto.bestSeason !== undefined) trek.bestSeason = dto.bestSeason;
     if (dto.startEndLocation !== undefined)
       trek.startEndLocation = dto.startEndLocation;

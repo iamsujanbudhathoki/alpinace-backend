@@ -3,6 +3,7 @@ import { autoInjectable } from 'tsyringe';
 import { AppDataSource } from '../../config/database.config';
 import { Tour, TourStatus, TourType } from '../../entities/tour/Tour.entity';
 import { TripDifficulty } from '../../entities/common/difficulty.enum';
+import { TripActivity } from '../../entities/common/activity.enum';
 import {
   Category,
   CategoryType,
@@ -238,6 +239,8 @@ export class TourService {
       shortDesc: dto.shortDesc,
       image: dto.image,
       coverMediaId: dto.coverMediaId,
+      country: dto.country || 'Nepal',
+      activity: dto.activity || TripActivity.CULTURAL_SIGHTSEEING,
       bestSeason: dto.bestSeason,
       startEndLocation: dto.startEndLocation,
       accommodation: dto.accommodation,
@@ -292,6 +295,8 @@ export class TourService {
     if (dto.shortDesc !== undefined) tour.shortDesc = dto.shortDesc;
     if (dto.image !== undefined) tour.image = dto.image;
     if (dto.coverMediaId !== undefined) tour.coverMediaId = dto.coverMediaId;
+    if (dto.country !== undefined) tour.country = dto.country;
+    if (dto.activity !== undefined) tour.activity = dto.activity;
     if (dto.bestSeason !== undefined) tour.bestSeason = dto.bestSeason;
     if (dto.startEndLocation !== undefined)
       tour.startEndLocation = dto.startEndLocation;

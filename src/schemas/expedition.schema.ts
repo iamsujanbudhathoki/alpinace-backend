@@ -16,6 +16,7 @@ import {
   ExpeditionStatus,
 } from '../entities/expedition/Expedition.entity';
 import { TripDifficulty } from '../entities/common/difficulty.enum';
+import { TripActivity } from '../entities/common/activity.enum';
 import {
   TripDepartureDateDto,
   TripFaqDto,
@@ -91,6 +92,14 @@ export class CreateExpeditionDto {
   @IsString()
   @IsNotEmpty({ message: 'Image URL is required' })
   image!: string;
+
+  @IsOptional()
+  @IsString()
+  country?: string;
+
+  @IsOptional()
+  @IsEnum(TripActivity)
+  activity?: TripActivity;
 
   @IsOptional()
   @IsString()
@@ -262,6 +271,14 @@ export class UpdateExpeditionDto {
   @IsOptional()
   @IsString()
   image?: string;
+
+  @IsOptional()
+  @IsString()
+  country?: string;
+
+  @IsOptional()
+  @IsEnum(TripActivity)
+  activity?: TripActivity;
 
   @IsOptional()
   @IsString()

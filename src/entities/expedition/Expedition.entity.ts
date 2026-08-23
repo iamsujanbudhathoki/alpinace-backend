@@ -1,6 +1,7 @@
 import { Column, Entity } from 'typeorm';
 import { CommonEntity } from '../common/common.entity';
 import { TripDifficulty } from '../common/difficulty.enum';
+import { TripActivity } from '../common/activity.enum';
 import {
   TripDepartureDate,
   TripFaq,
@@ -106,6 +107,18 @@ export class Expedition extends CommonEntity {
 
   @Column({ name: 'short_desc', type: 'text' })
   shortDesc: string;
+
+  @Column({ name: 'country', nullable: true, default: 'Nepal' })
+  country: string;
+
+  @Column({
+    name: 'activity',
+    type: 'enum',
+    enum: TripActivity,
+    default: TripActivity.PEAK_CLIMBING,
+    nullable: true,
+  })
+  activity: TripActivity;
 
   @Column({ name: 'best_season', nullable: true })
   bestSeason: string;

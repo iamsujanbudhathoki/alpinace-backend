@@ -3753,6 +3753,9 @@
 					"name": {
 						"type": "string"
 					},
+					"slug": {
+						"type": "string"
+					},
 					"type": {
 						"$ref": "#/components/schemas/CategoryType"
 					},
@@ -3765,6 +3768,7 @@
 				},
 				"required": [
 					"name",
+					"slug",
 					"type",
 					"description",
 					"status"
@@ -3775,6 +3779,9 @@
 			"UpdateCategoryDto": {
 				"properties": {
 					"name": {
+						"type": "string"
+					},
+					"slug": {
 						"type": "string"
 					},
 					"type": {
@@ -4598,6 +4605,22 @@
 				"parameters": [
 					{
 						"in": "query",
+						"name": "category",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "categorySlug",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
 						"name": "categoryId",
 						"required": false,
 						"schema": {
@@ -4783,6 +4806,22 @@
 					}
 				],
 				"parameters": [
+					{
+						"in": "query",
+						"name": "category",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "categorySlug",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"in": "query",
 						"name": "categoryId",
@@ -5068,6 +5107,22 @@
 				"parameters": [
 					{
 						"in": "query",
+						"name": "category",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "categorySlug",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
 						"name": "categoryId",
 						"required": false,
 						"schema": {
@@ -5243,6 +5298,22 @@
 					}
 				],
 				"parameters": [
+					{
+						"in": "query",
+						"name": "category",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "categorySlug",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"in": "query",
 						"name": "categoryId",
@@ -6680,6 +6751,22 @@
 				"parameters": [
 					{
 						"in": "query",
+						"name": "category",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "categorySlug",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
 						"name": "categoryId",
 						"required": false,
 						"schema": {
@@ -6873,6 +6960,22 @@
 					}
 				],
 				"parameters": [
+					{
+						"in": "query",
+						"name": "category",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "categorySlug",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"in": "query",
 						"name": "categoryId",
@@ -7264,9 +7367,9 @@
 				}
 			}
 		},
-		"/categories/{id}": {
+		"/categories/{idOrSlug}": {
 			"get": {
-				"operationId": "GetById",
+				"operationId": "GetByIdOrSlug",
 				"responses": {
 					"200": {
 						"description": "Ok",
@@ -7286,14 +7389,16 @@
 				"parameters": [
 					{
 						"in": "path",
-						"name": "id",
+						"name": "idOrSlug",
 						"required": true,
 						"schema": {
 							"type": "string"
 						}
 					}
 				]
-			},
+			}
+		},
+		"/categories/{id}": {
 			"put": {
 				"operationId": "Update",
 				"responses": {

@@ -59,10 +59,10 @@ export class CategoryController extends Controller {
     };
   }
 
-  @Get('{id}')
+  @Get('{idOrSlug}')
   @NoSecurity()
-  async getById(@Path() id: string): Promise<ApiResponse<Category>> {
-    const data = await this.categoryService.getById(id);
+  async getByIdOrSlug(@Path() idOrSlug: string): Promise<ApiResponse<Category>> {
+    const data = await this.categoryService.getByIdOrSlug(idOrSlug);
     return { data, message: 'Category retrieved successfully', success: true };
   }
 

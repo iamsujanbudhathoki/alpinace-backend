@@ -35,6 +35,8 @@ export class TourController extends Controller {
   @Get('')
   @NoSecurity()
   async getAll(
+    @Query() category?: string,
+    @Query() categorySlug?: string,
     @Query() categoryId?: string,
     @Query() region?: string,
     @Query() tourType?: TourType,
@@ -50,6 +52,8 @@ export class TourController extends Controller {
     @Query() page?: number,
   ): Promise<ApiResponse<Tour[]>> {
     const dataTotalCount = await this.tourService.getPublicAll({
+      category,
+      categorySlug,
       categoryId,
       region,
       tourType,
@@ -73,6 +77,8 @@ export class TourController extends Controller {
    */
   @Get('admin')
   async getAdminAll(
+    @Query() category?: string,
+    @Query() categorySlug?: string,
     @Query() categoryId?: string,
     @Query() region?: string,
     @Query() tourType?: TourType,
@@ -88,6 +94,8 @@ export class TourController extends Controller {
     @Query() page?: number,
   ): Promise<ApiResponse<Tour[]>> {
     const dataTotalCount = await this.tourService.getAdminAll({
+      category,
+      categorySlug,
       categoryId,
       region,
       tourType,

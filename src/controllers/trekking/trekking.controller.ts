@@ -35,6 +35,8 @@ export class TrekkingController extends Controller {
   @Get('')
   @NoSecurity()
   async getAll(
+    @Query() category?: string,
+    @Query() categorySlug?: string,
     @Query() categoryId?: string,
     @Query() region?: string,
     @Query() difficulty?: TripDifficulty,
@@ -51,6 +53,8 @@ export class TrekkingController extends Controller {
     @Query() page?: number,
   ): Promise<ApiResponse<Trek[]>> {
     const dataTotalCount = await this.trekService.getPublicAll({
+      category,
+      categorySlug,
       categoryId,
       region,
       difficulty,
@@ -80,6 +84,8 @@ export class TrekkingController extends Controller {
    */
   @Get('admin')
   async getAdminAll(
+    @Query() category?: string,
+    @Query() categorySlug?: string,
     @Query() categoryId?: string,
     @Query() region?: string,
     @Query() difficulty?: TripDifficulty,
@@ -96,6 +102,8 @@ export class TrekkingController extends Controller {
     @Query() page?: number,
   ): Promise<ApiResponse<Trek[]>> {
     const dataTotalCount = await this.trekService.getAdminAll({
+      category,
+      categorySlug,
       categoryId,
       region,
       difficulty,

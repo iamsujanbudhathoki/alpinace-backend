@@ -28,6 +28,8 @@ export class ExpeditionService {
   constructor(private mediaService: MediaService = new MediaService()) {}
 
   async getPublicAll(params?: {
+    category?: string;
+    categorySlug?: string;
     categoryId?: string;
     region?: string;
     difficulty?: TripDifficulty;
@@ -51,6 +53,8 @@ export class ExpeditionService {
   }
 
   async getAdminAll(params?: {
+    category?: string;
+    categorySlug?: string;
     categoryId?: string;
     region?: string;
     difficulty?: TripDifficulty;
@@ -74,6 +78,8 @@ export class ExpeditionService {
   }
 
   async getAll(params?: {
+    category?: string;
+    categorySlug?: string;
     categoryId?: string;
     region?: string;
     difficulty?: TripDifficulty;
@@ -93,10 +99,25 @@ export class ExpeditionService {
   }): Promise<[Expedition[], number]> {
     const qb = this.repo.createQueryBuilder('exp');
 
-    if (params?.categoryId && params.categoryId !== 'All') {
-      qb.andWhere('exp.categoryId = :categoryId', {
-        categoryId: params.categoryId,
-      });
+    const catParam = params?.categorySlug || params?.category || params?.categoryId;
+    if (catParam && catParam !== 'All') {
+      const isUuid =
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+          catParam,
+        );
+      let catEntity: Category | null = null;
+      if (isUuid) {
+        catEntity = await this.categoryRepo.findOne({ where: { id: catParam } });
+      }
+      if (!catEntity) {
+        catEntity = await this.categoryRepo.findOne({ where: { slug: catParam } });
+      }
+
+      if (catEntity) {
+        qb.andWhere('exp.categoryId = :catId', { catId: catEntity.id });
+      } else {
+        qb.andWhere('exp.categoryId = :catParam', { catParam });
+      }
     }
     if (params?.region && params.region !== 'All') {
       qb.andWhere('LOWER(exp.region) = LOWER(:region)', {
@@ -444,7 +465,7 @@ export class ExpeditionService {
       { label: 'All Categories', value: 'All' },
       ...dbCategories.map((c) => ({
         label: c.name,
-        value: c.id,
+        value: c.slug || c.id,
         id: c.id,
         name: c.name,
         slug: c.slug,

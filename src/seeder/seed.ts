@@ -38,11 +38,28 @@ export const seedDatabase = async () => {
   }
   console.log('Database initialized for seeding...');
 
-  // 1. Seed Categories
+  // 1. Seed Categories & Ensure Slugs
   const categoryRepo = AppDataSource.getRepository(Category);
+
+  // Migration/repair check: ensure all existing category records in DB have valid unique slugs
+  const existingDbCategories = await categoryRepo.find();
+  for (const cat of existingDbCategories) {
+    if (!cat.slug || !cat.slug.trim()) {
+      let slug = cat.name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+      if (!slug) slug = `category-${cat.id}`;
+      const collision = await categoryRepo.findOne({ where: { slug } });
+      if (collision && collision.id !== cat.id) {
+        slug = `${slug}-${cat.id.slice(0, 4)}`;
+      }
+      cat.slug = slug;
+      await categoryRepo.save(cat);
+    }
+  }
+
   const categoriesData = [
     {
       name: 'Everest & Khumbu Region',
+      slug: 'everest-khumbu-region',
       type: CategoryType.TREKKING,
       description:
         'Trekking packages navigating the iconic Khumbu valley, Lukla, Namche Bazaar, and Everest Base Camp.',
@@ -51,6 +68,7 @@ export const seedDatabase = async () => {
     },
     {
       name: '8000m Technical Expeditions',
+      slug: '8000m-technical-expeditions',
       type: CategoryType.EXPEDITIONS,
       description:
         'Extreme high-altitude peak climbs requiring IFMGA guide ratios, oxygen systems, and fixed-line logistics.',
@@ -59,6 +77,7 @@ export const seedDatabase = async () => {
     },
     {
       name: 'UNESCO Heritage & Resorts',
+      slug: 'unesco-heritage-resorts',
       type: CategoryType.TOURS,
       description:
         'Cultural sightseeing, boutique heritage hotels, and luxury Pokhara resort stays.',
@@ -67,6 +86,7 @@ export const seedDatabase = async () => {
     },
     {
       name: 'High Altitude Physiology & Safety',
+      slug: 'high-altitude-physiology-safety',
       type: CategoryType.BLOGS,
       description:
         'Expert guide insights on AMS prevention, acclimatization schedules, and mountain wellness.',
@@ -75,6 +95,7 @@ export const seedDatabase = async () => {
     },
     {
       name: 'Helicopter Charter Photography',
+      slug: 'helicopter-charter-photography',
       type: CategoryType.MEDIA,
       description:
         'Aerial mountain imagery, heli-tour photography, and high-resolution marketing banners.',
@@ -83,6 +104,7 @@ export const seedDatabase = async () => {
     },
     {
       name: 'Annapurna Sanctuary Circuit',
+      slug: 'annapurna-sanctuary-circuit',
       type: CategoryType.TREKKING,
       description:
         'Traversing Thorong La pass, Poon Hill sunrises, and Annapurna Base Camp.',
@@ -91,6 +113,7 @@ export const seedDatabase = async () => {
     },
     {
       name: 'Langtang & Sacred Lakes',
+      slug: 'langtang-sacred-lakes',
       type: CategoryType.TREKKING,
       description:
         'Pristine rhododendron forests, Tamang mountain heritage, and Gosaikunda glacier-fed lakes.',
@@ -99,6 +122,7 @@ export const seedDatabase = async () => {
     },
     {
       name: 'Manaslu Restricted Circuit',
+      slug: 'manaslu-restricted-circuit',
       type: CategoryType.TREKKING,
       description:
         'Circumnavigating Mt. Manaslu (8,163m) across Larkya La pass in restricted wilderness.',
@@ -108,9 +132,9 @@ export const seedDatabase = async () => {
   ];
 
   for (const cat of categoriesData) {
-    const slug = cat.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const slug = cat.slug || cat.name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
     const exists = await categoryRepo.findOne({
-      where: { slug },
+      where: [{ slug }, { name: cat.name }],
       withDeleted: true,
     });
     if (!exists) {

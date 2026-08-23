@@ -148,11 +148,10 @@ export class MediaService {
       .createQueryBuilder('media')
       .leftJoinAndSelect('media.category', 'category');
 
-    if (params?.categoryId && params.categoryId !== 'All') {
-      qb.andWhere('media.categoryId = :categoryId', { categoryId: params.categoryId });
-    } else if (params?.category && params.category !== 'All') {
-      qb.andWhere('(category.name = :category OR media.categoryId = :category)', {
-        category: params.category,
+    const catParam = params?.categoryId && params.categoryId !== 'All' ? params.categoryId : params?.category && params.category !== 'All' ? params.category : undefined;
+    if (catParam) {
+      qb.andWhere('(category.id = :catParam OR category.slug = :catParam OR category.name = :catParam OR media.categoryId = :catParam)', {
+        catParam,
       });
     }
 

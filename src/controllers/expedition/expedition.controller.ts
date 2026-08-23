@@ -44,6 +44,8 @@ export class ExpeditionController extends Controller {
   @Get('')
   @NoSecurity()
   async getAll(
+    @Query() category?: string,
+    @Query() categorySlug?: string,
     @Query() categoryId?: string,
     @Query() region?: string,
     @Query() difficulty?: TripDifficulty,
@@ -61,6 +63,8 @@ export class ExpeditionController extends Controller {
     @Query() page?: number,
   ): Promise<ApiResponse<Expedition[]>> {
     const dataTotalCount = await this.expeditionService.getPublicAll({
+      category,
+      categorySlug,
       categoryId,
       region,
       difficulty,
@@ -91,6 +95,8 @@ export class ExpeditionController extends Controller {
    */
   @Get('admin')
   async getAdminAll(
+    @Query() category?: string,
+    @Query() categorySlug?: string,
     @Query() categoryId?: string,
     @Query() region?: string,
     @Query() difficulty?: TripDifficulty,
@@ -108,6 +114,8 @@ export class ExpeditionController extends Controller {
     @Query() page?: number,
   ): Promise<ApiResponse<Expedition[]>> {
     const dataTotalCount = await this.expeditionService.getAdminAll({
+      category,
+      categorySlug,
       categoryId,
       region,
       difficulty,

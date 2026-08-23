@@ -21,6 +21,8 @@ export class TourService {
   constructor(private mediaService: MediaService = new MediaService()) {}
 
   async getPublicAll(params?: {
+    category?: string;
+    categorySlug?: string;
     categoryId?: string;
     region?: string;
     tourType?: TourType;
@@ -42,6 +44,8 @@ export class TourService {
   }
 
   async getAdminAll(params?: {
+    category?: string;
+    categorySlug?: string;
     categoryId?: string;
     region?: string;
     tourType?: TourType;
@@ -63,6 +67,8 @@ export class TourService {
   }
 
   async getAll(params?: {
+    category?: string;
+    categorySlug?: string;
     categoryId?: string;
     region?: string;
     tourType?: TourType;
@@ -80,10 +86,25 @@ export class TourService {
   }): Promise<[Tour[], number]> {
     const qb = this.repo.createQueryBuilder('tour');
 
-    if (params?.categoryId && params.categoryId !== 'All') {
-      qb.andWhere('tour.categoryId = :categoryId', {
-        categoryId: params.categoryId,
-      });
+    const catParam = params?.categorySlug || params?.category || params?.categoryId;
+    if (catParam && catParam !== 'All') {
+      const isUuid =
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+          catParam,
+        );
+      let catEntity: Category | null = null;
+      if (isUuid) {
+        catEntity = await this.categoryRepo.findOne({ where: { id: catParam } });
+      }
+      if (!catEntity) {
+        catEntity = await this.categoryRepo.findOne({ where: { slug: catParam } });
+      }
+
+      if (catEntity) {
+        qb.andWhere('tour.categoryId = :catId', { catId: catEntity.id });
+      } else {
+        qb.andWhere('tour.categoryId = :catParam', { catParam });
+      }
     }
     if (params?.region && params.region !== 'All') {
       qb.andWhere('LOWER(tour.region) = LOWER(:region)', {
@@ -388,7 +409,7 @@ export class TourService {
       { label: 'All Categories', value: 'All' },
       ...dbCategories.map((c) => ({
         label: c.name,
-        value: c.id,
+        value: c.slug || c.id,
         id: c.id,
         name: c.name,
         slug: c.slug,

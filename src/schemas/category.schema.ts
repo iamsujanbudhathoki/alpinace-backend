@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsString, Matches } from 'class-validator';
 import {
   CategoryStatus,
   CategoryType,
@@ -8,6 +8,13 @@ export class CreateCategoryDto {
   @IsString()
   @IsNotEmpty({ message: 'Category name is required' })
   name!: string;
+
+  @IsString()
+  @IsNotEmpty({ message: 'Category slug is required' })
+  @Matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
+    message: 'Slug must contain only lowercase letters, numbers, and hyphens (e.g. everest-region)',
+  })
+  slug!: string;
 
   @IsEnum(CategoryType, { message: 'Invalid category type' })
   @IsNotEmpty({ message: 'Category type is required' })
@@ -28,6 +35,13 @@ export class UpdateCategoryDto {
   name?: string;
 
   @IsOptional()
+  @IsString()
+  @Matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
+    message: 'Slug must contain only lowercase letters, numbers, and hyphens (e.g. everest-region)',
+  })
+  slug?: string;
+
+  @IsOptional()
   @IsEnum(CategoryType)
   type?: CategoryType;
 
@@ -39,3 +53,4 @@ export class UpdateCategoryDto {
   @IsEnum(CategoryStatus)
   status?: CategoryStatus;
 }
+

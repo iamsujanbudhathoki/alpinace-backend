@@ -60,17 +60,43 @@ export class CategoryService {
     return item;
   }
 
+  async getByIdOrSlug(idOrSlug: string): Promise<Category> {
+    const isUuid =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+        idOrSlug,
+      );
+
+    let item: Category | null = null;
+    if (isUuid) {
+      item = await this.repo.findOne({ where: { id: idOrSlug } });
+    }
+    if (!item) {
+      item = await this.repo.findOne({ where: { slug: idOrSlug } });
+    }
+
+    if (!item) throw AppError.notFound(`Category '${idOrSlug}' not found`);
+    return item;
+  }
+
   async create(dto: CreateCategoryDto): Promise<Category> {
-    const slug = dto.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-    const existing = await this.repo.findOne({ where: { slug } });
-    if (existing)
+    const rawSlug = dto.slug || dto.name;
+    const slug = rawSlug.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+
+    const existingSlug = await this.repo.findOne({ where: { slug } });
+    if (existingSlug) {
+      throw AppError.alreadyExists('Category with this slug already exists');
+    }
+
+    const existingName = await this.repo.findOne({ where: { name: dto.name.trim() } });
+    if (existingName) {
       throw AppError.alreadyExists('Category with this name already exists');
+    }
 
     const category = this.repo.create({
-      name: dto.name,
+      name: dto.name.trim(),
       slug,
       type: dto.type,
-      description: dto.description,
+      description: dto.description.trim(),
       status: dto.status,
       itemCount: 0,
     });
@@ -80,12 +106,28 @@ export class CategoryService {
   async update(id: string, dto: UpdateCategoryDto): Promise<Category> {
     const category = await this.getById(id);
 
-    if (dto.name && dto.name !== category.name) {
-      category.name = dto.name;
-      category.slug = dto.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    if (dto.slug !== undefined) {
+      const newSlug = dto.slug.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+      if (newSlug !== category.slug) {
+        const existingSlug = await this.repo.findOne({ where: { slug: newSlug } });
+        if (existingSlug && existingSlug.id !== id) {
+          throw AppError.alreadyExists('Category with this slug already exists');
+        }
+        category.slug = newSlug;
+      }
     }
+
+    if (dto.name !== undefined && dto.name.trim() !== category.name) {
+      const trimmedName = dto.name.trim();
+      const existingName = await this.repo.findOne({ where: { name: trimmedName } });
+      if (existingName && existingName.id !== id) {
+        throw AppError.alreadyExists('Category with this name already exists');
+      }
+      category.name = trimmedName;
+    }
+
     if (dto.type) category.type = dto.type;
-    if (dto.description !== undefined) category.description = dto.description;
+    if (dto.description !== undefined) category.description = dto.description.trim();
     if (dto.status) category.status = dto.status;
 
     return this.repo.save(category);

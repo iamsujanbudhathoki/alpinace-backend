@@ -66,23 +66,28 @@ export class BlogService {
       qb.andWhere('blog.status = :status', { status });
     }
 
-    if (categoryId && categoryId !== 'All') {
+    const catParam = categoryId !== 'All' ? categoryId : category !== 'All' ? category : undefined;
+    if (catParam) {
       const isUuid =
         /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-          categoryId,
+          catParam,
         );
+      let catEntity: Category | null = null;
       if (isUuid) {
-        const catEntity = await this.categoryRepo.findOne({
-          where: { id: categoryId },
-        });
-        if (catEntity) {
-          qb.andWhere('blog.category = :categoryName', {
-            categoryName: catEntity.name,
-          });
-        }
+        catEntity = await this.categoryRepo.findOne({ where: { id: catParam } });
       }
-    } else if (category && category !== 'All') {
-      qb.andWhere('blog.category = :category', { category });
+      if (!catEntity) {
+        catEntity = await this.categoryRepo.findOne({ where: { slug: catParam } });
+      }
+
+      if (catEntity) {
+        qb.andWhere('(blog.category = :catName OR LOWER(blog.category) = LOWER(:catSlug))', {
+          catName: catEntity.name,
+          catSlug: catEntity.slug,
+        });
+      } else {
+        qb.andWhere('blog.category = :catParam', { catParam });
+      }
     }
 
     if (search && search.trim() !== '') {

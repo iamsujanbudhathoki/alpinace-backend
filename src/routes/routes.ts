@@ -1308,6 +1308,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "name": {"dataType":"string","required":true},
+            "slug": {"dataType":"string","required":true},
             "type": {"ref":"CategoryType","required":true},
             "description": {"dataType":"string","required":true},
             "status": {"ref":"CategoryStatus","required":true},
@@ -1319,6 +1320,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "name": {"dataType":"string"},
+            "slug": {"dataType":"string"},
             "type": {"ref":"CategoryType"},
             "description": {"dataType":"string"},
             "status": {"ref":"CategoryStatus"},
@@ -1626,6 +1628,8 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
     
         const argsTrekkingController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
+                category: {"in":"query","name":"category","dataType":"string"},
+                categorySlug: {"in":"query","name":"categorySlug","dataType":"string"},
                 categoryId: {"in":"query","name":"categoryId","dataType":"string"},
                 region: {"in":"query","name":"region","dataType":"string"},
                 difficulty: {"in":"query","name":"difficulty","ref":"TripDifficulty"},
@@ -1669,6 +1673,8 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsTrekkingController_getAdminAll: Record<string, TsoaRoute.ParameterSchema> = {
+                category: {"in":"query","name":"category","dataType":"string"},
+                categorySlug: {"in":"query","name":"categorySlug","dataType":"string"},
                 categoryId: {"in":"query","name":"categoryId","dataType":"string"},
                 region: {"in":"query","name":"region","dataType":"string"},
                 difficulty: {"in":"query","name":"difficulty","ref":"TripDifficulty"},
@@ -1866,6 +1872,8 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsTourController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
+                category: {"in":"query","name":"category","dataType":"string"},
+                categorySlug: {"in":"query","name":"categorySlug","dataType":"string"},
                 categoryId: {"in":"query","name":"categoryId","dataType":"string"},
                 region: {"in":"query","name":"region","dataType":"string"},
                 tourType: {"in":"query","name":"tourType","ref":"TourType"},
@@ -1908,6 +1916,8 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsTourController_getAdminAll: Record<string, TsoaRoute.ParameterSchema> = {
+                category: {"in":"query","name":"category","dataType":"string"},
+                categorySlug: {"in":"query","name":"categorySlug","dataType":"string"},
                 categoryId: {"in":"query","name":"categoryId","dataType":"string"},
                 region: {"in":"query","name":"region","dataType":"string"},
                 tourType: {"in":"query","name":"tourType","ref":"TourType"},
@@ -3016,6 +3026,8 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsExpeditionController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
+                category: {"in":"query","name":"category","dataType":"string"},
+                categorySlug: {"in":"query","name":"categorySlug","dataType":"string"},
                 categoryId: {"in":"query","name":"categoryId","dataType":"string"},
                 region: {"in":"query","name":"region","dataType":"string"},
                 difficulty: {"in":"query","name":"difficulty","ref":"TripDifficulty"},
@@ -3060,6 +3072,8 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsExpeditionController_getAdminAll: Record<string, TsoaRoute.ParameterSchema> = {
+                category: {"in":"query","name":"category","dataType":"string"},
+                categorySlug: {"in":"query","name":"categorySlug","dataType":"string"},
                 categoryId: {"in":"query","name":"categoryId","dataType":"string"},
                 region: {"in":"query","name":"region","dataType":"string"},
                 difficulty: {"in":"query","name":"difficulty","ref":"TripDifficulty"},
@@ -3320,25 +3334,25 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsCategoryController_getById: Record<string, TsoaRoute.ParameterSchema> = {
-                id: {"in":"path","name":"id","required":true,"dataType":"string"},
+        const argsCategoryController_getByIdOrSlug: Record<string, TsoaRoute.ParameterSchema> = {
+                idOrSlug: {"in":"path","name":"idOrSlug","required":true,"dataType":"string"},
         };
-        app.get('/categories/:id',
+        app.get('/categories/:idOrSlug',
             ...(fetchMiddlewares<RequestHandler>(CategoryController)),
-            ...(fetchMiddlewares<RequestHandler>(CategoryController.prototype.getById)),
+            ...(fetchMiddlewares<RequestHandler>(CategoryController.prototype.getByIdOrSlug)),
 
-            async function CategoryController_getById(request: ExRequest, response: ExResponse, next: any) {
+            async function CategoryController_getByIdOrSlug(request: ExRequest, response: ExResponse, next: any) {
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsCategoryController_getById, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsCategoryController_getByIdOrSlug, request, response });
 
                 const controller = new CategoryController();
 
               await templateService.apiHandler({
-                methodName: 'getById',
+                methodName: 'getByIdOrSlug',
                 controller,
                 response,
                 next,

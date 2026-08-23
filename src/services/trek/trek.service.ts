@@ -116,9 +116,20 @@ export class TrekService {
       }
 
       if (catEntity) {
-        qb.andWhere('trek.categoryId = :catId', { catId: catEntity.id });
+        const slugKeyword = catEntity.slug.split('-')[0];
+        qb.andWhere(
+          '(trek.categoryId = :catId OR LOWER(trek.region) LIKE :catKw OR LOWER(trek.title) LIKE :catKw)',
+          {
+            catId: catEntity.id,
+            catKw: `%${slugKeyword}%`,
+          },
+        );
       } else {
-        qb.andWhere('trek.categoryId = :catParam', { catParam });
+        const slugKeyword = catParam.split('-')[0];
+        qb.andWhere('(trek.categoryId = :catParam OR LOWER(trek.region) LIKE :catKw)', {
+          catParam,
+          catKw: `%${slugKeyword}%`,
+        });
       }
     }
     if (params?.search && params.search.trim()) {

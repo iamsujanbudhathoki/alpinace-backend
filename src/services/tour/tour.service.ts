@@ -101,9 +101,13 @@ export class TourService {
       }
 
       if (catEntity) {
-        qb.andWhere('tour.categoryId = :catId', { catId: catEntity.id });
+        qb.andWhere('(tour.categoryId = :catId OR tour.categoryId IS NULL)', { catId: catEntity.id });
       } else {
-        qb.andWhere('tour.categoryId = :catParam', { catParam });
+        const slugKeyword = catParam.split('-')[0];
+        qb.andWhere('(tour.categoryId = :catParam OR LOWER(tour.region) LIKE :catKw OR LOWER(tour.title) LIKE :catKw)', {
+          catParam,
+          catKw: `%${slugKeyword}%`,
+        });
       }
     }
     if (params?.region && params.region !== 'All') {

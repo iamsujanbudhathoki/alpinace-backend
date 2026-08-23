@@ -114,9 +114,13 @@ export class ExpeditionService {
       }
 
       if (catEntity) {
-        qb.andWhere('exp.categoryId = :catId', { catId: catEntity.id });
+        qb.andWhere('(exp.categoryId = :catId OR exp.categoryId IS NULL)', { catId: catEntity.id });
       } else {
-        qb.andWhere('exp.categoryId = :catParam', { catParam });
+        const slugKeyword = catParam.split('-')[0];
+        qb.andWhere('(exp.categoryId = :catParam OR LOWER(exp.region) LIKE :catKw OR LOWER(exp.title) LIKE :catKw)', {
+          catParam,
+          catKw: `%${slugKeyword}%`,
+        });
       }
     }
     if (params?.region && params.region !== 'All') {

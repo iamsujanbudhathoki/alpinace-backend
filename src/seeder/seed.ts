@@ -688,14 +688,40 @@ export const seedDatabase = async () => {
     },
   ];
 
+  const allDbCats = await categoryRepo.find();
+  const catSlugMap = new Map<string, string>();
+  allDbCats.forEach((c) => {
+    catSlugMap.set(c.slug, c.id);
+    catSlugMap.set(c.name.toLowerCase(), c.id);
+  });
+
+  const getTrekCategoryId = (region: string, title: string = '') => {
+    const r = (region + ' ' + title).toLowerCase();
+    if (r.includes('everest') || r.includes('khumbu')) return catSlugMap.get('everest-khumbu-region');
+    if (r.includes('annapurna')) return catSlugMap.get('annapurna-sanctuary-circuit');
+    if (r.includes('langtang')) return catSlugMap.get('langtang-sacred-lakes');
+    if (r.includes('manaslu')) return catSlugMap.get('manaslu-restricted-circuit');
+    return allDbCats.find((c) => c.type === CategoryType.TREKKING)?.id;
+  };
+
+  const getTourCategoryId = () => {
+    return catSlugMap.get('unesco-heritage-resorts') || allDbCats.find((c) => c.type === CategoryType.TOURS)?.id;
+  };
+
+  const getExpeditionCategoryId = () => {
+    return catSlugMap.get('8000m-technical-expeditions') || allDbCats.find((c) => c.type === CategoryType.EXPEDITIONS)?.id;
+  };
+
   for (const t of treksData) {
+    const catId = getTrekCategoryId(t.region, t.title);
     const exists = await trekRepo.findOne({
       where: { slug: t.slug },
       withDeleted: true,
     });
     if (!exists) {
-      await trekRepo.save(trekRepo.create(t));
+      await trekRepo.save(trekRepo.create({ ...t, categoryId: catId }));
     } else {
+      if (catId && !exists.categoryId) exists.categoryId = catId;
       exists.faqs = t.faqs;
       exists.reviews = t.reviews;
       exists.coverMediaId = t.coverMediaId;
@@ -708,7 +734,19 @@ export const seedDatabase = async () => {
       await trekRepo.save(exists);
     }
   }
-  console.log('Seeded treks');
+
+  // Repair existing DB treks missing categoryId
+  const existingDbTreks = await trekRepo.find();
+  for (const trek of existingDbTreks) {
+    if (!trek.categoryId) {
+      const catId = getTrekCategoryId(trek.region, trek.title);
+      if (catId) {
+        trek.categoryId = catId;
+        await trekRepo.save(trek);
+      }
+    }
+  }
+  console.log('Seeded and linked treks');
 
   // 4. Seed Tours
   const tourRepo = AppDataSource.getRepository(Tour);
@@ -901,13 +939,15 @@ export const seedDatabase = async () => {
   ];
 
   for (const tr of toursData) {
+    const catId = getTourCategoryId();
     const exists = await tourRepo.findOne({
       where: { slug: tr.slug },
       withDeleted: true,
     });
     if (!exists) {
-      await tourRepo.save(tourRepo.create(tr));
+      await tourRepo.save(tourRepo.create({ ...tr, categoryId: catId }));
     } else {
+      if (catId && !exists.categoryId) exists.categoryId = catId;
       exists.faqs = tr.faqs;
       exists.reviews = tr.reviews;
       exists.coverMediaId = tr.coverMediaId;
@@ -917,7 +957,19 @@ export const seedDatabase = async () => {
       await tourRepo.save(exists);
     }
   }
-  console.log('Seeded tours');
+
+  // Repair existing DB tours missing categoryId
+  const existingDbTours = await tourRepo.find();
+  for (const tour of existingDbTours) {
+    if (!tour.categoryId) {
+      const catId = getTourCategoryId();
+      if (catId) {
+        tour.categoryId = catId;
+        await tourRepo.save(tour);
+      }
+    }
+  }
+  console.log('Seeded and linked tours');
 
   // 5. Seed Expeditions
   const expeditionRepo = AppDataSource.getRepository(Expedition);
@@ -1128,13 +1180,15 @@ export const seedDatabase = async () => {
   ];
 
   for (const exp of expeditionsData) {
+    const catId = getExpeditionCategoryId();
     const exists = await expeditionRepo.findOne({
       where: { slug: exp.slug },
       withDeleted: true,
     });
     if (!exists) {
-      await expeditionRepo.save(expeditionRepo.create(exp));
+      await expeditionRepo.save(expeditionRepo.create({ ...exp, categoryId: catId }));
     } else {
+      if (catId && !exists.categoryId) exists.categoryId = catId;
       exists.faqs = exp.faqs;
       exists.reviews = exp.reviews;
       exists.coverMediaId = exp.coverMediaId;
@@ -1144,7 +1198,19 @@ export const seedDatabase = async () => {
       await expeditionRepo.save(exists);
     }
   }
-  console.log('Seeded expeditions');
+
+  // Repair existing DB expeditions missing categoryId
+  const existingDbExpeditions = await expeditionRepo.find();
+  for (const exp of existingDbExpeditions) {
+    if (!exp.categoryId) {
+      const catId = getExpeditionCategoryId();
+      if (catId) {
+        exp.categoryId = catId;
+        await expeditionRepo.save(exp);
+      }
+    }
+  }
+  console.log('Seeded and linked expeditions');
 
   // 6. Seed Guides
   const guideRepo = AppDataSource.getRepository(Guide);

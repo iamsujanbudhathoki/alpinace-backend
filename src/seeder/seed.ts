@@ -1870,7 +1870,6 @@ export const seedDatabase = async () => {
     { key: 'homeStats', value: JSON.stringify(homeStats) },
     { key: 'companyFaqs', value: JSON.stringify(companyFaqs) },
     { key: 'testimonials', value: JSON.stringify(testimonials) },
-    { key: 'currency', value: 'USD' },
   ];
 
   for (const s of defaultSettings) {

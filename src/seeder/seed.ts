@@ -1822,7 +1822,7 @@ export const seedDatabase = async () => {
   ];
 
   const defaultSettings = [
-    { key: 'siteName', value: 'AlpineAce Expeditions' },
+    { key: 'siteName', value: 'AlpineAce' },
     { key: 'tagline', value: 'Venture Beyond the Ordinary' },
     {
       key: 'siteTitle',

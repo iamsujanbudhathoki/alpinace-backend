@@ -44,6 +44,11 @@ export class SettingService {
     const mediaRepo = AppDataSource.getRepository(Media);
 
     for (const s of settings) {
+      if (s.key === 'currency') {
+        delete map.currency;
+        await this.repo.delete({ key: 'currency' });
+        continue;
+      }
       if (s.key === 'testimonials' && s.value) {
         try {
           const list = JSON.parse(s.value);
@@ -70,6 +75,8 @@ export class SettingService {
       }
       map[s.key] = s.value;
     }
+
+    delete map.currency;
 
     return map;
   }

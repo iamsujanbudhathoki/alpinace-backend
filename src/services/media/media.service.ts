@@ -1,5 +1,6 @@
 import { In } from 'typeorm';
 import { autoInjectable } from 'tsyringe';
+import { isUUID } from 'class-validator';
 import { AppDataSource } from '../../config/database.config';
 import { Media } from '../../entities/media/media.entity';
 import { MediaType } from '../../constants/appConstant';
@@ -263,7 +264,7 @@ export class MediaService {
 
   async resolveMediaById(id: string): Promise<MediaUploadResult | null> {
     if (!id) return null;
-    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+    const isUuid = isUUID(id);
     let media: Media | null = null;
     if (isUuid) {
       media = await this.mediaRepo.findOne({ where: { id }, relations: ['category'] });
@@ -294,9 +295,7 @@ export class MediaService {
     const validIds = ids.filter(Boolean);
     if (validIds.length === 0) return map;
 
-    const uuids = validIds.filter((id) =>
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id),
-    );
+    const uuids = validIds.filter((id) => isUUID(id));
     if (uuids.length > 0) {
       const records = await this.mediaRepo.find({ where: { id: In(uuids) }, relations: ['category'] });
       for (const m of records) {

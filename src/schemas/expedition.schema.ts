@@ -187,11 +187,11 @@ export class CreateExpeditionDto {
 
   @IsOptional()
   @IsString()
-  coverMediaId?: string;
+  coverMediaId?: string | null;
 
   @IsOptional()
   @IsString()
-  mapMediaId?: string;
+  mapMediaId?: string | null;
 
   @IsOptional()
   @IsArray()
@@ -366,11 +366,11 @@ export class UpdateExpeditionDto {
 
   @IsOptional()
   @IsString()
-  coverMediaId?: string;
+  coverMediaId?: string | null;
 
   @IsOptional()
   @IsString()
-  mapMediaId?: string;
+  mapMediaId?: string | null;
 
   @IsOptional()
   @IsArray()

@@ -1,4 +1,5 @@
 import { autoInjectable } from 'tsyringe';
+import { isUUID } from 'class-validator';
 import { AppDataSource } from '../../config/database.config';
 import {
   Category,
@@ -48,30 +49,43 @@ export class CategoryService {
   }
 
   async getByType(type: CategoryType): Promise<Category[]> {
-    return this.repo.find({
+    const all = await this.repo.find({
       where: { type, status: CategoryStatus.ACTIVE },
       order: { name: 'ASC' },
+    });
+
+    const parents = all.filter((c) => !c.parentId);
+    const childrenMap = new Map<string, Category[]>();
+
+    all.forEach((c) => {
+      if (c.parentId) {
+        const list = childrenMap.get(c.parentId) || [];
+        list.push(c);
+        childrenMap.set(c.parentId, list);
+      }
+    });
+
+    return parents.map((p) => {
+      p.children = childrenMap.get(p.id) || [];
+      return p;
     });
   }
 
   async getById(id: string): Promise<Category> {
-    const item = await this.repo.findOne({ where: { id } });
+    const item = await this.repo.findOne({ where: { id }, relations: ['children', 'parent'] });
     if (!item) throw AppError.notFound(`Category with ID ${id} not found`);
     return item;
   }
 
   async getByIdOrSlug(idOrSlug: string): Promise<Category> {
-    const isUuid =
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-        idOrSlug,
-      );
+    const isUuid = isUUID(idOrSlug);
 
     let item: Category | null = null;
     if (isUuid) {
-      item = await this.repo.findOne({ where: { id: idOrSlug } });
+      item = await this.repo.findOne({ where: { id: idOrSlug }, relations: ['children', 'parent'] });
     }
     if (!item) {
-      item = await this.repo.findOne({ where: { slug: idOrSlug } });
+      item = await this.repo.findOne({ where: { slug: idOrSlug }, relations: ['children', 'parent'] });
     }
 
     if (!item) throw AppError.notFound(`Category '${idOrSlug}' not found`);
@@ -99,6 +113,9 @@ export class CategoryService {
       description: dto.description.trim(),
       status: dto.status,
       itemCount: 0,
+      image: dto.image || null,
+      mediaId: dto.mediaId || null,
+      parentId: dto.parentId || null,
     });
     return this.repo.save(category);
   }
@@ -129,6 +146,9 @@ export class CategoryService {
     if (dto.type) category.type = dto.type;
     if (dto.description !== undefined) category.description = dto.description.trim();
     if (dto.status) category.status = dto.status;
+    if (dto.image !== undefined) category.image = dto.image || null;
+    if (dto.mediaId !== undefined) category.mediaId = dto.mediaId || null;
+    if (dto.parentId !== undefined) category.parentId = dto.parentId || null;
 
     return this.repo.save(category);
   }

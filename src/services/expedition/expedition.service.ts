@@ -1,5 +1,6 @@
 import { In } from 'typeorm';
 import { autoInjectable } from 'tsyringe';
+import { isUUID } from 'class-validator';
 import { AppDataSource } from '../../config/database.config';
 import {
   ClimbingGrade,
@@ -10,6 +11,7 @@ import { TripDifficulty } from '../../entities/common/difficulty.enum';
 import { TripActivity } from '../../entities/common/activity.enum';
 import {
   Category,
+  CategoryStatus,
   CategoryType,
 } from '../../entities/category/Category.entity';
 import {
@@ -101,10 +103,7 @@ export class ExpeditionService {
 
     const catParam = params?.categorySlug || params?.category || params?.categoryId;
     if (catParam && catParam !== 'All') {
-      const isUuid =
-        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-          catParam,
-        );
+      const isUuid = isUUID(catParam);
       let catEntity: Category | null = null;
       if (isUuid) {
         catEntity = await this.categoryRepo.findOne({ where: { id: catParam } });
@@ -221,17 +220,25 @@ export class ExpeditionService {
     }
 
     const [items, count] = await qb.getManyAndCount();
+    const categories = await this.categoryRepo.find();
+    const categoryMap = new Map(categories.map((c) => [c.id, c]));
+
     const resolved = await Promise.all(
-      items.map((i) => this.mediaService.resolveItemMedia(i)),
+      items.map(async (i) => {
+        const withMedia = await this.mediaService.resolveItemMedia(i);
+        const cat = i.categoryId ? categoryMap.get(i.categoryId) : undefined;
+        return {
+          ...withMedia,
+          category: cat?.name,
+          categorySlug: cat?.slug,
+        };
+      }),
     );
-    return [resolved, count];
+    return [resolved as any, count];
   }
 
   async getByIdOrSlug(idOrSlug: string): Promise<Expedition> {
-    const isUuid =
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-        idOrSlug,
-      );
+    const isUuid = isUUID(idOrSlug);
 
     let item: Expedition | null = null;
     if (isUuid) {
@@ -243,7 +250,15 @@ export class ExpeditionService {
 
     if (!item)
       throw AppError.notFound(`Expedition package ${idOrSlug} not found`);
-    return this.mediaService.resolveItemMedia(item);
+    const withMedia = await this.mediaService.resolveItemMedia(item);
+    const cat = item.categoryId
+      ? await this.categoryRepo.findOne({ where: { id: item.categoryId } })
+      : undefined;
+    return {
+      ...withMedia,
+      category: cat?.name,
+      categorySlug: cat?.slug,
+    } as any;
   }
 
   async getPublicByIdOrSlug(idOrSlug: string): Promise<Expedition> {
@@ -432,17 +447,9 @@ export class ExpeditionService {
   }> {
     const exps = await this.repo.find();
 
-    const categoryIds = Array.from(
-      new Set(
-        exps.map((p) => p.categoryId).filter((id): id is string => Boolean(id)),
-      ),
-    );
-    const dbCategories =
-      categoryIds.length > 0
-        ? await this.categoryRepo.find({ where: { id: In(categoryIds) } })
-        : await this.categoryRepo.find({
-            where: { type: CategoryType.EXPEDITIONS },
-          });
+    const dbCategories = await this.categoryRepo.find({
+      where: { type: CategoryType.EXPEDITIONS, status: CategoryStatus.ACTIVE },
+    });
 
     const durations = exps
       .map((p) => Number(p.durationDays))

@@ -1,4 +1,5 @@
 import { autoInjectable } from 'tsyringe';
+import { isUUID } from 'class-validator';
 import { AppDataSource } from '../../config/database.config';
 import { BlogArticle, BlogStatus } from '../../entities/blog/BlogArticle.entity';
 import { Category } from '../../entities/category/Category.entity';
@@ -68,10 +69,7 @@ export class BlogService {
 
     const catParam = categoryId !== 'All' ? categoryId : category !== 'All' ? category : undefined;
     if (catParam) {
-      const isUuid =
-        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-          catParam,
-        );
+      const isUuid = isUUID(catParam);
       let catEntity: Category | null = null;
       if (isUuid) {
         catEntity = await this.categoryRepo.findOne({ where: { id: catParam } });
@@ -115,10 +113,7 @@ export class BlogService {
   }
 
   async getByIdOrSlug(idOrSlug: string): Promise<BlogArticle> {
-    const isUuid =
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-        idOrSlug,
-      );
+    const isUuid = isUUID(idOrSlug);
 
     let item: BlogArticle | null = null;
     if (isUuid) {

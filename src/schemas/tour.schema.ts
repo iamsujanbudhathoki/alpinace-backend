@@ -175,11 +175,11 @@ export class CreateTourDto {
 
   @IsOptional()
   @IsString()
-  coverMediaId?: string;
+  coverMediaId?: string | null;
 
   @IsOptional()
   @IsString()
-  mapMediaId?: string;
+  mapMediaId?: string | null;
 
   @IsOptional()
   @IsArray()
@@ -345,11 +345,11 @@ export class UpdateTourDto {
 
   @IsOptional()
   @IsString()
-  coverMediaId?: string;
+  coverMediaId?: string | null;
 
   @IsOptional()
   @IsString()
-  mapMediaId?: string;
+  mapMediaId?: string | null;
 
   @IsOptional()
   @IsArray()

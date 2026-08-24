@@ -1,4 +1,4 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { CommonEntity } from '../common/common.entity';
 
 export enum CategoryType {
@@ -33,4 +33,20 @@ export class Category extends CommonEntity {
 
   @Column({ name: 'status', default: CategoryStatus.ACTIVE })
   status: CategoryStatus;
+
+  @Column({ name: 'image', type: 'text', nullable: true })
+  image?: string | null;
+
+  @Column({ name: 'media_id', type: 'varchar', nullable: true })
+  mediaId?: string | null;
+
+  @Column({ name: 'parent_id', type: 'varchar', nullable: true })
+  parentId?: string | null;
+
+  @ManyToOne(() => Category, (cat) => cat.children, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'parent_id' })
+  parent?: Category | null;
+
+  @OneToMany(() => Category, (cat) => cat.parent)
+  children?: Category[];
 }

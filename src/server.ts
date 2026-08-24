@@ -4,7 +4,6 @@ import { AppDataSource } from './config/database.config';
 import { DotenvConfig } from './config/env.config';
 import { configMiddleware } from './middlewares';
 import { PathUtils } from './utils/path.util';
-import { seedDatabase } from './seeder/seed';
 // import { RedisUtil } from './utils/redis.util';
 
 class Server {
@@ -18,14 +17,6 @@ class Server {
     AppDataSource.initialize()
       .then(async () => {
         console.log('Data Source has been initialized!');
-        try {
-          await seedDatabase();
-        } catch (seedErr) {
-          console.warn(
-            'Seeding skipped or encountered non-fatal error:',
-            seedErr,
-          );
-        }
 
         const app = express();
         configMiddleware(app);

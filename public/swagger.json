@@ -221,10 +221,12 @@
 						"format": "date-time"
 					},
 					"coverMediaId": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"mapMediaId": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"galleryMediaIds": {
 						"items": {
@@ -836,10 +838,12 @@
 						"type": "array"
 					},
 					"coverMediaId": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"mapMediaId": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"galleryMediaIds": {
 						"items": {
@@ -984,10 +988,12 @@
 						"type": "array"
 					},
 					"coverMediaId": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"mapMediaId": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"galleryMediaIds": {
 						"items": {
@@ -1075,10 +1081,12 @@
 						"format": "date-time"
 					},
 					"coverMediaId": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"mapMediaId": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"galleryMediaIds": {
 						"items": {
@@ -1468,10 +1476,12 @@
 						"type": "array"
 					},
 					"coverMediaId": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"mapMediaId": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"galleryMediaIds": {
 						"items": {
@@ -1622,10 +1632,12 @@
 						"type": "array"
 					},
 					"coverMediaId": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"mapMediaId": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"galleryMediaIds": {
 						"items": {
@@ -2004,6 +2016,32 @@
 					},
 					"status": {
 						"$ref": "#/components/schemas/CategoryStatus"
+					},
+					"image": {
+						"type": "string",
+						"nullable": true
+					},
+					"mediaId": {
+						"type": "string",
+						"nullable": true
+					},
+					"parentId": {
+						"type": "string",
+						"nullable": true
+					},
+					"parent": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/Category"
+							}
+						],
+						"nullable": true
+					},
+					"children": {
+						"items": {
+							"$ref": "#/components/schemas/Category"
+						},
+						"type": "array"
 					}
 				},
 				"required": [
@@ -2868,10 +2906,12 @@
 						"format": "date-time"
 					},
 					"coverMediaId": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"mapMediaId": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"galleryMediaIds": {
 						"items": {
@@ -3277,10 +3317,12 @@
 						"type": "array"
 					},
 					"coverMediaId": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"mapMediaId": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"galleryMediaIds": {
 						"items": {
@@ -3438,10 +3480,12 @@
 						"type": "array"
 					},
 					"coverMediaId": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"mapMediaId": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"galleryMediaIds": {
 						"items": {
@@ -3764,6 +3808,18 @@
 					},
 					"status": {
 						"$ref": "#/components/schemas/CategoryStatus"
+					},
+					"image": {
+						"type": "string",
+						"nullable": true
+					},
+					"mediaId": {
+						"type": "string",
+						"nullable": true
+					},
+					"parentId": {
+						"type": "string",
+						"nullable": true
 					}
 				},
 				"required": [
@@ -3792,6 +3848,18 @@
 					},
 					"status": {
 						"$ref": "#/components/schemas/CategoryStatus"
+					},
+					"image": {
+						"type": "string",
+						"nullable": true
+					},
+					"mediaId": {
+						"type": "string",
+						"nullable": true
+					},
+					"parentId": {
+						"type": "string",
+						"nullable": true
 					}
 				},
 				"type": "object",

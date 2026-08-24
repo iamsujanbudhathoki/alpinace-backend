@@ -15,7 +15,7 @@ class DotenvConfig {
   static NODE_ENV = process.env.NODE_ENV;
 
   // DB
-  static DATABASE_URL = process.env.DATABASE_URL?.trim() || '';
+  static DATABASE_URL = process.env.DATABASE_URL?.trim() ;
   static DB_SSL =
   process.env.DB_SSL === 'true' ||
     Boolean(
@@ -39,17 +39,18 @@ class DotenvConfig {
   // URL
   static FRONTEND_BASE_URL = process.env.FRONTEND_BASE_URL;
   static BASE_URL = process.env.BASE_URL;
-    static PUBLIC_URL = process.env.R2_PUBLIC_DOMAIN
+  static PUBLIC_URL = process.env.R2_PUBLIC_DOMAIN;
 
   // CLOUDFLARE R2 STORAGE
-  static R2_ACCOUNT_ID = process.env.R2_ACCOUNT_ID || '';
-  static R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID || '';
-  static R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY || '';
-  static R2_BUCKET_NAME = process.env.R2_BUCKET_NAME || '';
-  static R2_PUBLIC_DOMAIN = process.env.R2_PUBLIC_DOMAIN || '';
+  static R2_ACCOUNT_ID = process.env.R2_ACCOUNT_ID!;
+  static R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID!;
+  static R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY!;
+  static R2_BUCKET_NAME = process.env.R2_BUCKET_NAME!;
+  static R2_PUBLIC_DOMAIN = process.env.R2_PUBLIC_DOMAIN!;
 
   // CLOUDFLARE TURNSTILE
-  static TURNSTILE_SECRET_KEY = process.env.TURNSTILE_SECRET_KEY || '1x0000000000000000000000000000000AA';
+  static TURNSTILE_SECRET_KEY =
+    process.env.TURNSTILE_SECRET_KEY || '1x0000000000000000000000000000000AA';
   static TURNSTILE_ENABLED = process.env.TURNSTILE_ENABLED !== 'false';
 }
 

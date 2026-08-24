@@ -27,6 +27,18 @@ export class CreateCategoryDto {
   @IsEnum(CategoryStatus, { message: 'Invalid status' })
   @IsNotEmpty({ message: 'Category status is required' })
   status!: CategoryStatus;
+
+  @IsOptional()
+  @IsString()
+  image?: string | null;
+
+  @IsOptional()
+  @IsString()
+  mediaId?: string | null;
+
+  @IsOptional()
+  @IsString()
+  parentId?: string | null;
 }
 
 export class UpdateCategoryDto {
@@ -52,5 +64,16 @@ export class UpdateCategoryDto {
   @IsOptional()
   @IsEnum(CategoryStatus)
   status?: CategoryStatus;
-}
 
+  @IsOptional()
+  @IsString()
+  image?: string | null;
+
+  @IsOptional()
+  @IsString()
+  mediaId?: string | null;
+
+  @IsOptional()
+  @IsString()
+  parentId?: string | null;
+}

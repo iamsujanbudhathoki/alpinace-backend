@@ -65,15 +65,55 @@ export const seedDatabase = async () => {
         'Trekking packages navigating the iconic Khumbu valley, Lukla, Namche Bazaar, and Everest Base Camp.',
       itemCount: 8,
       status: CategoryStatus.ACTIVE,
+      subcategories: [
+        { name: 'Everest Base Camp Treks', slug: 'everest-base-camp', description: 'Classic trail to EBC & Kala Patthar 5,545m', itemCount: 4 },
+        { name: 'Gokyo Lakes & Cho La Pass', slug: 'gokyo-lakes-cho-la', description: 'Turquoise glacial lakes and high pass crossing', itemCount: 3 },
+        { name: 'Three High Passes Challenge', slug: 'three-passes-trek', description: 'Kongma La, Cho La, and Renjo La alpine routes', itemCount: 2 },
+        { name: 'Everest Luxury Lodge Treks', slug: 'everest-luxury-lodge', description: 'Five-star mountain lodge experience in Khumbu', itemCount: 2 },
+      ],
     },
     {
-      name: '8000m Technical Expeditions',
-      slug: '8000m-technical-expeditions',
-      type: CategoryType.EXPEDITIONS,
+      name: 'Annapurna Sanctuary Circuit',
+      slug: 'annapurna-sanctuary-circuit',
+      type: CategoryType.TREKKING,
       description:
-        'Extreme high-altitude peak climbs requiring IFMGA guide ratios, oxygen systems, and fixed-line logistics.',
+        'Traversing Thorong La pass, Poon Hill sunrises, and Annapurna Base Camp.',
+      itemCount: 5,
+      status: CategoryStatus.ACTIVE,
+      subcategories: [
+        { name: 'Annapurna Circuit Trek', slug: 'annapurna-circuit', description: 'Thorong La Pass 5,416m and Kali Gandaki gorge', itemCount: 3 },
+        { name: 'Annapurna Base Camp (ABC)', slug: 'annapurna-base-camp', description: 'Deep amphitheater surrounded by 8000m peaks', itemCount: 3 },
+        { name: 'Ghorepani Poon Hill', slug: 'poon-hill-sunrise', description: 'Short panoramic sunrise trek over Dhaulagiri', itemCount: 2 },
+        { name: 'Mardi Himal Ridge Trek', slug: 'mardi-himal', description: 'Off-the-beaten-path ridge trek under Machhapuchhre', itemCount: 2 },
+      ],
+    },
+    {
+      name: 'Langtang & Sacred Lakes',
+      slug: 'langtang-sacred-lakes',
+      type: CategoryType.TREKKING,
+      description:
+        'Pristine rhododendron forests, Tamang mountain heritage, and Gosaikunda glacier-fed lakes.',
       itemCount: 4,
       status: CategoryStatus.ACTIVE,
+      subcategories: [
+        { name: 'Langtang Valley Trek', slug: 'langtang-valley', description: 'Glacial valley trek with Tamang cultural heritage', itemCount: 3 },
+        { name: 'Gosaikunda Sacred Lakes', slug: 'gosaikunda-lakes', description: 'Sacred glacier-fed mountain lakes at 4,380m', itemCount: 2 },
+        { name: 'Tamang Heritage Trail', slug: 'tamang-heritage', description: 'Homestay culture, hot springs, and Tibetan traditions', itemCount: 2 },
+      ],
+    },
+    {
+      name: 'Manaslu Restricted Circuit',
+      slug: 'manaslu-restricted-circuit',
+      type: CategoryType.TREKKING,
+      description:
+        'Circumnavigating Mt. Manaslu (8,163m) across Larkya La pass in restricted wilderness.',
+      itemCount: 3,
+      status: CategoryStatus.ACTIVE,
+      subcategories: [
+        { name: 'Manaslu Circuit Trek', slug: 'manaslu-circuit', description: 'Larkya La pass 5,160m around Mt. Manaslu', itemCount: 2 },
+        { name: 'Upper Mustang Kingdom', slug: 'upper-mustang', description: 'Walled city of Lo Manthang and Tibetan caves', itemCount: 2 },
+        { name: 'Kanchenjunga Circuit', slug: 'kanchenjunga-circuit', description: 'Far-eastern wilderness to world 3rd highest peak', itemCount: 1 },
+      ],
     },
     {
       name: 'UNESCO Heritage & Resorts',
@@ -83,6 +123,67 @@ export const seedDatabase = async () => {
         'Cultural sightseeing, boutique heritage hotels, and luxury Pokhara resort stays.',
       itemCount: 6,
       status: CategoryStatus.ACTIVE,
+      subcategories: [
+        { name: 'Kathmandu Valley World Heritage', slug: 'kathmandu-heritage', description: 'Durbar squares, Swayambhunath, and Pashupatinath', itemCount: 3 },
+        { name: 'Pokhara Scenic & Lake Tour', slug: 'pokhara-lakeside', description: 'Phewa lake boating, Sarangkot sunrise, and mountain views', itemCount: 3 },
+        { name: 'Lumbini Sacred Pilgrimage', slug: 'lumbini-birthplace', description: 'Birthplace of Lord Buddha and international monasteries', itemCount: 2 },
+      ],
+    },
+    {
+      name: 'Luxury & Helicopter Tours',
+      slug: 'luxury-helicopter-tours',
+      type: CategoryType.TOURS,
+      description:
+        'Helicopter day charters, Everest breakfast flights, and luxury resort transfers.',
+      itemCount: 4,
+      status: CategoryStatus.ACTIVE,
+      subcategories: [
+        { name: 'Everest Helicopter Day Tour', slug: 'everest-heli-tour', description: 'Fly to Kala Patthar and champagne breakfast at Everest', itemCount: 2 },
+        { name: 'Annapurna Heli Landing', slug: 'annapurna-heli-landing', description: 'Direct helicopter landing at Annapurna Base Camp', itemCount: 2 },
+        { name: 'Gosaikunda Heli Flight', slug: 'gosaikunda-heli', description: 'Quick morning helicopter flight to sacred Gosaikunda', itemCount: 1 },
+      ],
+    },
+    {
+      name: 'Wildlife & Jungle Safari',
+      slug: 'wildlife-jungle-safari',
+      type: CategoryType.TOURS,
+      description:
+        'Chitwan national park safaris, rhino tracking, and Tharu cultural experiences.',
+      itemCount: 3,
+      status: CategoryStatus.ACTIVE,
+      subcategories: [
+        { name: 'Chitwan National Park Safari', slug: 'chitwan-safari', description: 'One-horned rhinos, Bengal tigers, and canoe rides', itemCount: 2 },
+        { name: 'Bardia Wilderness Sanctuary', slug: 'bardia-safari', description: 'Pristine jungle sanctuary in western Nepal', itemCount: 1 },
+      ],
+    },
+    {
+      name: '8000m Technical Expeditions',
+      slug: '8000m-technical-expeditions',
+      type: CategoryType.EXPEDITIONS,
+      description:
+        'Extreme high-altitude peak climbs requiring IFMGA guide ratios, oxygen systems, and fixed-line logistics.',
+      itemCount: 4,
+      status: CategoryStatus.ACTIVE,
+      subcategories: [
+        { name: 'Mt. Everest Expedition (8,848m)', slug: 'mt-everest-expedition', description: 'Ultimate summit of the world with 1:1 Sherpa guide ratio', itemCount: 2 },
+        { name: 'Mt. Lhotse Expedition (8,516m)', slug: 'mt-lhotse-expedition', description: 'World 4th highest peak via South Col route', itemCount: 1 },
+        { name: 'Mt. Manaslu Expedition (8,163m)', slug: 'mt-manaslu-expedition', description: 'Autumn 8000m expedition in Gorkha region', itemCount: 2 },
+      ],
+    },
+    {
+      name: '6000m & 7000m Peak Climbing',
+      slug: '6000m-7000m-peaks',
+      type: CategoryType.EXPEDITIONS,
+      description:
+        'Trekking peaks and technical alpine climbs including Island Peak, Mera Peak, and Ama Dablam.',
+      itemCount: 5,
+      status: CategoryStatus.ACTIVE,
+      subcategories: [
+        { name: 'Ama Dablam Expedition (6,812m)', slug: 'ama-dablam-expedition', description: 'The Jewel of the Himalayas technical ridge climbing', itemCount: 2 },
+        { name: 'Island Peak (Imja Tse 6,189m)', slug: 'island-peak-climbing', description: 'Classic Himalayan climbing peak combined with EBC', itemCount: 3 },
+        { name: 'Mera Peak (6,476m)', slug: 'mera-peak-climbing', description: 'Highest trekking peak in Nepal with 5 x 8000m views', itemCount: 2 },
+        { name: 'Lobuche East (6,119m)', slug: 'lobuche-east-climbing', description: 'Technical snow ridge climb near Everest Base Camp', itemCount: 2 },
+      ],
     },
     {
       name: 'High Altitude Physiology & Safety',
@@ -102,43 +203,59 @@ export const seedDatabase = async () => {
       itemCount: 24,
       status: CategoryStatus.ACTIVE,
     },
-    {
-      name: 'Annapurna Sanctuary Circuit',
-      slug: 'annapurna-sanctuary-circuit',
-      type: CategoryType.TREKKING,
-      description:
-        'Traversing Thorong La pass, Poon Hill sunrises, and Annapurna Base Camp.',
-      itemCount: 5,
-      status: CategoryStatus.ACTIVE,
-    },
-    {
-      name: 'Langtang & Sacred Lakes',
-      slug: 'langtang-sacred-lakes',
-      type: CategoryType.TREKKING,
-      description:
-        'Pristine rhododendron forests, Tamang mountain heritage, and Gosaikunda glacier-fed lakes.',
-      itemCount: 4,
-      status: CategoryStatus.ACTIVE,
-    },
-    {
-      name: 'Manaslu Restricted Circuit',
-      slug: 'manaslu-restricted-circuit',
-      type: CategoryType.TREKKING,
-      description:
-        'Circumnavigating Mt. Manaslu (8,163m) across Larkya La pass in restricted wilderness.',
-      itemCount: 3,
-      status: CategoryStatus.ACTIVE,
-    },
   ];
 
   for (const cat of categoriesData) {
     const slug = cat.slug || cat.name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
-    const exists = await categoryRepo.findOne({
+    let parentCat = await categoryRepo.findOne({
       where: [{ slug }, { name: cat.name }],
       withDeleted: true,
     });
-    if (!exists) {
-      await categoryRepo.save(categoryRepo.create({ ...cat, slug }));
+    if (!parentCat) {
+      parentCat = await categoryRepo.save(
+        categoryRepo.create({
+          name: cat.name,
+          slug,
+          type: cat.type,
+          description: cat.description,
+          itemCount: cat.itemCount,
+          status: cat.status,
+          parentId: null,
+        }),
+      );
+    } else {
+      parentCat.type = cat.type;
+      parentCat.description = cat.description;
+      parentCat.status = cat.status;
+      await categoryRepo.save(parentCat);
+    }
+
+    if (cat.subcategories && cat.subcategories.length > 0) {
+      for (const sub of cat.subcategories) {
+        const subSlug = sub.slug || sub.name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
+        const existingSub = await categoryRepo.findOne({
+          where: [{ slug: subSlug }, { name: sub.name }],
+          withDeleted: true,
+        });
+        if (!existingSub) {
+          await categoryRepo.save(
+            categoryRepo.create({
+              name: sub.name,
+              slug: subSlug,
+              type: cat.type,
+              description: sub.description || '',
+              itemCount: sub.itemCount || 0,
+              status: CategoryStatus.ACTIVE,
+              parentId: parentCat.id,
+            }),
+          );
+        } else {
+          existingSub.parentId = parentCat.id;
+          existingSub.type = cat.type;
+          existingSub.description = sub.description || existingSub.description;
+          await categoryRepo.save(existingSub);
+        }
+      }
     }
   }
   console.log('Seeded categories');
@@ -689,6 +806,7 @@ export const seedDatabase = async () => {
   ];
 
   const allDbCats = await categoryRepo.find();
+  const allValidCatIds = new Set(allDbCats.map((c) => c.id));
   const catSlugMap = new Map<string, string>();
   allDbCats.forEach((c) => {
     catSlugMap.set(c.slug, c.id);
@@ -721,24 +839,49 @@ export const seedDatabase = async () => {
     if (!exists) {
       await trekRepo.save(trekRepo.create({ ...t, categoryId: catId }));
     } else {
-      if (catId && !exists.categoryId) exists.categoryId = catId;
-      exists.faqs = t.faqs;
-      exists.reviews = t.reviews;
-      exists.coverMediaId = t.coverMediaId;
-      exists.mapMediaId = t.mapMediaId;
-      exists.galleryMediaIds = t.galleryMediaIds;
-      exists.packageFiles = t.packageFiles;
+      let updated = false;
+      if (catId && (!exists.categoryId || !allValidCatIds.has(exists.categoryId))) {
+        exists.categoryId = catId;
+        updated = true;
+      }
+      if (!exists.coverMediaId && t.coverMediaId) {
+        exists.coverMediaId = t.coverMediaId;
+        updated = true;
+      }
+      if (!exists.mapMediaId && t.mapMediaId) {
+        exists.mapMediaId = t.mapMediaId;
+        updated = true;
+      }
+      if ((!exists.galleryMediaIds || exists.galleryMediaIds.length === 0) && t.galleryMediaIds) {
+        exists.galleryMediaIds = t.galleryMediaIds;
+        updated = true;
+      }
+      if ((!exists.faqs || exists.faqs.length === 0) && t.faqs) {
+        exists.faqs = t.faqs;
+        updated = true;
+      }
+      if ((!exists.reviews || exists.reviews.length === 0) && t.reviews) {
+        exists.reviews = t.reviews;
+        updated = true;
+      }
+      if ((!exists.packageFiles || exists.packageFiles.length === 0) && t.packageFiles) {
+        exists.packageFiles = t.packageFiles;
+        updated = true;
+      }
       if (t.itinerary && (!exists.itinerary || exists.itinerary.length === 0)) {
         exists.itinerary = t.itinerary;
+        updated = true;
       }
-      await trekRepo.save(exists);
+      if (updated) {
+        await trekRepo.save(exists);
+      }
     }
   }
 
-  // Repair existing DB treks missing categoryId
+  // Repair existing DB treks missing or invalid categoryId
   const existingDbTreks = await trekRepo.find();
   for (const trek of existingDbTreks) {
-    if (!trek.categoryId) {
+    if (!trek.categoryId || !allValidCatIds.has(trek.categoryId)) {
       const catId = getTrekCategoryId(trek.region, trek.title);
       if (catId) {
         trek.categoryId = catId;
@@ -947,21 +1090,45 @@ export const seedDatabase = async () => {
     if (!exists) {
       await tourRepo.save(tourRepo.create({ ...tr, categoryId: catId }));
     } else {
-      if (catId && !exists.categoryId) exists.categoryId = catId;
-      exists.faqs = tr.faqs;
-      exists.reviews = tr.reviews;
-      exists.coverMediaId = tr.coverMediaId;
-      exists.mapMediaId = tr.mapMediaId;
-      exists.galleryMediaIds = tr.galleryMediaIds;
-      exists.packageFiles = tr.packageFiles;
-      await tourRepo.save(exists);
+      let updated = false;
+      if (catId && (!exists.categoryId || !allValidCatIds.has(exists.categoryId))) {
+        exists.categoryId = catId;
+        updated = true;
+      }
+      if (!exists.coverMediaId && tr.coverMediaId) {
+        exists.coverMediaId = tr.coverMediaId;
+        updated = true;
+      }
+      if (!exists.mapMediaId && tr.mapMediaId) {
+        exists.mapMediaId = tr.mapMediaId;
+        updated = true;
+      }
+      if ((!exists.galleryMediaIds || exists.galleryMediaIds.length === 0) && tr.galleryMediaIds) {
+        exists.galleryMediaIds = tr.galleryMediaIds;
+        updated = true;
+      }
+      if ((!exists.faqs || exists.faqs.length === 0) && tr.faqs) {
+        exists.faqs = tr.faqs;
+        updated = true;
+      }
+      if ((!exists.reviews || exists.reviews.length === 0) && tr.reviews) {
+        exists.reviews = tr.reviews;
+        updated = true;
+      }
+      if ((!exists.packageFiles || exists.packageFiles.length === 0) && tr.packageFiles) {
+        exists.packageFiles = tr.packageFiles;
+        updated = true;
+      }
+      if (updated) {
+        await tourRepo.save(exists);
+      }
     }
   }
 
-  // Repair existing DB tours missing categoryId
+  // Repair existing DB tours missing or invalid categoryId
   const existingDbTours = await tourRepo.find();
   for (const tour of existingDbTours) {
-    if (!tour.categoryId) {
+    if (!tour.categoryId || !allValidCatIds.has(tour.categoryId)) {
       const catId = getTourCategoryId();
       if (catId) {
         tour.categoryId = catId;
@@ -1188,21 +1355,45 @@ export const seedDatabase = async () => {
     if (!exists) {
       await expeditionRepo.save(expeditionRepo.create({ ...exp, categoryId: catId }));
     } else {
-      if (catId && !exists.categoryId) exists.categoryId = catId;
-      exists.faqs = exp.faqs;
-      exists.reviews = exp.reviews;
-      exists.coverMediaId = exp.coverMediaId;
-      exists.mapMediaId = exp.mapMediaId;
-      exists.galleryMediaIds = exp.galleryMediaIds;
-      exists.packageFiles = exp.packageFiles;
-      await expeditionRepo.save(exists);
+      let updated = false;
+      if (catId && (!exists.categoryId || !allValidCatIds.has(exists.categoryId))) {
+        exists.categoryId = catId;
+        updated = true;
+      }
+      if (!exists.coverMediaId && exp.coverMediaId) {
+        exists.coverMediaId = exp.coverMediaId;
+        updated = true;
+      }
+      if (!exists.mapMediaId && exp.mapMediaId) {
+        exists.mapMediaId = exp.mapMediaId;
+        updated = true;
+      }
+      if ((!exists.galleryMediaIds || exists.galleryMediaIds.length === 0) && exp.galleryMediaIds) {
+        exists.galleryMediaIds = exp.galleryMediaIds;
+        updated = true;
+      }
+      if ((!exists.faqs || exists.faqs.length === 0) && exp.faqs) {
+        exists.faqs = exp.faqs;
+        updated = true;
+      }
+      if ((!exists.reviews || exists.reviews.length === 0) && exp.reviews) {
+        exists.reviews = exp.reviews;
+        updated = true;
+      }
+      if ((!exists.packageFiles || exists.packageFiles.length === 0) && exp.packageFiles) {
+        exists.packageFiles = exp.packageFiles;
+        updated = true;
+      }
+      if (updated) {
+        await expeditionRepo.save(exists);
+      }
     }
   }
 
-  // Repair existing DB expeditions missing categoryId
+  // Repair existing DB expeditions missing or invalid categoryId
   const existingDbExpeditions = await expeditionRepo.find();
   for (const exp of existingDbExpeditions) {
-    if (!exp.categoryId) {
+    if (!exp.categoryId || !allValidCatIds.has(exp.categoryId)) {
       const catId = getExpeditionCategoryId();
       if (catId) {
         exp.categoryId = catId;
@@ -1530,7 +1721,7 @@ export const seedDatabase = async () => {
     });
     if (!exists) {
       await blogRepo.save(blogRepo.create(b));
-    } else {
+    } else if (!exists.coverMediaId && b.coverMediaId) {
       exists.coverMediaId = b.coverMediaId;
       await blogRepo.save(exists);
     }

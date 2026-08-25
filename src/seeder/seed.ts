@@ -66,10 +66,10 @@ export const seedDatabase = async () => {
       itemCount: 8,
       status: CategoryStatus.ACTIVE,
       subcategories: [
-        { name: 'Everest Base Camp Treks', slug: 'everest-base-camp', description: 'Classic trail to EBC & Kala Patthar 5,545m', itemCount: 4 },
-        { name: 'Gokyo Lakes & Cho La Pass', slug: 'gokyo-lakes-cho-la', description: 'Turquoise glacial lakes and high pass crossing', itemCount: 3 },
-        { name: 'Three High Passes Challenge', slug: 'three-passes-trek', description: 'Kongma La, Cho La, and Renjo La alpine routes', itemCount: 2 },
-        { name: 'Everest Luxury Lodge Treks', slug: 'everest-luxury-lodge', description: 'Five-star mountain lodge experience in Khumbu', itemCount: 2 },
+        { name: 'Everest Base Camp Treks', slug: 'everest-base-camp', description: 'Classic trail to EBC & Kala Patthar 5,545m', itemCount: 4, image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80' },
+        { name: 'Gokyo Lakes & Cho La Pass', slug: 'gokyo-lakes-cho-la', description: 'Turquoise glacial lakes and high pass crossing', itemCount: 3, image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=800&q=80' },
+        { name: 'Three High Passes Challenge', slug: 'three-passes-trek', description: 'Kongma La, Cho La, and Renjo La alpine routes', itemCount: 2, image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80' },
+        { name: 'Everest Luxury Lodge Treks', slug: 'everest-luxury-lodge', description: 'Five-star mountain lodge experience in Khumbu', itemCount: 2, image: 'https://images.unsplash.com/photo-1516481400365-878b508f2fea?auto=format&fit=crop&w=800&q=80' },
       ],
     },
     {
@@ -81,10 +81,10 @@ export const seedDatabase = async () => {
       itemCount: 5,
       status: CategoryStatus.ACTIVE,
       subcategories: [
-        { name: 'Annapurna Circuit Trek', slug: 'annapurna-circuit', description: 'Thorong La Pass 5,416m and Kali Gandaki gorge', itemCount: 3 },
-        { name: 'Annapurna Base Camp (ABC)', slug: 'annapurna-base-camp', description: 'Deep amphitheater surrounded by 8000m peaks', itemCount: 3 },
-        { name: 'Ghorepani Poon Hill', slug: 'poon-hill-sunrise', description: 'Short panoramic sunrise trek over Dhaulagiri', itemCount: 2 },
-        { name: 'Mardi Himal Ridge Trek', slug: 'mardi-himal', description: 'Off-the-beaten-path ridge trek under Machhapuchhre', itemCount: 2 },
+        { name: 'Annapurna Circuit Trek', slug: 'annapurna-circuit', description: 'Thorong La Pass 5,416m and Kali Gandaki gorge', itemCount: 3, image: 'https://images.unsplash.com/photo-1585409677983-0f6c41ca913b?auto=format&fit=crop&w=800&q=80' },
+        { name: 'Annapurna Base Camp (ABC)', slug: 'annapurna-base-camp', description: 'Deep amphitheater surrounded by 8000m peaks', itemCount: 3, image: 'https://images.unsplash.com/photo-1583870908408-3f9c6f8a9e0f?auto=format&fit=crop&w=800&q=80' },
+        { name: 'Ghorepani Poon Hill', slug: 'poon-hill-sunrise', description: 'Short panoramic sunrise trek over Dhaulagiri', itemCount: 2, image: 'https://images.unsplash.com/photo-1544644181-1484b3fdfc32?auto=format&fit=crop&w=800&q=80' },
+        { name: 'Mardi Himal Ridge Trek', slug: 'mardi-himal', description: 'Off-the-beaten-path ridge trek under Machhapuchhre', itemCount: 2, image: 'https://images.unsplash.com/photo-1516482498816-ba38689e1c14?auto=format&fit=crop&w=800&q=80' },
       ],
     },
     {
@@ -96,9 +96,9 @@ export const seedDatabase = async () => {
       itemCount: 4,
       status: CategoryStatus.ACTIVE,
       subcategories: [
-        { name: 'Langtang Valley Trek', slug: 'langtang-valley', description: 'Glacial valley trek with Tamang cultural heritage', itemCount: 3 },
-        { name: 'Gosaikunda Sacred Lakes', slug: 'gosaikunda-lakes', description: 'Sacred glacier-fed mountain lakes at 4,380m', itemCount: 2 },
-        { name: 'Tamang Heritage Trail', slug: 'tamang-heritage', description: 'Homestay culture, hot springs, and Tibetan traditions', itemCount: 2 },
+        { name: 'Langtang Valley Trek', slug: 'langtang-valley', description: 'Glacial valley trek with Tamang cultural heritage', itemCount: 3, image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80' },
+        { name: 'Gosaikunda Sacred Lakes', slug: 'gosaikunda-lakes', description: 'Sacred glacier-fed mountain lakes at 4,380m', itemCount: 2, image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=800&q=80' },
+        { name: 'Tamang Heritage Trail', slug: 'tamang-heritage', description: 'Homestay culture, hot springs, and Tibetan traditions', itemCount: 2, image: 'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=800&q=80' },
       ],
     },
     {
@@ -110,9 +110,9 @@ export const seedDatabase = async () => {
       itemCount: 3,
       status: CategoryStatus.ACTIVE,
       subcategories: [
-        { name: 'Manaslu Circuit Trek', slug: 'manaslu-circuit', description: 'Larkya La pass 5,160m around Mt. Manaslu', itemCount: 2 },
-        { name: 'Upper Mustang Kingdom', slug: 'upper-mustang', description: 'Walled city of Lo Manthang and Tibetan caves', itemCount: 2 },
-        { name: 'Kanchenjunga Circuit', slug: 'kanchenjunga-circuit', description: 'Far-eastern wilderness to world 3rd highest peak', itemCount: 1 },
+        { name: 'Manaslu Circuit Trek', slug: 'manaslu-circuit', description: 'Larkya La pass 5,160m around Mt. Manaslu', itemCount: 2, image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=800&q=80' },
+        { name: 'Upper Mustang Kingdom', slug: 'upper-mustang', description: 'Walled city of Lo Manthang and Tibetan caves', itemCount: 2, image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80' },
+        { name: 'Kanchenjunga Circuit', slug: 'kanchenjunga-circuit', description: 'Far-eastern wilderness to world 3rd highest peak', itemCount: 1, image: 'https://images.unsplash.com/photo-1583870908408-3f9c6f8a9e0f?auto=format&fit=crop&w=800&q=80' },
       ],
     },
     {
@@ -124,9 +124,9 @@ export const seedDatabase = async () => {
       itemCount: 6,
       status: CategoryStatus.ACTIVE,
       subcategories: [
-        { name: 'Kathmandu Valley World Heritage', slug: 'kathmandu-heritage', description: 'Durbar squares, Swayambhunath, and Pashupatinath', itemCount: 3 },
-        { name: 'Pokhara Scenic & Lake Tour', slug: 'pokhara-lakeside', description: 'Phewa lake boating, Sarangkot sunrise, and mountain views', itemCount: 3 },
-        { name: 'Lumbini Sacred Pilgrimage', slug: 'lumbini-birthplace', description: 'Birthplace of Lord Buddha and international monasteries', itemCount: 2 },
+        { name: 'Kathmandu Valley World Heritage', slug: 'kathmandu-heritage', description: 'Durbar squares, Swayambhunath, and Pashupatinath', itemCount: 3, image: 'https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=800&q=80' },
+        { name: 'Pokhara Scenic & Lake Tour', slug: 'pokhara-lakeside', description: 'Phewa lake boating, Sarangkot sunrise, and mountain views', itemCount: 3, image: 'https://images.unsplash.com/photo-1544644181-1484b3fdfc32?auto=format&fit=crop&w=800&q=80' },
+        { name: 'Lumbini Sacred Pilgrimage', slug: 'lumbini-birthplace', description: 'Birthplace of Lord Buddha and international monasteries', itemCount: 2, image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=800&q=80' },
       ],
     },
     {
@@ -138,9 +138,9 @@ export const seedDatabase = async () => {
       itemCount: 4,
       status: CategoryStatus.ACTIVE,
       subcategories: [
-        { name: 'Everest Helicopter Day Tour', slug: 'everest-heli-tour', description: 'Fly to Kala Patthar and champagne breakfast at Everest', itemCount: 2 },
-        { name: 'Annapurna Heli Landing', slug: 'annapurna-heli-landing', description: 'Direct helicopter landing at Annapurna Base Camp', itemCount: 2 },
-        { name: 'Gosaikunda Heli Flight', slug: 'gosaikunda-heli', description: 'Quick morning helicopter flight to sacred Gosaikunda', itemCount: 1 },
+        { name: 'Everest Helicopter Day Tour', slug: 'everest-heli-tour', description: 'Fly to Kala Patthar and champagne breakfast at Everest', itemCount: 2, image: 'https://images.unsplash.com/photo-1516481400365-878b508f2fea?auto=format&fit=crop&w=800&q=80' },
+        { name: 'Annapurna Heli Landing', slug: 'annapurna-heli-landing', description: 'Direct helicopter landing at Annapurna Base Camp', itemCount: 2, image: 'https://images.unsplash.com/photo-1583870908408-3f9c6f8a9e0f?auto=format&fit=crop&w=800&q=80' },
+        { name: 'Gosaikunda Heli Flight', slug: 'gosaikunda-heli', description: 'Quick morning helicopter flight to sacred Gosaikunda', itemCount: 1, image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80' },
       ],
     },
     {
@@ -152,8 +152,8 @@ export const seedDatabase = async () => {
       itemCount: 3,
       status: CategoryStatus.ACTIVE,
       subcategories: [
-        { name: 'Chitwan National Park Safari', slug: 'chitwan-safari', description: 'One-horned rhinos, Bengal tigers, and canoe rides', itemCount: 2 },
-        { name: 'Bardia Wilderness Sanctuary', slug: 'bardia-safari', description: 'Pristine jungle sanctuary in western Nepal', itemCount: 1 },
+        { name: 'Chitwan National Park Safari', slug: 'chitwan-safari', description: 'One-horned rhinos, Bengal tigers, and canoe rides', itemCount: 2, image: 'https://images.unsplash.com/photo-1580137189272-c9379f8864fd?auto=format&fit=crop&w=800&q=80' },
+        { name: 'Bardia Wilderness Sanctuary', slug: 'bardia-safari', description: 'Pristine jungle sanctuary in western Nepal', itemCount: 1, image: 'https://images.unsplash.com/photo-1580137189272-c9379f8864fd?auto=format&fit=crop&w=800&q=80' },
       ],
     },
     {
@@ -165,9 +165,9 @@ export const seedDatabase = async () => {
       itemCount: 4,
       status: CategoryStatus.ACTIVE,
       subcategories: [
-        { name: 'Mt. Everest Expedition (8,848m)', slug: 'mt-everest-expedition', description: 'Ultimate summit of the world with 1:1 Sherpa guide ratio', itemCount: 2 },
-        { name: 'Mt. Lhotse Expedition (8,516m)', slug: 'mt-lhotse-expedition', description: 'World 4th highest peak via South Col route', itemCount: 1 },
-        { name: 'Mt. Manaslu Expedition (8,163m)', slug: 'mt-manaslu-expedition', description: 'Autumn 8000m expedition in Gorkha region', itemCount: 2 },
+        { name: 'Mt. Everest Expedition (8,848m)', slug: 'mt-everest-expedition', description: 'Ultimate summit of the world with 1:1 Sherpa guide ratio', itemCount: 2, image: 'https://images.unsplash.com/photo-1583870908408-3f9c6f8a9e0f?auto=format&fit=crop&w=800&q=80' },
+        { name: 'Mt. Lhotse Expedition (8,516m)', slug: 'mt-lhotse-expedition', description: 'World 4th highest peak via South Col route', itemCount: 1, image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80' },
+        { name: 'Mt. Manaslu Expedition (8,163m)', slug: 'mt-manaslu-expedition', description: 'Autumn 8000m expedition in Gorkha region', itemCount: 2, image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=800&q=80' },
       ],
     },
     {
@@ -179,10 +179,10 @@ export const seedDatabase = async () => {
       itemCount: 5,
       status: CategoryStatus.ACTIVE,
       subcategories: [
-        { name: 'Ama Dablam Expedition (6,812m)', slug: 'ama-dablam-expedition', description: 'The Jewel of the Himalayas technical ridge climbing', itemCount: 2 },
-        { name: 'Island Peak (Imja Tse 6,189m)', slug: 'island-peak-climbing', description: 'Classic Himalayan climbing peak combined with EBC', itemCount: 3 },
-        { name: 'Mera Peak (6,476m)', slug: 'mera-peak-climbing', description: 'Highest trekking peak in Nepal with 5 x 8000m views', itemCount: 2 },
-        { name: 'Lobuche East (6,119m)', slug: 'lobuche-east-climbing', description: 'Technical snow ridge climb near Everest Base Camp', itemCount: 2 },
+        { name: 'Ama Dablam Expedition (6,812m)', slug: 'ama-dablam-expedition', description: 'The Jewel of the Himalayas technical ridge climbing', itemCount: 2, image: 'https://images.unsplash.com/photo-1516482498816-ba38689e1c14?auto=format&fit=crop&w=800&q=80' },
+        { name: 'Island Peak (Imja Tse 6,189m)', slug: 'island-peak-climbing', description: 'Classic Himalayan climbing peak combined with EBC', itemCount: 3, image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80' },
+        { name: 'Mera Peak (6,476m)', slug: 'mera-peak-climbing', description: 'Highest trekking peak in Nepal with 5 x 8000m views', itemCount: 2, image: 'https://images.unsplash.com/photo-1583870908408-3f9c6f8a9e0f?auto=format&fit=crop&w=800&q=80' },
+        { name: 'Lobuche East (6,119m)', slug: 'lobuche-east-climbing', description: 'Technical snow ridge climb near Everest Base Camp', itemCount: 2, image: 'https://images.unsplash.com/photo-1516482498816-ba38689e1c14?auto=format&fit=crop&w=800&q=80' },
       ],
     },
     {
@@ -247,12 +247,14 @@ export const seedDatabase = async () => {
               itemCount: sub.itemCount || 0,
               status: CategoryStatus.ACTIVE,
               parentId: parentCat.id,
+              image: (sub as any).image || null,
             }),
           );
         } else {
           existingSub.parentId = parentCat.id;
           existingSub.type = cat.type;
           existingSub.description = sub.description || existingSub.description;
+          if ((sub as any).image) existingSub.image = (sub as any).image;
           await categoryRepo.save(existingSub);
         }
       }
@@ -623,7 +625,6 @@ export const seedDatabase = async () => {
       shortDesc:
         'Experience the ultimate trek to the base of Mt. Everest, staying in handpicked premium luxury lodges with Sherpa legends.',
       bestSeason: 'March - May & September - November',
-      permitsRequired: ['Sagarmatha NP Permit', 'Khumbu Pasang Lhamu Entry'],
       itinerary: sampleEverestItinerary,
       faqs: defaultTrekFaqs,
       reviews: defaultTrekReviews,
@@ -658,7 +659,6 @@ export const seedDatabase = async () => {
       shortDesc:
         "Experience the ultimate trek to the base of the world's highest peak, staying in handpicked premium luxury lodges with Sherpa legends.",
       bestSeason: 'March - May & September - November',
-      permitsRequired: ['Sagarmatha NP Permit', 'Khumbu Pasang Lhamu Entry'],
       itinerary: sampleEverestItinerary,
       faqs: defaultTrekFaqs,
       reviews: defaultTrekReviews,
@@ -693,7 +693,6 @@ export const seedDatabase = async () => {
       shortDesc:
         'Witness the complete diversity of the Himalayas, from lush tropical valleys and pine-covered ridges to Thorong La pass.',
       bestSeason: 'March - May & September - November',
-      permitsRequired: ['ACAP Permit', 'TIMS Card'],
       faqs: defaultTrekFaqs,
       reviews: defaultTrekReviews,
     },
@@ -727,7 +726,6 @@ export const seedDatabase = async () => {
       shortDesc:
         'Immerse in breathtaking panoramic views of the Annapurna Massif with private lodge accommodation, gourmet dining, and helicopter return.',
       bestSeason: 'September - May',
-      permitsRequired: ['ACAP Permit', 'TIMS Card'],
       faqs: defaultTrekFaqs,
       reviews: defaultTrekReviews,
     },
@@ -761,11 +759,6 @@ export const seedDatabase = async () => {
       shortDesc:
         'Circle the world’s eighth-highest peak through untouched Tibetan-influenced villages and Larkya La pass.',
       bestSeason: 'March - May & September - November',
-      permitsRequired: [
-        'Manaslu Restricted Area Permit',
-        'MCAP Permit',
-        'ACAP Permit',
-      ],
       faqs: defaultTrekFaqs,
       reviews: defaultTrekReviews,
     },
@@ -799,7 +792,6 @@ export const seedDatabase = async () => {
       shortDesc:
         'Trek through pristine rhododendron forests, Tamang mountain villages, and glacier-fed alpine lakes near Kathmandu.',
       bestSeason: 'March - May & September - December',
-      permitsRequired: ['Langtang NP Permit', 'TIMS Card'],
       faqs: defaultTrekFaqs,
       reviews: defaultTrekReviews,
     },
@@ -967,7 +959,6 @@ export const seedDatabase = async () => {
       shortDesc:
         'Explore medieval durbar squares, ancient pagoda palaces, and sacred stupas with private historians.',
       bestSeason: 'Year-round, best October - April',
-      permitsRequired: ['Monuments Entrance Fees'],
       faqs: defaultTourFaqs,
       reviews: defaultTourReviews,
     },
@@ -1003,7 +994,6 @@ export const seedDatabase = async () => {
       shortDesc:
         'Unwind beside Phewa Lake with private sunrise cruises, mountain-view yoga sessions, and full spa treatments framed by the Annapurna range.',
       bestSeason: 'September - May',
-      permitsRequired: ['Sarangkot Entry'],
       faqs: defaultTourFaqs,
       reviews: defaultTourReviews,
     },
@@ -1039,7 +1029,6 @@ export const seedDatabase = async () => {
       shortDesc:
         'Track one-horned rhinos and Bengal tigers across Chitwan National Park, staying in luxury jungle resort.',
       bestSeason: 'October - March',
-      permitsRequired: ['Chitwan NP Entry'],
       faqs: defaultTourFaqs,
       reviews: defaultTourReviews,
     },
@@ -1075,7 +1064,6 @@ export const seedDatabase = async () => {
       shortDesc:
         "Fly within view of Mt. Everest's summit at dawn, then land in the Khumbu foothills for a guided day in a traditional Sherpa village.",
       bestSeason: 'March - May & September - November',
-      permitsRequired: ['Helicopter Charter Permit'],
       faqs: defaultTourFaqs,
       reviews: defaultTourReviews,
     },
@@ -1214,11 +1202,6 @@ export const seedDatabase = async () => {
       shortDesc:
         'Climb the Matterhorn of the Himalayas with 1:1 IFMGA Sherpa summit leaders and high-altitude luxury basecamp support.',
       bestSeason: 'March - May & September - November',
-      permitsRequired: [
-        'NMA Climbing Permit',
-        'Sagarmatha NP Permit',
-        'Garbage Deposit',
-      ],
       faqs: defaultExpeditionFaqs,
       reviews: defaultExpeditionReviews,
     },
@@ -1256,11 +1239,6 @@ export const seedDatabase = async () => {
       shortDesc:
         'An ideal introductory Himalayan summit, combining the classic Everest Base Camp approach with a guided technical ascent of Island Peak.',
       bestSeason: 'March - May & September - November',
-      permitsRequired: [
-        'Sagarmatha NP Permit',
-        'Island Peak Climbing Permit',
-        'Khumbu Pasang Lhamu Entry',
-      ],
       faqs: defaultExpeditionFaqs,
       reviews: defaultExpeditionReviews,
     },
@@ -1298,11 +1276,6 @@ export const seedDatabase = async () => {
       shortDesc:
         'The ultimate mountaineering achievement. A full South Col expedition with 1:1 Sherpa support and bottled oxygen.',
       bestSeason: 'April - May',
-      permitsRequired: [
-        'Everest Summit Permit',
-        'Sagarmatha NP Permit',
-        'Khumbu Icefall Route Fee',
-      ],
       faqs: defaultExpeditionFaqs,
       reviews: defaultExpeditionReviews,
     },
@@ -1340,7 +1313,6 @@ export const seedDatabase = async () => {
       shortDesc:
         "Trek through remote Hinku valley and climb Nepal's highest trekking peak for panoramic views of five 8,000m summits.",
       bestSeason: 'March - May & September - November',
-      permitsRequired: ['NMA Mera Peak Permit', 'Makalu Barun NP Permit'],
       faqs: defaultExpeditionFaqs,
       reviews: defaultExpeditionReviews,
     },

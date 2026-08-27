@@ -123,15 +123,6 @@ export class CreateExpeditionDto {
 
   @IsOptional()
   @IsString()
-  permitsText?: string;
-
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  permitsRequired?: string[];
-
-  @IsOptional()
-  @IsString()
   inclusionsText?: string;
 
   @IsOptional()
@@ -299,15 +290,6 @@ export class UpdateExpeditionDto {
   @IsOptional()
   @IsString()
   groupSizeRange?: string;
-
-  @IsOptional()
-  @IsString()
-  permitsText?: string;
-
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  permitsRequired?: string[];
 
   @IsOptional()
   @IsString()

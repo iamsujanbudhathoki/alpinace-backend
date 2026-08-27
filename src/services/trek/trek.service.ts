@@ -252,17 +252,7 @@ export class TrekService {
       const cat = await this.categoryRepo.findOne({
         where: { id: categoryId },
       });
-      if (!cat) categoryId = undefined;
     }
-
-    const permitsArray = dto.permitsRequired
-      ? dto.permitsRequired
-      : dto.permitsText
-        ? dto.permitsText
-            .split(',')
-            .map((s) => s.trim())
-            .filter(Boolean)
-        : [];
 
     const trek = this.repo.create({
       title: dto.title,
@@ -284,7 +274,6 @@ export class TrekService {
       accommodation: dto.accommodation,
       meals: dto.meals,
       groupSizeRange: dto.groupSizeRange,
-      permitsRequired: permitsArray,
       inclusionsText: dto.inclusionsText,
       exclusionsText: dto.exclusionsText,
       itinerary: dto.itinerary || [],
@@ -340,14 +329,6 @@ export class TrekService {
     if (dto.meals !== undefined) trek.meals = dto.meals;
     if (dto.groupSizeRange !== undefined)
       trek.groupSizeRange = dto.groupSizeRange;
-    if (dto.permitsRequired) {
-      trek.permitsRequired = dto.permitsRequired;
-    } else if (dto.permitsText !== undefined) {
-      trek.permitsRequired = dto.permitsText
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean);
-    }
     if (dto.inclusionsText !== undefined)
       trek.inclusionsText = dto.inclusionsText;
     if (dto.exclusionsText !== undefined)

@@ -23,9 +23,10 @@ export const authLimiter = rateLimit({
  */
 export const inquiryLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 15, // Limit each IP to 15 inquiries per windowMs
+  max: 30, // Limit each IP to 30 POST inquiries per 15 minutes
   standardHeaders: 'draft-7',
   legacyHeaders: false,
+  skip: (req) => req.method !== 'POST',
   message: {
     success: false,
     message: 'Too many inquiries submitted from this IP. Please wait a few minutes before submitting another.',

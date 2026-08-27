@@ -100,15 +100,6 @@ export class CreateTrekDto {
 
   @IsOptional()
   @IsString()
-  permitsText?: string;
-
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  permitsRequired?: string[];
-
-  @IsOptional()
-  @IsString()
   inclusionsText?: string;
 
   @IsOptional()
@@ -259,15 +250,6 @@ export class UpdateTrekDto {
   @IsOptional()
   @IsString()
   groupSizeRange?: string;
-
-  @IsOptional()
-  @IsString()
-  permitsText?: string;
-
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  permitsRequired?: string[];
 
   @IsOptional()
   @IsString()

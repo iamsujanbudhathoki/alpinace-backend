@@ -111,15 +111,6 @@ export class CreateTourDto {
 
   @IsOptional()
   @IsString()
-  permitsText?: string;
-
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  permitsRequired?: string[];
-
-  @IsOptional()
-  @IsString()
   inclusionsText?: string;
 
   @IsOptional()
@@ -278,15 +269,6 @@ export class UpdateTourDto {
   @IsOptional()
   @IsString()
   groupSizeRange?: string;
-
-  @IsOptional()
-  @IsString()
-  permitsText?: string;
-
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  permitsRequired?: string[];
 
   @IsOptional()
   @IsString()

@@ -284,15 +284,6 @@ export class ExpeditionService {
       if (!cat) categoryId = undefined;
     }
 
-    const permitsArray = dto.permitsRequired
-      ? dto.permitsRequired
-      : dto.permitsText
-        ? dto.permitsText
-            .split(',')
-            .map((s) => s.trim())
-            .filter(Boolean)
-        : [];
-
     const altitude =
       dto.peakHeightM !== undefined
         ? Number(dto.peakHeightM)
@@ -325,7 +316,6 @@ export class ExpeditionService {
       accommodation: dto.accommodation,
       meals: dto.meals,
       groupSizeRange: dto.groupSizeRange,
-      permitsRequired: permitsArray,
       inclusionsText: dto.inclusionsText,
       exclusionsText: dto.exclusionsText,
       itinerary: dto.itinerary || [],
@@ -389,14 +379,6 @@ export class ExpeditionService {
     if (dto.meals !== undefined) exp.meals = dto.meals;
     if (dto.groupSizeRange !== undefined)
       exp.groupSizeRange = dto.groupSizeRange;
-    if (dto.permitsRequired) {
-      exp.permitsRequired = dto.permitsRequired;
-    } else if (dto.permitsText !== undefined) {
-      exp.permitsRequired = dto.permitsText
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean);
-    }
     if (dto.inclusionsText !== undefined)
       exp.inclusionsText = dto.inclusionsText;
     if (dto.exclusionsText !== undefined)

@@ -248,17 +248,7 @@ export class TourService {
       const cat = await this.categoryRepo.findOne({
         where: { id: categoryId },
       });
-      if (!cat) categoryId = undefined;
     }
-
-    const permitsArray = dto.permitsRequired
-      ? dto.permitsRequired
-      : dto.permitsText
-        ? dto.permitsText
-            .split(',')
-            .map((s) => s.trim())
-            .filter(Boolean)
-        : [];
 
     const tour = this.repo.create({
       title: dto.title,
@@ -282,7 +272,6 @@ export class TourService {
       accommodation: dto.accommodation,
       meals: dto.meals,
       groupSizeRange: dto.groupSizeRange,
-      permitsRequired: permitsArray,
       inclusionsText: dto.inclusionsText,
       exclusionsText: dto.exclusionsText,
       itinerary: dto.itinerary || [],
@@ -340,14 +329,6 @@ export class TourService {
     if (dto.meals !== undefined) tour.meals = dto.meals;
     if (dto.groupSizeRange !== undefined)
       tour.groupSizeRange = dto.groupSizeRange;
-    if (dto.permitsRequired) {
-      tour.permitsRequired = dto.permitsRequired;
-    } else if (dto.permitsText !== undefined) {
-      tour.permitsRequired = dto.permitsText
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean);
-    }
     if (dto.inclusionsText !== undefined)
       tour.inclusionsText = dto.inclusionsText;
     if (dto.exclusionsText !== undefined)

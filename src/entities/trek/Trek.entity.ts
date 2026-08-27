@@ -158,9 +158,6 @@ export class Trek extends CommonEntity {
   @Column({ name: 'group_size_range', nullable: true })
   groupSizeRange: string;
 
-  @Column({ name: 'permits_required', type: 'simple-array', nullable: true })
-  permitsRequired: string[];
-
   @Column({ name: 'inclusions_text', type: 'text', nullable: true })
   inclusionsText: string;
 

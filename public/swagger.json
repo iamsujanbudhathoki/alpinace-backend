@@ -746,9 +746,6 @@
 					"shortDesc": {
 						"type": "string"
 					},
-					"image": {
-						"type": "string"
-					},
 					"country": {
 						"type": "string"
 					},
@@ -805,15 +802,6 @@
 							"$ref": "#/components/schemas/TripDepartureDateDto"
 						},
 						"type": "array"
-					},
-					"galleryImages": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"mapImage": {
-						"type": "string"
 					},
 					"packageFiles": {
 						"items": {
@@ -886,9 +874,6 @@
 					"shortDesc": {
 						"type": "string"
 					},
-					"image": {
-						"type": "string"
-					},
 					"country": {
 						"type": "string"
 					},
@@ -945,15 +930,6 @@
 							"$ref": "#/components/schemas/TripDepartureDateDto"
 						},
 						"type": "array"
-					},
-					"galleryImages": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"mapImage": {
-						"type": "string"
 					},
 					"packageFiles": {
 						"items": {
@@ -1358,9 +1334,6 @@
 					"shortDesc": {
 						"type": "string"
 					},
-					"image": {
-						"type": "string"
-					},
 					"country": {
 						"type": "string"
 					},
@@ -1417,15 +1390,6 @@
 							"$ref": "#/components/schemas/TripDepartureDateDto"
 						},
 						"type": "array"
-					},
-					"galleryImages": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"mapImage": {
-						"type": "string"
 					},
 					"packageFiles": {
 						"items": {
@@ -1504,9 +1468,6 @@
 					"shortDesc": {
 						"type": "string"
 					},
-					"image": {
-						"type": "string"
-					},
 					"country": {
 						"type": "string"
 					},
@@ -1563,15 +1524,6 @@
 							"$ref": "#/components/schemas/TripDepartureDateDto"
 						},
 						"type": "array"
-					},
-					"galleryImages": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"mapImage": {
-						"type": "string"
 					},
 					"packageFiles": {
 						"items": {
@@ -3415,9 +3367,6 @@
 					"shortDesc": {
 						"type": "string"
 					},
-					"image": {
-						"type": "string"
-					},
 					"country": {
 						"type": "string"
 					},
@@ -3474,15 +3423,6 @@
 							"$ref": "#/components/schemas/TripDepartureDateDto"
 						},
 						"type": "array"
-					},
-					"galleryImages": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"mapImage": {
-						"type": "string"
 					},
 					"packageFiles": {
 						"items": {
@@ -3568,9 +3508,6 @@
 					"shortDesc": {
 						"type": "string"
 					},
-					"image": {
-						"type": "string"
-					},
 					"country": {
 						"type": "string"
 					},
@@ -3627,15 +3564,6 @@
 							"$ref": "#/components/schemas/TripDepartureDateDto"
 						},
 						"type": "array"
-					},
-					"galleryImages": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"mapImage": {
-						"type": "string"
 					},
 					"packageFiles": {
 						"items": {
@@ -3973,10 +3901,6 @@
 					"status": {
 						"$ref": "#/components/schemas/CategoryStatus"
 					},
-					"image": {
-						"type": "string",
-						"nullable": true
-					},
 					"mediaId": {
 						"type": "string",
 						"nullable": true
@@ -4012,10 +3936,6 @@
 					},
 					"status": {
 						"$ref": "#/components/schemas/CategoryStatus"
-					},
-					"image": {
-						"type": "string",
-						"nullable": true
 					},
 					"mediaId": {
 						"type": "string",

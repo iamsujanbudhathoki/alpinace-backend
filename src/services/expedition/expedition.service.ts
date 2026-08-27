@@ -270,6 +270,12 @@ export class ExpeditionService {
   }
 
   async create(dto: CreateExpeditionDto): Promise<Expedition> {
+    await this.mediaService.validateMediaIdsExists([
+      dto.coverMediaId,
+      dto.mapMediaId,
+      ...(dto.galleryMediaIds || []),
+    ]);
+
     let slug = dto.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     const existing = await this.repo.findOne({ where: { slug } });
     if (existing) {
@@ -307,7 +313,6 @@ export class ExpeditionService {
       priceUSD: Number(dto.priceUSD),
       status: dto.status || ExpeditionStatus.ACTIVE,
       shortDesc: dto.shortDesc,
-      image: dto.image,
       coverMediaId: dto.coverMediaId,
       country: dto.country || 'Nepal',
       activity: dto.activity || TripActivity.PEAK_CLIMBING,
@@ -324,9 +329,7 @@ export class ExpeditionService {
       addonsText: dto.addonsText,
       usefulInfoText: dto.usefulInfoText,
       departureDates: dto.departureDates || [],
-      galleryImages: dto.galleryImages || [],
       galleryMediaIds: dto.galleryMediaIds || [],
-      mapImage: dto.mapImage,
       mapMediaId: dto.mapMediaId,
       packageFiles: dto.packageFiles || [],
       metaTitle: dto.metaTitle,
@@ -342,6 +345,12 @@ export class ExpeditionService {
   }
 
   async update(id: string, dto: UpdateExpeditionDto): Promise<Expedition> {
+    await this.mediaService.validateMediaIdsExists([
+      dto.coverMediaId,
+      dto.mapMediaId,
+      ...(dto.galleryMediaIds || []),
+    ]);
+
     const exp = await this.getByIdOrSlug(id);
 
     if (dto.title && dto.title !== exp.title) {
@@ -368,7 +377,6 @@ export class ExpeditionService {
     if (dto.priceUSD !== undefined) exp.priceUSD = Number(dto.priceUSD);
     if (dto.status) exp.status = dto.status;
     if (dto.shortDesc !== undefined) exp.shortDesc = dto.shortDesc;
-    if (dto.image !== undefined) exp.image = dto.image;
     if (dto.coverMediaId !== undefined) exp.coverMediaId = dto.coverMediaId;
     if (dto.country !== undefined) exp.country = dto.country;
     if (dto.activity !== undefined) exp.activity = dto.activity;
@@ -389,9 +397,7 @@ export class ExpeditionService {
     if (dto.addonsText !== undefined) exp.addonsText = dto.addonsText;
     if (dto.usefulInfoText !== undefined) exp.usefulInfoText = dto.usefulInfoText;
     if (dto.departureDates !== undefined) exp.departureDates = dto.departureDates;
-    if (dto.galleryImages !== undefined) exp.galleryImages = dto.galleryImages;
     if (dto.galleryMediaIds !== undefined) exp.galleryMediaIds = dto.galleryMediaIds;
-    if (dto.mapImage !== undefined) exp.mapImage = dto.mapImage;
     if (dto.mapMediaId !== undefined) exp.mapMediaId = dto.mapMediaId;
     if (dto.packageFiles !== undefined) exp.packageFiles = dto.packageFiles;
     if (dto.metaTitle !== undefined) exp.metaTitle = dto.metaTitle;

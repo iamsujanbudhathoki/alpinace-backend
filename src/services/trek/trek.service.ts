@@ -254,6 +254,12 @@ export class TrekService {
       });
     }
 
+    await this.mediaService.validateMediaIdsExists([
+      dto.coverMediaId,
+      dto.mapMediaId,
+      ...(dto.galleryMediaIds || []),
+    ]);
+
     const trek = this.repo.create({
       title: dto.title,
       slug,
@@ -265,7 +271,6 @@ export class TrekService {
       priceUSD: Number(dto.priceUSD),
       status: dto.status || TrekStatus.ACTIVE,
       shortDesc: dto.shortDesc,
-      image: dto.image,
       coverMediaId: dto.coverMediaId,
       country: dto.country || 'Nepal',
       activity: dto.activity || TripActivity.TREKKING_HIKING,
@@ -282,9 +287,7 @@ export class TrekService {
       addonsText: dto.addonsText,
       usefulInfoText: dto.usefulInfoText,
       departureDates: dto.departureDates || [],
-      galleryImages: dto.galleryImages || [],
       galleryMediaIds: dto.galleryMediaIds || [],
-      mapImage: dto.mapImage,
       mapMediaId: dto.mapMediaId,
       packageFiles: dto.packageFiles || [],
       metaTitle: dto.metaTitle,
@@ -300,6 +303,12 @@ export class TrekService {
   }
 
   async update(id: string, dto: UpdateTrekDto): Promise<Trek> {
+    await this.mediaService.validateMediaIdsExists([
+      dto.coverMediaId,
+      dto.mapMediaId,
+      ...(dto.galleryMediaIds || []),
+    ]);
+
     const trek = await this.getByIdOrSlug(id);
 
     if (dto.title && dto.title !== trek.title) {
@@ -318,7 +327,6 @@ export class TrekService {
     if (dto.priceUSD !== undefined) trek.priceUSD = Number(dto.priceUSD);
     if (dto.status) trek.status = dto.status;
     if (dto.shortDesc !== undefined) trek.shortDesc = dto.shortDesc;
-    if (dto.image !== undefined) trek.image = dto.image;
     if (dto.coverMediaId !== undefined) trek.coverMediaId = dto.coverMediaId;
     if (dto.country !== undefined) trek.country = dto.country;
     if (dto.activity !== undefined) trek.activity = dto.activity;
@@ -339,9 +347,7 @@ export class TrekService {
     if (dto.addonsText !== undefined) trek.addonsText = dto.addonsText;
     if (dto.usefulInfoText !== undefined) trek.usefulInfoText = dto.usefulInfoText;
     if (dto.departureDates !== undefined) trek.departureDates = dto.departureDates;
-    if (dto.galleryImages !== undefined) trek.galleryImages = dto.galleryImages;
     if (dto.galleryMediaIds !== undefined) trek.galleryMediaIds = dto.galleryMediaIds;
-    if (dto.mapImage !== undefined) trek.mapImage = dto.mapImage;
     if (dto.mapMediaId !== undefined) trek.mapMediaId = dto.mapMediaId;
     if (dto.packageFiles !== undefined) trek.packageFiles = dto.packageFiles;
     if (dto.metaTitle !== undefined) trek.metaTitle = dto.metaTitle;

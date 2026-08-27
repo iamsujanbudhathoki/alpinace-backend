@@ -44,7 +44,7 @@ export class UpdateAboutUsDto {
 
   @IsOptional()
   @IsString()
-  heroImage?: string;
+  heroMediaId?: string;
 
   @IsOptional()
   @IsString()
@@ -56,7 +56,7 @@ export class UpdateAboutUsDto {
 
   @IsOptional()
   @IsString()
-  storyImage?: string;
+  storyMediaId?: string;
 
   @IsOptional()
   @IsString()

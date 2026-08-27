@@ -849,8 +849,7 @@
 					"title",
 					"region",
 					"durationDays",
-					"priceUSD",
-					"image"
+					"priceUSD"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -1462,8 +1461,7 @@
 					"title",
 					"region",
 					"durationDays",
-					"priceUSD",
-					"image"
+					"priceUSD"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -1608,6 +1606,252 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"TestimonialStatus": {
+				"enum": [
+					"active",
+					"inactive"
+				],
+				"type": "string"
+			},
+			"Testimonial": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"deletedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"author": {
+						"type": "string"
+					},
+					"role": {
+						"type": "string"
+					},
+					"country": {
+						"type": "string"
+					},
+					"tripName": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					},
+					"avatar": {
+						"type": "string"
+					},
+					"avatarMediaId": {
+						"type": "string"
+					},
+					"rating": {
+						"type": "number",
+						"format": "double"
+					},
+					"status": {
+						"$ref": "#/components/schemas/TestimonialStatus"
+					},
+					"order": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"deletedAt",
+					"author",
+					"content",
+					"rating",
+					"status",
+					"order"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_Testimonial-Array_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"items": {
+									"$ref": "#/components/schemas/Testimonial"
+								},
+								"type": "array"
+							},
+							{
+								"items": {
+									"items": {
+										"$ref": "#/components/schemas/Testimonial"
+									},
+									"type": "array"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ReorderTestimonialItemDto": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"order": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"id",
+					"order"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ReorderTestimonialsDto": {
+				"properties": {
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/ReorderTestimonialItemDto"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"items"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_Testimonial_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/Testimonial"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/Testimonial"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateTestimonialDto": {
+				"properties": {
+					"author": {
+						"type": "string"
+					},
+					"role": {
+						"type": "string"
+					},
+					"country": {
+						"type": "string"
+					},
+					"tripName": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					},
+					"avatarMediaId": {
+						"type": "string"
+					},
+					"rating": {
+						"type": "number",
+						"format": "double"
+					},
+					"status": {
+						"$ref": "#/components/schemas/TestimonialStatus"
+					},
+					"order": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"author",
+					"content"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateTestimonialDto": {
+				"properties": {
+					"author": {
+						"type": "string"
+					},
+					"role": {
+						"type": "string"
+					},
+					"country": {
+						"type": "string"
+					},
+					"tripName": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					},
+					"avatarMediaId": {
+						"type": "string"
+					},
+					"rating": {
+						"type": "number",
+						"format": "double"
+					},
+					"status": {
+						"$ref": "#/components/schemas/TestimonialStatus"
+					},
+					"order": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"TeamMemberStatus": {
 				"enum": [
 					"active",
@@ -1638,6 +1882,9 @@
 						"type": "string"
 					},
 					"avatar": {
+						"type": "string"
+					},
+					"avatarMediaId": {
 						"type": "string"
 					},
 					"experience": {
@@ -1780,7 +2027,7 @@
 					"bio": {
 						"type": "string"
 					},
-					"avatar": {
+					"avatarMediaId": {
 						"type": "string"
 					},
 					"experience": {
@@ -1812,7 +2059,7 @@
 					"bio": {
 						"type": "string"
 					},
-					"avatar": {
+					"avatarMediaId": {
 						"type": "string"
 					},
 					"experience": {
@@ -2615,237 +2862,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"GuideRole": {
-				"enum": [
-					"Lead Expedition Leader",
-					"Senior Trekking Guide",
-					"High Altitude Sherpa",
-					"Cultural Tour Guide"
-				],
-				"type": "string"
-			},
-			"GuideStatus": {
-				"enum": [
-					"Available",
-					"On Mountain",
-					"On Leave"
-				],
-				"type": "string"
-			},
-			"Guide": {
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"deletedAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"name": {
-						"type": "string"
-					},
-					"role": {
-						"$ref": "#/components/schemas/GuideRole"
-					},
-					"summitStats": {
-						"type": "string"
-					},
-					"certifications": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"status": {
-						"$ref": "#/components/schemas/GuideStatus"
-					},
-					"phone": {
-						"type": "string"
-					},
-					"email": {
-						"type": "string"
-					},
-					"currentAssignment": {
-						"type": "string"
-					},
-					"avatarUrl": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"deletedAt",
-					"name",
-					"role",
-					"summitStats",
-					"certifications",
-					"status",
-					"phone",
-					"email",
-					"currentAssignment",
-					"avatarUrl"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ApiResponse_Guide-Array_": {
-				"properties": {
-					"data": {
-						"anyOf": [
-							{
-								"items": {
-									"$ref": "#/components/schemas/Guide"
-								},
-								"type": "array"
-							},
-							{
-								"items": {
-									"items": {
-										"$ref": "#/components/schemas/Guide"
-									},
-									"type": "array"
-								},
-								"type": "array"
-							}
-						],
-						"nullable": true
-					},
-					"pagination": {
-						"$ref": "#/components/schemas/PaginationMeta"
-					},
-					"success": {
-						"type": "boolean"
-					},
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"data",
-					"success",
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ApiResponse_Guide_": {
-				"properties": {
-					"data": {
-						"anyOf": [
-							{
-								"$ref": "#/components/schemas/Guide"
-							},
-							{
-								"items": {
-									"$ref": "#/components/schemas/Guide"
-								},
-								"type": "array"
-							}
-						],
-						"nullable": true
-					},
-					"pagination": {
-						"$ref": "#/components/schemas/PaginationMeta"
-					},
-					"success": {
-						"type": "boolean"
-					},
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"data",
-					"success",
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"CreateGuideDto": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"role": {
-						"$ref": "#/components/schemas/GuideRole"
-					},
-					"summitStats": {
-						"type": "string"
-					},
-					"certifications": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"status": {
-						"$ref": "#/components/schemas/GuideStatus"
-					},
-					"phone": {
-						"type": "string"
-					},
-					"email": {
-						"type": "string"
-					},
-					"currentAssignment": {
-						"type": "string"
-					},
-					"avatarUrl": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"name",
-					"role",
-					"phone",
-					"email",
-					"avatarUrl"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"UpdateGuideDto": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"role": {
-						"$ref": "#/components/schemas/GuideRole"
-					},
-					"summitStats": {
-						"type": "string"
-					},
-					"certifications": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"status": {
-						"$ref": "#/components/schemas/GuideStatus"
-					},
-					"phone": {
-						"type": "string"
-					},
-					"email": {
-						"type": "string"
-					},
-					"currentAssignment": {
-						"type": "string"
-					},
-					"avatarUrl": {
-						"type": "string"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
 			"FaqStatus": {
 				"enum": [
 					"active",
@@ -3502,8 +3518,7 @@
 					"title",
 					"region",
 					"durationDays",
-					"priceUSD",
-					"image"
+					"priceUSD"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -4391,9 +4406,6 @@
 					"content": {
 						"type": "string"
 					},
-					"image": {
-						"type": "string"
-					},
 					"coverMediaId": {
 						"type": "string"
 					},
@@ -4441,9 +4453,6 @@
 					"content": {
 						"type": "string"
 					},
-					"image": {
-						"type": "string"
-					},
 					"coverMediaId": {
 						"type": "string"
 					},
@@ -4459,217 +4468,6 @@
 					},
 					"keywords": {
 						"type": "string"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"AssociateStatus": {
-				"enum": [
-					"active",
-					"draft"
-				],
-				"type": "string"
-			},
-			"Associate": {
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"deletedAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"name": {
-						"type": "string"
-					},
-					"role": {
-						"type": "string"
-					},
-					"company": {
-						"type": "string"
-					},
-					"image": {
-						"type": "string"
-					},
-					"websiteUrl": {
-						"type": "string"
-					},
-					"description": {
-						"type": "string"
-					},
-					"category": {
-						"type": "string"
-					},
-					"status": {
-						"$ref": "#/components/schemas/AssociateStatus"
-					},
-					"order": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"deletedAt",
-					"name",
-					"role",
-					"company",
-					"image",
-					"websiteUrl",
-					"description",
-					"category",
-					"status",
-					"order"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ApiResponse_Associate-Array_": {
-				"properties": {
-					"data": {
-						"anyOf": [
-							{
-								"items": {
-									"$ref": "#/components/schemas/Associate"
-								},
-								"type": "array"
-							},
-							{
-								"items": {
-									"items": {
-										"$ref": "#/components/schemas/Associate"
-									},
-									"type": "array"
-								},
-								"type": "array"
-							}
-						],
-						"nullable": true
-					},
-					"pagination": {
-						"$ref": "#/components/schemas/PaginationMeta"
-					},
-					"success": {
-						"type": "boolean"
-					},
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"data",
-					"success",
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ApiResponse_Associate_": {
-				"properties": {
-					"data": {
-						"anyOf": [
-							{
-								"$ref": "#/components/schemas/Associate"
-							},
-							{
-								"items": {
-									"$ref": "#/components/schemas/Associate"
-								},
-								"type": "array"
-							}
-						],
-						"nullable": true
-					},
-					"pagination": {
-						"$ref": "#/components/schemas/PaginationMeta"
-					},
-					"success": {
-						"type": "boolean"
-					},
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"data",
-					"success",
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"CreateAssociateDto": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"role": {
-						"type": "string"
-					},
-					"company": {
-						"type": "string"
-					},
-					"image": {
-						"type": "string"
-					},
-					"websiteUrl": {
-						"type": "string"
-					},
-					"description": {
-						"type": "string"
-					},
-					"category": {
-						"type": "string"
-					},
-					"status": {
-						"$ref": "#/components/schemas/AssociateStatus"
-					},
-					"order": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"name"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"UpdateAssociateDto": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"role": {
-						"type": "string"
-					},
-					"company": {
-						"type": "string"
-					},
-					"image": {
-						"type": "string"
-					},
-					"websiteUrl": {
-						"type": "string"
-					},
-					"description": {
-						"type": "string"
-					},
-					"category": {
-						"type": "string"
-					},
-					"status": {
-						"$ref": "#/components/schemas/AssociateStatus"
-					},
-					"order": {
-						"type": "number",
-						"format": "double"
 					}
 				},
 				"type": "object",
@@ -4848,6 +4646,9 @@
 					"heroImage": {
 						"type": "string"
 					},
+					"heroMediaId": {
+						"type": "string"
+					},
 					"storyTitle": {
 						"type": "string"
 					},
@@ -4855,6 +4656,9 @@
 						"type": "string"
 					},
 					"storyImage": {
+						"type": "string"
+					},
+					"storyMediaId": {
 						"type": "string"
 					},
 					"mission": {
@@ -4894,10 +4698,8 @@
 					"deletedAt",
 					"heroTitle",
 					"heroSubtitle",
-					"heroImage",
 					"storyTitle",
 					"storyContent",
-					"storyImage",
 					"mission",
 					"vision",
 					"values",
@@ -4984,7 +4786,7 @@
 					"heroSubtitle": {
 						"type": "string"
 					},
-					"heroImage": {
+					"heroMediaId": {
 						"type": "string"
 					},
 					"storyTitle": {
@@ -4993,7 +4795,7 @@
 					"storyContent": {
 						"type": "string"
 					},
-					"storyImage": {
+					"storyMediaId": {
 						"type": "string"
 					},
 					"mission": {
@@ -6026,6 +5828,270 @@
 				]
 			}
 		},
+		"/testimonials": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Testimonial-Array_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Testimonials & Reviews"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/TestimonialStatus"
+						}
+					},
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sortBy",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sortOrder",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"ASC",
+								"DESC",
+								"asc",
+								"desc"
+							]
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Testimonial_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Testimonials & Reviews"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateTestimonialDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/testimonials/reorder": {
+			"put": {
+				"operationId": "Reorder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Testimonials & Reviews"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ReorderTestimonialsDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/testimonials/{id}": {
+			"get": {
+				"operationId": "GetById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Testimonial_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Testimonials & Reviews"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Testimonial_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Testimonials & Reviews"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateTestimonialDto"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "Delete",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Testimonials & Reviews"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/teams": {
 			"get": {
 				"operationId": "GetAll",
@@ -7031,175 +7097,6 @@
 						}
 					}
 				}
-			}
-		},
-		"/guides": {
-			"get": {
-				"operationId": "GetAll",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Guide-Array_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Guides"
-				],
-				"security": [],
-				"parameters": []
-			},
-			"post": {
-				"operationId": "Create",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Guide_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Guides"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/CreateGuideDto"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/guides/{id}": {
-			"get": {
-				"operationId": "GetById",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Guide_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Guides"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			},
-			"put": {
-				"operationId": "Update",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Guide_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Guides"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/UpdateGuideDto"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "Delete",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_boolean_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Guides"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
 			}
 		},
 		"/faqs": {
@@ -8735,184 +8632,6 @@
 				},
 				"tags": [
 					"Blog Articles"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
-		"/associates": {
-			"get": {
-				"operationId": "GetAll",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Associate-Array_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Associates & Partners"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "status",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/AssociateStatus"
-						}
-					}
-				]
-			},
-			"post": {
-				"operationId": "Create",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Associate_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Associates & Partners"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/CreateAssociateDto"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/associates/{id}": {
-			"get": {
-				"operationId": "GetById",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Associate_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Associates & Partners"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			},
-			"put": {
-				"operationId": "Update",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Associate_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Associates & Partners"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/UpdateAssociateDto"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "Delete",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_boolean_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Associates & Partners"
 				],
 				"security": [
 					{

@@ -15,7 +15,7 @@ export class CreateTeamMemberDto {
 
   @IsString()
   @IsOptional()
-  avatar?: string;
+  avatarMediaId?: string;
 
   @IsString()
   @IsOptional()
@@ -45,7 +45,7 @@ export class UpdateTeamMemberDto {
 
   @IsString()
   @IsOptional()
-  avatar?: string;
+  avatarMediaId?: string;
 
   @IsString()
   @IsOptional()

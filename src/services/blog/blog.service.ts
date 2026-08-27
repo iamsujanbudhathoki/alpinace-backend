@@ -136,6 +136,10 @@ export class BlogService {
   }
 
   async create(dto: CreateBlogArticleDto): Promise<BlogArticle> {
+    if (dto.coverMediaId) {
+      await this.mediaService.validateMediaExists(dto.coverMediaId);
+    }
+
     let slug = dto.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     const existing = await this.repo.findOne({ where: { slug } });
     if (existing) slug = `${slug}-${Date.now()}`;
@@ -151,7 +155,6 @@ export class BlogService {
       views: 0,
       excerpt: dto.excerpt || '',
       content: dto.content || '',
-      image: dto.image || '',
       coverMediaId: dto.coverMediaId,
       metaTitle: dto.metaTitle,
       metaDescription: dto.metaDescription,
@@ -163,6 +166,10 @@ export class BlogService {
   }
 
   async update(id: string, dto: UpdateBlogArticleDto): Promise<BlogArticle> {
+    if (dto.coverMediaId) {
+      await this.mediaService.validateMediaExists(dto.coverMediaId);
+    }
+
     const article = await this.getByIdOrSlug(id);
 
     if (dto.title && dto.title !== article.title) {
@@ -176,7 +183,6 @@ export class BlogService {
     if (dto.publishedDate !== undefined) article.publishedDate = dto.publishedDate;
     if (dto.excerpt !== undefined) article.excerpt = dto.excerpt;
     if (dto.content !== undefined) article.content = dto.content;
-    if (dto.image !== undefined) article.image = dto.image;
     if (dto.coverMediaId !== undefined) article.coverMediaId = dto.coverMediaId;
     if (dto.views !== undefined) article.views = dto.views;
     if (dto.metaTitle !== undefined) article.metaTitle = dto.metaTitle;

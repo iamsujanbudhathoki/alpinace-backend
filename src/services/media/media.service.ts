@@ -262,6 +262,29 @@ export class MediaService {
     return true;
   }
 
+  async validateMediaExists(id?: string | null): Promise<void> {
+    if (!id || typeof id !== 'string' || !id.trim()) return;
+    const cleanId = id.trim();
+    const isUuid = isUUID(cleanId);
+    let media: Media | null = null;
+    if (isUuid) {
+      media = await this.mediaRepo.findOne({ where: { id: cleanId } });
+    } else {
+      media = await this.mediaRepo.findOne({ where: { path: cleanId } });
+    }
+    if (!media) {
+      throw AppError.badRequest(`Referenced Media record with ID '${cleanId}' does not exist.`);
+    }
+  }
+
+  async validateMediaIdsExists(ids?: (string | null | undefined)[]): Promise<void> {
+    if (!ids || ids.length === 0) return;
+    const validIds = ids.filter((id): id is string => Boolean(id && typeof id === 'string' && id.trim()));
+    for (const id of validIds) {
+      await this.validateMediaExists(id);
+    }
+  }
+
   async resolveMediaById(id: string): Promise<MediaUploadResult | null> {
     if (!id) return null;
     const isUuid = isUUID(id);
@@ -324,6 +347,11 @@ export class MediaService {
     const mediaIdsToFetch: string[] = [];
 
     if (item.coverMediaId) mediaIdsToFetch.push(item.coverMediaId);
+    if (item.avatarMediaId) mediaIdsToFetch.push(item.avatarMediaId);
+    if (item.heroMediaId) mediaIdsToFetch.push(item.heroMediaId);
+    if (item.storyMediaId) mediaIdsToFetch.push(item.storyMediaId);
+    if (item.imageMediaId) mediaIdsToFetch.push(item.imageMediaId);
+    if (item.mediaId) mediaIdsToFetch.push(item.mediaId);
     if (item.mapMediaId) mediaIdsToFetch.push(item.mapMediaId);
 
     if (Array.isArray(item.galleryMediaIds)) {
@@ -345,6 +373,33 @@ export class MediaService {
     // Resolve Cover Image
     if (item.coverMediaId && mediaMap.has(item.coverMediaId)) {
       item.image = mediaMap.get(item.coverMediaId)!.url;
+    }
+
+    // Resolve Avatar Image
+    if (item.avatarMediaId && mediaMap.has(item.avatarMediaId)) {
+      const resolvedUrl = mediaMap.get(item.avatarMediaId)!.url;
+      item.avatar = resolvedUrl;
+      item.avatarUrl = resolvedUrl;
+    }
+
+    // Resolve Hero Image
+    if (item.heroMediaId && mediaMap.has(item.heroMediaId)) {
+      item.heroImage = mediaMap.get(item.heroMediaId)!.url;
+    }
+
+    // Resolve Story Image
+    if (item.storyMediaId && mediaMap.has(item.storyMediaId)) {
+      item.storyImage = mediaMap.get(item.storyMediaId)!.url;
+    }
+
+    // Resolve Generic Image Media ID
+    if (item.imageMediaId && mediaMap.has(item.imageMediaId)) {
+      item.image = mediaMap.get(item.imageMediaId)!.url;
+    }
+
+    // Resolve Category Media ID
+    if (item.mediaId && mediaMap.has(item.mediaId)) {
+      item.image = mediaMap.get(item.mediaId)!.url;
     }
 
     // Resolve Trek Map

@@ -13,7 +13,6 @@ import {
   ClimbingGrade,
 } from '../entities/expedition/Expedition.entity';
 import { TripDifficulty } from '../entities/common/difficulty.enum';
-import { Guide, GuideRole, GuideStatus } from '../entities/guide/Guide.entity';
 import {
   Booking,
   BookingPackageType,
@@ -25,11 +24,9 @@ import { Inquiry, InquiryStatus } from '../entities/inquiry/Inquiry.entity';
 import { BlogArticle, BlogStatus } from '../entities/blog/BlogArticle.entity';
 import { Setting } from '../entities/setting/Setting.entity';
 import { Media } from '../entities/media/media.entity';
-import {
-  Associate,
-  AssociateStatus,
-} from '../entities/associate/Associate.entity';
 import { Faq, FaqStatus } from '../entities/faq/Faq.entity';
+import { Testimonial, TestimonialStatus } from '../entities/testimonial/Testimonial.entity';
+import { TeamMember, TeamMemberStatus } from '../entities/team/TeamMember.entity';
 import { MediaType } from '../constants/appConstant';
 
 export const seedDatabase = async () => {
@@ -1375,81 +1372,6 @@ export const seedDatabase = async () => {
   }
   console.log('Seeded and linked expeditions');
 
-  // 6. Seed Guides
-  const guideRepo = AppDataSource.getRepository(Guide);
-  const guidesData = [
-    {
-      name: 'Lakpa Tenzing Sherpa',
-      role: GuideRole.LEAD_EXPEDITION_LEADER,
-      summitStats: '12x Everest, 4x K2, 6x Lhotse',
-      certifications: [
-        'IFMGA Mountain Guide',
-        'NMA Master Instructor',
-        'Wilderness First Responder',
-      ],
-      status: GuideStatus.ON_MOUNTAIN,
-      phone: '+977 9841-234567',
-      email: 'lakpa.sherpa@alpineace.com',
-      currentAssignment: 'Everest Base Camp Luxury Trek (ACE-2026-0891)',
-      avatarUrl: getMediaUrl('guide-lakpa-avatar'),
-    },
-    {
-      name: 'Mingma Norbu Sherpa',
-      role: GuideRole.LEAD_EXPEDITION_LEADER,
-      summitStats: '8x Everest, 9x Ama Dablam',
-      certifications: ['IFMGA Mountain Guide', 'NMA Advanced Mountaineer'],
-      status: GuideStatus.AVAILABLE,
-      phone: '+977 9851-876543',
-      email: 'mingma.norbu@alpineace.com',
-      avatarUrl: getMediaUrl('guide-mingma-avatar'),
-    },
-    {
-      name: 'Pemba Gelje Sherpa',
-      role: GuideRole.SENIOR_TREKKING_GUIDE,
-      summitStats: '3x Island Peak, 4x Mera Peak',
-      certifications: [
-        'NMA Certified Trekking Guide',
-        'Emergency Alpine First Aid',
-      ],
-      status: GuideStatus.AVAILABLE,
-      phone: '+977 9803-345678',
-      email: 'pemba.g@alpineace.com',
-      avatarUrl: getMediaUrl('guide-pemba-avatar'),
-    },
-    {
-      name: 'Rohan Tamang',
-      role: GuideRole.CULTURAL_TOUR_GUIDE,
-      summitStats: 'Cultural Specialist (10+ Yrs)',
-      certifications: ['Nepal Tourism Board License', 'Heritage Historian'],
-      status: GuideStatus.ON_MOUNTAIN,
-      phone: '+977 9818-567890',
-      email: 'rohan.tamang@alpineace.com',
-      currentAssignment: 'Kathmandu & Chitwan Safari (ACE-2026-0894)',
-      avatarUrl: getMediaUrl('guide-rohan-avatar'),
-    },
-    {
-      name: 'Pasang Dawa Sherpa',
-      role: GuideRole.HIGH_ALTITUDE_SHERPA,
-      summitStats: '5x Everest, 3x Cho Oyu',
-      certifications: ['NMA Climbing Guide', 'Alpine Rescue'],
-      status: GuideStatus.AVAILABLE,
-      phone: '+977 9849-112233',
-      email: 'pasang.dawa@alpineace.com',
-      avatarUrl: getMediaUrl('guide-pasang-avatar'),
-    },
-  ];
-
-  for (const g of guidesData) {
-    const exists = await guideRepo.findOne({
-      where: { email: g.email },
-      withDeleted: true,
-    });
-    if (!exists) {
-      await guideRepo.save(guideRepo.create(g));
-    }
-  }
-  console.log('Seeded guides');
-
   // 7. Seed Bookings
   const bookingRepo = AppDataSource.getRepository(Booking);
   const bookingsData = [
@@ -1793,6 +1715,70 @@ export const seedDatabase = async () => {
     },
   ];
 
+  const testimonialRepo = AppDataSource.getRepository(Testimonial);
+  const existingTestimonialsCount = await testimonialRepo.count();
+  if (existingTestimonialsCount === 0) {
+    for (let idx = 0; idx < testimonials.length; idx++) {
+      const item = testimonials[idx];
+      await testimonialRepo.save(
+        testimonialRepo.create({
+          author: item.author,
+          role: item.role,
+          country: item.country,
+          tripName: item.tripName,
+          content: item.content,
+          avatar: item.avatar,
+          avatarMediaId: item.avatarMediaId,
+          rating: item.rating,
+          status: TestimonialStatus.ACTIVE,
+          order: idx + 1,
+        }),
+      );
+    }
+    console.log('Seeded testimonials table.');
+  }
+
+  const teamRepo = AppDataSource.getRepository(TeamMember);
+  const teamCount = await teamRepo.count();
+  if (teamCount === 0) {
+    const teamMembersData = [
+      {
+        name: 'Mingma Norbu Sherpa',
+        role: 'Lead Expedition Leader',
+        bio: '14-time Everest summiteer and IFMGA certified guide with 18 years of high-altitude Himalayan leadership.',
+        avatarMediaId: getMediaId('guide-mingma-avatar'),
+        avatar: getMediaUrl('guide-mingma-avatar'),
+        experience: 'IFMGA Guide • 14x Everest',
+        status: TeamMemberStatus.ACTIVE,
+        order: 1,
+      },
+      {
+        name: 'Lakpa Tenzing Sherpa',
+        role: 'Senior Trekking Leader',
+        bio: 'Expert in Everest Base Camp, Gokyo Lakes, and Annapurna Circuit with over 10 years guiding international groups.',
+        avatarMediaId: getMediaId('guide-lakpa-avatar'),
+        avatar: getMediaUrl('guide-lakpa-avatar'),
+        experience: 'Lead Guide • 10 yrs',
+        status: TeamMemberStatus.ACTIVE,
+        order: 2,
+      },
+      {
+        name: 'Pemba Gelje Sherpa',
+        role: 'High Altitude Climber',
+        bio: 'Specialist in 6,000m peak climbs including Island Peak, Mera Peak, and Lobuche East.',
+        avatarMediaId: getMediaId('guide-pemba-avatar'),
+        avatar: getMediaUrl('guide-pemba-avatar'),
+        experience: 'Peak Specialist • 8 yrs',
+        status: TeamMemberStatus.ACTIVE,
+        order: 3,
+      },
+    ];
+    for (const m of teamMembersData) {
+      await teamRepo.save(teamRepo.create(m));
+    }
+    console.log('Seeded team members');
+  }
+
   const defaultSettings = [
     { key: 'siteName', value: 'AlpineAce' },
     { key: 'tagline', value: 'Venture Beyond the Ordinary' },
@@ -1896,53 +1882,6 @@ export const seedDatabase = async () => {
   console.log('Seeded initial media records');
 
   // 12. Seed Associates & Affiliations
-  const associateRepo = AppDataSource.getRepository(Associate);
-  const associateCount = await associateRepo.count();
-  if (associateCount === 0) {
-    const defaultAssociates = [
-      {
-        name: 'Trekking Agencies Association of Nepal (TAAN)',
-        role: 'Accredited Member',
-        company: 'TAAN Nepal',
-        image: getMediaUrl('assoc-taan-logo'),
-        websiteUrl: 'https://taan.org.np',
-        description:
-          'Apex body of trekking agencies in Nepal ensuring certified ethical operations.',
-        category: 'Accreditation',
-        status: AssociateStatus.ACTIVE,
-        order: 1,
-      },
-      {
-        name: 'Nepal Mountaineering Association (NMA)',
-        role: 'Certified Expedition Partner',
-        company: 'NMA',
-        image: getMediaUrl('assoc-nma-logo'),
-        websiteUrl: 'https://nepalmountaineering.org',
-        description:
-          'National governing body for peak climbing permits and Sherpa mountaineering training.',
-        category: 'Mountaineering',
-        status: AssociateStatus.ACTIVE,
-        order: 2,
-      },
-      {
-        name: 'Himalayan Rescue Association (HRA)',
-        role: 'Medical Safety Partner',
-        company: 'HRA Nepal',
-        image: getMediaUrl('assoc-hra-logo'),
-        websiteUrl: 'https://hra.org.np',
-        description:
-          'Volunteer medical stations in Pheriche and Manang dedicated to AMS prevention and high-altitude rescue.',
-        category: 'Safety & Rescue',
-        status: AssociateStatus.ACTIVE,
-        order: 3,
-      },
-    ];
-    for (const a of defaultAssociates) {
-      await associateRepo.save(associateRepo.create(a));
-    }
-    console.log('Seeded initial associate records');
-  }
-
   // 13. Seed Pre-Trip Consultation FAQs
   const faqRepo = AppDataSource.getRepository(Faq);
   const faqCount = await faqRepo.count();

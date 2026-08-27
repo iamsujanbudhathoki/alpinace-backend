@@ -17,8 +17,10 @@ export class TeamMember extends CommonEntity {
   @Column({ name: 'bio', type: 'text', nullable: true })
   bio?: string;
 
-  @Column({ name: 'avatar', type: 'text', nullable: true })
   avatar?: string;
+
+  @Column({ name: 'avatar_media_id', nullable: true })
+  avatarMediaId?: string;
 
   @Column({ name: 'experience', nullable: true })
   experience?: string;

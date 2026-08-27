@@ -30,10 +30,6 @@ export class CreateCategoryDto {
 
   @IsOptional()
   @IsString()
-  image?: string | null;
-
-  @IsOptional()
-  @IsString()
   mediaId?: string | null;
 
   @IsOptional()
@@ -64,10 +60,6 @@ export class UpdateCategoryDto {
   @IsOptional()
   @IsEnum(CategoryStatus)
   status?: CategoryStatus;
-
-  @IsOptional()
-  @IsString()
-  image?: string | null;
 
   @IsOptional()
   @IsString()

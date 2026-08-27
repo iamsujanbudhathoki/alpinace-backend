@@ -89,10 +89,6 @@ export class CreateExpeditionDto {
   @IsString()
   shortDesc?: string;
 
-  @IsString()
-  @IsNotEmpty({ message: 'Image URL is required' })
-  image!: string;
-
   @IsOptional()
   @IsString()
   country?: string;
@@ -160,15 +156,6 @@ export class CreateExpeditionDto {
   @ValidateNested({ each: true })
   @Type(() => TripDepartureDateDto)
   departureDates?: TripDepartureDateDto[];
-
-  @IsOptional()
-  @IsArray({ message: 'Gallery images must be an array' })
-  @IsString({ each: true })
-  galleryImages?: string[];
-
-  @IsOptional()
-  @IsString()
-  mapImage?: string;
 
   @IsOptional()
   @IsArray({ message: 'Package files must be an array' })
@@ -217,7 +204,8 @@ export class UpdateExpeditionDto {
 
   @IsOptional()
   @Type(() => Number)
-  @IsNumber()
+  @IsNumber({}, { message: 'Duration must be a number' })
+  @Min(1, { message: 'Duration must be at least 1 day' })
   durationDays?: number;
 
   @IsOptional()
@@ -248,7 +236,8 @@ export class UpdateExpeditionDto {
 
   @IsOptional()
   @Type(() => Number)
-  @IsNumber()
+  @IsNumber({}, { message: 'Price must be a number' })
+  @Min(0, { message: 'Price cannot be negative' })
   priceUSD?: number;
 
   @IsOptional()
@@ -258,10 +247,6 @@ export class UpdateExpeditionDto {
   @IsOptional()
   @IsString()
   shortDesc?: string;
-
-  @IsOptional()
-  @IsString()
-  image?: string;
 
   @IsOptional()
   @IsString()
@@ -330,15 +315,6 @@ export class UpdateExpeditionDto {
   @ValidateNested({ each: true })
   @Type(() => TripDepartureDateDto)
   departureDates?: TripDepartureDateDto[];
-
-  @IsOptional()
-  @IsArray({ message: 'Gallery images must be an array' })
-  @IsString({ each: true })
-  galleryImages?: string[];
-
-  @IsOptional()
-  @IsString()
-  mapImage?: string;
 
   @IsOptional()
   @IsArray({ message: 'Package files must be an array' })

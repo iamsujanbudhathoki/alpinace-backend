@@ -11,10 +11,13 @@ import {
   UpdateCategoryDto,
 } from '../../schemas/category.schema';
 import { AppError } from '../../utils/appError.util';
+import { MediaService } from '../media/media.service';
 
 @autoInjectable()
 export class CategoryService {
   private repo = AppDataSource.getRepository(Category);
+
+  constructor(private mediaService: MediaService = new MediaService()) {}
 
   async getAll(params?: {
     type?: CategoryType;
@@ -45,7 +48,11 @@ export class CategoryService {
       }
     }
 
-    return qb.getManyAndCount();
+    const [items, count] = await qb.getManyAndCount();
+    const resolved = await Promise.all(
+      items.map((cat) => this.mediaService.resolveItemMedia(cat)),
+    );
+    return [resolved, count];
   }
 
   async getByType(type: CategoryType): Promise<Category[]> {
@@ -54,10 +61,14 @@ export class CategoryService {
       order: { name: 'ASC' },
     });
 
-    const parents = all.filter((c) => !c.parentId);
+    const resolvedAll = await Promise.all(
+      all.map((cat) => this.mediaService.resolveItemMedia(cat)),
+    );
+
+    const parents = resolvedAll.filter((c) => !c.parentId);
     const childrenMap = new Map<string, Category[]>();
 
-    all.forEach((c) => {
+    resolvedAll.forEach((c) => {
       if (c.parentId) {
         const list = childrenMap.get(c.parentId) || [];
         list.push(c);
@@ -74,7 +85,7 @@ export class CategoryService {
   async getById(id: string): Promise<Category> {
     const item = await this.repo.findOne({ where: { id }, relations: ['children', 'parent'] });
     if (!item) throw AppError.notFound(`Category with ID ${id} not found`);
-    return item;
+    return this.mediaService.resolveItemMedia(item);
   }
 
   async getByIdOrSlug(idOrSlug: string): Promise<Category> {
@@ -89,10 +100,14 @@ export class CategoryService {
     }
 
     if (!item) throw AppError.notFound(`Category '${idOrSlug}' not found`);
-    return item;
+    return this.mediaService.resolveItemMedia(item);
   }
 
   async create(dto: CreateCategoryDto): Promise<Category> {
+    if (dto.mediaId) {
+      await this.mediaService.validateMediaExists(dto.mediaId);
+    }
+
     const rawSlug = dto.slug || dto.name;
     const slug = rawSlug.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
@@ -113,14 +128,18 @@ export class CategoryService {
       description: dto.description.trim(),
       status: dto.status,
       itemCount: 0,
-      image: dto.image || null,
       mediaId: dto.mediaId || null,
       parentId: dto.parentId || null,
     });
-    return this.repo.save(category);
+    const saved = await this.repo.save(category);
+    return this.mediaService.resolveItemMedia(saved);
   }
 
   async update(id: string, dto: UpdateCategoryDto): Promise<Category> {
+    if (dto.mediaId) {
+      await this.mediaService.validateMediaExists(dto.mediaId);
+    }
+
     const category = await this.getById(id);
 
     if (dto.slug !== undefined) {
@@ -146,11 +165,11 @@ export class CategoryService {
     if (dto.type) category.type = dto.type;
     if (dto.description !== undefined) category.description = dto.description.trim();
     if (dto.status) category.status = dto.status;
-    if (dto.image !== undefined) category.image = dto.image || null;
     if (dto.mediaId !== undefined) category.mediaId = dto.mediaId || null;
     if (dto.parentId !== undefined) category.parentId = dto.parentId || null;
 
-    return this.repo.save(category);
+    const saved = await this.repo.save(category);
+    return this.mediaService.resolveItemMedia(saved);
   }
 
   async delete(id: string): Promise<boolean> {

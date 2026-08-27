@@ -1,9 +1,14 @@
+import { autoInjectable } from 'tsyringe';
 import { AppDataSource } from '../../config/database.config';
 import { AboutUs, AboutUsStatus } from '../../entities/about-us/AboutUs.entity';
 import { UpdateAboutUsDto } from '../../schemas/about-us.schema';
+import { MediaService } from '../media/media.service';
 
+@autoInjectable()
 export class AboutUsService {
   private aboutUsRepository = AppDataSource.getRepository(AboutUs);
+
+  constructor(private mediaService: MediaService = new MediaService()) {}
 
   private DEFAULT_ABOUT_US: Partial<AboutUs> = {
     heroTitle: 'Sherpa-guided treks planned from Kathmandu.',
@@ -53,9 +58,10 @@ export class AboutUsService {
     });
     if (!about) {
       const newAbout = this.aboutUsRepository.create(this.DEFAULT_ABOUT_US);
-      return await this.aboutUsRepository.save(newAbout);
+      const saved = await this.aboutUsRepository.save(newAbout);
+      return this.mediaService.resolveItemMedia(saved);
     }
-    return about;
+    return this.mediaService.resolveItemMedia(about);
   }
 
   async getPublic(): Promise<AboutUs> {
@@ -64,6 +70,13 @@ export class AboutUsService {
   }
 
   async update(dto: UpdateAboutUsDto): Promise<AboutUs> {
+    if (dto.heroMediaId) {
+      await this.mediaService.validateMediaExists(dto.heroMediaId);
+    }
+    if (dto.storyMediaId) {
+      await this.mediaService.validateMediaExists(dto.storyMediaId);
+    }
+
     const [existing] = await this.aboutUsRepository.find({
       order: { createdAt: 'ASC' },
       take: 1,
@@ -77,6 +90,7 @@ export class AboutUsService {
     } else {
       about = this.aboutUsRepository.merge(existing, dto);
     }
-    return await this.aboutUsRepository.save(about);
+    const saved = await this.aboutUsRepository.save(about);
+    return this.mediaService.resolveItemMedia(saved);
   }
 }

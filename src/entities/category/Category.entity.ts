@@ -34,7 +34,6 @@ export class Category extends CommonEntity {
   @Column({ name: 'status', default: CategoryStatus.ACTIVE })
   status: CategoryStatus;
 
-  @Column({ name: 'image', type: 'text', nullable: true })
   image?: string | null;
 
   @Column({ name: 'media_id', type: 'varchar', nullable: true })

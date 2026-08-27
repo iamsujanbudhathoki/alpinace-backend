@@ -250,6 +250,12 @@ export class TourService {
       });
     }
 
+    await this.mediaService.validateMediaIdsExists([
+      dto.coverMediaId,
+      dto.mapMediaId,
+      ...(dto.galleryMediaIds || []),
+    ]);
+
     const tour = this.repo.create({
       title: dto.title,
       slug,
@@ -263,7 +269,6 @@ export class TourService {
       priceUSD: Number(dto.priceUSD),
       status: dto.status || TourStatus.ACTIVE,
       shortDesc: dto.shortDesc,
-      image: dto.image,
       coverMediaId: dto.coverMediaId,
       country: dto.country || 'Nepal',
       activity: dto.activity || TripActivity.CULTURAL_SIGHTSEEING,
@@ -280,9 +285,7 @@ export class TourService {
       addonsText: dto.addonsText,
       usefulInfoText: dto.usefulInfoText,
       departureDates: dto.departureDates || [],
-      galleryImages: dto.galleryImages || [],
       galleryMediaIds: dto.galleryMediaIds || [],
-      mapImage: dto.mapImage,
       mapMediaId: dto.mapMediaId,
       packageFiles: dto.packageFiles || [],
       metaTitle: dto.metaTitle,
@@ -298,6 +301,12 @@ export class TourService {
   }
 
   async update(id: string, dto: UpdateTourDto): Promise<Tour> {
+    await this.mediaService.validateMediaIdsExists([
+      dto.coverMediaId,
+      dto.mapMediaId,
+      ...(dto.galleryMediaIds || []),
+    ]);
+
     const tour = await this.getByIdOrSlug(id);
 
     if (dto.title && dto.title !== tour.title) {
@@ -318,7 +327,6 @@ export class TourService {
     if (dto.priceUSD !== undefined) tour.priceUSD = Number(dto.priceUSD);
     if (dto.status) tour.status = dto.status;
     if (dto.shortDesc !== undefined) tour.shortDesc = dto.shortDesc;
-    if (dto.image !== undefined) tour.image = dto.image;
     if (dto.coverMediaId !== undefined) tour.coverMediaId = dto.coverMediaId;
     if (dto.country !== undefined) tour.country = dto.country;
     if (dto.activity !== undefined) tour.activity = dto.activity;
@@ -339,9 +347,7 @@ export class TourService {
     if (dto.addonsText !== undefined) tour.addonsText = dto.addonsText;
     if (dto.usefulInfoText !== undefined) tour.usefulInfoText = dto.usefulInfoText;
     if (dto.departureDates !== undefined) tour.departureDates = dto.departureDates;
-    if (dto.galleryImages !== undefined) tour.galleryImages = dto.galleryImages;
     if (dto.galleryMediaIds !== undefined) tour.galleryMediaIds = dto.galleryMediaIds;
-    if (dto.mapImage !== undefined) tour.mapImage = dto.mapImage;
     if (dto.mapMediaId !== undefined) tour.mapMediaId = dto.mapMediaId;
     if (dto.packageFiles !== undefined) tour.packageFiles = dto.packageFiles;
     if (dto.metaTitle !== undefined) tour.metaTitle = dto.metaTitle;

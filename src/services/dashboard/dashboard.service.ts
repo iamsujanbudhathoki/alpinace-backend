@@ -14,7 +14,6 @@ import {
   Expedition,
   ExpeditionStatus,
 } from '../../entities/expedition/Expedition.entity';
-import { Guide } from '../../entities/guide/Guide.entity';
 
 export interface DashboardMetricsResponse {
   totalRevenueUSD: number;
@@ -35,7 +34,6 @@ export class DashboardService {
   private trekRepo = AppDataSource.getRepository(Trek);
   private tourRepo = AppDataSource.getRepository(Tour);
   private expeditionRepo = AppDataSource.getRepository(Expedition);
-  private guideRepo = AppDataSource.getRepository(Guide);
 
   async getMetrics(): Promise<DashboardMetricsResponse> {
     const bookings = await this.bookingRepo.find({
@@ -45,7 +43,6 @@ export class DashboardService {
     const treks = await this.trekRepo.find();
     const tours = await this.tourRepo.find();
     const expeditions = await this.expeditionRepo.find();
-    const guides = await this.guideRepo.find();
 
     const totalRevenue = bookings.reduce(
       (sum, b) => sum + Number(b.totalAmountUSD || 0),

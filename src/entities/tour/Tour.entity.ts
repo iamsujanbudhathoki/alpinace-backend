@@ -96,7 +96,6 @@ export class Tour extends CommonEntity {
   @Column({ name: 'reviews_count', type: 'int', default: 0 })
   reviewsCount: number;
 
-  @Column({ name: 'image', type: 'text', nullable: true })
   image?: string;
   galleryImages?: string[];
   mapImage?: string;

@@ -39,3 +39,5 @@ export class FaqQueryParamsDto extends BaseQueryParamsDto {
 }
 
 export class TeamQueryParamsDto extends BaseQueryParamsDto {}
+
+export class TestimonialQueryParamsDto extends BaseQueryParamsDto {}

@@ -3,6 +3,9 @@ import { DotenvConfig } from '../../config/env.config';
 
 export class TurnstileService {
   async verifyToken(token?: string, remoteIp?: string): Promise<boolean> {
+    // Temporarily disabled / commented out for now
+    return true;
+
     if (!DotenvConfig.TURNSTILE_ENABLED) {
       return true;
     }

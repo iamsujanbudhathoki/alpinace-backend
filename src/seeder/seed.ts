@@ -2006,8 +2006,14 @@ export const seedDatabase = async () => {
     console.log('Seeded initial FAQ records');
   }
 
+  // 13. Seed About Us Initial Record
+  const { AboutUsService } = await import('../services/about-us/about-us.service');
+  await new AboutUsService().get();
+  console.log('Seeded initial About Us record');
+
   console.log('Database seeding finished successfully!');
 };
+
 
 if (require.main === module) {
   seedDatabase()

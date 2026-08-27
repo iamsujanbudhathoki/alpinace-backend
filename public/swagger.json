@@ -4786,6 +4786,249 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"AboutUsValueItem": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"desc": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"title",
+					"desc"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AboutUsStatItem": {
+				"properties": {
+					"number": {
+						"type": "string"
+					},
+					"label": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"number",
+					"label"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AboutUsStatus": {
+				"enum": [
+					"published",
+					"draft"
+				],
+				"type": "string"
+			},
+			"AboutUs": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"deletedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"heroTitle": {
+						"type": "string"
+					},
+					"heroSubtitle": {
+						"type": "string"
+					},
+					"heroImage": {
+						"type": "string"
+					},
+					"storyTitle": {
+						"type": "string"
+					},
+					"storyContent": {
+						"type": "string"
+					},
+					"storyImage": {
+						"type": "string"
+					},
+					"mission": {
+						"type": "string"
+					},
+					"vision": {
+						"type": "string"
+					},
+					"values": {
+						"items": {
+							"$ref": "#/components/schemas/AboutUsValueItem"
+						},
+						"type": "array"
+					},
+					"stats": {
+						"items": {
+							"$ref": "#/components/schemas/AboutUsStatItem"
+						},
+						"type": "array"
+					},
+					"status": {
+						"$ref": "#/components/schemas/AboutUsStatus"
+					},
+					"metaTitle": {
+						"type": "string"
+					},
+					"metaDescription": {
+						"type": "string"
+					},
+					"metaKeywords": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"deletedAt",
+					"heroTitle",
+					"heroSubtitle",
+					"heroImage",
+					"storyTitle",
+					"storyContent",
+					"storyImage",
+					"mission",
+					"vision",
+					"values",
+					"stats",
+					"status",
+					"metaTitle",
+					"metaDescription",
+					"metaKeywords"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_AboutUs_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/AboutUs"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/AboutUs"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AboutUsValueItemDto": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"desc": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"title",
+					"desc"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AboutUsStatItemDto": {
+				"properties": {
+					"number": {
+						"type": "string"
+					},
+					"label": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"number",
+					"label"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateAboutUsDto": {
+				"properties": {
+					"heroTitle": {
+						"type": "string"
+					},
+					"heroSubtitle": {
+						"type": "string"
+					},
+					"heroImage": {
+						"type": "string"
+					},
+					"storyTitle": {
+						"type": "string"
+					},
+					"storyContent": {
+						"type": "string"
+					},
+					"storyImage": {
+						"type": "string"
+					},
+					"mission": {
+						"type": "string"
+					},
+					"vision": {
+						"type": "string"
+					},
+					"values": {
+						"items": {
+							"$ref": "#/components/schemas/AboutUsValueItemDto"
+						},
+						"type": "array"
+					},
+					"stats": {
+						"items": {
+							"$ref": "#/components/schemas/AboutUsStatItemDto"
+						},
+						"type": "array"
+					},
+					"status": {
+						"$ref": "#/components/schemas/AboutUsStatus"
+					},
+					"metaTitle": {
+						"type": "string"
+					},
+					"metaDescription": {
+						"type": "string"
+					},
+					"metaKeywords": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -9936,6 +10179,132 @@
 						}
 					}
 				]
+			}
+		},
+		"/admin/about-us": {
+			"get": {
+				"operationId": "GetAdminContent",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_AboutUs_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get complete editable About Us data including SEO metadata for admin panel.",
+				"tags": [
+					"Admin About Us Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": []
+			},
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_AboutUs_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update or initialize About Us content and SEO metadata.",
+				"tags": [
+					"Admin About Us Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateAboutUsDto"
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_AboutUs_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create or initialize About Us content.",
+				"tags": [
+					"Admin About Us Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateAboutUsDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/about-us": {
+			"get": {
+				"operationId": "GetPublicContent",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_AboutUs_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get public About Us content and SEO metadata for the /about page.",
+				"tags": [
+					"Public About Us"
+				],
+				"security": [],
+				"parameters": []
 			}
 		}
 	},

@@ -14,3 +14,4 @@ export * from './media/media.entity';
 export * from './setting/Setting.entity';
 export * from './associate/Associate.entity';
 export * from './faq/Faq.entity';
+export * from './about-us/AboutUs.entity';

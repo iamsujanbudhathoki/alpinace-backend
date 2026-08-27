@@ -35,12 +35,16 @@ export class TeamController extends Controller {
     @Query() search?: string,
     @Query() limit?: number,
     @Query() page?: number,
+    @Query() sortBy?: string,
+    @Query() sortOrder?: 'ASC' | 'DESC' | 'asc' | 'desc',
   ): Promise<ApiResponse<TeamMember[]>> {
     const dataTotalCount = await this.teamService.getAll({
       status,
       search,
       limit,
       page,
+      sortBy,
+      sortOrder,
     });
     const { data, pagination } = paginateResponse(dataTotalCount, limit, page);
     return { data, pagination, message: 'Team members retrieved successfully', success: true };

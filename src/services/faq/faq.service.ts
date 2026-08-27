@@ -2,45 +2,22 @@ import { autoInjectable } from 'tsyringe';
 import { AppDataSource } from '../../config/database.config';
 import { Faq, FaqStatus } from '../../entities/faq/Faq.entity';
 import { CreateFaqDto, UpdateFaqDto } from '../../schemas/faq.schema';
+import { FaqQueryParamsDto } from '../../schemas/query-params.schema';
+import { applyBaseQueryParams } from '../../utils/query-builder.util';
 import { AppError } from '../../utils/appError.util';
 
 @autoInjectable()
 export class FaqService {
   private repo = AppDataSource.getRepository(Faq);
 
-  async getAll(params?: {
-    status?: FaqStatus;
-    category?: string;
-    search?: string;
-    limit?: number;
-    page?: number;
-  }): Promise<[Faq[], number]> {
+  async getAll(params: FaqQueryParamsDto = {}): Promise<[Faq[], number]> {
     const qb = this.repo.createQueryBuilder('faq');
 
-    if (params?.status && (params.status as any) !== 'All') {
-      qb.andWhere('faq.status = :status', { status: params.status });
-    }
-
-    if (params?.category && params.category !== 'All') {
+    if (params.category && params.category !== 'All') {
       qb.andWhere('faq.category = :category', { category: params.category });
     }
 
-    if (params?.search && params.search.trim()) {
-      const term = `%${params.search.trim().toLowerCase()}%`;
-      qb.andWhere(
-        '(LOWER(faq.question) LIKE :term OR LOWER(faq.answer) LIKE :term OR LOWER(faq.category) LIKE :term)',
-        { term },
-      );
-    }
-
-    qb.orderBy('faq.order', 'ASC').addOrderBy('faq.createdAt', 'ASC');
-
-    if (params?.limit) {
-      qb.take(params.limit);
-      if (params.page && params.page > 1) {
-        qb.skip((params.page - 1) * params.limit);
-      }
-    }
+    applyBaseQueryParams(qb, 'faq', params, ['question', 'answer', 'category']);
 
     return qb.getManyAndCount();
   }
@@ -52,12 +29,18 @@ export class FaqService {
   }
 
   async create(dto: CreateFaqDto): Promise<Faq> {
+    let orderVal = dto.order;
+    if (orderVal === undefined || orderVal === null) {
+      const maxOrder = await this.repo.maximum('order');
+      orderVal = (maxOrder || 0) + 1;
+    }
+
     const faq = this.repo.create({
       question: dto.question,
       answer: dto.answer,
       category: dto.category || 'General',
       status: dto.status || FaqStatus.ACTIVE,
-      order: dto.order || 0,
+      order: orderVal,
     });
 
     return this.repo.save(faq);
@@ -65,13 +48,7 @@ export class FaqService {
 
   async update(id: string, dto: UpdateFaqDto): Promise<Faq> {
     const faq = await this.getById(id);
-
-    if (dto.question !== undefined) faq.question = dto.question;
-    if (dto.answer !== undefined) faq.answer = dto.answer;
-    if (dto.category !== undefined) faq.category = dto.category;
-    if (dto.status !== undefined) faq.status = dto.status;
-    if (dto.order !== undefined) faq.order = dto.order;
-
+    Object.assign(faq, dto);
     return this.repo.save(faq);
   }
 
@@ -93,4 +70,3 @@ export class FaqService {
     return true;
   }
 }
-

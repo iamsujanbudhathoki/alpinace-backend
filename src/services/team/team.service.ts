@@ -1,40 +1,17 @@
 import { AppDataSource } from '../../config/database.config';
 import { TeamMember, TeamMemberStatus } from '../../entities/team/TeamMember.entity';
 import { CreateTeamMemberDto, UpdateTeamMemberDto, ReorderTeamMemberItemDto } from '../../schemas/team.schema';
+import { TeamQueryParamsDto } from '../../schemas/query-params.schema';
+import { applyBaseQueryParams } from '../../utils/query-builder.util';
 import { AppError } from '../../utils/appError.util';
 
 export class TeamService {
   private repo = AppDataSource.getRepository(TeamMember);
 
-  async getAll({
-    status,
-    search,
-    limit,
-    page,
-  }: {
-    status?: TeamMemberStatus;
-    search?: string;
-    limit?: number;
-    page?: number;
-  }): Promise<[TeamMember[], number]> {
+  async getAll(params: TeamQueryParamsDto = {}): Promise<[TeamMember[], number]> {
     const qb = this.repo.createQueryBuilder('team');
 
-    if (status) {
-      qb.andWhere('team.status = :status', { status });
-    }
-
-    if (search) {
-      qb.andWhere(
-        '(team.name LIKE :search OR team.role LIKE :search OR team.bio LIKE :search OR team.experience LIKE :search)',
-        { search: `%${search}%` },
-      );
-    }
-
-    qb.orderBy('team.order', 'ASC').addOrderBy('team.createdAt', 'ASC');
-
-    if (limit && page) {
-      qb.skip((page - 1) * limit).take(limit);
-    }
+    applyBaseQueryParams(qb, 'team', params, ['name', 'role', 'bio', 'experience']);
 
     return await qb.getManyAndCount();
   }

@@ -2205,6 +2205,8 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 search: {"in":"query","name":"search","dataType":"string"},
                 limit: {"in":"query","name":"limit","dataType":"double"},
                 page: {"in":"query","name":"page","dataType":"double"},
+                sortBy: {"in":"query","name":"sortBy","dataType":"string"},
+                sortOrder: {"in":"query","name":"sortOrder","dataType":"union","subSchemas":[{"dataType":"enum","enums":["ASC"]},{"dataType":"enum","enums":["DESC"]},{"dataType":"enum","enums":["asc"]},{"dataType":"enum","enums":["desc"]}]},
         };
         app.get('/teams',
             ...(fetchMiddlewares<RequestHandler>(TeamController)),
@@ -3117,6 +3119,8 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 search: {"in":"query","name":"search","dataType":"string"},
                 limit: {"in":"query","name":"limit","dataType":"double"},
                 page: {"in":"query","name":"page","dataType":"double"},
+                sortBy: {"in":"query","name":"sortBy","dataType":"string"},
+                sortOrder: {"in":"query","name":"sortOrder","dataType":"union","subSchemas":[{"dataType":"enum","enums":["ASC"]},{"dataType":"enum","enums":["DESC"]},{"dataType":"enum","enums":["asc"]},{"dataType":"enum","enums":["desc"]}]},
         };
         app.get('/faqs',
             ...(fetchMiddlewares<RequestHandler>(FaqController)),

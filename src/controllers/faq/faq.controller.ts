@@ -36,6 +36,8 @@ export class FaqController extends Controller {
     @Query() search?: string,
     @Query() limit?: number,
     @Query() page?: number,
+    @Query() sortBy?: string,
+    @Query() sortOrder?: 'ASC' | 'DESC' | 'asc' | 'desc',
   ): Promise<ApiResponse<Faq[]>> {
     const dataTotalCount = await this.faqService.getAll({
       status,
@@ -43,6 +45,8 @@ export class FaqController extends Controller {
       search,
       limit,
       page,
+      sortBy,
+      sortOrder,
     });
     const { data, pagination } = paginateResponse(dataTotalCount, limit, page);
     return { data, pagination, message: 'FAQs retrieved successfully', success: true };

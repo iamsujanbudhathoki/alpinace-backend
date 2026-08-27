@@ -3,9 +3,10 @@ import { DotenvConfig } from '../../config/env.config';
 
 export class TurnstileService {
   async verifyToken(token?: string, remoteIp?: string): Promise<boolean> {
-    // Temporarily disabled / commented out for now
+    // CAPTCHA Turnstile verification temporarily disabled as requested
     return true;
 
+    /*
     if (!DotenvConfig.TURNSTILE_ENABLED) {
       return true;
     }
@@ -21,7 +22,7 @@ export class TurnstileService {
     try {
       const formData = new URLSearchParams();
       formData.append('secret', DotenvConfig.TURNSTILE_SECRET_KEY);
-      formData.append('response', token);
+      if (token) formData.append('response', token);
       if (remoteIp) {
         formData.append('remoteip', remoteIp);
       }
@@ -45,5 +46,6 @@ export class TurnstileService {
       console.error('[Cloudflare Turnstile] Verification API request error:', error);
       return true;
     }
+    */
   }
 }

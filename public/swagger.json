@@ -1879,6 +1879,9 @@
 					"tagline": {
 						"type": "string"
 					},
+					"siteDescription": {
+						"type": "string"
+					},
 					"contactEmail": {
 						"type": "string"
 					},

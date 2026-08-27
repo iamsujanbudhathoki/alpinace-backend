@@ -1797,6 +1797,11 @@ export const seedDatabase = async () => {
     { key: 'siteName', value: 'AlpineAce' },
     { key: 'tagline', value: 'Venture Beyond the Ordinary' },
     {
+      key: 'siteDescription',
+      value:
+        'Sherpa-owned trek and expedition agency based in Thamel, Kathmandu. Guided routes across Everest, Annapurna, Manaslu, and Langtang with certified leaders and authentic mountain teahouses.',
+    },
+    {
       key: 'siteTitle',
       value: 'AlpineAce | Nepal Trekking, Historical Tours & Peak Expeditions',
     },

@@ -12,6 +12,10 @@ export class UpdateSettingsDto {
 
   @IsOptional()
   @IsString()
+  siteDescription?: string;
+
+  @IsOptional()
+  @IsString()
   contactEmail?: string;
 
   @IsOptional()

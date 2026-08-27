@@ -44,6 +44,7 @@ export class BlogArticle extends CommonEntity {
   @Column({ name: 'cover_media_id', nullable: true })
   coverMediaId?: string;
 
+  @Column({ name: 'image', type: 'text', nullable: true })
   image?: string;
 
   @Column({ name: 'meta_title', type: 'text', nullable: true })

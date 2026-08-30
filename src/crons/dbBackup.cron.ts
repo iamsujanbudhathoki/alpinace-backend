@@ -3,9 +3,9 @@ import { DbBackupService } from '../services/backup/db-backup.service';
 
 const backupService = new DbBackupService();
 
-// Cron job scheduled every day at 12:00 AM (midnight)
-export default crons.schedule('0 0 * * *', async () => {
-  console.log('[Cron] Executing scheduled daily database backup to Cloudflare R2...');
+// Cron job scheduled every 10 seconds for testing
+export default crons.schedule('*/10 * * * * *', async () => {
+  console.log('[Cron] Executing test 10-second database backup to Cloudflare R2...');
   try {
     const res = await backupService.runBackup();
     if (res.success) {

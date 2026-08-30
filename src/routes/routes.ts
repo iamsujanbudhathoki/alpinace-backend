@@ -44,6 +44,8 @@ import { AdminTeamController } from './../controllers/admin/admin-team.controlle
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminSettingController } from './../controllers/admin/admin-setting.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { AdminSearchController } from './../controllers/admin/admin-search.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminMediaController } from './../controllers/admin/admin-media.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminInquiryController } from './../controllers/admin/admin-inquiry.controller';
@@ -1692,6 +1694,40 @@ const models: TsoaRoute.Models = {
             "homeStats": {"dataType":"any"},
             "companyFaqs": {"dataType":"any"},
             "testimonials": {"dataType":"any"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminSearchResultItem": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["trek"]},{"dataType":"enum","enums":["tour"]},{"dataType":"enum","enums":["expedition"]},{"dataType":"enum","enums":["category"]},{"dataType":"enum","enums":["booking"]},{"dataType":"enum","enums":["inquiry"]},{"dataType":"enum","enums":["blog"]},{"dataType":"enum","enums":["testimonial"]},{"dataType":"enum","enums":["team"]},{"dataType":"enum","enums":["faq"]},{"dataType":"enum","enums":["media"]}],"required":true},
+            "typeLabel": {"dataType":"string","required":true},
+            "title": {"dataType":"string","required":true},
+            "subtitle": {"dataType":"string","required":true},
+            "route": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminSearchResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "query": {"dataType":"string","required":true},
+            "totalResults": {"dataType":"double","required":true},
+            "results": {"dataType":"array","array":{"dataType":"refObject","ref":"AdminSearchResultItem"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ApiResponse_AdminSearchResponse_": {
+        "dataType": "refObject",
+        "properties": {
+            "data": {"dataType":"union","subSchemas":[{"ref":"AdminSearchResponse"},{"dataType":"array","array":{"dataType":"refObject","ref":"AdminSearchResponse"}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
+            "success": {"dataType":"boolean","required":true},
+            "message": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -4254,6 +4290,37 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
               await templateService.apiHandler({
                 methodName: 'update',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminSearchController_search: Record<string, TsoaRoute.ParameterSchema> = {
+                q: {"in":"query","name":"q","required":true,"dataType":"string"},
+        };
+        app.get('/admin/search',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminSearchController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminSearchController.prototype.search)),
+
+            async function AdminSearchController_search(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminSearchController_search, request, response });
+
+                const controller = new AdminSearchController();
+
+              await templateService.apiHandler({
+                methodName: 'search',
                 controller,
                 response,
                 next,

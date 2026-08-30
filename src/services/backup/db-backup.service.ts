@@ -78,7 +78,12 @@ export class DbBackupService {
   }
 
   private async generateSchemaSql(tables: string[]): Promise<string> {
-    let sql = `-- Database Schema Dump (${new Date().toISOString()})\nSET FOREIGN_KEY_CHECKS=0;\n\n`;
+    let sql = `-- AlpineAce Database Schema Dump\n`;
+    sql += `-- Generated At: ${new Date().toISOString()}\n\n`;
+    sql += `SET NAMES utf8mb4;\n`;
+    sql += `SET FOREIGN_KEY_CHECKS = 0;\n`;
+    sql += `SET UNIQUE_CHECKS = 0;\n\n`;
+
     for (const t of tables) {
       const res: any[] = await AppDataSource.query(`SHOW CREATE TABLE \`${t}\``);
       if (res && res[0]) {
@@ -86,28 +91,46 @@ export class DbBackupService {
         sql += `DROP TABLE IF EXISTS \`${t}\`;\n${createSql};\n\n`;
       }
     }
-    return sql + `SET FOREIGN_KEY_CHECKS=1;\n`;
+
+    sql += `SET FOREIGN_KEY_CHECKS = 1;\n`;
+    sql += `SET UNIQUE_CHECKS = 1;\n`;
+    return sql;
   }
 
   private async generateDataSql(tables: string[]): Promise<string> {
-    let sql = `-- Database Values Dump (${new Date().toISOString()})\nSET FOREIGN_KEY_CHECKS=0;\n\n`;
+    let sql = `-- AlpineAce Database Values Dump\n`;
+    sql += `-- Generated At: ${new Date().toISOString()}\n\n`;
+    sql += `SET NAMES utf8mb4;\n`;
+    sql += `SET FOREIGN_KEY_CHECKS = 0;\n`;
+    sql += `SET UNIQUE_CHECKS = 0;\n\n`;
+
     for (const t of tables) {
       const rows: any[] = await AppDataSource.query(`SELECT * FROM \`${t}\``);
       if (rows.length === 0) continue;
 
       const cols = Object.keys(rows[0]).map((c) => `\`${c}\``).join(', ');
-      const valStrings = rows.map((r) => `(${Object.values(r).map((v) => this.sqlEscape(v)).join(', ')})`);
-      sql += `-- Table: \`${t}\`\nINSERT INTO \`${t}\` (${cols}) VALUES\n${valStrings.join(',\n')};\n\n`;
+      
+      // Batch inserts into chunks of 100 rows for memory safety & MySQL max_allowed_packet compliance
+      const chunkSize = 100;
+      for (let i = 0; i < rows.length; i += chunkSize) {
+        const chunk = rows.slice(i, i + chunkSize);
+        const valStrings = chunk.map((r) => `(${Object.values(r).map((v) => this.sqlEscape(v)).join(', ')})`);
+        sql += `INSERT INTO \`${t}\` (${cols}) VALUES\n${valStrings.join(',\n')};\n\n`;
+      }
     }
-    return sql + `SET FOREIGN_KEY_CHECKS=1;\n`;
+
+    sql += `SET FOREIGN_KEY_CHECKS = 1;\n`;
+    sql += `SET UNIQUE_CHECKS = 1;\n`;
+    return sql;
   }
 
   private sqlEscape(val: any): string {
     if (val === null || val === undefined) return 'NULL';
     if (typeof val === 'number') return String(val);
     if (typeof val === 'boolean') return val ? '1' : '0';
+    if (Buffer.isBuffer(val)) return `X'${val.toString('hex')}'`;
     if (val instanceof Date) return `'${val.toISOString().slice(0, 19).replace('T', ' ')}'`;
     const str = typeof val === 'object' ? JSON.stringify(val) : String(val);
-    return `'${str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n').replace(/\r/g, '\\r')}'`;
+    return `'${str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\0/g, '\\0').replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\x1a/g, '\\Z')}'`;
   }
 }

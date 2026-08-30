@@ -2186,8 +2186,6 @@ const models: TsoaRoute.Models = {
         "properties": {
             "success": {"dataType":"boolean","required":true},
             "timestamp": {"dataType":"string","required":true},
-            "schemaUrl": {"dataType":"string"},
-            "dataUrl": {"dataType":"string"},
             "schemaKey": {"dataType":"string"},
             "dataKey": {"dataType":"string"},
             "message": {"dataType":"string","required":true},

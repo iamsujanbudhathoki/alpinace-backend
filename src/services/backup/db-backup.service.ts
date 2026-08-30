@@ -7,8 +7,6 @@ import { AuditEntityType } from '../../constants/audit.constants';
 export interface BackupResult {
   success: boolean;
   timestamp: string;
-  schemaUrl?: string;
-  dataUrl?: string;
   schemaKey?: string;
   dataKey?: string;
   message: string;
@@ -21,139 +19,56 @@ export class DbBackupService {
   ) {}
 
   /**
-   * Generates Schema SQL & Data SQL dumps and uploads them to Cloudflare R2
+   * Generates Schema & Values SQL dumps and uploads them to Cloudflare R2
    */
   async runBackup(): Promise<BackupResult> {
     const timestamp = new Date().toISOString();
-    const formattedDate = new Date()
-      .toISOString()
-      .replace(/[:.]/g, '-')
-      .slice(0, 16);
-    const monthDir = new Date().toISOString().slice(0, 7); // e.g. 2026-08
-
-    console.log(`[DB Backup] Starting daily automated database backup (${timestamp})...`);
+    const dateStr = timestamp.slice(0, 10); // e.g. 2026-08-31
+    console.log(`[DB Backup] Starting automated backup for ${dateStr}...`);
 
     if (!AppDataSource.isInitialized) {
       await AppDataSource.initialize();
     }
 
     try {
-      // 1. Get list of tables
       const tablesResult: any[] = await AppDataSource.query('SHOW TABLES');
-      const tableNames: string[] = tablesResult
-        .map((r) => Object.values(r)[0] as string)
-        .filter(Boolean);
+      const tables: string[] = tablesResult.map((r) => Object.values(r)[0] as string).filter(Boolean);
 
-      if (tableNames.length === 0) {
+      if (tables.length === 0) {
         throw new Error('No database tables found for backup.');
       }
 
-      // 2. Build Schema SQL Dump
-      let schemaSql = `-- AlpineAce Database Schema Dump\n`;
-      schemaSql += `-- Timestamp: ${timestamp}\n`;
-      schemaSql += `SET FOREIGN_KEY_CHECKS = 0;\n\n`;
+      // Generate Schema SQL and Data/Values SQL Dumps
+      const schemaSql = await this.generateSchemaSql(tables);
+      const dataSql = await this.generateDataSql(tables);
 
-      for (const table of tableNames) {
-        const createResult: any[] = await AppDataSource.query(
-          `SHOW CREATE TABLE \`${table}\``,
-        );
-        if (createResult && createResult[0]) {
-          const createTableSql =
-            createResult[0]['Create Table'] ||
-            createResult[0]['Create View'] ||
-            Object.values(createResult[0])[1];
-          schemaSql += `DROP TABLE IF EXISTS \`${table}\`;\n`;
-          schemaSql += `${createTableSql};\n\n`;
-        }
-      }
-      schemaSql += `SET FOREIGN_KEY_CHECKS = 1;\n`;
-
-      // 3. Build Data/Values SQL Dump
-      let dataSql = `-- AlpineAce Database Values/Data Dump\n`;
-      dataSql += `-- Timestamp: ${timestamp}\n`;
-      dataSql += `SET FOREIGN_KEY_CHECKS = 0;\n\n`;
-
-      for (const table of tableNames) {
-        const rows: any[] = await AppDataSource.query(`SELECT * FROM \`${table}\``);
-        if (rows.length === 0) continue;
-
-        dataSql += `-- Table data for \`${table}\` (${rows.length} rows)\n`;
-
-        // Chunk insert statements into batches of 100 rows
-        const chunkSize = 100;
-        for (let i = 0; i < rows.length; i += chunkSize) {
-          const chunk = rows.slice(i, i + chunkSize);
-          const columns = Object.keys(chunk[0])
-            .map((col) => `\`${col}\``)
-            .join(', ');
-
-          const valueLines = chunk.map((row) => {
-            const values = Object.values(row).map((val) => this.formatSqlValue(val));
-            return `(${values.join(', ')})`;
-          });
-
-          dataSql += `INSERT INTO \`${table}\` (${columns}) VALUES\n${valueLines.join(',\n')};\n\n`;
-        }
-      }
-      dataSql += `SET FOREIGN_KEY_CHECKS = 1;\n`;
-
-      // 4. Upload to Cloudflare R2 inside private folder organized by date (e.g. private/backups/2026-08-31/)
-      const now = new Date();
-      const currentDate = now.toISOString().slice(0, 10); // e.g. 2026-08-31
-      const currentTime = now.toISOString().slice(11, 16).replace(':', ''); // e.g. 0132
-
-      const schemaKey = `private/backups/${currentDate}/schema-${currentTime}.sql`;
-      const dataKey = `private/backups/${currentDate}/values-${currentTime}.sql`;
-      const schemaLatestKey = `private/backups/${currentDate}/schema.sql`;
-      const dataLatestKey = `private/backups/${currentDate}/values.sql`;
-
-      let schemaUrl = '';
-      let dataUrl = '';
+      // Private bucket path: private/backups/YYYY-MM-DD/
+      const schemaKey = `private/backups/${dateStr}/schema.sql`;
+      const dataKey = `private/backups/${dateStr}/values.sql`;
 
       if (R2Util.isConfigured()) {
-        const schemaBuffer = Buffer.from(schemaSql, 'utf-8');
-        const dataBuffer = Buffer.from(dataSql, 'utf-8');
-
-        // Upload timestamped files
-        schemaUrl = await R2Util.upload(schemaKey, schemaBuffer, 'application/sql');
-        dataUrl = await R2Util.upload(dataKey, dataBuffer, 'application/sql');
-
-        // Also upload canonical schema.sql & values.sql in current date folder
-        await R2Util.upload(schemaLatestKey, schemaBuffer, 'application/sql');
-        await R2Util.upload(dataLatestKey, dataBuffer, 'application/sql');
-
-        console.log(`[DB Backup] Uploaded Private Schema SQL: ${schemaKey} & ${schemaLatestKey}`);
-        console.log(`[DB Backup] Uploaded Private Values SQL: ${dataKey} & ${dataLatestKey}`);
+        await R2Util.upload(schemaKey, Buffer.from(schemaSql, 'utf-8'), 'application/sql');
+        await R2Util.upload(dataKey, Buffer.from(dataSql, 'utf-8'), 'application/sql');
+        console.log(`[DB Backup] Uploaded R2: ${schemaKey} & ${dataKey}`);
       } else {
-        console.warn(
-          '[DB Backup] Cloudflare R2 credentials not set. Backup generated locally in memory.',
-        );
+        console.warn('[DB Backup] Cloudflare R2 credentials not configured.');
       }
 
       await this.auditLogService.log({
         action: 'SYSTEM_BACKUP',
         entityType: AuditEntityType.SETTING,
-        metadata: {
-          privateFolder: `private/backups/${currentDate}/`,
-          schemaKey,
-          dataKey,
-          schemaLatestKey,
-          dataLatestKey,
-          tableCount: tableNames.length,
-        },
+        metadata: { schemaKey, dataKey, tableCount: tables.length },
       });
 
       return {
         success: true,
         timestamp,
-        schemaUrl: schemaUrl || undefined,
-        dataUrl: dataUrl || undefined,
         schemaKey,
         dataKey,
-        message: 'Daily database schema and values backup completed successfully.',
+        message: `Database backup uploaded successfully to ${dateStr}/`,
       };
     } catch (err: any) {
-      console.error('[DB Backup] Backup generation failed:', err);
+      console.error('[DB Backup] Error:', err);
       return {
         success: false,
         timestamp,
@@ -162,39 +77,37 @@ export class DbBackupService {
     }
   }
 
-  /**
-   * Formats JavaScript runtime values into MySQL compliant literal values
-   */
-  private formatSqlValue(val: any): string {
-    if (val === null || val === undefined) {
-      return 'NULL';
+  private async generateSchemaSql(tables: string[]): Promise<string> {
+    let sql = `-- Database Schema Dump (${new Date().toISOString()})\nSET FOREIGN_KEY_CHECKS=0;\n\n`;
+    for (const t of tables) {
+      const res: any[] = await AppDataSource.query(`SHOW CREATE TABLE \`${t}\``);
+      if (res && res[0]) {
+        const createSql = res[0]['Create Table'] || res[0]['Create View'] || Object.values(res[0])[1];
+        sql += `DROP TABLE IF EXISTS \`${t}\`;\n${createSql};\n\n`;
+      }
     }
-    if (typeof val === 'number') {
-      return String(val);
-    }
-    if (typeof val === 'boolean') {
-      return val ? '1' : '0';
-    }
-    if (val instanceof Date) {
-      return `'${val.toISOString().slice(0, 19).replace('T', ' ')}'`;
-    }
-    if (typeof val === 'object') {
-      const jsonStr = JSON.stringify(val);
-      return `'${this.escapeString(jsonStr)}'`;
-    }
-    return `'${this.escapeString(String(val))}'`;
+    return sql + `SET FOREIGN_KEY_CHECKS=1;\n`;
   }
 
-  /**
-   * Escapes single quotes and special characters for raw SQL values
-   */
-  private escapeString(str: string): string {
-    return str
-      .replace(/\\/g, '\\\\')
-      .replace(/'/g, "\\'")
-      .replace(/\0/g, '\\0')
-      .replace(/\n/g, '\\n')
-      .replace(/\r/g, '\\r')
-      .replace(/\x1a/g, '\\Z');
+  private async generateDataSql(tables: string[]): Promise<string> {
+    let sql = `-- Database Values Dump (${new Date().toISOString()})\nSET FOREIGN_KEY_CHECKS=0;\n\n`;
+    for (const t of tables) {
+      const rows: any[] = await AppDataSource.query(`SELECT * FROM \`${t}\``);
+      if (rows.length === 0) continue;
+
+      const cols = Object.keys(rows[0]).map((c) => `\`${c}\``).join(', ');
+      const valStrings = rows.map((r) => `(${Object.values(r).map((v) => this.sqlEscape(v)).join(', ')})`);
+      sql += `-- Table: \`${t}\`\nINSERT INTO \`${t}\` (${cols}) VALUES\n${valStrings.join(',\n')};\n\n`;
+    }
+    return sql + `SET FOREIGN_KEY_CHECKS=1;\n`;
+  }
+
+  private sqlEscape(val: any): string {
+    if (val === null || val === undefined) return 'NULL';
+    if (typeof val === 'number') return String(val);
+    if (typeof val === 'boolean') return val ? '1' : '0';
+    if (val instanceof Date) return `'${val.toISOString().slice(0, 19).replace('T', ' ')}'`;
+    const str = typeof val === 'object' ? JSON.stringify(val) : String(val);
+    return `'${str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n').replace(/\r/g, '\\r')}'`;
   }
 }

@@ -6246,12 +6246,6 @@
 					"timestamp": {
 						"type": "string"
 					},
-					"schemaUrl": {
-						"type": "string"
-					},
-					"dataUrl": {
-						"type": "string"
-					},
 					"schemaKey": {
 						"type": "string"
 					},

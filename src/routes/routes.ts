@@ -915,6 +915,7 @@ const models: TsoaRoute.Models = {
             "itemCount": {"dataType":"double","required":true},
             "image": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
             "parentId": {"dataType":"string"},
+            "children": {"dataType":"array","array":{"dataType":"refObject","ref":"PublicCategoryDto"}},
         },
         "additionalProperties": false,
     },

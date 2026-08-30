@@ -252,6 +252,9 @@ export function toPublicCategory(category: Category): PublicCategoryDto {
     itemCount: category.itemCount,
     image: category.image,
     parentId: category.parentId || undefined,
+    children: category.children && category.children.length > 0
+      ? category.children.map(toPublicCategory)
+      : undefined,
   };
 }
 

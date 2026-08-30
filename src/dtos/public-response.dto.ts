@@ -208,6 +208,7 @@ export interface PublicCategoryDto {
   itemCount: number;
   image?: string | null;
   parentId?: string;
+  children?: PublicCategoryDto[];
 }
 
 export interface PublicAboutUsDto {

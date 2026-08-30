@@ -1,5 +1,6 @@
 import { autoInjectable } from 'tsyringe';
 import { AppDataSource } from '../../config/database.config';
+import { DotenvConfig } from '../../config/env.config';
 import { R2Util } from '../../utils/r2.util';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { AuditEntityType } from '../../constants/audit.constants';
@@ -45,11 +46,12 @@ export class DbBackupService {
       // Private bucket path: private/backups/YYYY-MM-DD/
       const schemaKey = `private/backups/${dateStr}/schema.sql`;
       const dataKey = `private/backups/${dateStr}/values.sql`;
+      const backupBucket = DotenvConfig.R2_BACKUP_BUCKET_NAME || DotenvConfig.R2_BUCKET_NAME;
 
       if (R2Util.isConfigured()) {
-        await R2Util.upload(schemaKey, Buffer.from(schemaSql, 'utf-8'), 'application/sql');
-        await R2Util.upload(dataKey, Buffer.from(dataSql, 'utf-8'), 'application/sql');
-        console.log(`[DB Backup] Uploaded R2: ${schemaKey} & ${dataKey}`);
+        await R2Util.upload(schemaKey, Buffer.from(schemaSql, 'utf-8'), 'application/sql', backupBucket);
+        await R2Util.upload(dataKey, Buffer.from(dataSql, 'utf-8'), 'application/sql', backupBucket);
+        console.log(`[DB Backup] Uploaded R2 (${backupBucket}): ${schemaKey} & ${dataKey}`);
       } else {
         console.warn('[DB Backup] Cloudflare R2 credentials not configured.');
       }

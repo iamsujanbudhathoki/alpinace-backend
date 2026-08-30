@@ -49,12 +49,14 @@ export class R2Util {
     key: string,
     buffer: Buffer,
     contentType: string,
+    bucketName?: string,
   ): Promise<string> {
     const client = this.getClient();
     const cleanKey = key.replace(/^\/+/, ''); // Remove leading slash
+    const targetBucket = bucketName || DotenvConfig.R2_BUCKET_NAME;
 
     const command = new PutObjectCommand({
-      Bucket: DotenvConfig.R2_BUCKET_NAME,
+      Bucket: targetBucket,
       Key: cleanKey,
       Body: buffer,
       ContentType: contentType,

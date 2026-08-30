@@ -44,7 +44,12 @@ export class Admin extends CommonEntity {
   @Column({ type: 'boolean', default: true })
   isActive: boolean;
 
-  @Column({ name: 'failed_login_attempts', type: 'int', default: 0 })
+  @Column({
+    name: 'failed_login_attempts',
+    type: 'int',
+    default: 0,
+    select: false,
+  })
   failedLoginAttempts: number;
 
   @BeforeInsert()

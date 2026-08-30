@@ -27,6 +27,7 @@ export class AdminAuthService {
         'role',
         'avatarUrl',
         'isActive',
+        'failedLoginAttempts',
       ],
     });
 
@@ -38,26 +39,61 @@ export class AdminAuthService {
       throw AppError.unAuthorized('Invalid email or password');
     }
 
-    if (!admin.isActive) {
+    if (!admin.isActive || (admin.failedLoginAttempts || 0) >= 5) {
+      if (admin.isActive) {
+        admin.isActive = false;
+        await this.adminRepo.save(admin);
+      }
       await this.auditLogService.logLoginFailed(
         data.email,
-        'Account is disabled',
+        'Account disabled due to 5 consecutive failed login attempts',
         { userId: admin.id },
       );
-      throw AppError.forbidden('Account is disabled');
+      throw AppError.forbidden(
+        'Account is disabled due to 5 consecutive failed login attempts. Please contact a system administrator to restore access.',
+      );
     }
 
     const isValidPassword = await BcryptService.compare(
       data.password,
       admin.password,
     );
+
     if (!isValidPassword) {
-      await this.auditLogService.logLoginFailed(
-        data.email,
-        'Invalid password',
-        { userId: admin.id },
-      );
-      throw AppError.unAuthorized('Invalid email or password');
+      const attempts = (admin.failedLoginAttempts || 0) + 1;
+      admin.failedLoginAttempts = attempts;
+      const isNowDisabled = attempts >= 5;
+      if (isNowDisabled) {
+        admin.isActive = false;
+      }
+      await this.adminRepo.save(admin);
+
+      if (isNowDisabled) {
+        await this.auditLogService.logLoginFailed(
+          data.email,
+          'Account disabled due to 5 consecutive failed login attempts',
+          { userId: admin.id },
+        );
+        throw AppError.forbidden(
+          'Account is disabled due to 5 consecutive failed login attempts. Please contact a system administrator to restore access.',
+        );
+      } else {
+        const remaining = 5 - attempts;
+        await this.auditLogService.logLoginFailed(
+          data.email,
+          `Invalid password (${attempts}/5 failed attempts)`,
+          { userId: admin.id },
+        );
+        throw AppError.unAuthorized(
+          `Invalid email or password. ${remaining} attempt(s) remaining before account lockout.`,
+        );
+      }
+    }
+
+    // Reset failed login attempts counter on successful login
+    if ((admin.failedLoginAttempts || 0) > 0) {
+      admin.failedLoginAttempts = 0;
+      await this.adminRepo.save(admin);
     }
 
     const token = JwtUtil.generateToken({

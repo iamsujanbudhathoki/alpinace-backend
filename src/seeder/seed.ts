@@ -357,9 +357,14 @@ export const seedDatabase = async () => {
       avatarUrl: getMediaUrl('guide-mingma-avatar'),
       phoneNumber: '+977 9841-234567',
       isActive: true,
+      failedLoginAttempts: 0,
     });
     await adminRepo.save(admin);
     console.log('Seeded admin: admin@alpineace.com');
+  } else {
+    existingAdmin.isActive = true;
+    existingAdmin.failedLoginAttempts = 0;
+    await adminRepo.save(existingAdmin);
   }
 
   // 4. Seed Treks

@@ -44,6 +44,9 @@ export class Admin extends CommonEntity {
   @Column({ type: 'boolean', default: true })
   isActive: boolean;
 
+  @Column({ name: 'failed_login_attempts', type: 'int', default: 0 })
+  failedLoginAttempts: number;
+
   @BeforeInsert()
   @BeforeUpdate()
   async hashPassword() {

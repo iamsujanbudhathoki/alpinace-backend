@@ -1,42 +1,32 @@
 import {
-  Body,
   Controller,
-  Delete,
   Get,
   Middlewares,
   NoSecurity,
   Path,
-  Post,
-  Put,
   Query,
   Route,
-  Security,
   Tags,
 } from 'tsoa';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
-import { BlogArticle, BlogStatus } from '../../entities/blog/BlogArticle.entity';
+import { BlogStatus } from '../../entities/blog/BlogArticle.entity';
 import { BlogService } from '../../services/blog/blog.service';
-import {
-  CreateBlogArticleDto,
-  GetBlogsQueryDto,
-  UpdateBlogArticleDto,
-} from '../../schemas/blog.schema';
+import { GetBlogsQueryDto } from '../../schemas/blog.schema';
 import { RequestValidator } from '../../middlewares/validator.middleware';
 import { paginateResponse } from '../../utils/pageAndLimit';
+import { PublicBlogDetailDto, PublicBlogSummaryDto } from '../../dtos/public-response.dto';
+import { toPublicBlogDetail, toPublicBlogSummary } from '../../utils/public-mapper.util';
 
 @Route('blogs')
-@Tags('Blog Articles')
-@Security('jwt', ['admin'])
+@Tags('Blog Articles Public')
 export class BlogController extends Controller {
   constructor(private blogService: BlogService = new BlogService()) {
     super();
   }
 
   /**
-   * Get all blog articles with optional status, category, and search filtering.
-   * Pass ?status=Published to only retrieve published articles.
-   * Pass ?categoryId=... to filter by category ID.
-   * Pass ?search=... to search within title, excerpt, and category.
+   * Get public published blog articles with optional category and search filtering.
+   * Returns lightweight PublicBlogSummaryDto data.
    */
   @Get('')
   @NoSecurity()
@@ -48,8 +38,8 @@ export class BlogController extends Controller {
     @Query() search?: string,
     @Query() limit?: number,
     @Query() page?: number,
-  ): Promise<ApiResponse<BlogArticle[]>> {
-    const dataTotalCount = await this.blogService.getPublicAll(
+  ): Promise<ApiResponse<PublicBlogSummaryDto[]>> {
+    const [items, totalCount] = await this.blogService.getPublicAll(
       status,
       categoryId,
       category,
@@ -57,7 +47,8 @@ export class BlogController extends Controller {
       limit,
       page,
     );
-    const { data, pagination } = paginateResponse(dataTotalCount, limit, page);
+    const publicItems = items.map(toPublicBlogSummary);
+    const { data, pagination } = paginateResponse([publicItems, totalCount], limit, page);
     return {
       data,
       pagination,
@@ -67,81 +58,19 @@ export class BlogController extends Controller {
   }
 
   /**
-   * Admin-only listing of ALL blog articles (including DRAFT, PUBLISHED, and ARCHIVED).
+   * Get public published blog article by ID or Slug.
+   * Returns sanitized PublicBlogDetailDto data.
    */
-  @Get('admin')
-  @Middlewares(RequestValidator.validateQuery(GetBlogsQueryDto))
-  async getAdminAll(
-    @Query() status?: BlogStatus,
-    @Query() categoryId?: string,
-    @Query() category?: string,
-    @Query() search?: string,
-    @Query() limit?: number,
-    @Query() page?: number,
-  ): Promise<ApiResponse<BlogArticle[]>> {
-    const dataTotalCount = await this.blogService.getAdminAll(
-      status,
-      categoryId,
-      category,
-      search,
-      limit,
-      page,
-    );
-    const { data, pagination } = paginateResponse(dataTotalCount, limit, page);
-    return {
-      data,
-      pagination,
-      message: 'Admin blog articles retrieved successfully',
-      success: true,
-    };
-  }
-
   @Get('{idOrSlug}')
   @NoSecurity()
   async getByIdOrSlug(
     @Path() idOrSlug: string,
-  ): Promise<ApiResponse<BlogArticle>> {
-    const data = await this.blogService.getPublicByIdOrSlug(idOrSlug);
+  ): Promise<ApiResponse<PublicBlogDetailDto>> {
+    const blog = await this.blogService.getPublicByIdOrSlug(idOrSlug);
+    const data = toPublicBlogDetail(blog);
     return {
       data,
       message: 'Blog article retrieved successfully',
-      success: true,
-    };
-  }
-
-  @Post('')
-  @Middlewares(RequestValidator.validate(CreateBlogArticleDto))
-  async create(
-    @Body() body: CreateBlogArticleDto,
-  ): Promise<ApiResponse<BlogArticle>> {
-    const data = await this.blogService.create(body);
-    return {
-      data,
-      message: 'Blog article created successfully',
-      success: true,
-    };
-  }
-
-  @Put('{id}')
-  @Middlewares(RequestValidator.validate(UpdateBlogArticleDto))
-  async update(
-    @Path() id: string,
-    @Body() body: UpdateBlogArticleDto,
-  ): Promise<ApiResponse<BlogArticle>> {
-    const data = await this.blogService.update(id, body);
-    return {
-      data,
-      message: 'Blog article updated successfully',
-      success: true,
-    };
-  }
-
-  @Delete('{id}')
-  async delete(@Path() id: string): Promise<ApiResponse<boolean>> {
-    const data = await this.blogService.delete(id);
-    return {
-      data,
-      message: 'Blog article deleted successfully',
       success: true,
     };
   }

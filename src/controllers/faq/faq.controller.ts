@@ -1,46 +1,42 @@
 import {
-  Body,
   Controller,
-  Delete,
   Get,
-  Middlewares,
   NoSecurity,
   Path,
-  Post,
-  Put,
   Query,
   Route,
-  Security,
   Tags,
 } from 'tsoa';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
-import { Faq, FaqStatus } from '../../entities/faq/Faq.entity';
+import { FaqStatus } from '../../entities/faq/Faq.entity';
 import { FaqService } from '../../services/faq/faq.service';
-import { CreateFaqDto, UpdateFaqDto, ReorderFaqsDto } from '../../schemas/faq.schema';
-import { RequestValidator } from '../../middlewares/validator.middleware';
 import { paginateResponse } from '../../utils/pageAndLimit';
+import { PublicFaqDto } from '../../dtos/public-response.dto';
+import { toPublicFaq } from '../../utils/public-mapper.util';
 
 @Route('faqs')
-@Tags('FAQs & Consultations')
-@Security('jwt', ['admin'])
+@Tags('FAQs Public')
 export class FaqController extends Controller {
   constructor(private faqService: FaqService = new FaqService()) {
     super();
   }
 
+  /**
+   * Get public active FAQs.
+   * Enforces status = ACTIVE for public requests.
+   */
   @Get('')
   @NoSecurity()
   async getAll(
-    @Query() status?: FaqStatus,
     @Query() category?: string,
     @Query() search?: string,
     @Query() limit?: number,
     @Query() page?: number,
     @Query() sortBy?: string,
     @Query() sortOrder?: 'ASC' | 'DESC' | 'asc' | 'desc',
-  ): Promise<ApiResponse<Faq[]>> {
-    const dataTotalCount = await this.faqService.getAll({
-      status,
+  ): Promise<ApiResponse<PublicFaqDto[]>> {
+    const [items, totalCount] = await this.faqService.getAll({
+      status: FaqStatus.ACTIVE,
       category,
       search,
       limit,
@@ -48,43 +44,19 @@ export class FaqController extends Controller {
       sortBy,
       sortOrder,
     });
-    const { data, pagination } = paginateResponse(dataTotalCount, limit, page);
+    const publicItems = items.map(toPublicFaq);
+    const { data, pagination } = paginateResponse([publicItems, totalCount], limit, page);
     return { data, pagination, message: 'FAQs retrieved successfully', success: true };
   }
 
-  @Put('reorder')
-  async reorder(@Body() body: ReorderFaqsDto): Promise<ApiResponse<boolean>> {
-    const data = await this.faqService.reorder(body.items);
-    return { data, message: 'FAQs reordered successfully', success: true };
-  }
-
+  /**
+   * Get public active FAQ by ID.
+   */
   @Get('{id}')
   @NoSecurity()
-  async getById(@Path() id: string): Promise<ApiResponse<Faq>> {
-    const data = await this.faqService.getById(id);
+  async getById(@Path() id: string): Promise<ApiResponse<PublicFaqDto>> {
+    const faq = await this.faqService.getById(id);
+    const data = toPublicFaq(faq);
     return { data, message: 'FAQ retrieved successfully', success: true };
-  }
-
-  @Post('')
-  @Middlewares(RequestValidator.validate(CreateFaqDto))
-  async create(@Body() body: CreateFaqDto): Promise<ApiResponse<Faq>> {
-    const data = await this.faqService.create(body);
-    return { data, message: 'FAQ created successfully', success: true };
-  }
-
-  @Put('{id}')
-  @Middlewares(RequestValidator.validate(UpdateFaqDto))
-  async update(
-    @Path() id: string,
-    @Body() body: UpdateFaqDto,
-  ): Promise<ApiResponse<Faq>> {
-    const data = await this.faqService.update(id, body);
-    return { data, message: 'FAQ updated successfully', success: true };
-  }
-
-  @Delete('{id}')
-  async delete(@Path() id: string): Promise<ApiResponse<boolean>> {
-    const data = await this.faqService.delete(id);
-    return { data, message: 'FAQ deleted successfully', success: true };
   }
 }

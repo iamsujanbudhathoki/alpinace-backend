@@ -1,36 +1,30 @@
 import {
-  Body,
   Controller,
-  Delete,
   Get,
-  Middlewares,
   NoSecurity,
   Path,
-  Post,
-  Put,
   Query,
   Route,
-  Security,
   Tags,
 } from 'tsoa';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
-import { Trek, TrekStatus } from '../../entities/trek/Trek.entity';
+import { TrekStatus } from '../../entities/trek/Trek.entity';
 import { TripDifficulty } from '../../entities/common/difficulty.enum';
 import { TrekService } from '../../services/trek/trek.service';
-import { CreateTrekDto, UpdateTrekDto } from '../../schemas/trek.schema';
-import { RequestValidator } from '../../middlewares/validator.middleware';
 import { paginateResponse } from '../../utils/pageAndLimit';
+import { PublicTrekDetailDto, PublicTrekSummaryDto } from '../../dtos/public-response.dto';
+import { toPublicTrekDetail, toPublicTrekSummary } from '../../utils/public-mapper.util';
 
 @Route('treks')
-@Tags('Trekking')
-@Security('jwt', ['admin'])
+@Tags('Trekking Public')
 export class TrekkingController extends Controller {
   constructor(private trekService: TrekService = new TrekService()) {
     super();
   }
 
   /**
-   * Get all trekking packages with dynamic filtering.
+   * Get public active/featured trekking packages with dynamic filtering.
+   * Returns lightweight PublicTrekSummaryDto data suitable for the marketing site.
    */
   @Get('')
   @NoSecurity()
@@ -51,8 +45,8 @@ export class TrekkingController extends Controller {
     @Query() sortBy?: string,
     @Query() limit?: number,
     @Query() page?: number,
-  ): Promise<ApiResponse<Trek[]>> {
-    const dataTotalCount = await this.trekService.getPublicAll({
+  ): Promise<ApiResponse<PublicTrekSummaryDto[]>> {
+    const [items, totalCount] = await this.trekService.getPublicAll({
       category,
       categorySlug,
       categoryId,
@@ -70,60 +64,12 @@ export class TrekkingController extends Controller {
       limit,
       page,
     });
-    const { data, pagination } = paginateResponse(dataTotalCount, limit, page);
+    const publicItems = items.map(toPublicTrekSummary);
+    const { data, pagination } = paginateResponse([publicItems, totalCount], limit, page);
     return {
       data,
       pagination,
       message: 'Trekking packages retrieved successfully',
-      success: true,
-    };
-  }
-
-  /**
-   * Admin-only listing of ALL trekking packages (including DRAFT, ACTIVE, and FEATURED).
-   */
-  @Get('admin')
-  async getAdminAll(
-    @Query() category?: string,
-    @Query() categorySlug?: string,
-    @Query() categoryId?: string,
-    @Query() region?: string,
-    @Query() difficulty?: TripDifficulty,
-    @Query() status?: TrekStatus,
-    @Query() search?: string,
-    @Query() minPrice?: number,
-    @Query() maxPrice?: number,
-    @Query() minDuration?: number,
-    @Query() maxDuration?: number,
-    @Query() minAltitude?: number,
-    @Query() maxAltitude?: number,
-    @Query() sortBy?: string,
-    @Query() limit?: number,
-    @Query() page?: number,
-  ): Promise<ApiResponse<Trek[]>> {
-    const dataTotalCount = await this.trekService.getAdminAll({
-      category,
-      categorySlug,
-      categoryId,
-      region,
-      difficulty,
-      status,
-      search,
-      minPrice,
-      maxPrice,
-      minDuration,
-      maxDuration,
-      minAltitude,
-      maxAltitude,
-      sortBy,
-      limit,
-      page,
-    });
-    const { data, pagination } = paginateResponse(dataTotalCount, limit, page);
-    return {
-      data,
-      pagination,
-      message: 'Admin trekking packages retrieved successfully',
       success: true,
     };
   }
@@ -143,48 +89,18 @@ export class TrekkingController extends Controller {
   }
 
   /**
-   * Get trekking package by ID or Slug (public active/featured only).
+   * Get active/featured trekking package by ID or Slug.
+   * Returns sanitized PublicTrekDetailDto data for the marketing detail page.
    */
   @Get('{idOrSlug}')
   @NoSecurity()
-  async getByIdOrSlug(@Path() idOrSlug: string): Promise<ApiResponse<Trek>> {
-    const data = await this.trekService.getPublicByIdOrSlug(idOrSlug);
+  async getByIdOrSlug(@Path() idOrSlug: string): Promise<ApiResponse<PublicTrekDetailDto>> {
+    const trek = await this.trekService.getPublicByIdOrSlug(idOrSlug);
+    const data = toPublicTrekDetail(trek);
     return {
       data,
       message: 'Trekking package retrieved successfully',
       success: true,
     };
-  }
-
-  /**
-   * Create a new trekking package.
-   */
-  @Post('')
-  @Middlewares(RequestValidator.validate(CreateTrekDto))
-  async create(@Body() body: CreateTrekDto): Promise<ApiResponse<Trek>> {
-    const data = await this.trekService.create(body);
-    return { data, message: 'Trek created successfully', success: true };
-  }
-
-  /**
-   * Update an existing trekking package.
-   */
-  @Put('{id}')
-  @Middlewares(RequestValidator.validate(UpdateTrekDto))
-  async update(
-    @Path() id: string,
-    @Body() body: UpdateTrekDto,
-  ): Promise<ApiResponse<Trek>> {
-    const data = await this.trekService.update(id, body);
-    return { data, message: 'Trek updated successfully', success: true };
-  }
-
-  /**
-   * Delete a trekking package.
-   */
-  @Delete('{id}')
-  async delete(@Path() id: string): Promise<ApiResponse<boolean>> {
-    const data = await this.trekService.delete(id);
-    return { data, message: 'Trek deleted successfully', success: true };
   }
 }

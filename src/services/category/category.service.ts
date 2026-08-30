@@ -20,12 +20,17 @@ export class CategoryService {
   constructor(private mediaService: MediaService = new MediaService()) {}
 
   async getAll(params?: {
+    status?: CategoryStatus;
     type?: CategoryType;
     search?: string;
     limit?: number;
     page?: number;
   }): Promise<[Category[], number]> {
     const qb = this.repo.createQueryBuilder('cat');
+
+    if (params?.status && (params.status as any) !== 'All') {
+      qb.andWhere('cat.status = :status', { status: params.status });
+    }
 
     if (params?.type && (params.type as any) !== 'All') {
       qb.andWhere('cat.type = :type', { type: params.type });

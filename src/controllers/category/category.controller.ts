@@ -1,34 +1,24 @@
 import {
-  Body,
   Controller,
-  Delete,
   Get,
-  Middlewares,
   NoSecurity,
   Path,
-  Post,
-  Put,
   Query,
   Route,
-  Security,
   Tags,
 } from 'tsoa';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
 import {
-  Category,
+  CategoryStatus,
   CategoryType,
 } from '../../entities/category/Category.entity';
 import { CategoryService } from '../../services/category/category.service';
-import {
-  CreateCategoryDto,
-  UpdateCategoryDto,
-} from '../../schemas/category.schema';
-import { RequestValidator } from '../../middlewares/validator.middleware';
 import { paginateResponse } from '../../utils/pageAndLimit';
+import { PublicCategoryDto } from '../../dtos/public-response.dto';
+import { toPublicCategory } from '../../utils/public-mapper.util';
 
 @Route('categories')
-@Tags('Categories')
-@Security('jwt', ['admin'])
+@Tags('Categories Public')
 export class CategoryController extends Controller {
   constructor(
     private categoryService: CategoryService = new CategoryService(),
@@ -36,6 +26,9 @@ export class CategoryController extends Controller {
     super();
   }
 
+  /**
+   * Get public active categories with optional type and search filters.
+   */
   @Get('')
   @NoSecurity()
   async getAll(
@@ -43,14 +36,16 @@ export class CategoryController extends Controller {
     @Query() search?: string,
     @Query() limit?: number,
     @Query() page?: number,
-  ): Promise<ApiResponse<Category[]>> {
-    const dataTotalCount = await this.categoryService.getAll({
+  ): Promise<ApiResponse<PublicCategoryDto[]>> {
+    const [items, totalCount] = await this.categoryService.getAll({
+      status: CategoryStatus.ACTIVE,
       type,
       search,
       limit,
       page,
     });
-    const { data, pagination } = paginateResponse(dataTotalCount, limit, page);
+    const publicItems = items.map(toPublicCategory);
+    const { data, pagination } = paginateResponse([publicItems, totalCount], limit, page);
     return {
       data,
       pagination,
@@ -59,35 +54,14 @@ export class CategoryController extends Controller {
     };
   }
 
+  /**
+   * Get public active category by ID or Slug.
+   */
   @Get('{idOrSlug}')
   @NoSecurity()
-  async getByIdOrSlug(@Path() idOrSlug: string): Promise<ApiResponse<Category>> {
-    const data = await this.categoryService.getByIdOrSlug(idOrSlug);
+  async getByIdOrSlug(@Path() idOrSlug: string): Promise<ApiResponse<PublicCategoryDto>> {
+    const category = await this.categoryService.getByIdOrSlug(idOrSlug);
+    const data = toPublicCategory(category);
     return { data, message: 'Category retrieved successfully', success: true };
-  }
-
-  @Post('')
-  @Middlewares(RequestValidator.validate(CreateCategoryDto))
-  async create(
-    @Body() body: CreateCategoryDto,
-  ): Promise<ApiResponse<Category>> {
-    const data = await this.categoryService.create(body);
-    return { data, message: 'Category created successfully', success: true };
-  }
-
-  @Put('{id}')
-  @Middlewares(RequestValidator.validate(UpdateCategoryDto))
-  async update(
-    @Path() id: string,
-    @Body() body: UpdateCategoryDto,
-  ): Promise<ApiResponse<Category>> {
-    const data = await this.categoryService.update(id, body);
-    return { data, message: 'Category updated successfully', success: true };
-  }
-
-  @Delete('{id}')
-  async delete(@Path() id: string): Promise<ApiResponse<boolean>> {
-    const data = await this.categoryService.delete(id);
-    return { data, message: 'Category deleted successfully', success: true };
   }
 }

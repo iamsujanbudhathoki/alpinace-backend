@@ -17,6 +17,156 @@
 				],
 				"type": "string"
 			},
+			"PublicTrekSummaryDto": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					},
+					"categorySlug": {
+						"type": "string"
+					},
+					"categoryId": {
+						"type": "string"
+					},
+					"region": {
+						"type": "string"
+					},
+					"durationDays": {
+						"type": "number",
+						"format": "double"
+					},
+					"maxAltitudeMeters": {
+						"type": "number",
+						"format": "double"
+					},
+					"difficulty": {
+						"$ref": "#/components/schemas/TripDifficulty"
+					},
+					"priceUSD": {
+						"type": "number",
+						"format": "double"
+					},
+					"rating": {
+						"type": "number",
+						"format": "double"
+					},
+					"reviewsCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"image": {
+						"type": "string"
+					},
+					"shortDesc": {
+						"type": "string"
+					},
+					"country": {
+						"type": "string"
+					},
+					"bestSeason": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"title",
+					"slug",
+					"region",
+					"durationDays",
+					"maxAltitudeMeters",
+					"difficulty",
+					"priceUSD",
+					"rating",
+					"reviewsCount",
+					"shortDesc"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PaginationMeta": {
+				"properties": {
+					"count": {
+						"type": "number",
+						"format": "double"
+					},
+					"currentPage": {
+						"type": "number",
+						"format": "double"
+					},
+					"nextPage": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"prevPage": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"lastPage": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"count",
+					"currentPage",
+					"nextPage",
+					"prevPage",
+					"lastPage"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_PublicTrekSummaryDto-Array_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"items": {
+									"$ref": "#/components/schemas/PublicTrekSummaryDto"
+								},
+								"type": "array"
+							},
+							{
+								"items": {
+									"items": {
+										"$ref": "#/components/schemas/PublicTrekSummaryDto"
+									},
+									"type": "array"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"TrekStatus": {
 				"enum": [
 					"active",
@@ -24,6 +174,36 @@
 					"draft"
 				],
 				"type": "string"
+			},
+			"ApiResponse_any_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{},
+							{
+								"items": {},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
 			},
 			"TripActivity": {
 				"enum": [
@@ -203,6 +383,2567 @@
 				},
 				"required": [
 					"title"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicTrekDetailDto": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					},
+					"categorySlug": {
+						"type": "string"
+					},
+					"categoryId": {
+						"type": "string"
+					},
+					"region": {
+						"type": "string"
+					},
+					"durationDays": {
+						"type": "number",
+						"format": "double"
+					},
+					"maxAltitudeMeters": {
+						"type": "number",
+						"format": "double"
+					},
+					"difficulty": {
+						"$ref": "#/components/schemas/TripDifficulty"
+					},
+					"priceUSD": {
+						"type": "number",
+						"format": "double"
+					},
+					"rating": {
+						"type": "number",
+						"format": "double"
+					},
+					"reviewsCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"image": {
+						"type": "string"
+					},
+					"shortDesc": {
+						"type": "string"
+					},
+					"country": {
+						"type": "string"
+					},
+					"bestSeason": {
+						"type": "string"
+					},
+					"activity": {
+						"$ref": "#/components/schemas/TripActivity"
+					},
+					"startEndLocation": {
+						"type": "string"
+					},
+					"accommodation": {
+						"type": "string"
+					},
+					"meals": {
+						"type": "string"
+					},
+					"groupSizeRange": {
+						"type": "string"
+					},
+					"inclusionsText": {
+						"type": "string"
+					},
+					"exclusionsText": {
+						"type": "string"
+					},
+					"addonsText": {
+						"type": "string"
+					},
+					"usefulInfoText": {
+						"type": "string"
+					},
+					"galleryImages": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"mapImage": {
+						"type": "string"
+					},
+					"itinerary": {
+						"items": {
+							"$ref": "#/components/schemas/TripItineraryDay"
+						},
+						"type": "array"
+					},
+					"faqs": {
+						"items": {
+							"$ref": "#/components/schemas/TripFaq"
+						},
+						"type": "array"
+					},
+					"reviews": {
+						"items": {
+							"$ref": "#/components/schemas/TripReview"
+						},
+						"type": "array"
+					},
+					"departureDates": {
+						"items": {
+							"$ref": "#/components/schemas/TripDepartureDate"
+						},
+						"type": "array"
+					},
+					"packageFiles": {
+						"items": {
+							"$ref": "#/components/schemas/TripPackageFile"
+						},
+						"type": "array"
+					},
+					"metaTitle": {
+						"type": "string"
+					},
+					"metaDescription": {
+						"type": "string"
+					},
+					"keywords": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"title",
+					"slug",
+					"region",
+					"durationDays",
+					"maxAltitudeMeters",
+					"difficulty",
+					"priceUSD",
+					"rating",
+					"reviewsCount",
+					"shortDesc"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_PublicTrekDetailDto_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/PublicTrekDetailDto"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/PublicTrekDetailDto"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TourType": {
+				"enum": [
+					"cultural_heritage",
+					"luxury_wellness",
+					"wildlife_safari",
+					"helicopter_tour",
+					"day_tour",
+					"other"
+				],
+				"type": "string"
+			},
+			"PublicTourSummaryDto": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					},
+					"categorySlug": {
+						"type": "string"
+					},
+					"categoryId": {
+						"type": "string"
+					},
+					"region": {
+						"type": "string"
+					},
+					"tourType": {
+						"$ref": "#/components/schemas/TourType"
+					},
+					"transportation": {
+						"type": "string"
+					},
+					"durationDays": {
+						"type": "number",
+						"format": "double"
+					},
+					"maxAltitudeMeters": {
+						"type": "number",
+						"format": "double"
+					},
+					"difficulty": {
+						"$ref": "#/components/schemas/TripDifficulty"
+					},
+					"priceUSD": {
+						"type": "number",
+						"format": "double"
+					},
+					"rating": {
+						"type": "number",
+						"format": "double"
+					},
+					"reviewsCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"image": {
+						"type": "string"
+					},
+					"shortDesc": {
+						"type": "string"
+					},
+					"country": {
+						"type": "string"
+					},
+					"bestSeason": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"title",
+					"slug",
+					"region",
+					"tourType",
+					"durationDays",
+					"maxAltitudeMeters",
+					"difficulty",
+					"priceUSD",
+					"rating",
+					"reviewsCount",
+					"shortDesc"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_PublicTourSummaryDto-Array_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"items": {
+									"$ref": "#/components/schemas/PublicTourSummaryDto"
+								},
+								"type": "array"
+							},
+							{
+								"items": {
+									"items": {
+										"$ref": "#/components/schemas/PublicTourSummaryDto"
+									},
+									"type": "array"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TourStatus": {
+				"enum": [
+					"active",
+					"featured",
+					"draft"
+				],
+				"type": "string"
+			},
+			"PublicTourDetailDto": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					},
+					"categorySlug": {
+						"type": "string"
+					},
+					"categoryId": {
+						"type": "string"
+					},
+					"region": {
+						"type": "string"
+					},
+					"tourType": {
+						"$ref": "#/components/schemas/TourType"
+					},
+					"transportation": {
+						"type": "string"
+					},
+					"durationDays": {
+						"type": "number",
+						"format": "double"
+					},
+					"maxAltitudeMeters": {
+						"type": "number",
+						"format": "double"
+					},
+					"difficulty": {
+						"$ref": "#/components/schemas/TripDifficulty"
+					},
+					"priceUSD": {
+						"type": "number",
+						"format": "double"
+					},
+					"rating": {
+						"type": "number",
+						"format": "double"
+					},
+					"reviewsCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"image": {
+						"type": "string"
+					},
+					"shortDesc": {
+						"type": "string"
+					},
+					"country": {
+						"type": "string"
+					},
+					"bestSeason": {
+						"type": "string"
+					},
+					"activity": {
+						"$ref": "#/components/schemas/TripActivity"
+					},
+					"startEndLocation": {
+						"type": "string"
+					},
+					"accommodation": {
+						"type": "string"
+					},
+					"meals": {
+						"type": "string"
+					},
+					"groupSizeRange": {
+						"type": "string"
+					},
+					"inclusionsText": {
+						"type": "string"
+					},
+					"exclusionsText": {
+						"type": "string"
+					},
+					"addonsText": {
+						"type": "string"
+					},
+					"usefulInfoText": {
+						"type": "string"
+					},
+					"galleryImages": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"mapImage": {
+						"type": "string"
+					},
+					"itinerary": {
+						"items": {
+							"$ref": "#/components/schemas/TripItineraryDay"
+						},
+						"type": "array"
+					},
+					"faqs": {
+						"items": {
+							"$ref": "#/components/schemas/TripFaq"
+						},
+						"type": "array"
+					},
+					"reviews": {
+						"items": {
+							"$ref": "#/components/schemas/TripReview"
+						},
+						"type": "array"
+					},
+					"departureDates": {
+						"items": {
+							"$ref": "#/components/schemas/TripDepartureDate"
+						},
+						"type": "array"
+					},
+					"packageFiles": {
+						"items": {
+							"$ref": "#/components/schemas/TripPackageFile"
+						},
+						"type": "array"
+					},
+					"metaTitle": {
+						"type": "string"
+					},
+					"metaDescription": {
+						"type": "string"
+					},
+					"keywords": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"title",
+					"slug",
+					"region",
+					"tourType",
+					"durationDays",
+					"maxAltitudeMeters",
+					"difficulty",
+					"priceUSD",
+					"rating",
+					"reviewsCount",
+					"shortDesc"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_PublicTourDetailDto_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/PublicTourDetailDto"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/PublicTourDetailDto"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicTestimonialDto": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"author": {
+						"type": "string"
+					},
+					"role": {
+						"type": "string"
+					},
+					"country": {
+						"type": "string"
+					},
+					"tripName": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					},
+					"avatar": {
+						"type": "string"
+					},
+					"rating": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"id",
+					"author",
+					"content",
+					"rating"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_PublicTestimonialDto-Array_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"items": {
+									"$ref": "#/components/schemas/PublicTestimonialDto"
+								},
+								"type": "array"
+							},
+							{
+								"items": {
+									"items": {
+										"$ref": "#/components/schemas/PublicTestimonialDto"
+									},
+									"type": "array"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_PublicTestimonialDto_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/PublicTestimonialDto"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/PublicTestimonialDto"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicTeamMemberDto": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"role": {
+						"type": "string"
+					},
+					"bio": {
+						"type": "string"
+					},
+					"avatar": {
+						"type": "string"
+					},
+					"experience": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"role"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_PublicTeamMemberDto-Array_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"items": {
+									"$ref": "#/components/schemas/PublicTeamMemberDto"
+								},
+								"type": "array"
+							},
+							{
+								"items": {
+									"items": {
+										"$ref": "#/components/schemas/PublicTeamMemberDto"
+									},
+									"type": "array"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_PublicTeamMemberDto_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/PublicTeamMemberDto"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/PublicTeamMemberDto"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicSettingDto": {
+				"properties": {},
+				"type": "object",
+				"additionalProperties": {
+					"type": "string"
+				}
+			},
+			"ApiResponse_PublicSettingDto_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/PublicSettingDto"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/PublicSettingDto"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"NotificationType": {
+				"enum": [
+					"inquiry",
+					"booking",
+					"quote",
+					"system"
+				],
+				"type": "string"
+			},
+			"Notification": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"deletedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"title": {
+						"type": "string"
+					},
+					"body": {
+						"type": "string"
+					},
+					"type": {
+						"$ref": "#/components/schemas/NotificationType"
+					},
+					"isRead": {
+						"type": "boolean"
+					},
+					"refId": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"deletedAt",
+					"title",
+					"body",
+					"type",
+					"isRead",
+					"refId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_Notification-Array_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"items": {
+									"$ref": "#/components/schemas/Notification"
+								},
+								"type": "array"
+							},
+							{
+								"items": {
+									"items": {
+										"$ref": "#/components/schemas/Notification"
+									},
+									"type": "array"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PaginatedNotifications": {
+				"properties": {
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/Notification"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"unreadCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"limit": {
+						"type": "number",
+						"format": "double"
+					},
+					"offset": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"items",
+					"total",
+					"unreadCount",
+					"limit",
+					"offset"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_PaginatedNotifications_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/PaginatedNotifications"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/PaginatedNotifications"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_number_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"type": "number",
+								"format": "double"
+							},
+							{
+								"items": {
+									"type": "number",
+									"format": "double"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_boolean_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"type": "boolean"
+							},
+							{
+								"items": {
+									"type": "boolean"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CategoryType": {
+				"enum": [
+					"trekking",
+					"tours",
+					"expeditions",
+					"blogs",
+					"media"
+				],
+				"type": "string"
+			},
+			"CategoryStatus": {
+				"enum": [
+					"active",
+					"draft"
+				],
+				"type": "string"
+			},
+			"Category": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"deletedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"name": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"type": {
+						"$ref": "#/components/schemas/CategoryType"
+					},
+					"description": {
+						"type": "string"
+					},
+					"itemCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"status": {
+						"$ref": "#/components/schemas/CategoryStatus"
+					},
+					"image": {
+						"type": "string",
+						"nullable": true
+					},
+					"mediaId": {
+						"type": "string",
+						"nullable": true
+					},
+					"parentId": {
+						"type": "string",
+						"nullable": true
+					},
+					"parent": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/Category"
+							}
+						],
+						"nullable": true
+					},
+					"children": {
+						"items": {
+							"$ref": "#/components/schemas/Category"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"deletedAt",
+					"name",
+					"slug",
+					"type",
+					"description",
+					"itemCount",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MediaUploadResult": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"categoryId": {
+						"type": "string"
+					},
+					"categoryName": {
+						"type": "string"
+					},
+					"category": {
+						"$ref": "#/components/schemas/Category"
+					},
+					"description": {
+						"type": "string"
+					},
+					"altText": {
+						"type": "string"
+					},
+					"url": {
+						"type": "string"
+					},
+					"mimeType": {
+						"type": "string"
+					},
+					"fileSize": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"title",
+					"description",
+					"altText",
+					"url",
+					"mimeType",
+					"fileSize"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_MediaUploadResult_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/MediaUploadResult"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/MediaUploadResult"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_MediaUploadResult-Array_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"items": {
+									"$ref": "#/components/schemas/MediaUploadResult"
+								},
+								"type": "array"
+							},
+							{
+								"items": {
+									"items": {
+										"$ref": "#/components/schemas/MediaUploadResult"
+									},
+									"type": "array"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateMediaDto": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"categoryId": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"altText": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"InquiryStatus": {
+				"enum": [
+					"New",
+					"Contacted",
+					"Quote Sent",
+					"Booked",
+					"Closed"
+				],
+				"type": "string"
+			},
+			"InquiryType": {
+				"enum": [
+					"Trekking",
+					"Tour",
+					"Expedition",
+					"General"
+				],
+				"type": "string"
+			},
+			"Inquiry": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"deletedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"guestName": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"country": {
+						"type": "string"
+					},
+					"interestedTrip": {
+						"type": "string"
+					},
+					"travelDates": {
+						"type": "string"
+					},
+					"groupSize": {
+						"type": "number",
+						"format": "double"
+					},
+					"message": {
+						"type": "string"
+					},
+					"status": {
+						"$ref": "#/components/schemas/InquiryStatus"
+					},
+					"type": {
+						"$ref": "#/components/schemas/InquiryType"
+					},
+					"notes": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"deletedAt",
+					"guestName",
+					"email",
+					"phone",
+					"country",
+					"interestedTrip",
+					"travelDates",
+					"groupSize",
+					"message",
+					"status",
+					"type",
+					"notes"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_Inquiry_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/Inquiry"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/Inquiry"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateInquiryDto": {
+				"properties": {
+					"guestName": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"country": {
+						"type": "string"
+					},
+					"interestedTrip": {
+						"type": "string"
+					},
+					"travelDates": {
+						"type": "string"
+					},
+					"groupSize": {
+						"type": "number",
+						"format": "double"
+					},
+					"message": {
+						"type": "string"
+					},
+					"status": {
+						"$ref": "#/components/schemas/InquiryStatus"
+					},
+					"type": {
+						"$ref": "#/components/schemas/InquiryType"
+					},
+					"notes": {
+						"type": "string"
+					},
+					"cfTurnstileToken": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"guestName",
+					"email",
+					"phone",
+					"interestedTrip",
+					"groupSize",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicFaqDto": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"question": {
+						"type": "string"
+					},
+					"answer": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"question",
+					"answer",
+					"category"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_PublicFaqDto-Array_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"items": {
+									"$ref": "#/components/schemas/PublicFaqDto"
+								},
+								"type": "array"
+							},
+							{
+								"items": {
+									"items": {
+										"$ref": "#/components/schemas/PublicFaqDto"
+									},
+									"type": "array"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_PublicFaqDto_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/PublicFaqDto"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/PublicFaqDto"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ClimbingGrade": {
+				"enum": [
+					"Non-Technical Trekking Peak",
+					"Technical Alpine Grade",
+					"Extreme Technical Grade"
+				],
+				"type": "string"
+			},
+			"PublicExpeditionSummaryDto": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					},
+					"categorySlug": {
+						"type": "string"
+					},
+					"categoryId": {
+						"type": "string"
+					},
+					"region": {
+						"type": "string"
+					},
+					"durationDays": {
+						"type": "number",
+						"format": "double"
+					},
+					"peakHeightM": {
+						"type": "number",
+						"format": "double"
+					},
+					"maxAltitudeMeters": {
+						"type": "number",
+						"format": "double"
+					},
+					"climbingGrade": {
+						"$ref": "#/components/schemas/ClimbingGrade"
+					},
+					"difficulty": {
+						"$ref": "#/components/schemas/TripDifficulty"
+					},
+					"sherpaGuideRatio": {
+						"type": "string"
+					},
+					"oxygenRequired": {
+						"type": "boolean"
+					},
+					"priceUSD": {
+						"type": "number",
+						"format": "double"
+					},
+					"rating": {
+						"type": "number",
+						"format": "double"
+					},
+					"reviewsCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"image": {
+						"type": "string"
+					},
+					"shortDesc": {
+						"type": "string"
+					},
+					"country": {
+						"type": "string"
+					},
+					"bestSeason": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"title",
+					"slug",
+					"region",
+					"durationDays",
+					"peakHeightM",
+					"maxAltitudeMeters",
+					"climbingGrade",
+					"difficulty",
+					"priceUSD",
+					"rating",
+					"reviewsCount",
+					"shortDesc"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_PublicExpeditionSummaryDto-Array_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"items": {
+									"$ref": "#/components/schemas/PublicExpeditionSummaryDto"
+								},
+								"type": "array"
+							},
+							{
+								"items": {
+									"items": {
+										"$ref": "#/components/schemas/PublicExpeditionSummaryDto"
+									},
+									"type": "array"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ExpeditionStatus": {
+				"enum": [
+					"active",
+					"featured",
+					"draft"
+				],
+				"type": "string"
+			},
+			"PublicExpeditionDetailDto": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					},
+					"categorySlug": {
+						"type": "string"
+					},
+					"categoryId": {
+						"type": "string"
+					},
+					"region": {
+						"type": "string"
+					},
+					"durationDays": {
+						"type": "number",
+						"format": "double"
+					},
+					"peakHeightM": {
+						"type": "number",
+						"format": "double"
+					},
+					"maxAltitudeMeters": {
+						"type": "number",
+						"format": "double"
+					},
+					"climbingGrade": {
+						"$ref": "#/components/schemas/ClimbingGrade"
+					},
+					"difficulty": {
+						"$ref": "#/components/schemas/TripDifficulty"
+					},
+					"sherpaGuideRatio": {
+						"type": "string"
+					},
+					"oxygenRequired": {
+						"type": "boolean"
+					},
+					"priceUSD": {
+						"type": "number",
+						"format": "double"
+					},
+					"rating": {
+						"type": "number",
+						"format": "double"
+					},
+					"reviewsCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"image": {
+						"type": "string"
+					},
+					"shortDesc": {
+						"type": "string"
+					},
+					"country": {
+						"type": "string"
+					},
+					"bestSeason": {
+						"type": "string"
+					},
+					"activity": {
+						"$ref": "#/components/schemas/TripActivity"
+					},
+					"startEndLocation": {
+						"type": "string"
+					},
+					"accommodation": {
+						"type": "string"
+					},
+					"meals": {
+						"type": "string"
+					},
+					"groupSizeRange": {
+						"type": "string"
+					},
+					"inclusionsText": {
+						"type": "string"
+					},
+					"exclusionsText": {
+						"type": "string"
+					},
+					"addonsText": {
+						"type": "string"
+					},
+					"usefulInfoText": {
+						"type": "string"
+					},
+					"galleryImages": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"mapImage": {
+						"type": "string"
+					},
+					"itinerary": {
+						"items": {
+							"$ref": "#/components/schemas/TripItineraryDay"
+						},
+						"type": "array"
+					},
+					"faqs": {
+						"items": {
+							"$ref": "#/components/schemas/TripFaq"
+						},
+						"type": "array"
+					},
+					"reviews": {
+						"items": {
+							"$ref": "#/components/schemas/TripReview"
+						},
+						"type": "array"
+					},
+					"departureDates": {
+						"items": {
+							"$ref": "#/components/schemas/TripDepartureDate"
+						},
+						"type": "array"
+					},
+					"packageFiles": {
+						"items": {
+							"$ref": "#/components/schemas/TripPackageFile"
+						},
+						"type": "array"
+					},
+					"metaTitle": {
+						"type": "string"
+					},
+					"metaDescription": {
+						"type": "string"
+					},
+					"keywords": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"title",
+					"slug",
+					"region",
+					"durationDays",
+					"peakHeightM",
+					"maxAltitudeMeters",
+					"climbingGrade",
+					"difficulty",
+					"priceUSD",
+					"rating",
+					"reviewsCount",
+					"shortDesc"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_PublicExpeditionDetailDto_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/PublicExpeditionDetailDto"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/PublicExpeditionDetailDto"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BookingPackageType": {
+				"enum": [
+					"trekking",
+					"expedition",
+					"tour"
+				],
+				"type": "string"
+			},
+			"BookingPaymentStatus": {
+				"enum": [
+					"paid",
+					"deposit_paid",
+					"pending",
+					"refunded"
+				],
+				"type": "string"
+			},
+			"BookingStatus": {
+				"enum": [
+					"confirmed",
+					"in_review",
+					"active_trek",
+					"completed",
+					"cancelled"
+				],
+				"type": "string"
+			},
+			"BookingPermitStatus": {
+				"enum": [
+					"issued",
+					"processing",
+					"pending_document"
+				],
+				"type": "string"
+			},
+			"Booking": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"deletedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"reference": {
+						"type": "string"
+					},
+					"guestName": {
+						"type": "string"
+					},
+					"guestEmail": {
+						"type": "string"
+					},
+					"guestPhone": {
+						"type": "string"
+					},
+					"country": {
+						"type": "string"
+					},
+					"packageName": {
+						"type": "string"
+					},
+					"packageType": {
+						"$ref": "#/components/schemas/BookingPackageType"
+					},
+					"startDate": {
+						"type": "string"
+					},
+					"endDate": {
+						"type": "string"
+					},
+					"groupSize": {
+						"type": "number",
+						"format": "double"
+					},
+					"totalAmountUSD": {
+						"type": "number",
+						"format": "double"
+					},
+					"paymentStatus": {
+						"$ref": "#/components/schemas/BookingPaymentStatus"
+					},
+					"bookingStatus": {
+						"$ref": "#/components/schemas/BookingStatus"
+					},
+					"assignedGuide": {
+						"type": "string"
+					},
+					"permitStatus": {
+						"$ref": "#/components/schemas/BookingPermitStatus"
+					},
+					"specialRequests": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"deletedAt",
+					"reference",
+					"guestName",
+					"guestEmail",
+					"guestPhone",
+					"country",
+					"packageName",
+					"packageType",
+					"startDate",
+					"endDate",
+					"groupSize",
+					"totalAmountUSD",
+					"paymentStatus",
+					"bookingStatus",
+					"assignedGuide",
+					"permitStatus",
+					"specialRequests"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"DashboardMetricsResponse": {
+				"properties": {
+					"totalRevenueUSD": {
+						"type": "number",
+						"format": "double"
+					},
+					"revenueChangePercent": {
+						"type": "number",
+						"format": "double"
+					},
+					"activeExpeditions": {
+						"type": "number",
+						"format": "double"
+					},
+					"climbersOnMountain": {
+						"type": "number",
+						"format": "double"
+					},
+					"pendingBookings": {
+						"type": "number",
+						"format": "double"
+					},
+					"pendingInquiries": {
+						"type": "number",
+						"format": "double"
+					},
+					"timsPermitsProcessing": {
+						"type": "number",
+						"format": "double"
+					},
+					"recentBookings": {
+						"items": {
+							"$ref": "#/components/schemas/Booking"
+						},
+						"type": "array"
+					},
+					"featuredPackages": {
+						"items": {},
+						"type": "array"
+					}
+				},
+				"required": [
+					"totalRevenueUSD",
+					"revenueChangePercent",
+					"activeExpeditions",
+					"climbersOnMountain",
+					"pendingBookings",
+					"pendingInquiries",
+					"timsPermitsProcessing",
+					"recentBookings",
+					"featuredPackages"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_DashboardMetricsResponse_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/DashboardMetricsResponse"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/DashboardMetricsResponse"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicCategoryDto": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"type": {
+						"$ref": "#/components/schemas/CategoryType"
+					},
+					"description": {
+						"type": "string"
+					},
+					"itemCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"image": {
+						"type": "string",
+						"nullable": true
+					},
+					"parentId": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"slug",
+					"type",
+					"itemCount"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_PublicCategoryDto-Array_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"items": {
+									"$ref": "#/components/schemas/PublicCategoryDto"
+								},
+								"type": "array"
+							},
+							{
+								"items": {
+									"items": {
+										"$ref": "#/components/schemas/PublicCategoryDto"
+									},
+									"type": "array"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_PublicCategoryDto_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/PublicCategoryDto"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/PublicCategoryDto"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_Booking_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/Booking"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/Booking"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateBookingDto": {
+				"properties": {
+					"guestName": {
+						"type": "string"
+					},
+					"guestEmail": {
+						"type": "string"
+					},
+					"guestPhone": {
+						"type": "string"
+					},
+					"country": {
+						"type": "string"
+					},
+					"packageName": {
+						"type": "string"
+					},
+					"packageType": {
+						"$ref": "#/components/schemas/BookingPackageType"
+					},
+					"startDate": {
+						"type": "string"
+					},
+					"endDate": {
+						"type": "string"
+					},
+					"groupSize": {
+						"type": "number",
+						"format": "double"
+					},
+					"totalAmountUSD": {
+						"type": "number",
+						"format": "double"
+					},
+					"paymentStatus": {
+						"$ref": "#/components/schemas/BookingPaymentStatus"
+					},
+					"bookingStatus": {
+						"$ref": "#/components/schemas/BookingStatus"
+					},
+					"assignedGuide": {
+						"type": "string"
+					},
+					"permitStatus": {
+						"$ref": "#/components/schemas/BookingPermitStatus"
+					},
+					"specialRequests": {
+						"type": "string"
+					},
+					"cfTurnstileToken": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"guestName",
+					"guestEmail",
+					"guestPhone",
+					"country",
+					"packageName",
+					"packageType",
+					"startDate",
+					"endDate",
+					"groupSize",
+					"totalAmountUSD"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicBlogSummaryDto": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					},
+					"readTime": {
+						"type": "string"
+					},
+					"publishedDate": {
+						"type": "string"
+					},
+					"excerpt": {
+						"type": "string"
+					},
+					"image": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"title",
+					"slug",
+					"category",
+					"readTime"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_PublicBlogSummaryDto-Array_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"items": {
+									"$ref": "#/components/schemas/PublicBlogSummaryDto"
+								},
+								"type": "array"
+							},
+							{
+								"items": {
+									"items": {
+										"$ref": "#/components/schemas/PublicBlogSummaryDto"
+									},
+									"type": "array"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BlogStatus": {
+				"enum": [
+					"published",
+					"draft",
+					"archived"
+				],
+				"type": "string"
+			},
+			"PublicBlogDetailDto": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					},
+					"readTime": {
+						"type": "string"
+					},
+					"publishedDate": {
+						"type": "string"
+					},
+					"excerpt": {
+						"type": "string"
+					},
+					"image": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					},
+					"views": {
+						"type": "number",
+						"format": "double"
+					},
+					"metaTitle": {
+						"type": "string"
+					},
+					"metaDescription": {
+						"type": "string"
+					},
+					"keywords": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"title",
+					"slug",
+					"category",
+					"readTime"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_PublicBlogDetailDto_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/PublicBlogDetailDto"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/PublicBlogDetailDto"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminLoginResponse": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"role": {
+						"type": "string"
+					},
+					"avatarUrl": {
+						"type": "string"
+					},
+					"token": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"email",
+					"role",
+					"token"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_AdminLoginResponse_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/AdminLoginResponse"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/AdminLoginResponse"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AdminAuthSchema": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"email",
+					"password"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_null_": {
+				"properties": {
+					"data": {
+						"items": {
+							"type": "number",
+							"enum": [
+								null
+							],
+							"nullable": true
+						},
+						"type": "array",
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -404,41 +3145,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"PaginationMeta": {
-				"properties": {
-					"count": {
-						"type": "number",
-						"format": "double"
-					},
-					"currentPage": {
-						"type": "number",
-						"format": "double"
-					},
-					"nextPage": {
-						"type": "number",
-						"format": "double",
-						"nullable": true
-					},
-					"prevPage": {
-						"type": "number",
-						"format": "double",
-						"nullable": true
-					},
-					"lastPage": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"count",
-					"currentPage",
-					"nextPage",
-					"prevPage",
-					"lastPage"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"ApiResponse_Trek-Array_": {
 				"properties": {
 					"data": {
@@ -456,36 +3162,6 @@
 									},
 									"type": "array"
 								},
-								"type": "array"
-							}
-						],
-						"nullable": true
-					},
-					"pagination": {
-						"$ref": "#/components/schemas/PaginationMeta"
-					},
-					"success": {
-						"type": "boolean"
-					},
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"data",
-					"success",
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ApiResponse_any_": {
-				"properties": {
-					"data": {
-						"anyOf": [
-							{},
-							{
-								"items": {},
 								"type": "array"
 							}
 						],
@@ -963,59 +3639,6 @@
 				},
 				"type": "object",
 				"additionalProperties": false
-			},
-			"ApiResponse_boolean_": {
-				"properties": {
-					"data": {
-						"anyOf": [
-							{
-								"type": "boolean"
-							},
-							{
-								"items": {
-									"type": "boolean"
-								},
-								"type": "array"
-							}
-						],
-						"nullable": true
-					},
-					"pagination": {
-						"$ref": "#/components/schemas/PaginationMeta"
-					},
-					"success": {
-						"type": "boolean"
-					},
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"data",
-					"success",
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"TourType": {
-				"enum": [
-					"cultural_heritage",
-					"luxury_wellness",
-					"wildlife_safari",
-					"helicopter_tour",
-					"day_tour",
-					"other"
-				],
-				"type": "string"
-			},
-			"TourStatus": {
-				"enum": [
-					"active",
-					"featured",
-					"draft"
-				],
-				"type": "string"
 			},
 			"Tour": {
 				"properties": {
@@ -2145,523 +4768,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"NotificationType": {
-				"enum": [
-					"inquiry",
-					"booking",
-					"quote",
-					"system"
-				],
-				"type": "string"
-			},
-			"Notification": {
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"deletedAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"title": {
-						"type": "string"
-					},
-					"body": {
-						"type": "string"
-					},
-					"type": {
-						"$ref": "#/components/schemas/NotificationType"
-					},
-					"isRead": {
-						"type": "boolean"
-					},
-					"refId": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"deletedAt",
-					"title",
-					"body",
-					"type",
-					"isRead",
-					"refId"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ApiResponse_Notification-Array_": {
-				"properties": {
-					"data": {
-						"anyOf": [
-							{
-								"items": {
-									"$ref": "#/components/schemas/Notification"
-								},
-								"type": "array"
-							},
-							{
-								"items": {
-									"items": {
-										"$ref": "#/components/schemas/Notification"
-									},
-									"type": "array"
-								},
-								"type": "array"
-							}
-						],
-						"nullable": true
-					},
-					"pagination": {
-						"$ref": "#/components/schemas/PaginationMeta"
-					},
-					"success": {
-						"type": "boolean"
-					},
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"data",
-					"success",
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"PaginatedNotifications": {
-				"properties": {
-					"items": {
-						"items": {
-							"$ref": "#/components/schemas/Notification"
-						},
-						"type": "array"
-					},
-					"total": {
-						"type": "number",
-						"format": "double"
-					},
-					"unreadCount": {
-						"type": "number",
-						"format": "double"
-					},
-					"limit": {
-						"type": "number",
-						"format": "double"
-					},
-					"offset": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"items",
-					"total",
-					"unreadCount",
-					"limit",
-					"offset"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ApiResponse_PaginatedNotifications_": {
-				"properties": {
-					"data": {
-						"anyOf": [
-							{
-								"$ref": "#/components/schemas/PaginatedNotifications"
-							},
-							{
-								"items": {
-									"$ref": "#/components/schemas/PaginatedNotifications"
-								},
-								"type": "array"
-							}
-						],
-						"nullable": true
-					},
-					"pagination": {
-						"$ref": "#/components/schemas/PaginationMeta"
-					},
-					"success": {
-						"type": "boolean"
-					},
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"data",
-					"success",
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ApiResponse_number_": {
-				"properties": {
-					"data": {
-						"anyOf": [
-							{
-								"type": "number",
-								"format": "double"
-							},
-							{
-								"items": {
-									"type": "number",
-									"format": "double"
-								},
-								"type": "array"
-							}
-						],
-						"nullable": true
-					},
-					"pagination": {
-						"$ref": "#/components/schemas/PaginationMeta"
-					},
-					"success": {
-						"type": "boolean"
-					},
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"data",
-					"success",
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"CategoryType": {
-				"enum": [
-					"trekking",
-					"tours",
-					"expeditions",
-					"blogs",
-					"media"
-				],
-				"type": "string"
-			},
-			"CategoryStatus": {
-				"enum": [
-					"active",
-					"draft"
-				],
-				"type": "string"
-			},
-			"Category": {
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"deletedAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"name": {
-						"type": "string"
-					},
-					"slug": {
-						"type": "string"
-					},
-					"type": {
-						"$ref": "#/components/schemas/CategoryType"
-					},
-					"description": {
-						"type": "string"
-					},
-					"itemCount": {
-						"type": "number",
-						"format": "double"
-					},
-					"status": {
-						"$ref": "#/components/schemas/CategoryStatus"
-					},
-					"image": {
-						"type": "string",
-						"nullable": true
-					},
-					"mediaId": {
-						"type": "string",
-						"nullable": true
-					},
-					"parentId": {
-						"type": "string",
-						"nullable": true
-					},
-					"parent": {
-						"allOf": [
-							{
-								"$ref": "#/components/schemas/Category"
-							}
-						],
-						"nullable": true
-					},
-					"children": {
-						"items": {
-							"$ref": "#/components/schemas/Category"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"deletedAt",
-					"name",
-					"slug",
-					"type",
-					"description",
-					"itemCount",
-					"status"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"MediaUploadResult": {
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"name": {
-						"type": "string"
-					},
-					"title": {
-						"type": "string"
-					},
-					"categoryId": {
-						"type": "string"
-					},
-					"categoryName": {
-						"type": "string"
-					},
-					"category": {
-						"$ref": "#/components/schemas/Category"
-					},
-					"description": {
-						"type": "string"
-					},
-					"altText": {
-						"type": "string"
-					},
-					"url": {
-						"type": "string"
-					},
-					"mimeType": {
-						"type": "string"
-					},
-					"fileSize": {
-						"type": "string"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					}
-				},
-				"required": [
-					"id",
-					"name",
-					"title",
-					"description",
-					"altText",
-					"url",
-					"mimeType",
-					"fileSize"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ApiResponse_MediaUploadResult_": {
-				"properties": {
-					"data": {
-						"anyOf": [
-							{
-								"$ref": "#/components/schemas/MediaUploadResult"
-							},
-							{
-								"items": {
-									"$ref": "#/components/schemas/MediaUploadResult"
-								},
-								"type": "array"
-							}
-						],
-						"nullable": true
-					},
-					"pagination": {
-						"$ref": "#/components/schemas/PaginationMeta"
-					},
-					"success": {
-						"type": "boolean"
-					},
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"data",
-					"success",
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ApiResponse_MediaUploadResult-Array_": {
-				"properties": {
-					"data": {
-						"anyOf": [
-							{
-								"items": {
-									"$ref": "#/components/schemas/MediaUploadResult"
-								},
-								"type": "array"
-							},
-							{
-								"items": {
-									"items": {
-										"$ref": "#/components/schemas/MediaUploadResult"
-									},
-									"type": "array"
-								},
-								"type": "array"
-							}
-						],
-						"nullable": true
-					},
-					"pagination": {
-						"$ref": "#/components/schemas/PaginationMeta"
-					},
-					"success": {
-						"type": "boolean"
-					},
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"data",
-					"success",
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"UpdateMediaDto": {
-				"properties": {
-					"title": {
-						"type": "string"
-					},
-					"categoryId": {
-						"type": "string"
-					},
-					"description": {
-						"type": "string"
-					},
-					"altText": {
-						"type": "string"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"InquiryStatus": {
-				"enum": [
-					"New",
-					"Contacted",
-					"Quote Sent",
-					"Booked",
-					"Closed"
-				],
-				"type": "string"
-			},
-			"InquiryType": {
-				"enum": [
-					"Trekking",
-					"Tour",
-					"Expedition",
-					"General"
-				],
-				"type": "string"
-			},
-			"Inquiry": {
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"deletedAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"guestName": {
-						"type": "string"
-					},
-					"email": {
-						"type": "string"
-					},
-					"phone": {
-						"type": "string"
-					},
-					"country": {
-						"type": "string"
-					},
-					"interestedTrip": {
-						"type": "string"
-					},
-					"travelDates": {
-						"type": "string"
-					},
-					"groupSize": {
-						"type": "number",
-						"format": "double"
-					},
-					"message": {
-						"type": "string"
-					},
-					"status": {
-						"$ref": "#/components/schemas/InquiryStatus"
-					},
-					"type": {
-						"$ref": "#/components/schemas/InquiryType"
-					},
-					"notes": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"deletedAt",
-					"guestName",
-					"email",
-					"phone",
-					"country",
-					"interestedTrip",
-					"travelDates",
-					"groupSize",
-					"message",
-					"status",
-					"type",
-					"notes"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"ApiResponse_Inquiry-Array_": {
 				"properties": {
 					"data": {
@@ -2697,91 +4803,6 @@
 				"required": [
 					"data",
 					"success",
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ApiResponse_Inquiry_": {
-				"properties": {
-					"data": {
-						"anyOf": [
-							{
-								"$ref": "#/components/schemas/Inquiry"
-							},
-							{
-								"items": {
-									"$ref": "#/components/schemas/Inquiry"
-								},
-								"type": "array"
-							}
-						],
-						"nullable": true
-					},
-					"pagination": {
-						"$ref": "#/components/schemas/PaginationMeta"
-					},
-					"success": {
-						"type": "boolean"
-					},
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"data",
-					"success",
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"CreateInquiryDto": {
-				"properties": {
-					"guestName": {
-						"type": "string"
-					},
-					"email": {
-						"type": "string"
-					},
-					"phone": {
-						"type": "string"
-					},
-					"country": {
-						"type": "string"
-					},
-					"interestedTrip": {
-						"type": "string"
-					},
-					"travelDates": {
-						"type": "string"
-					},
-					"groupSize": {
-						"type": "number",
-						"format": "double"
-					},
-					"message": {
-						"type": "string"
-					},
-					"status": {
-						"$ref": "#/components/schemas/InquiryStatus"
-					},
-					"type": {
-						"$ref": "#/components/schemas/InquiryType"
-					},
-					"notes": {
-						"type": "string"
-					},
-					"cfTurnstileToken": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"guestName",
-					"email",
-					"phone",
-					"interestedTrip",
-					"groupSize",
 					"message"
 				],
 				"type": "object",
@@ -3017,22 +5038,6 @@
 				},
 				"type": "object",
 				"additionalProperties": false
-			},
-			"ClimbingGrade": {
-				"enum": [
-					"Non-Technical Trekking Peak",
-					"Technical Alpine Grade",
-					"Extreme Technical Grade"
-				],
-				"type": "string"
-			},
-			"ExpeditionStatus": {
-				"enum": [
-					"active",
-					"featured",
-					"draft"
-				],
-				"type": "string"
 			},
 			"Expedition": {
 				"properties": {
@@ -3598,218 +5603,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"BookingPackageType": {
-				"enum": [
-					"trekking",
-					"expedition",
-					"tour"
-				],
-				"type": "string"
-			},
-			"BookingPaymentStatus": {
-				"enum": [
-					"paid",
-					"deposit_paid",
-					"pending",
-					"refunded"
-				],
-				"type": "string"
-			},
-			"BookingStatus": {
-				"enum": [
-					"confirmed",
-					"in_review",
-					"active_trek",
-					"completed",
-					"cancelled"
-				],
-				"type": "string"
-			},
-			"BookingPermitStatus": {
-				"enum": [
-					"issued",
-					"processing",
-					"pending_document"
-				],
-				"type": "string"
-			},
-			"Booking": {
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"deletedAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"reference": {
-						"type": "string"
-					},
-					"guestName": {
-						"type": "string"
-					},
-					"guestEmail": {
-						"type": "string"
-					},
-					"guestPhone": {
-						"type": "string"
-					},
-					"country": {
-						"type": "string"
-					},
-					"packageName": {
-						"type": "string"
-					},
-					"packageType": {
-						"$ref": "#/components/schemas/BookingPackageType"
-					},
-					"startDate": {
-						"type": "string"
-					},
-					"endDate": {
-						"type": "string"
-					},
-					"groupSize": {
-						"type": "number",
-						"format": "double"
-					},
-					"totalAmountUSD": {
-						"type": "number",
-						"format": "double"
-					},
-					"paymentStatus": {
-						"$ref": "#/components/schemas/BookingPaymentStatus"
-					},
-					"bookingStatus": {
-						"$ref": "#/components/schemas/BookingStatus"
-					},
-					"assignedGuide": {
-						"type": "string"
-					},
-					"permitStatus": {
-						"$ref": "#/components/schemas/BookingPermitStatus"
-					},
-					"specialRequests": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"id",
-					"createdAt",
-					"deletedAt",
-					"reference",
-					"guestName",
-					"guestEmail",
-					"guestPhone",
-					"country",
-					"packageName",
-					"packageType",
-					"startDate",
-					"endDate",
-					"groupSize",
-					"totalAmountUSD",
-					"paymentStatus",
-					"bookingStatus",
-					"assignedGuide",
-					"permitStatus",
-					"specialRequests"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"DashboardMetricsResponse": {
-				"properties": {
-					"totalRevenueUSD": {
-						"type": "number",
-						"format": "double"
-					},
-					"revenueChangePercent": {
-						"type": "number",
-						"format": "double"
-					},
-					"activeExpeditions": {
-						"type": "number",
-						"format": "double"
-					},
-					"climbersOnMountain": {
-						"type": "number",
-						"format": "double"
-					},
-					"pendingBookings": {
-						"type": "number",
-						"format": "double"
-					},
-					"pendingInquiries": {
-						"type": "number",
-						"format": "double"
-					},
-					"timsPermitsProcessing": {
-						"type": "number",
-						"format": "double"
-					},
-					"recentBookings": {
-						"items": {
-							"$ref": "#/components/schemas/Booking"
-						},
-						"type": "array"
-					},
-					"featuredPackages": {
-						"items": {},
-						"type": "array"
-					}
-				},
-				"required": [
-					"totalRevenueUSD",
-					"revenueChangePercent",
-					"activeExpeditions",
-					"climbersOnMountain",
-					"pendingBookings",
-					"pendingInquiries",
-					"timsPermitsProcessing",
-					"recentBookings",
-					"featuredPackages"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ApiResponse_DashboardMetricsResponse_": {
-				"properties": {
-					"data": {
-						"anyOf": [
-							{
-								"$ref": "#/components/schemas/DashboardMetricsResponse"
-							},
-							{
-								"items": {
-									"$ref": "#/components/schemas/DashboardMetricsResponse"
-								},
-								"type": "array"
-							}
-						],
-						"nullable": true
-					},
-					"pagination": {
-						"$ref": "#/components/schemas/PaginationMeta"
-					},
-					"success": {
-						"type": "boolean"
-					},
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"data",
-					"success",
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"ApiResponse_Category-Array_": {
 				"properties": {
 					"data": {
@@ -3989,108 +5782,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"ApiResponse_Booking_": {
-				"properties": {
-					"data": {
-						"anyOf": [
-							{
-								"$ref": "#/components/schemas/Booking"
-							},
-							{
-								"items": {
-									"$ref": "#/components/schemas/Booking"
-								},
-								"type": "array"
-							}
-						],
-						"nullable": true
-					},
-					"pagination": {
-						"$ref": "#/components/schemas/PaginationMeta"
-					},
-					"success": {
-						"type": "boolean"
-					},
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"data",
-					"success",
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"CreateBookingDto": {
-				"properties": {
-					"guestName": {
-						"type": "string"
-					},
-					"guestEmail": {
-						"type": "string"
-					},
-					"guestPhone": {
-						"type": "string"
-					},
-					"country": {
-						"type": "string"
-					},
-					"packageName": {
-						"type": "string"
-					},
-					"packageType": {
-						"$ref": "#/components/schemas/BookingPackageType"
-					},
-					"startDate": {
-						"type": "string"
-					},
-					"endDate": {
-						"type": "string"
-					},
-					"groupSize": {
-						"type": "number",
-						"format": "double"
-					},
-					"totalAmountUSD": {
-						"type": "number",
-						"format": "double"
-					},
-					"paymentStatus": {
-						"$ref": "#/components/schemas/BookingPaymentStatus"
-					},
-					"bookingStatus": {
-						"$ref": "#/components/schemas/BookingStatus"
-					},
-					"assignedGuide": {
-						"type": "string"
-					},
-					"permitStatus": {
-						"$ref": "#/components/schemas/BookingPermitStatus"
-					},
-					"specialRequests": {
-						"type": "string"
-					},
-					"cfTurnstileToken": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"guestName",
-					"guestEmail",
-					"guestPhone",
-					"country",
-					"packageName",
-					"packageType",
-					"startDate",
-					"endDate",
-					"groupSize",
-					"totalAmountUSD"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"UpdateBookingDto": {
 				"properties": {
 					"guestName": {
@@ -4143,14 +5834,6 @@
 				},
 				"type": "object",
 				"additionalProperties": false
-			},
-			"BlogStatus": {
-				"enum": [
-					"published",
-					"draft",
-					"archived"
-				],
-				"type": "string"
 			},
 			"BlogArticle": {
 				"properties": {
@@ -4390,118 +6073,6 @@
 						"type": "string"
 					}
 				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"AdminLoginResponse": {
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"name": {
-						"type": "string"
-					},
-					"email": {
-						"type": "string"
-					},
-					"role": {
-						"type": "string"
-					},
-					"avatarUrl": {
-						"type": "string"
-					},
-					"token": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"id",
-					"name",
-					"email",
-					"role",
-					"token"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ApiResponse_AdminLoginResponse_": {
-				"properties": {
-					"data": {
-						"anyOf": [
-							{
-								"$ref": "#/components/schemas/AdminLoginResponse"
-							},
-							{
-								"items": {
-									"$ref": "#/components/schemas/AdminLoginResponse"
-								},
-								"type": "array"
-							}
-						],
-						"nullable": true
-					},
-					"pagination": {
-						"$ref": "#/components/schemas/PaginationMeta"
-					},
-					"success": {
-						"type": "boolean"
-					},
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"data",
-					"success",
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"AdminAuthSchema": {
-				"properties": {
-					"email": {
-						"type": "string"
-					},
-					"password": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"email",
-					"password"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ApiResponse_null_": {
-				"properties": {
-					"data": {
-						"items": {
-							"type": "number",
-							"enum": [
-								null
-							],
-							"nullable": true
-						},
-						"type": "array",
-						"nullable": true
-					},
-					"pagination": {
-						"$ref": "#/components/schemas/PaginationMeta"
-					},
-					"success": {
-						"type": "boolean"
-					},
-					"message": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"data",
-					"success",
-					"message"
-				],
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -4751,6 +6322,84 @@
 				},
 				"type": "object",
 				"additionalProperties": false
+			},
+			"PublicAboutUsDto": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"heroTitle": {
+						"type": "string"
+					},
+					"heroSubtitle": {
+						"type": "string"
+					},
+					"heroImage": {
+						"type": "string"
+					},
+					"storyTitle": {
+						"type": "string"
+					},
+					"storyContent": {
+						"type": "string"
+					},
+					"storyImage": {
+						"type": "string"
+					},
+					"mission": {
+						"type": "string"
+					},
+					"vision": {
+						"type": "string"
+					},
+					"values": {
+						"items": {},
+						"type": "array"
+					},
+					"stats": {
+						"items": {},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_PublicAboutUsDto_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/PublicAboutUsDto"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/PublicAboutUsDto"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -4773,220 +6422,17 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Trek-Array_"
+									"$ref": "#/components/schemas/ApiResponse_PublicTrekSummaryDto-Array_"
 								}
 							}
 						}
 					}
 				},
-				"description": "Get all trekking packages with dynamic filtering.",
+				"description": "Get public active/featured trekking packages with dynamic filtering.\nReturns lightweight PublicTrekSummaryDto data suitable for the marketing site.",
 				"tags": [
-					"Trekking"
+					"Trekking Public"
 				],
 				"security": [],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "category",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "categorySlug",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "categoryId",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "region",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "difficulty",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/TripDifficulty"
-						}
-					},
-					{
-						"in": "query",
-						"name": "status",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/TrekStatus"
-						}
-					},
-					{
-						"in": "query",
-						"name": "search",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "minPrice",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "maxPrice",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "minDuration",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "maxDuration",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "minAltitude",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "maxAltitude",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "sortBy",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "limit",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "page",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			},
-			"post": {
-				"operationId": "Create",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Trek_"
-								}
-							}
-						}
-					}
-				},
-				"description": "Create a new trekking package.",
-				"tags": [
-					"Trekking"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/CreateTrekDto"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/treks/admin": {
-			"get": {
-				"operationId": "GetAdminAll",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Trek-Array_"
-								}
-							}
-						}
-					}
-				},
-				"description": "Admin-only listing of ALL trekking packages (including DRAFT, ACTIVE, and FEATURED).",
-				"tags": [
-					"Trekking"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
 				"parameters": [
 					{
 						"in": "query",
@@ -5144,7 +6590,7 @@
 				},
 				"description": "Get dynamic filter options for trekking (difficulties, categories, regions, sort options, ranges).",
 				"tags": [
-					"Trekking"
+					"Trekking Public"
 				],
 				"security": [],
 				"parameters": []
@@ -5159,105 +6605,21 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Trek_"
+									"$ref": "#/components/schemas/ApiResponse_PublicTrekDetailDto_"
 								}
 							}
 						}
 					}
 				},
-				"description": "Get trekking package by ID or Slug (public active/featured only).",
+				"description": "Get active/featured trekking package by ID or Slug.\nReturns sanitized PublicTrekDetailDto data for the marketing detail page.",
 				"tags": [
-					"Trekking"
+					"Trekking Public"
 				],
 				"security": [],
 				"parameters": [
 					{
 						"in": "path",
 						"name": "idOrSlug",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
-		"/treks/{id}": {
-			"put": {
-				"operationId": "Update",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Trek_"
-								}
-							}
-						}
-					}
-				},
-				"description": "Update an existing trekking package.",
-				"tags": [
-					"Trekking"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/UpdateTrekDto"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "Delete",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_boolean_"
-								}
-							}
-						}
-					}
-				},
-				"description": "Delete a trekking package.",
-				"tags": [
-					"Trekking"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
 						"required": true,
 						"schema": {
 							"type": "string"
@@ -5275,210 +6637,17 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Tour-Array_"
+									"$ref": "#/components/schemas/ApiResponse_PublicTourSummaryDto-Array_"
 								}
 							}
 						}
 					}
 				},
-				"description": "Get all tour packages with dynamic filtering.",
+				"description": "Get public active/featured tour packages with dynamic filtering.\nReturns lightweight PublicTourSummaryDto data suitable for the marketing site.",
 				"tags": [
-					"Tours"
+					"Tours Public"
 				],
 				"security": [],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "category",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "categorySlug",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "categoryId",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "region",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "tourType",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/TourType"
-						}
-					},
-					{
-						"in": "query",
-						"name": "difficulty",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/TripDifficulty"
-						}
-					},
-					{
-						"in": "query",
-						"name": "status",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/TourStatus"
-						}
-					},
-					{
-						"in": "query",
-						"name": "search",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "minPrice",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "maxPrice",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "minDuration",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "maxDuration",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "sortBy",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "limit",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "page",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			},
-			"post": {
-				"operationId": "Create",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Tour_"
-								}
-							}
-						}
-					}
-				},
-				"description": "Create a new tour package.",
-				"tags": [
-					"Tours"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/CreateTourDto"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/tours/admin": {
-			"get": {
-				"operationId": "GetAdminAll",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Tour-Array_"
-								}
-							}
-						}
-					}
-				},
-				"description": "Admin-only listing of ALL tour packages (including DRAFT, ACTIVE, and FEATURED).",
-				"tags": [
-					"Tours"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
 				"parameters": [
 					{
 						"in": "query",
@@ -5626,7 +6795,7 @@
 				},
 				"description": "Get dynamic filter options for tours (styles, categories, tour types, regions, sort options, ranges).",
 				"tags": [
-					"Tours"
+					"Tours Public"
 				],
 				"security": [],
 				"parameters": []
@@ -5641,105 +6810,21 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Tour_"
+									"$ref": "#/components/schemas/ApiResponse_PublicTourDetailDto_"
 								}
 							}
 						}
 					}
 				},
-				"description": "Get tour package by ID or Slug (public active/featured only).",
+				"description": "Get active/featured tour package by ID or Slug.\nReturns sanitized PublicTourDetailDto data for the marketing detail page.",
 				"tags": [
-					"Tours"
+					"Tours Public"
 				],
 				"security": [],
 				"parameters": [
 					{
 						"in": "path",
 						"name": "idOrSlug",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
-		"/tours/{id}": {
-			"put": {
-				"operationId": "Update",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Tour_"
-								}
-							}
-						}
-					}
-				},
-				"description": "Update an existing tour package.",
-				"tags": [
-					"Tours"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/UpdateTourDto"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "Delete",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_boolean_"
-								}
-							}
-						}
-					}
-				},
-				"description": "Delete a tour package.",
-				"tags": [
-					"Tours"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
 						"required": true,
 						"schema": {
 							"type": "string"
@@ -5757,25 +6842,18 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Testimonial-Array_"
+									"$ref": "#/components/schemas/ApiResponse_PublicTestimonialDto-Array_"
 								}
 							}
 						}
 					}
 				},
+				"description": "Get public active testimonials.\nEnforces status = ACTIVE for public requests.",
 				"tags": [
-					"Testimonials & Reviews"
+					"Testimonials Public"
 				],
 				"security": [],
 				"parameters": [
-					{
-						"in": "query",
-						"name": "status",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/TestimonialStatus"
-						}
-					},
 					{
 						"in": "query",
 						"name": "search",
@@ -5825,80 +6903,6 @@
 						}
 					}
 				]
-			},
-			"post": {
-				"operationId": "Create",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Testimonial_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Testimonials & Reviews"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/CreateTestimonialDto"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/testimonials/reorder": {
-			"put": {
-				"operationId": "Reorder",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_boolean_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Testimonials & Reviews"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/ReorderTestimonialsDto"
-							}
-						}
-					}
-				}
 			}
 		},
 		"/testimonials/{id}": {
@@ -5910,96 +6914,17 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Testimonial_"
+									"$ref": "#/components/schemas/ApiResponse_PublicTestimonialDto_"
 								}
 							}
 						}
 					}
 				},
+				"description": "Get public active testimonial by ID.",
 				"tags": [
-					"Testimonials & Reviews"
+					"Testimonials Public"
 				],
 				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			},
-			"put": {
-				"operationId": "Update",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Testimonial_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Testimonials & Reviews"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/UpdateTestimonialDto"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "Delete",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_boolean_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Testimonials & Reviews"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
 				"parameters": [
 					{
 						"in": "path",
@@ -6021,25 +6946,18 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_TeamMember-Array_"
+									"$ref": "#/components/schemas/ApiResponse_PublicTeamMemberDto-Array_"
 								}
 							}
 						}
 					}
 				},
+				"description": "Get public active team members.\nEnforces status = ACTIVE for public requests.",
 				"tags": [
-					"Teams & Leadership"
+					"Teams Public"
 				],
 				"security": [],
 				"parameters": [
-					{
-						"in": "query",
-						"name": "status",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/TeamMemberStatus"
-						}
-					},
 					{
 						"in": "query",
 						"name": "search",
@@ -6089,80 +7007,6 @@
 						}
 					}
 				]
-			},
-			"post": {
-				"operationId": "Create",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_TeamMember_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Teams & Leadership"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/CreateTeamMemberDto"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/teams/reorder": {
-			"put": {
-				"operationId": "Reorder",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_boolean_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Teams & Leadership"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/ReorderTeamMembersDto"
-							}
-						}
-					}
-				}
 			}
 		},
 		"/teams/{id}": {
@@ -6174,96 +7018,17 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_TeamMember_"
+									"$ref": "#/components/schemas/ApiResponse_PublicTeamMemberDto_"
 								}
 							}
 						}
 					}
 				},
+				"description": "Get public active team member by ID.",
 				"tags": [
-					"Teams & Leadership"
+					"Teams Public"
 				],
 				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			},
-			"put": {
-				"operationId": "Update",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_TeamMember_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Teams & Leadership"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/UpdateTeamMemberDto"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "Delete",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_boolean_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Teams & Leadership"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
 				"parameters": [
 					{
 						"in": "path",
@@ -6285,53 +7050,18 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Record_string.string__"
+									"$ref": "#/components/schemas/ApiResponse_PublicSettingDto_"
 								}
 							}
 						}
 					}
 				},
+				"description": "Get public site settings required for site branding and contact information.\nReturns safe, public configuration keys only.",
 				"tags": [
-					"Site Settings"
+					"Public Site Settings"
 				],
 				"security": [],
 				"parameters": []
-			},
-			"put": {
-				"operationId": "Update",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Record_string.string__"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Site Settings"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/UpdateSettingsDto"
-							}
-						}
-					}
-				}
 			}
 		},
 		"/notifications": {
@@ -6751,67 +7481,6 @@
 			}
 		},
 		"/inquiries": {
-			"get": {
-				"operationId": "GetAll",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Inquiry-Array_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Inquiries & Leads"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "status",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/InquiryStatus"
-						}
-					},
-					{
-						"in": "query",
-						"name": "search",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "limit",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "page",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			},
 			"post": {
 				"operationId": "Create",
 				"responses": {
@@ -6826,8 +7495,9 @@
 						}
 					}
 				},
+				"description": "Public inquiry submission endpoint.",
 				"tags": [
-					"Inquiries & Leads"
+					"Public Inquiries"
 				],
 				"security": [],
 				"parameters": [],
@@ -6843,182 +7513,6 @@
 				}
 			}
 		},
-		"/inquiries/{id}": {
-			"get": {
-				"operationId": "GetById",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Inquiry_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Inquiries & Leads"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			},
-			"put": {
-				"operationId": "Update",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Inquiry_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Inquiries & Leads"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/UpdateInquiryDto"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "Delete",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_boolean_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Inquiries & Leads"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
-		"/inquiries/{id}/quote": {
-			"post": {
-				"operationId": "SendQuote",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Inquiry_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Inquiries & Leads"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"allOf": [
-									{
-										"$ref": "#/components/schemas/SendQuoteDto"
-									},
-									{
-										"properties": {
-											"status": {
-												"$ref": "#/components/schemas/InquiryStatus"
-											}
-										},
-										"type": "object"
-									}
-								]
-							}
-						}
-					}
-				}
-			}
-		},
 		"/faqs": {
 			"get": {
 				"operationId": "GetAll",
@@ -7028,25 +7522,18 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Faq-Array_"
+									"$ref": "#/components/schemas/ApiResponse_PublicFaqDto-Array_"
 								}
 							}
 						}
 					}
 				},
+				"description": "Get public active FAQs.\nEnforces status = ACTIVE for public requests.",
 				"tags": [
-					"FAQs & Consultations"
+					"FAQs Public"
 				],
 				"security": [],
 				"parameters": [
-					{
-						"in": "query",
-						"name": "status",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/FaqStatus"
-						}
-					},
 					{
 						"in": "query",
 						"name": "category",
@@ -7104,80 +7591,6 @@
 						}
 					}
 				]
-			},
-			"post": {
-				"operationId": "Create",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Faq_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"FAQs & Consultations"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/CreateFaqDto"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/faqs/reorder": {
-			"put": {
-				"operationId": "Reorder",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_boolean_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"FAQs & Consultations"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/ReorderFaqsDto"
-							}
-						}
-					}
-				}
 			}
 		},
 		"/faqs/{id}": {
@@ -7189,96 +7602,17 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Faq_"
+									"$ref": "#/components/schemas/ApiResponse_PublicFaqDto_"
 								}
 							}
 						}
 					}
 				},
+				"description": "Get public active FAQ by ID.",
 				"tags": [
-					"FAQs & Consultations"
+					"FAQs Public"
 				],
 				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			},
-			"put": {
-				"operationId": "Update",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Faq_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"FAQs & Consultations"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/UpdateFaqDto"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "Delete",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_boolean_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"FAQs & Consultations"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
 				"parameters": [
 					{
 						"in": "path",
@@ -7300,228 +7634,17 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Expedition-Array_"
+									"$ref": "#/components/schemas/ApiResponse_PublicExpeditionSummaryDto-Array_"
 								}
 							}
 						}
 					}
 				},
-				"description": "Get all active expedition packages with dynamic filtering.",
+				"description": "Get public active/featured expedition packages with dynamic filtering.\nReturns lightweight PublicExpeditionSummaryDto data suitable for marketing site.",
 				"tags": [
-					"Expeditions"
+					"Expeditions Public"
 				],
 				"security": [],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "category",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "categorySlug",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "categoryId",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "region",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "difficulty",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/TripDifficulty"
-						}
-					},
-					{
-						"in": "query",
-						"name": "climbingGrade",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/ClimbingGrade"
-						}
-					},
-					{
-						"in": "query",
-						"name": "status",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/ExpeditionStatus"
-						}
-					},
-					{
-						"in": "query",
-						"name": "search",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "minPrice",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "maxPrice",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "minAltitude",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "maxAltitude",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "minPeakHeight",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "maxPeakHeight",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "sortBy",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "limit",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "page",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			},
-			"post": {
-				"operationId": "Create",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Expedition_"
-								}
-							}
-						}
-					}
-				},
-				"description": "Create a new expedition package.",
-				"tags": [
-					"Expeditions"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/CreateExpeditionDto"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/expeditions/admin": {
-			"get": {
-				"operationId": "GetAdminAll",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Expedition-Array_"
-								}
-							}
-						}
-					}
-				},
-				"description": "Admin-only listing of ALL expedition packages (including DRAFT, ACTIVE, and FEATURED).",
-				"tags": [
-					"Expeditions"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
 				"parameters": [
 					{
 						"in": "query",
@@ -7687,7 +7810,7 @@
 				},
 				"description": "Get dynamic filter options for expeditions (alpine grades, categories, peaks, regions, sort options, ranges).",
 				"tags": [
-					"Expeditions"
+					"Expeditions Public"
 				],
 				"security": [],
 				"parameters": []
@@ -7702,105 +7825,21 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Expedition_"
+									"$ref": "#/components/schemas/ApiResponse_PublicExpeditionDetailDto_"
 								}
 							}
 						}
 					}
 				},
-				"description": "Get expedition package by ID or Slug (public active/featured only).",
+				"description": "Get active/featured expedition package by ID or Slug.\nReturns sanitized PublicExpeditionDetailDto data for marketing detail page.",
 				"tags": [
-					"Expeditions"
+					"Expeditions Public"
 				],
 				"security": [],
 				"parameters": [
 					{
 						"in": "path",
 						"name": "idOrSlug",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
-		"/expeditions/{id}": {
-			"put": {
-				"operationId": "Update",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Expedition_"
-								}
-							}
-						}
-					}
-				},
-				"description": "Update an existing expedition package.",
-				"tags": [
-					"Expeditions"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/UpdateExpeditionDto"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "Delete",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_boolean_"
-								}
-							}
-						}
-					}
-				},
-				"description": "Delete an expedition package.",
-				"tags": [
-					"Expeditions"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
 						"required": true,
 						"schema": {
 							"type": "string"
@@ -7846,14 +7885,15 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Category-Array_"
+									"$ref": "#/components/schemas/ApiResponse_PublicCategoryDto-Array_"
 								}
 							}
 						}
 					}
 				},
+				"description": "Get public active categories with optional type and search filters.",
 				"tags": [
-					"Categories"
+					"Categories Public"
 				],
 				"security": [],
 				"parameters": [
@@ -7892,42 +7932,6 @@
 						}
 					}
 				]
-			},
-			"post": {
-				"operationId": "Create",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Category_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Categories"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/CreateCategoryDto"
-							}
-						}
-					}
-				}
 			}
 		},
 		"/categories/{idOrSlug}": {
@@ -7939,14 +7943,15 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Category_"
+									"$ref": "#/components/schemas/ApiResponse_PublicCategoryDto_"
 								}
 							}
 						}
 					}
 				},
+				"description": "Get public active category by ID or Slug.",
 				"tags": [
-					"Categories"
+					"Categories Public"
 				],
 				"security": [],
 				"parameters": [
@@ -7961,166 +7966,7 @@
 				]
 			}
 		},
-		"/categories/{id}": {
-			"put": {
-				"operationId": "Update",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Category_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Categories"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/UpdateCategoryDto"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "Delete",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_boolean_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Categories"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
 		"/bookings": {
-			"get": {
-				"operationId": "GetAll",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Booking-Array_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Bookings"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "search",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "status",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/BookingStatus"
-						}
-					},
-					{
-						"in": "query",
-						"name": "packageType",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/BookingPackageType"
-						}
-					},
-					{
-						"in": "query",
-						"name": "paymentStatus",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/BookingPaymentStatus"
-						}
-					},
-					{
-						"in": "query",
-						"name": "limit",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "page",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			},
 			"post": {
 				"operationId": "Create",
 				"responses": {
@@ -8135,8 +7981,9 @@
 						}
 					}
 				},
+				"description": "Public booking submission endpoint.",
 				"tags": [
-					"Bookings"
+					"Public Bookings"
 				],
 				"security": [],
 				"parameters": [],
@@ -8152,123 +7999,6 @@
 				}
 			}
 		},
-		"/bookings/{id}": {
-			"get": {
-				"operationId": "GetById",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Booking_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Bookings"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			},
-			"put": {
-				"operationId": "Update",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Booking_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Bookings"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/UpdateBookingDto"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "Delete",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_boolean_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Bookings"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
 		"/blogs": {
 			"get": {
 				"operationId": "GetAll",
@@ -8278,133 +8008,17 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_BlogArticle-Array_"
+									"$ref": "#/components/schemas/ApiResponse_PublicBlogSummaryDto-Array_"
 								}
 							}
 						}
 					}
 				},
-				"description": "Get all blog articles with optional status, category, and search filtering.\nPass ?status=Published to only retrieve published articles.\nPass ?categoryId=... to filter by category ID.\nPass ?search=... to search within title, excerpt, and category.",
+				"description": "Get public published blog articles with optional category and search filtering.\nReturns lightweight PublicBlogSummaryDto data.",
 				"tags": [
-					"Blog Articles"
+					"Blog Articles Public"
 				],
 				"security": [],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "status",
-						"required": false,
-						"schema": {
-							"$ref": "#/components/schemas/BlogStatus"
-						}
-					},
-					{
-						"in": "query",
-						"name": "categoryId",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "category",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "search",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "limit",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "page",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			},
-			"post": {
-				"operationId": "Create",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_BlogArticle_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Blog Articles"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/CreateBlogArticleDto"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/blogs/admin": {
-			"get": {
-				"operationId": "GetAdminAll",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_BlogArticle-Array_"
-								}
-							}
-						}
-					}
-				},
-				"description": "Admin-only listing of ALL blog articles (including DRAFT, PUBLISHED, and ARCHIVED).",
-				"tags": [
-					"Blog Articles"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
 				"parameters": [
 					{
 						"in": "query",
@@ -8468,102 +8082,21 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_BlogArticle_"
+									"$ref": "#/components/schemas/ApiResponse_PublicBlogDetailDto_"
 								}
 							}
 						}
 					}
 				},
+				"description": "Get public published blog article by ID or Slug.\nReturns sanitized PublicBlogDetailDto data.",
 				"tags": [
-					"Blog Articles"
+					"Blog Articles Public"
 				],
 				"security": [],
 				"parameters": [
 					{
 						"in": "path",
 						"name": "idOrSlug",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
-		"/blogs/{id}": {
-			"put": {
-				"operationId": "Update",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_BlogArticle_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Blog Articles"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/UpdateBlogArticleDto"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "Delete",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_boolean_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Blog Articles"
-				],
-				"security": [
-					{
-						"jwt": [
-							"admin"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
 						"required": true,
 						"schema": {
 							"type": "string"
@@ -9264,6 +8797,1359 @@
 				]
 			}
 		},
+		"/admin/testimonials": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Testimonial-Array_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Admin-only listing of ALL testimonials (including ACTIVE and INACTIVE).",
+				"tags": [
+					"Admin Testimonials Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/TestimonialStatus"
+						}
+					},
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sortBy",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sortOrder",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"ASC",
+								"DESC",
+								"asc",
+								"desc"
+							]
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Testimonial_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Testimonials Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateTestimonialDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/testimonials/reorder": {
+			"put": {
+				"operationId": "Reorder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Testimonials Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ReorderTestimonialsDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/testimonials/{id}": {
+			"get": {
+				"operationId": "GetById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Testimonial_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Testimonials Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Testimonial_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Testimonials Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateTestimonialDto"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "Delete",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Testimonials Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/admin/teams": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_TeamMember-Array_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Admin-only listing of ALL team members (including ACTIVE and INACTIVE).",
+				"tags": [
+					"Admin Team Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/TeamMemberStatus"
+						}
+					},
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sortBy",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sortOrder",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"ASC",
+								"DESC",
+								"asc",
+								"desc"
+							]
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_TeamMember_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Team Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateTeamMemberDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/teams/reorder": {
+			"put": {
+				"operationId": "Reorder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Team Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ReorderTeamMembersDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/teams/{id}": {
+			"get": {
+				"operationId": "GetById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_TeamMember_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Team Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_TeamMember_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Team Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateTeamMemberDto"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "Delete",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Team Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/admin/settings": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Record_string.string__"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all management site settings for admin panel.",
+				"tags": [
+					"Admin Site Settings"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": []
+			},
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Record_string.string__"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update site settings.",
+				"tags": [
+					"Admin Site Settings"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateSettingsDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/media/upload": {
+			"post": {
+				"operationId": "UploadFile",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_MediaUploadResult_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Media Library"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "categoryId",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"file": {
+										"type": "string",
+										"format": "binary"
+									}
+								},
+								"required": [
+									"file"
+								]
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/media": {
+			"get": {
+				"operationId": "GetAllMedia",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_MediaUploadResult-Array_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Media Library"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "categoryId",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "category",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/admin/media/{id}": {
+			"put": {
+				"operationId": "UpdateMedia",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_MediaUploadResult_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Media Library"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateMediaDto"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteMedia",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Media Library"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/admin/inquiries": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Inquiry-Array_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Inquiries Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/InquiryStatus"
+						}
+					},
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/admin/inquiries/{id}": {
+			"get": {
+				"operationId": "GetById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Inquiry_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Inquiries Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Inquiry_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Inquiries Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateInquiryDto"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "Delete",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Inquiries Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/admin/inquiries/{id}/quote": {
+			"post": {
+				"operationId": "SendQuote",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Inquiry_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Inquiries Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"allOf": [
+									{
+										"$ref": "#/components/schemas/SendQuoteDto"
+									},
+									{
+										"properties": {
+											"status": {
+												"$ref": "#/components/schemas/InquiryStatus"
+											}
+										},
+										"type": "object"
+									}
+								]
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/faqs": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Faq-Array_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Admin-only listing of ALL FAQs (including ACTIVE and DRAFT).",
+				"tags": [
+					"Admin FAQs Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/FaqStatus"
+						}
+					},
+					{
+						"in": "query",
+						"name": "category",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sortBy",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sortOrder",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"ASC",
+								"DESC",
+								"asc",
+								"desc"
+							]
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Faq_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin FAQs Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateFaqDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/faqs/reorder": {
+			"put": {
+				"operationId": "Reorder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin FAQs Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ReorderFaqsDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/faqs/{id}": {
+			"get": {
+				"operationId": "GetById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Faq_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin FAQs Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Faq_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin FAQs Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateFaqDto"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "Delete",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin FAQs Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/admin/expeditions": {
 			"get": {
 				"operationId": "GetAll",
@@ -9561,6 +10447,429 @@
 				"description": "Delete an expedition package.",
 				"tags": [
 					"Admin Expeditions Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/admin/categories": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Category-Array_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Admin-only listing of ALL categories (including ACTIVE and DRAFT).",
+				"tags": [
+					"Admin Categories Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/CategoryStatus"
+						}
+					},
+					{
+						"in": "query",
+						"name": "type",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/CategoryType"
+						}
+					},
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Category_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Categories Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateCategoryDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/categories/{idOrSlug}": {
+			"get": {
+				"operationId": "GetByIdOrSlug",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Category_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Categories Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "idOrSlug",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/admin/categories/{id}": {
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Category_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Categories Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateCategoryDto"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "Delete",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Categories Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/admin/bookings": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Booking-Array_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Bookings Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/BookingStatus"
+						}
+					},
+					{
+						"in": "query",
+						"name": "packageType",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/BookingPackageType"
+						}
+					},
+					{
+						"in": "query",
+						"name": "paymentStatus",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/BookingPaymentStatus"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/admin/bookings/{id}": {
+			"get": {
+				"operationId": "GetById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Booking_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Bookings Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Booking_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Bookings Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateBookingDto"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "Delete",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Bookings Management"
 				],
 				"security": [
 					{
@@ -9932,7 +11241,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_AboutUs_"
+									"$ref": "#/components/schemas/ApiResponse_PublicAboutUsDto_"
 								}
 							}
 						}

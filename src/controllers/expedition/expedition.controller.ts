@@ -1,36 +1,31 @@
 import {
-  Body,
   Controller,
-  Delete,
   Get,
-  Middlewares,
   NoSecurity,
   Path,
-  Post,
-  Put,
   Query,
   Route,
-  Security,
   Tags,
 } from 'tsoa';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
 import {
   ClimbingGrade,
-  Expedition,
   ExpeditionStatus,
 } from '../../entities/expedition/Expedition.entity';
 import { TripDifficulty } from '../../entities/common/difficulty.enum';
 import { ExpeditionService } from '../../services/expedition/expedition.service';
-import {
-  CreateExpeditionDto,
-  UpdateExpeditionDto,
-} from '../../schemas/expedition.schema';
-import { RequestValidator } from '../../middlewares/validator.middleware';
 import { paginateResponse } from '../../utils/pageAndLimit';
+import {
+  PublicExpeditionDetailDto,
+  PublicExpeditionSummaryDto,
+} from '../../dtos/public-response.dto';
+import {
+  toPublicExpeditionDetail,
+  toPublicExpeditionSummary,
+} from '../../utils/public-mapper.util';
 
 @Route('expeditions')
-@Tags('Expeditions')
-@Security('jwt', ['admin'])
+@Tags('Expeditions Public')
 export class ExpeditionController extends Controller {
   constructor(
     private expeditionService: ExpeditionService = new ExpeditionService(),
@@ -39,7 +34,8 @@ export class ExpeditionController extends Controller {
   }
 
   /**
-   * Get all active expedition packages with dynamic filtering.
+   * Get public active/featured expedition packages with dynamic filtering.
+   * Returns lightweight PublicExpeditionSummaryDto data suitable for marketing site.
    */
   @Get('')
   @NoSecurity()
@@ -61,8 +57,8 @@ export class ExpeditionController extends Controller {
     @Query() sortBy?: string,
     @Query() limit?: number,
     @Query() page?: number,
-  ): Promise<ApiResponse<Expedition[]>> {
-    const dataTotalCount = await this.expeditionService.getPublicAll({
+  ): Promise<ApiResponse<PublicExpeditionSummaryDto[]>> {
+    const [items, totalCount] = await this.expeditionService.getPublicAll({
       category,
       categorySlug,
       categoryId,
@@ -81,62 +77,12 @@ export class ExpeditionController extends Controller {
       limit,
       page,
     });
-    const { data, pagination } = paginateResponse(dataTotalCount, limit, page);
+    const publicItems = items.map(toPublicExpeditionSummary);
+    const { data, pagination } = paginateResponse([publicItems, totalCount], limit, page);
     return {
       data,
       pagination,
       message: 'Expeditions retrieved successfully',
-      success: true,
-    };
-  }
-
-  /**
-   * Admin-only listing of ALL expedition packages (including DRAFT, ACTIVE, and FEATURED).
-   */
-  @Get('admin')
-  async getAdminAll(
-    @Query() category?: string,
-    @Query() categorySlug?: string,
-    @Query() categoryId?: string,
-    @Query() region?: string,
-    @Query() difficulty?: TripDifficulty,
-    @Query() climbingGrade?: ClimbingGrade,
-    @Query() status?: ExpeditionStatus,
-    @Query() search?: string,
-    @Query() minPrice?: number,
-    @Query() maxPrice?: number,
-    @Query() minAltitude?: number,
-    @Query() maxAltitude?: number,
-    @Query() minPeakHeight?: number,
-    @Query() maxPeakHeight?: number,
-    @Query() sortBy?: string,
-    @Query() limit?: number,
-    @Query() page?: number,
-  ): Promise<ApiResponse<Expedition[]>> {
-    const dataTotalCount = await this.expeditionService.getAdminAll({
-      category,
-      categorySlug,
-      categoryId,
-      region,
-      difficulty,
-      climbingGrade,
-      status,
-      search,
-      minPrice,
-      maxPrice,
-      minAltitude,
-      maxAltitude,
-      minPeakHeight,
-      maxPeakHeight,
-      sortBy,
-      limit,
-      page,
-    });
-    const { data, pagination } = paginateResponse(dataTotalCount, limit, page);
-    return {
-      data,
-      pagination,
-      message: 'Admin expeditions retrieved successfully',
       success: true,
     };
   }
@@ -156,52 +102,20 @@ export class ExpeditionController extends Controller {
   }
 
   /**
-   * Get expedition package by ID or Slug (public active/featured only).
+   * Get active/featured expedition package by ID or Slug.
+   * Returns sanitized PublicExpeditionDetailDto data for marketing detail page.
    */
   @Get('{idOrSlug}')
   @NoSecurity()
   async getByIdOrSlug(
     @Path() idOrSlug: string,
-  ): Promise<ApiResponse<Expedition>> {
-    const data = await this.expeditionService.getPublicByIdOrSlug(idOrSlug);
+  ): Promise<ApiResponse<PublicExpeditionDetailDto>> {
+    const exp = await this.expeditionService.getPublicByIdOrSlug(idOrSlug);
+    const data = toPublicExpeditionDetail(exp);
     return {
       data,
       message: 'Expedition retrieved successfully',
       success: true,
     };
-  }
-
-  /**
-   * Create a new expedition package.
-   */
-  @Post('')
-  @Middlewares(RequestValidator.validate(CreateExpeditionDto))
-  async create(
-    @Body() body: CreateExpeditionDto,
-  ): Promise<ApiResponse<Expedition>> {
-    const data = await this.expeditionService.create(body);
-    return { data, message: 'Expedition created successfully', success: true };
-  }
-
-  /**
-   * Update an existing expedition package.
-   */
-  @Put('{id}')
-  @Middlewares(RequestValidator.validate(UpdateExpeditionDto))
-  async update(
-    @Path() id: string,
-    @Body() body: UpdateExpeditionDto,
-  ): Promise<ApiResponse<Expedition>> {
-    const data = await this.expeditionService.update(id, body);
-    return { data, message: 'Expedition updated successfully', success: true };
-  }
-
-  /**
-   * Delete an expedition package.
-   */
-  @Delete('{id}')
-  async delete(@Path() id: string): Promise<ApiResponse<boolean>> {
-    const data = await this.expeditionService.delete(id);
-    return { data, message: 'Expedition deleted successfully', success: true };
   }
 }

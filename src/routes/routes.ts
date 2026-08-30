@@ -1094,6 +1094,7 @@ const models: TsoaRoute.Models = {
             "title": {"dataType":"string","required":true},
             "slug": {"dataType":"string","required":true},
             "categoryId": {"dataType":"string","required":true},
+            "subcategoryId": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
             "region": {"dataType":"string","required":true},
             "durationDays": {"dataType":"double","required":true},
             "maxAltitudeMeters": {"dataType":"double","required":true},
@@ -1233,6 +1234,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "title": {"dataType":"string","required":true},
             "categoryId": {"dataType":"string"},
+            "subcategoryId": {"dataType":"string"},
             "region": {"dataType":"string","required":true},
             "durationDays": {"dataType":"double","required":true},
             "maxAltitudeMeters": {"dataType":"double"},
@@ -1271,6 +1273,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "title": {"dataType":"string"},
             "categoryId": {"dataType":"string"},
+            "subcategoryId": {"dataType":"string"},
             "region": {"dataType":"string"},
             "durationDays": {"dataType":"double"},
             "maxAltitudeMeters": {"dataType":"double"},
@@ -1316,6 +1319,7 @@ const models: TsoaRoute.Models = {
             "title": {"dataType":"string","required":true},
             "slug": {"dataType":"string","required":true},
             "categoryId": {"dataType":"string","required":true},
+            "subcategoryId": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
             "region": {"dataType":"string","required":true},
             "tourType": {"ref":"TourType","required":true},
             "transportation": {"dataType":"string","required":true},
@@ -1381,6 +1385,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "title": {"dataType":"string","required":true},
             "categoryId": {"dataType":"string"},
+            "subcategoryId": {"dataType":"string"},
             "region": {"dataType":"string","required":true},
             "tourType": {"ref":"TourType"},
             "transportation": {"dataType":"string"},
@@ -1421,6 +1426,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "title": {"dataType":"string"},
             "categoryId": {"dataType":"string"},
+            "subcategoryId": {"dataType":"string"},
             "region": {"dataType":"string"},
             "tourType": {"ref":"TourType"},
             "transportation": {"dataType":"string"},
@@ -1814,6 +1820,7 @@ const models: TsoaRoute.Models = {
             "title": {"dataType":"string","required":true},
             "slug": {"dataType":"string","required":true},
             "categoryId": {"dataType":"string","required":true},
+            "subcategoryId": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
             "region": {"dataType":"string","required":true},
             "durationDays": {"dataType":"double","required":true},
             "peakHeightM": {"dataType":"double","required":true},
@@ -1881,6 +1888,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "title": {"dataType":"string","required":true},
             "categoryId": {"dataType":"string"},
+            "subcategoryId": {"dataType":"string"},
             "region": {"dataType":"string","required":true},
             "durationDays": {"dataType":"double","required":true},
             "peakHeightM": {"dataType":"double"},
@@ -1923,6 +1931,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "title": {"dataType":"string"},
             "categoryId": {"dataType":"string"},
+            "subcategoryId": {"dataType":"string"},
             "region": {"dataType":"string"},
             "durationDays": {"dataType":"double"},
             "peakHeightM": {"dataType":"double"},
@@ -3194,6 +3203,8 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsCategoryController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
                 type: {"in":"query","name":"type","ref":"CategoryType"},
+                parentsOnly: {"in":"query","name":"parentsOnly","dataType":"boolean"},
+                parentId: {"in":"query","name":"parentId","dataType":"string"},
                 search: {"in":"query","name":"search","dataType":"string"},
                 limit: {"in":"query","name":"limit","dataType":"double"},
                 page: {"in":"query","name":"page","dataType":"double"},
@@ -4919,6 +4930,8 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 search: {"in":"query","name":"search","dataType":"string"},
                 limit: {"in":"query","name":"limit","dataType":"double"},
                 page: {"in":"query","name":"page","dataType":"double"},
+                parentId: {"in":"query","name":"parentId","dataType":"string"},
+                parentsOnly: {"in":"query","name":"parentsOnly","dataType":"boolean"},
         };
         app.get('/admin/categories',
             authenticateMiddleware([{"jwt":["admin"]}]),

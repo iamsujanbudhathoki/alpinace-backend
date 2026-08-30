@@ -42,8 +42,11 @@ export class Expedition extends CommonEntity {
   @Column({ name: 'slug', unique: true })
   slug: string;
 
-  @Column({ name: 'category_id', nullable: true })
+  @Column({ name: 'category_id', type: 'varchar', length: 36, nullable: true })
   categoryId: string;
+
+  @Column({ name: 'subcategory_id', type: 'varchar', length: 36, nullable: true })
+  subcategoryId?: string | null;
 
   @Column({ name: 'region' })
   region: string;

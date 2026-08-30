@@ -1,4 +1,4 @@
-import { In } from 'typeorm';
+import { In, IsNull } from 'typeorm';
 import { autoInjectable } from 'tsyringe';
 import { isUUID } from 'class-validator';
 import { AppDataSource } from '../../config/database.config';
@@ -14,13 +14,17 @@ import { CreateTourDto, UpdateTourDto } from '../../schemas/tour.schema';
 import { AppError } from '../../utils/appError.util';
 
 import { MediaService } from '../media/media.service';
+import { CategoryService } from '../category/category.service';
 
 @autoInjectable()
 export class TourService {
   private repo = AppDataSource.getRepository(Tour);
   private categoryRepo = AppDataSource.getRepository(Category);
 
-  constructor(private mediaService: MediaService = new MediaService()) {}
+  constructor(
+    private mediaService: MediaService = new MediaService(),
+    private categoryService: CategoryService = new CategoryService(),
+  ) { }
 
   async getPublicAll(params?: {
     category?: string;
@@ -100,9 +104,34 @@ export class TourService {
       }
 
       if (catEntity) {
-        qb.andWhere('tour.categoryId = :catId', { catId: catEntity.id });
+        if (catEntity.parentId === null || catEntity.parentId === undefined) {
+          // Parent Category: match packages assigned directly to parent category OR to any child subcategories
+          const childCats = await this.categoryRepo.find({ where: { parentId: catEntity.id } });
+          const childCatIds = childCats.map((c) => c.id);
+
+          if (childCatIds.length > 0) {
+            qb.andWhere(
+              '(tour.categoryId = :catId OR tour.subcategoryId = :catId OR tour.subcategoryId IN (:...childCatIds))',
+              { catId: catEntity.id, childCatIds },
+            );
+          } else {
+            qb.andWhere(
+              '(tour.categoryId = :catId OR tour.subcategoryId = :catId)',
+              { catId: catEntity.id },
+            );
+          }
+        } else {
+          // Subcategory: match ONLY packages belonging to this specific subcategory
+          qb.andWhere(
+            '(tour.subcategoryId = :subcatId OR (tour.categoryId = :subcatId AND tour.subcategoryId IS NULL))',
+            { subcatId: catEntity.id },
+          );
+        }
       } else {
-        qb.andWhere('tour.categoryId = :catParam', { catParam });
+        qb.andWhere(
+          '(tour.categoryId = :catParam OR tour.subcategoryId = :catParam)',
+          { catParam },
+        );
       }
     }
     if (params?.region && params.region !== 'All') {
@@ -119,13 +148,9 @@ export class TourService {
       });
     }
     if (params?.isPublic) {
-      if (params?.status && (params.status === TourStatus.ACTIVE || params.status === TourStatus.FEATURED)) {
-        qb.andWhere('tour.status = :status', { status: params.status });
-      } else {
-        qb.andWhere('tour.status IN (:...publicStatuses)', {
-          publicStatuses: [TourStatus.ACTIVE, TourStatus.FEATURED],
-        });
-      }
+      qb.andWhere('tour.status IN (:...publicStatuses)', {
+        publicStatuses: [TourStatus.ACTIVE, TourStatus.FEATURED],
+      });
     } else if (params?.status) {
       qb.andWhere('tour.status = :status', { status: params.status });
     }
@@ -195,10 +220,13 @@ export class TourService {
       items.map(async (i) => {
         const withMedia = await this.mediaService.resolveItemMedia(i);
         const cat = i.categoryId ? categoryMap.get(i.categoryId) : undefined;
+        const subcat = i.subcategoryId ? categoryMap.get(i.subcategoryId) : undefined;
         return {
           ...withMedia,
           category: cat?.name,
           categorySlug: cat?.slug,
+          subcategory: subcat?.name,
+          subcategorySlug: subcat?.slug,
         };
       }),
     );
@@ -221,10 +249,15 @@ export class TourService {
     const cat = item.categoryId
       ? await this.categoryRepo.findOne({ where: { id: item.categoryId } })
       : undefined;
+    const subcat = item.subcategoryId
+      ? await this.categoryRepo.findOne({ where: { id: item.subcategoryId } })
+      : undefined;
     return {
       ...withMedia,
       category: cat?.name,
       categorySlug: cat?.slug,
+      subcategory: subcat?.name,
+      subcategorySlug: subcat?.slug,
     } as any;
   }
 
@@ -243,12 +276,11 @@ export class TourService {
       slug = `${slug}-${Date.now()}`;
     }
 
-    let categoryId = dto.categoryId;
-    if (categoryId) {
-      const cat = await this.categoryRepo.findOne({
-        where: { id: categoryId },
-      });
-    }
+    await this.categoryService.validateResourceCategory(
+      CategoryType.TOURS,
+      dto.categoryId,
+      dto.subcategoryId,
+    );
 
     await this.mediaService.validateMediaIdsExists([
       dto.coverMediaId,
@@ -259,7 +291,8 @@ export class TourService {
     const tour = this.repo.create({
       title: dto.title,
       slug,
-      categoryId,
+      categoryId: dto.categoryId,
+      subcategoryId: dto.subcategoryId || null,
       region: dto.region,
       tourType: dto.tourType || TourType.CULTURAL_HERITAGE,
       transportation: dto.transportation,
@@ -309,12 +342,26 @@ export class TourService {
 
     const tour = await this.getByIdOrSlug(id);
 
+    const targetCategoryId =
+      dto.categoryId !== undefined ? dto.categoryId : tour.categoryId;
+    const targetSubcategoryId =
+      dto.subcategoryId !== undefined ? dto.subcategoryId : tour.subcategoryId;
+
+    await this.categoryService.validateResourceCategory(
+      CategoryType.TOURS,
+      targetCategoryId,
+      targetSubcategoryId,
+    );
+
     if (dto.title && dto.title !== tour.title) {
       tour.title = dto.title;
       tour.slug = dto.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     }
     if (dto.categoryId !== undefined) {
       tour.categoryId = dto.categoryId;
+    }
+    if (dto.subcategoryId !== undefined) {
+      tour.subcategoryId = dto.subcategoryId || null;
     }
     if (dto.region) tour.region = dto.region;
     if (dto.tourType) tour.tourType = dto.tourType;
@@ -384,7 +431,8 @@ export class TourService {
     const tours = await this.repo.find();
 
     const dbCategories = await this.categoryRepo.find({
-      where: { type: CategoryType.TOURS, status: CategoryStatus.ACTIVE },
+      where: { type: CategoryType.TOURS, status: CategoryStatus.ACTIVE, parentId: IsNull() },
+      order: { menuOrder: 'ASC', createdAt: 'DESC' },
     });
 
     const durations = tours

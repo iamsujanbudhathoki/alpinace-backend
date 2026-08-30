@@ -25,6 +25,8 @@ export class CategoryService {
     search?: string;
     limit?: number;
     page?: number;
+    parentId?: string | null;
+    parentsOnly?: boolean;
   }): Promise<[Category[], number]> {
     const qb = this.repo.createQueryBuilder('cat');
 
@@ -34,6 +36,16 @@ export class CategoryService {
 
     if (params?.type && (params.type as any) !== 'All') {
       qb.andWhere('cat.type = :type', { type: params.type });
+    }
+
+    if (params?.parentsOnly) {
+      qb.andWhere('cat.parentId IS NULL');
+    } else if (params?.parentId !== undefined) {
+      if (params.parentId === null || params.parentId === '') {
+        qb.andWhere('cat.parentId IS NULL');
+      } else {
+        qb.andWhere('cat.parentId = :parentId', { parentId: params.parentId });
+      }
     }
 
     if (params?.search && params.search.trim()) {
@@ -58,6 +70,54 @@ export class CategoryService {
       items.map((cat) => this.mediaService.resolveItemMedia(cat)),
     );
     return [resolved, count];
+  }
+
+  async validateResourceCategory(
+    domain: CategoryType,
+    categoryId?: string | null,
+    subcategoryId?: string | null,
+  ): Promise<{ category: Category | null; subcategory: Category | null }> {
+    let category: Category | null = null;
+    let subcategory: Category | null = null;
+
+    if (categoryId) {
+      category = await this.repo.findOne({ where: { id: categoryId } });
+      if (!category) {
+        throw AppError.notFound(`Selected category does not exist.`);
+      }
+      if (category.type !== domain) {
+        throw AppError.badRequest(
+          `Selected category '${category.name}' belongs to domain '${category.type}', but expected '${domain}'.`,
+        );
+      }
+      if (category.parentId) {
+        throw AppError.badRequest(
+          `Selected category '${category.name}' is a subcategory. Please select a top-level parent category.`,
+        );
+      }
+    }
+
+    if (subcategoryId) {
+      if (!categoryId) {
+        throw AppError.badRequest(`A parent category must be selected before selecting a subcategory.`);
+      }
+      subcategory = await this.repo.findOne({ where: { id: subcategoryId } });
+      if (!subcategory) {
+        throw AppError.notFound(`Selected subcategory does not exist.`);
+      }
+      if (subcategory.parentId !== categoryId) {
+        throw AppError.badRequest(
+          `Selected subcategory '${subcategory.name}' does not belong to category '${category?.name}'.`,
+        );
+      }
+      if (subcategory.type !== domain) {
+        throw AppError.badRequest(
+          `Subcategory '${subcategory.name}' belongs to domain '${subcategory.type}', but expected '${domain}'.`,
+        );
+      }
+    }
+
+    return { category, subcategory };
   }
 
   async getByType(type: CategoryType): Promise<Category[]> {

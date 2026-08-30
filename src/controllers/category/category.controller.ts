@@ -33,6 +33,8 @@ export class CategoryController extends Controller {
   @NoSecurity()
   async getAll(
     @Query() type?: CategoryType,
+    @Query() parentsOnly?: boolean,
+    @Query() parentId?: string,
     @Query() search?: string,
     @Query() limit?: number,
     @Query() page?: number,
@@ -40,6 +42,8 @@ export class CategoryController extends Controller {
     const [items, totalCount] = await this.categoryService.getAll({
       status: CategoryStatus.ACTIVE,
       type,
+      parentsOnly,
+      parentId,
       search,
       limit,
       page,

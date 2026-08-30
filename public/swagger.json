@@ -2999,6 +2999,10 @@
 					"categoryId": {
 						"type": "string"
 					},
+					"subcategoryId": {
+						"type": "string",
+						"nullable": true
+					},
 					"region": {
 						"type": "string"
 					},
@@ -3413,6 +3417,9 @@
 					"categoryId": {
 						"type": "string"
 					},
+					"subcategoryId": {
+						"type": "string"
+					},
 					"region": {
 						"type": "string"
 					},
@@ -3539,6 +3546,9 @@
 						"type": "string"
 					},
 					"categoryId": {
+						"type": "string"
+					},
+					"subcategoryId": {
 						"type": "string"
 					},
 					"region": {
@@ -3690,6 +3700,10 @@
 					},
 					"categoryId": {
 						"type": "string"
+					},
+					"subcategoryId": {
+						"type": "string",
+						"nullable": true
 					},
 					"region": {
 						"type": "string"
@@ -3942,6 +3956,9 @@
 					"categoryId": {
 						"type": "string"
 					},
+					"subcategoryId": {
+						"type": "string"
+					},
 					"region": {
 						"type": "string"
 					},
@@ -4074,6 +4091,9 @@
 						"type": "string"
 					},
 					"categoryId": {
+						"type": "string"
+					},
+					"subcategoryId": {
 						"type": "string"
 					},
 					"region": {
@@ -5090,6 +5110,10 @@
 					"categoryId": {
 						"type": "string"
 					},
+					"subcategoryId": {
+						"type": "string",
+						"nullable": true
+					},
 					"region": {
 						"type": "string"
 					},
@@ -5350,6 +5374,9 @@
 					"categoryId": {
 						"type": "string"
 					},
+					"subcategoryId": {
+						"type": "string"
+					},
 					"region": {
 						"type": "string"
 					},
@@ -5489,6 +5516,9 @@
 						"type": "string"
 					},
 					"categoryId": {
+						"type": "string"
+					},
+					"subcategoryId": {
 						"type": "string"
 					},
 					"region": {
@@ -7932,6 +7962,22 @@
 						"required": false,
 						"schema": {
 							"$ref": "#/components/schemas/CategoryType"
+						}
+					},
+					{
+						"in": "query",
+						"name": "parentsOnly",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "parentId",
+						"required": false,
+						"schema": {
+							"type": "string"
 						}
 					},
 					{
@@ -10586,6 +10632,22 @@
 						"schema": {
 							"format": "double",
 							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "parentId",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "parentsOnly",
+						"required": false,
+						"schema": {
+							"type": "boolean"
 						}
 					}
 				]

@@ -1,4 +1,4 @@
-import { In } from 'typeorm';
+import { In, IsNull } from 'typeorm';
 import { autoInjectable } from 'tsyringe';
 import { isUUID } from 'class-validator';
 import { AppDataSource } from '../../config/database.config';
@@ -21,13 +21,17 @@ import {
 import { AppError } from '../../utils/appError.util';
 
 import { MediaService } from '../media/media.service';
+import { CategoryService } from '../category/category.service';
 
 @autoInjectable()
 export class ExpeditionService {
   private repo = AppDataSource.getRepository(Expedition);
   private categoryRepo = AppDataSource.getRepository(Category);
 
-  constructor(private mediaService: MediaService = new MediaService()) {}
+  constructor(
+    private mediaService: MediaService = new MediaService(),
+    private categoryService: CategoryService = new CategoryService(),
+  ) { }
 
   async getPublicAll(params?: {
     category?: string;
@@ -99,6 +103,7 @@ export class ExpeditionService {
     limit?: number;
     page?: number;
   }): Promise<[Expedition[], number]> {
+    await this.autoLinkCategories();
     const qb = this.repo.createQueryBuilder('exp');
 
     const catParam = params?.categorySlug || params?.category || params?.categoryId;
@@ -113,9 +118,34 @@ export class ExpeditionService {
       }
 
       if (catEntity) {
-        qb.andWhere('exp.categoryId = :catId', { catId: catEntity.id });
+        if (catEntity.parentId === null || catEntity.parentId === undefined) {
+          // Parent Category: match packages assigned directly to parent category OR to any child subcategories
+          const childCats = await this.categoryRepo.find({ where: { parentId: catEntity.id } });
+          const childCatIds = childCats.map((c) => c.id);
+
+          if (childCatIds.length > 0) {
+            qb.andWhere(
+              '(exp.categoryId = :catId OR exp.subcategoryId = :catId OR exp.subcategoryId IN (:...childCatIds))',
+              { catId: catEntity.id, childCatIds },
+            );
+          } else {
+            qb.andWhere(
+              '(exp.categoryId = :catId OR exp.subcategoryId = :catId)',
+              { catId: catEntity.id },
+            );
+          }
+        } else {
+          // Subcategory: match ONLY packages belonging to this specific subcategory
+          qb.andWhere(
+            '(exp.subcategoryId = :subcatId OR (exp.categoryId = :subcatId AND exp.subcategoryId IS NULL))',
+            { subcatId: catEntity.id },
+          );
+        }
       } else {
-        qb.andWhere('exp.categoryId = :catParam', { catParam });
+        qb.andWhere(
+          '(exp.categoryId = :catParam OR exp.subcategoryId = :catParam)',
+          { catParam },
+        );
       }
     }
     if (params?.region && params.region !== 'All') {
@@ -134,13 +164,9 @@ export class ExpeditionService {
       });
     }
     if (params?.isPublic) {
-      if (params?.status && (params.status === ExpeditionStatus.ACTIVE || params.status === ExpeditionStatus.FEATURED)) {
-        qb.andWhere('exp.status = :status', { status: params.status });
-      } else {
-        qb.andWhere('exp.status IN (:...publicStatuses)', {
-          publicStatuses: [ExpeditionStatus.ACTIVE, ExpeditionStatus.FEATURED],
-        });
-      }
+      qb.andWhere('exp.status IN (:...publicStatuses)', {
+        publicStatuses: [ExpeditionStatus.ACTIVE, ExpeditionStatus.FEATURED],
+      });
     } else if (params?.status) {
       qb.andWhere('exp.status = :status', { status: params.status });
     }
@@ -227,10 +253,13 @@ export class ExpeditionService {
       items.map(async (i) => {
         const withMedia = await this.mediaService.resolveItemMedia(i);
         const cat = i.categoryId ? categoryMap.get(i.categoryId) : undefined;
+        const subcat = i.subcategoryId ? categoryMap.get(i.subcategoryId) : undefined;
         return {
           ...withMedia,
           category: cat?.name,
           categorySlug: cat?.slug,
+          subcategory: subcat?.name,
+          subcategorySlug: subcat?.slug,
         };
       }),
     );
@@ -254,10 +283,15 @@ export class ExpeditionService {
     const cat = item.categoryId
       ? await this.categoryRepo.findOne({ where: { id: item.categoryId } })
       : undefined;
+    const subcat = item.subcategoryId
+      ? await this.categoryRepo.findOne({ where: { id: item.subcategoryId } })
+      : undefined;
     return {
       ...withMedia,
       category: cat?.name,
       categorySlug: cat?.slug,
+      subcategory: subcat?.name,
+      subcategorySlug: subcat?.slug,
     } as any;
   }
 
@@ -270,6 +304,12 @@ export class ExpeditionService {
   }
 
   async create(dto: CreateExpeditionDto): Promise<Expedition> {
+    await this.categoryService.validateResourceCategory(
+      CategoryType.EXPEDITIONS,
+      dto.categoryId,
+      dto.subcategoryId,
+    );
+
     await this.mediaService.validateMediaIdsExists([
       dto.coverMediaId,
       dto.mapMediaId,
@@ -282,14 +322,6 @@ export class ExpeditionService {
       slug = `${slug}-${Date.now()}`;
     }
 
-    let categoryId = dto.categoryId;
-    if (categoryId) {
-      const cat = await this.categoryRepo.findOne({
-        where: { id: categoryId },
-      });
-      if (!cat) categoryId = undefined;
-    }
-
     const altitude =
       dto.peakHeightM !== undefined
         ? Number(dto.peakHeightM)
@@ -300,7 +332,8 @@ export class ExpeditionService {
     const exp = this.repo.create({
       title: dto.title,
       slug,
-      categoryId,
+      categoryId: dto.categoryId,
+      subcategoryId: dto.subcategoryId || null,
       region: dto.region,
       durationDays: Number(dto.durationDays),
       peakHeightM: altitude,
@@ -353,12 +386,26 @@ export class ExpeditionService {
 
     const exp = await this.getByIdOrSlug(id);
 
+    const targetCategoryId =
+      dto.categoryId !== undefined ? dto.categoryId : exp.categoryId;
+    const targetSubcategoryId =
+      dto.subcategoryId !== undefined ? dto.subcategoryId : exp.subcategoryId;
+
+    await this.categoryService.validateResourceCategory(
+      CategoryType.EXPEDITIONS,
+      targetCategoryId,
+      targetSubcategoryId,
+    );
+
     if (dto.title && dto.title !== exp.title) {
       exp.title = dto.title;
       exp.slug = dto.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     }
     if (dto.categoryId !== undefined) {
       exp.categoryId = dto.categoryId;
+    }
+    if (dto.subcategoryId !== undefined) {
+      exp.subcategoryId = dto.subcategoryId || null;
     }
     if (dto.region) exp.region = dto.region;
     if (dto.durationDays !== undefined)
@@ -436,7 +483,8 @@ export class ExpeditionService {
     const exps = await this.repo.find();
 
     const dbCategories = await this.categoryRepo.find({
-      where: { type: CategoryType.EXPEDITIONS, status: CategoryStatus.ACTIVE },
+      where: { type: CategoryType.EXPEDITIONS, status: CategoryStatus.ACTIVE, parentId: IsNull() },
+      order: { menuOrder: 'ASC', createdAt: 'DESC' },
     });
 
     const durations = exps
@@ -513,5 +561,41 @@ export class ExpeditionService {
       minAltitude,
       maxAltitude,
     };
+  }
+
+  private async autoLinkCategories() {
+    try {
+      const items = await this.repo.find();
+      const categories = await this.categoryRepo.find({ where: { type: CategoryType.EXPEDITIONS } });
+      const parent8000 = categories.find((c) => c.slug === '8000m-technical-expeditions');
+      const parent6000 = categories.find((c) => c.slug === '6000m-7000m-peaks');
+
+      for (const item of items) {
+        let changed = false;
+        if (item.slug === 'everest-summit-expedition') {
+          if (parent8000 && item.categoryId !== parent8000.id) {
+            item.categoryId = parent8000.id;
+            const sub = categories.find((c) => c.slug === 'mt-everest-expedition');
+            if (sub) item.subcategoryId = sub.id;
+            changed = true;
+          }
+        } else if (!item.categoryId || (parent8000 && item.categoryId === parent8000.id && item.peakHeightM < 8000)) {
+          const sub = categories.find((c) => c.parentId !== null && (item.slug.includes(c.slug) || c.slug.includes(item.slug)));
+          if (sub && sub.parentId) {
+            item.subcategoryId = sub.id;
+            item.categoryId = sub.parentId;
+            changed = true;
+          } else if (parent6000 && item.peakHeightM < 8000) {
+            item.categoryId = parent6000.id;
+            changed = true;
+          }
+        }
+        if (changed) {
+          await this.repo.save(item);
+        }
+      }
+    } catch (e) {
+      // ignore
+    }
   }
 }

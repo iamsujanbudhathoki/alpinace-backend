@@ -1,4 +1,4 @@
-import { In } from 'typeorm';
+import { In, IsNull } from 'typeorm';
 import { autoInjectable } from 'tsyringe';
 import { isUUID } from 'class-validator';
 import { AppDataSource } from '../../config/database.config';
@@ -14,13 +14,17 @@ import { CreateTrekDto, UpdateTrekDto } from '../../schemas/trek.schema';
 import { AppError } from '../../utils/appError.util';
 
 import { MediaService } from '../media/media.service';
+import { CategoryService } from '../category/category.service';
 
 @autoInjectable()
 export class TrekService {
   private repo = AppDataSource.getRepository(Trek);
   private categoryRepo = AppDataSource.getRepository(Category);
 
-  constructor(private mediaService: MediaService = new MediaService()) {}
+  constructor(
+    private mediaService: MediaService = new MediaService(),
+    private categoryService: CategoryService = new CategoryService(),
+  ) { }
 
   async getPublicAll(params?: {
     category?: string;
@@ -92,13 +96,9 @@ export class TrekService {
     const qb = this.repo.createQueryBuilder('trek');
 
     if (params?.isPublic) {
-      if (params?.status && (params.status === TrekStatus.ACTIVE || params.status === TrekStatus.FEATURED)) {
-        qb.andWhere('trek.status = :status', { status: params.status });
-      } else {
-        qb.andWhere('trek.status IN (:...publicStatuses)', {
-          publicStatuses: [TrekStatus.ACTIVE, TrekStatus.FEATURED],
-        });
-      }
+      qb.andWhere('trek.status IN (:...publicStatuses)', {
+        publicStatuses: [TrekStatus.ACTIVE, TrekStatus.FEATURED],
+      });
     } else if (params?.status) {
       qb.andWhere('trek.status = :status', { status: params.status });
     }
@@ -115,10 +115,40 @@ export class TrekService {
       }
 
       if (catEntity) {
-        qb.andWhere('trek.categoryId = :catId', { catId: catEntity.id });
+        if (catEntity.parentId === null || catEntity.parentId === undefined) {
+          // Parent Category: match packages assigned directly to parent category OR to any child subcategories
+          const childCats = await this.categoryRepo.find({ where: { parentId: catEntity.id } });
+          const childCatIds = childCats.map((c) => c.id);
+
+          if (childCatIds.length > 0) {
+            qb.andWhere(
+              '(trek.categoryId = :catId OR trek.subcategoryId = :catId OR trek.subcategoryId IN (:...childCatIds))',
+              { catId: catEntity.id, childCatIds },
+            );
+          } else {
+            qb.andWhere(
+              '(trek.categoryId = :catId OR trek.subcategoryId = :catId)',
+              { catId: catEntity.id },
+            );
+          }
+        } else {
+          // Subcategory: match ONLY packages belonging to this specific subcategory
+          qb.andWhere(
+            '(trek.subcategoryId = :subcatId OR (trek.categoryId = :subcatId AND trek.subcategoryId IS NULL))',
+            { subcatId: catEntity.id },
+          );
+        }
       } else {
-        qb.andWhere('trek.categoryId = :catParam', { catParam });
+        qb.andWhere(
+          '(trek.categoryId = :catParam OR trek.subcategoryId = :catParam)',
+          { catParam },
+        );
       }
+    }
+    if (params?.difficulty && (params.difficulty as any) !== 'All') {
+      qb.andWhere('LOWER(trek.difficulty) = LOWER(:difficulty)', {
+        difficulty: params.difficulty,
+      });
     }
     if (params?.search && params.search.trim()) {
       qb.andWhere(
@@ -199,10 +229,13 @@ export class TrekService {
       items.map(async (i) => {
         const withMedia = await this.mediaService.resolveItemMedia(i);
         const cat = i.categoryId ? categoryMap.get(i.categoryId) : undefined;
+        const subcat = i.subcategoryId ? categoryMap.get(i.subcategoryId) : undefined;
         return {
           ...withMedia,
           category: cat?.name,
           categorySlug: cat?.slug,
+          subcategory: subcat?.name,
+          subcategorySlug: subcat?.slug,
         };
       }),
     );
@@ -225,10 +258,15 @@ export class TrekService {
     const cat = item.categoryId
       ? await this.categoryRepo.findOne({ where: { id: item.categoryId } })
       : undefined;
+    const subcat = item.subcategoryId
+      ? await this.categoryRepo.findOne({ where: { id: item.subcategoryId } })
+      : undefined;
     return {
       ...withMedia,
       category: cat?.name,
       categorySlug: cat?.slug,
+      subcategory: subcat?.name,
+      subcategorySlug: subcat?.slug,
     } as any;
   }
 
@@ -247,12 +285,11 @@ export class TrekService {
       slug = `${slug}-${Date.now()}`;
     }
 
-    let categoryId = dto.categoryId;
-    if (categoryId) {
-      const cat = await this.categoryRepo.findOne({
-        where: { id: categoryId },
-      });
-    }
+    await this.categoryService.validateResourceCategory(
+      CategoryType.TREKKING,
+      dto.categoryId,
+      dto.subcategoryId,
+    );
 
     await this.mediaService.validateMediaIdsExists([
       dto.coverMediaId,
@@ -263,7 +300,8 @@ export class TrekService {
     const trek = this.repo.create({
       title: dto.title,
       slug,
-      categoryId,
+      categoryId: dto.categoryId,
+      subcategoryId: dto.subcategoryId || null,
       region: dto.region,
       durationDays: Number(dto.durationDays),
       maxAltitudeMeters: Number(dto.maxAltitudeMeters) || 1400,
@@ -311,12 +349,26 @@ export class TrekService {
 
     const trek = await this.getByIdOrSlug(id);
 
+    const targetCategoryId =
+      dto.categoryId !== undefined ? dto.categoryId : trek.categoryId;
+    const targetSubcategoryId =
+      dto.subcategoryId !== undefined ? dto.subcategoryId : trek.subcategoryId;
+
+    await this.categoryService.validateResourceCategory(
+      CategoryType.TREKKING,
+      targetCategoryId,
+      targetSubcategoryId,
+    );
+
     if (dto.title && dto.title !== trek.title) {
       trek.title = dto.title;
       trek.slug = dto.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     }
     if (dto.categoryId !== undefined) {
       trek.categoryId = dto.categoryId;
+    }
+    if (dto.subcategoryId !== undefined) {
+      trek.subcategoryId = dto.subcategoryId || null;
     }
     if (dto.region) trek.region = dto.region;
     if (dto.durationDays !== undefined)
@@ -386,7 +438,8 @@ export class TrekService {
     const treks = await this.repo.find();
 
     const dbCategories = await this.categoryRepo.find({
-      where: { type: CategoryType.TREKKING, status: CategoryStatus.ACTIVE },
+      where: { type: CategoryType.TREKKING, status: CategoryStatus.ACTIVE, parentId: IsNull() },
+      order: { menuOrder: 'ASC', createdAt: 'DESC' },
     });
 
     const durations = treks

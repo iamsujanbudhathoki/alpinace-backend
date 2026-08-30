@@ -234,6 +234,7 @@ export const seedDatabase = async () => {
           where: [{ slug: subSlug }, { name: sub.name }],
           withDeleted: true,
         });
+        const mediaIdVal = (sub as any).image || (sub as any).mediaId || null;
         if (!existingSub) {
           await categoryRepo.save(
             categoryRepo.create({
@@ -244,14 +245,14 @@ export const seedDatabase = async () => {
               itemCount: sub.itemCount || 0,
               status: CategoryStatus.ACTIVE,
               parentId: parentCat.id,
-              image: (sub as any).image || null,
+              mediaId: mediaIdVal,
             }),
           );
         } else {
           existingSub.parentId = parentCat.id;
           existingSub.type = cat.type;
           existingSub.description = sub.description || existingSub.description;
-          if ((sub as any).image) existingSub.image = (sub as any).image;
+          if (mediaIdVal) existingSub.mediaId = mediaIdVal;
           await categoryRepo.save(existingSub);
         }
       }

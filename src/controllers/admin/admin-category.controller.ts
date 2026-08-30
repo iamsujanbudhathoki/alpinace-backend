@@ -78,6 +78,14 @@ export class AdminCategoryController extends Controller {
     return { data, message: 'Category created successfully', success: true };
   }
 
+  @Put('reorder')
+  async reorder(
+    @Body() body: { items: { id: string; menuOrder: number }[] },
+  ): Promise<ApiResponse<boolean>> {
+    const data = await this.categoryService.reorderCategories(body.items || []);
+    return { data, message: 'Category menu ordering updated successfully', success: true };
+  }
+
   @Put('{id}')
   @Middlewares(RequestValidator.validate(UpdateCategoryDto))
   async update(

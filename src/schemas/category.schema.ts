@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsOptional, IsString, Matches } from 'class-validator';
+import { IsBoolean, IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, Matches, Min } from 'class-validator';
 import {
   CategoryStatus,
   CategoryType,
@@ -27,6 +27,15 @@ export class CreateCategoryDto {
   @IsEnum(CategoryStatus, { message: 'Invalid status' })
   @IsNotEmpty({ message: 'Category status is required' })
   status!: CategoryStatus;
+
+  @IsOptional()
+  @IsBoolean()
+  showInMenu?: boolean;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  menuOrder?: number;
 
   @IsOptional()
   @IsString()
@@ -60,6 +69,15 @@ export class UpdateCategoryDto {
   @IsOptional()
   @IsEnum(CategoryStatus)
   status?: CategoryStatus;
+
+  @IsOptional()
+  @IsBoolean()
+  showInMenu?: boolean;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  menuOrder?: number;
 
   @IsOptional()
   @IsString()

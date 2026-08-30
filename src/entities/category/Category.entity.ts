@@ -34,6 +34,12 @@ export class Category extends CommonEntity {
   @Column({ name: 'status', default: CategoryStatus.ACTIVE })
   status: CategoryStatus;
 
+  @Column({ name: 'show_in_menu', type: 'boolean', default: true })
+  showInMenu: boolean;
+
+  @Column({ name: 'menu_order', type: 'int', default: 0 })
+  menuOrder: number;
+
   image?: string | null;
 
   @Column({ name: 'media_id', type: 'varchar', nullable: true })

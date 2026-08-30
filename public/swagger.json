@@ -1437,6 +1437,13 @@
 					"status": {
 						"$ref": "#/components/schemas/CategoryStatus"
 					},
+					"showInMenu": {
+						"type": "boolean"
+					},
+					"menuOrder": {
+						"type": "number",
+						"format": "double"
+					},
 					"image": {
 						"type": "string",
 						"nullable": true
@@ -1473,7 +1480,9 @@
 					"type",
 					"description",
 					"itemCount",
-					"status"
+					"status",
+					"showInMenu",
+					"menuOrder"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -5694,6 +5703,13 @@
 					"status": {
 						"$ref": "#/components/schemas/CategoryStatus"
 					},
+					"showInMenu": {
+						"type": "boolean"
+					},
+					"menuOrder": {
+						"type": "number",
+						"format": "double"
+					},
 					"mediaId": {
 						"type": "string",
 						"nullable": true
@@ -5729,6 +5745,13 @@
 					},
 					"status": {
 						"$ref": "#/components/schemas/CategoryStatus"
+					},
+					"showInMenu": {
+						"type": "boolean"
+					},
+					"menuOrder": {
+						"type": "number",
+						"format": "double"
 					},
 					"mediaId": {
 						"type": "string",
@@ -7932,6 +7955,29 @@
 						}
 					}
 				]
+			}
+		},
+		"/categories/nav": {
+			"get": {
+				"operationId": "GetNavMenu",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_PublicCategoryDto-Array_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get menu-visible categories structured tree for public marketing navbar navigation.",
+				"tags": [
+					"Categories Public"
+				],
+				"security": [],
+				"parameters": []
 			}
 		},
 		"/categories/{idOrSlug}": {
@@ -10610,6 +10656,68 @@
 						}
 					}
 				]
+			}
+		},
+		"/admin/categories/reorder": {
+			"put": {
+				"operationId": "Reorder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Categories Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"items": {
+										"items": {
+											"properties": {
+												"menuOrder": {
+													"type": "number",
+													"format": "double"
+												},
+												"id": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"menuOrder",
+												"id"
+											],
+											"type": "object"
+										},
+										"type": "array"
+									}
+								},
+								"required": [
+									"items"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/admin/categories/{id}": {

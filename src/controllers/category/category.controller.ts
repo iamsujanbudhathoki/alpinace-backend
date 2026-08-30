@@ -55,6 +55,21 @@ export class CategoryController extends Controller {
   }
 
   /**
+   * Get menu-visible categories structured tree for public marketing navbar navigation.
+   */
+  @Get('nav')
+  @NoSecurity()
+  async getNavMenu(): Promise<ApiResponse<PublicCategoryDto[]>> {
+    const items = await this.categoryService.getNavMenu();
+    const data = items.map(toPublicCategory);
+    return {
+      data,
+      message: 'Navigation categories retrieved successfully',
+      success: true,
+    };
+  }
+
+  /**
    * Get public active category by ID or Slug.
    */
   @Get('{idOrSlug}')

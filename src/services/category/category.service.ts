@@ -44,7 +44,7 @@ export class CategoryService {
       );
     }
 
-    qb.orderBy('cat.createdAt', 'DESC');
+    qb.orderBy('cat.menuOrder', 'ASC').addOrderBy('cat.createdAt', 'DESC');
 
     if (params?.limit) {
       qb.take(params.limit);
@@ -63,7 +63,7 @@ export class CategoryService {
   async getByType(type: CategoryType): Promise<Category[]> {
     const all = await this.repo.find({
       where: { type, status: CategoryStatus.ACTIVE },
-      order: { name: 'ASC' },
+      order: { menuOrder: 'ASC', name: 'ASC' },
     });
 
     const resolvedAll = await Promise.all(
@@ -82,9 +82,46 @@ export class CategoryService {
     });
 
     return parents.map((p) => {
-      p.children = childrenMap.get(p.id) || [];
+      p.children = (childrenMap.get(p.id) || []).sort((a, b) => (a.menuOrder ?? 0) - (b.menuOrder ?? 0));
       return p;
     });
+  }
+
+  async getNavMenu(): Promise<Category[]> {
+    const all = await this.repo.find({
+      where: { status: CategoryStatus.ACTIVE, showInMenu: true },
+      order: { menuOrder: 'ASC', name: 'ASC' },
+    });
+
+    const resolvedAll = await Promise.all(
+      all.map((cat) => this.mediaService.resolveItemMedia(cat)),
+    );
+
+    const parents = resolvedAll.filter((c) => !c.parentId);
+    const childrenMap = new Map<string, Category[]>();
+
+    resolvedAll.forEach((c) => {
+      if (c.parentId) {
+        const list = childrenMap.get(c.parentId) || [];
+        list.push(c);
+        childrenMap.set(c.parentId, list);
+      }
+    });
+
+    return parents.map((p) => {
+      p.children = (childrenMap.get(p.id) || []).sort((a, b) => (a.menuOrder ?? 0) - (b.menuOrder ?? 0));
+      return p;
+    });
+  }
+
+  async reorderCategories(items: { id: string; menuOrder: number }[]): Promise<boolean> {
+    if (!items || items.length === 0) return true;
+    await AppDataSource.transaction(async (transactionalEntityManager) => {
+      for (const item of items) {
+        await transactionalEntityManager.update(Category, { id: item.id }, { menuOrder: item.menuOrder });
+      }
+    });
+    return true;
   }
 
   async getById(id: string): Promise<Category> {
@@ -132,6 +169,8 @@ export class CategoryService {
       type: dto.type,
       description: dto.description.trim(),
       status: dto.status,
+      showInMenu: dto.showInMenu !== undefined ? dto.showInMenu : true,
+      menuOrder: dto.menuOrder !== undefined ? dto.menuOrder : 0,
       itemCount: 0,
       mediaId: dto.mediaId || null,
       parentId: dto.parentId || null,
@@ -170,6 +209,8 @@ export class CategoryService {
     if (dto.type) category.type = dto.type;
     if (dto.description !== undefined) category.description = dto.description.trim();
     if (dto.status) category.status = dto.status;
+    if (dto.showInMenu !== undefined) category.showInMenu = dto.showInMenu;
+    if (dto.menuOrder !== undefined) category.menuOrder = dto.menuOrder;
     if (dto.mediaId !== undefined) category.mediaId = dto.mediaId || null;
     if (dto.parentId !== undefined) category.parentId = dto.parentId || null;
 

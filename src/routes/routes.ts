@@ -567,6 +567,8 @@ const models: TsoaRoute.Models = {
             "description": {"dataType":"string","required":true},
             "itemCount": {"dataType":"double","required":true},
             "status": {"ref":"CategoryStatus","required":true},
+            "showInMenu": {"dataType":"boolean","required":true},
+            "menuOrder": {"dataType":"double","required":true},
             "image": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
             "mediaId": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
             "parentId": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
@@ -1987,6 +1989,8 @@ const models: TsoaRoute.Models = {
             "type": {"ref":"CategoryType","required":true},
             "description": {"dataType":"string","required":true},
             "status": {"ref":"CategoryStatus","required":true},
+            "showInMenu": {"dataType":"boolean"},
+            "menuOrder": {"dataType":"double"},
             "mediaId": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
             "parentId": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
         },
@@ -2001,6 +2005,8 @@ const models: TsoaRoute.Models = {
             "type": {"ref":"CategoryType"},
             "description": {"dataType":"string"},
             "status": {"ref":"CategoryStatus"},
+            "showInMenu": {"dataType":"boolean"},
+            "menuOrder": {"dataType":"double"},
             "mediaId": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
             "parentId": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
         },
@@ -3207,6 +3213,35 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
               await templateService.apiHandler({
                 methodName: 'getAll',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsCategoryController_getNavMenu: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/categories/nav',
+            ...(fetchMiddlewares<RequestHandler>(CategoryController)),
+            ...(fetchMiddlewares<RequestHandler>(CategoryController.prototype.getNavMenu)),
+
+            async function CategoryController_getNavMenu(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsCategoryController_getNavMenu, request, response });
+
+                const controller = new CategoryController();
+
+              await templateService.apiHandler({
+                methodName: 'getNavMenu',
                 controller,
                 response,
                 next,
@@ -4963,6 +4998,37 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
               await templateService.apiHandler({
                 methodName: 'create',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminCategoryController_reorder: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"items":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"menuOrder":{"dataType":"double","required":true},"id":{"dataType":"string","required":true}}},"required":true}}},
+        };
+        app.put('/admin/categories/reorder',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminCategoryController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminCategoryController.prototype.reorder)),
+
+            async function AdminCategoryController_reorder(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminCategoryController_reorder, request, response });
+
+                const controller = new AdminCategoryController();
+
+              await templateService.apiHandler({
+                methodName: 'reorder',
                 controller,
                 response,
                 next,

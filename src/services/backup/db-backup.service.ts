@@ -97,9 +97,15 @@ export class DbBackupService {
       }
       dataSql += `SET FOREIGN_KEY_CHECKS = 1;\n`;
 
-      // 4. Upload to Cloudflare R2
-      const schemaKey = `backups/${monthDir}/schema-${formattedDate}.sql`;
-      const dataKey = `backups/${monthDir}/values-${formattedDate}.sql`;
+      // 4. Upload to Cloudflare R2 inside private folder organized by date (e.g. private/backups/2026-08-31/)
+      const now = new Date();
+      const currentDate = now.toISOString().slice(0, 10); // e.g. 2026-08-31
+      const currentTime = now.toISOString().slice(11, 16).replace(':', ''); // e.g. 0132
+
+      const schemaKey = `private/backups/${currentDate}/schema-${currentTime}.sql`;
+      const dataKey = `private/backups/${currentDate}/values-${currentTime}.sql`;
+      const schemaLatestKey = `private/backups/${currentDate}/schema.sql`;
+      const dataLatestKey = `private/backups/${currentDate}/values.sql`;
 
       let schemaUrl = '';
       let dataUrl = '';
@@ -108,11 +114,16 @@ export class DbBackupService {
         const schemaBuffer = Buffer.from(schemaSql, 'utf-8');
         const dataBuffer = Buffer.from(dataSql, 'utf-8');
 
+        // Upload timestamped files
         schemaUrl = await R2Util.upload(schemaKey, schemaBuffer, 'application/sql');
         dataUrl = await R2Util.upload(dataKey, dataBuffer, 'application/sql');
 
-        console.log(`[DB Backup] Uploaded Schema SQL: ${schemaUrl}`);
-        console.log(`[DB Backup] Uploaded Values SQL: ${dataUrl}`);
+        // Also upload canonical schema.sql & values.sql in current date folder
+        await R2Util.upload(schemaLatestKey, schemaBuffer, 'application/sql');
+        await R2Util.upload(dataLatestKey, dataBuffer, 'application/sql');
+
+        console.log(`[DB Backup] Uploaded Private Schema SQL: ${schemaKey} & ${schemaLatestKey}`);
+        console.log(`[DB Backup] Uploaded Private Values SQL: ${dataKey} & ${dataLatestKey}`);
       } else {
         console.warn(
           '[DB Backup] Cloudflare R2 credentials not set. Backup generated locally in memory.',
@@ -122,7 +133,14 @@ export class DbBackupService {
       await this.auditLogService.log({
         action: 'SYSTEM_BACKUP',
         entityType: AuditEntityType.SETTING,
-        metadata: { schemaKey, dataKey, schemaUrl, dataUrl, tableCount: tableNames.length },
+        metadata: {
+          privateFolder: `private/backups/${currentDate}/`,
+          schemaKey,
+          dataKey,
+          schemaLatestKey,
+          dataLatestKey,
+          tableCount: tableNames.length,
+        },
       });
 
       return {

@@ -145,9 +145,44 @@ export class CategoryService {
     return this.mediaService.resolveItemMedia(item);
   }
 
+  private async validateCategoryHierarchy(
+    categoryId: string | null,
+    parentId: string | null,
+  ): Promise<void> {
+    if (!parentId) return;
+
+    if (categoryId && parentId === categoryId) {
+      throw AppError.badRequest('A category cannot be its own parent.');
+    }
+
+    const parentCategory = await this.repo.findOne({ where: { id: parentId } });
+    if (!parentCategory) {
+      throw AppError.notFound('Selected parent category does not exist.');
+    }
+
+    if (parentCategory.parentId) {
+      throw AppError.badRequest(
+        'Categories can only be nested up to 2 levels deep. Selected parent is already a subcategory.',
+      );
+    }
+
+    if (categoryId) {
+      const childCount = await this.repo.count({ where: { parentId: categoryId } });
+      if (childCount > 0) {
+        throw AppError.badRequest(
+          'A category that has subcategories cannot be assigned a parent category.',
+        );
+      }
+    }
+  }
+
   async create(dto: CreateCategoryDto): Promise<Category> {
     if (dto.mediaId) {
       await this.mediaService.validateMediaExists(dto.mediaId);
+    }
+
+    if (dto.parentId) {
+      await this.validateCategoryHierarchy(null, dto.parentId);
     }
 
     const rawSlug = dto.slug || dto.name;
@@ -185,6 +220,13 @@ export class CategoryService {
     }
 
     const category = await this.getById(id);
+
+    if (dto.parentId !== undefined) {
+      const targetParentId = dto.parentId || null;
+      if (targetParentId !== category.parentId) {
+        await this.validateCategoryHierarchy(id, targetParentId);
+      }
+    }
 
     if (dto.slug !== undefined) {
       const newSlug = dto.slug.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');

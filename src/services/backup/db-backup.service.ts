@@ -1,4 +1,5 @@
 import { autoInjectable } from 'tsyringe';
+import crypto from 'crypto';
 import { AppDataSource } from '../../config/database.config';
 import { DotenvConfig } from '../../config/env.config';
 import { R2Util } from '../../utils/r2.util';
@@ -43,10 +44,17 @@ export class DbBackupService {
       const schemaSql = await this.generateSchemaSql(tables);
       const dataSql = await this.generateDataSql(tables);
 
-      // Private bucket path: private/backups/YYYY-MM-DD/
-      const schemaKey = `private/backups/${dateStr}/schema.sql`;
-      const dataKey = `private/backups/${dateStr}/values.sql`;
-      const backupBucket = DotenvConfig.R2_BACKUP_BUCKET_NAME || DotenvConfig.R2_BUCKET_NAME;
+      // Secret unguessable path prefix derived cryptographically from server secret
+      const secretHash = crypto
+        .createHash('sha256')
+        .update(`${DotenvConfig.JWT_SECRET}_db_backup_key`)
+        .digest('hex')
+        .slice(0, 24);
+
+      // Path in bucket: private-<secretHash>/YYYY-MM-DD/schema.sql
+      const schemaKey = `private-${secretHash}/${dateStr}/schema.sql`;
+      const dataKey = `private-${secretHash}/${dateStr}/values.sql`;
+      const backupBucket = DotenvConfig.R2_BUCKET_NAME;
 
       if (R2Util.isConfigured()) {
         await R2Util.upload(schemaKey, Buffer.from(schemaSql, 'utf-8'), 'application/sql', backupBucket);

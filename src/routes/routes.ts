@@ -495,10 +495,23 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ApiResponse_Notification-Array_": {
+    "PaginatedNotificationResponse": {
         "dataType": "refObject",
         "properties": {
-            "data": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"Notification"}},{"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"Notification"}}},{"dataType":"enum","enums":[null]}],"required":true},
+            "items": {"dataType":"array","array":{"dataType":"refObject","ref":"Notification"},"required":true},
+            "total": {"dataType":"double","required":true},
+            "unreadCount": {"dataType":"double","required":true},
+            "page": {"dataType":"double","required":true},
+            "limit": {"dataType":"double","required":true},
+            "totalPages": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ApiResponse_PaginatedNotificationResponse_": {
+        "dataType": "refObject",
+        "properties": {
+            "data": {"dataType":"union","subSchemas":[{"ref":"PaginatedNotificationResponse"},{"dataType":"array","array":{"dataType":"refObject","ref":"PaginatedNotificationResponse"}},{"dataType":"enum","enums":[null]}],"required":true},
             "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
@@ -2746,6 +2759,9 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsNotificationController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
+                page: {"in":"query","name":"page","dataType":"double"},
+                limit: {"in":"query","name":"limit","dataType":"double"},
+                isRead: {"in":"query","name":"isRead","dataType":"boolean"},
         };
         app.get('/notifications',
             authenticateMiddleware([{"jwt":["admin"]}]),

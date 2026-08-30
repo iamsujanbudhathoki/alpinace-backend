@@ -12,7 +12,11 @@ import {
 } from 'tsoa';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
 import { Notification } from '../../entities/notification/Notification.entity';
-import { NotificationService, PaginatedNotifications } from '../../services/notification/notification.service';
+import {
+  NotificationService,
+  PaginatedNotifications,
+  PaginatedNotificationResponse,
+} from '../../services/notification/notification.service';
 
 @Route('notifications')
 @Tags('Notifications')
@@ -23,9 +27,25 @@ export class NotificationController extends Controller {
   }
 
   @Get('')
-  async getAll(): Promise<ApiResponse<Notification[]>> {
-    const data = await this.svc.getAll();
-    return { data, message: 'Notifications retrieved successfully', success: true };
+  async getAll(
+    @Query() page?: number,
+    @Query() limit?: number,
+    @Query() isRead?: boolean,
+  ): Promise<ApiResponse<PaginatedNotificationResponse>> {
+    const pageNum = page && page > 0 ? Number(page) : 1;
+    const limitNum = limit && limit > 0 ? Number(limit) : 10;
+
+    const data = await this.svc.getAllPaginated({
+      page: pageNum,
+      limit: limitNum,
+      isRead,
+    });
+
+    return {
+      data,
+      message: 'Notifications retrieved successfully',
+      success: true,
+    };
   }
 
   @Get('paged')

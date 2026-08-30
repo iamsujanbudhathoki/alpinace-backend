@@ -1209,22 +1209,56 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"ApiResponse_Notification-Array_": {
+			"PaginatedNotificationResponse": {
+				"properties": {
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/Notification"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"unreadCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"page": {
+						"type": "number",
+						"format": "double"
+					},
+					"limit": {
+						"type": "number",
+						"format": "double"
+					},
+					"totalPages": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"items",
+					"total",
+					"unreadCount",
+					"page",
+					"limit",
+					"totalPages"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_PaginatedNotificationResponse_": {
 				"properties": {
 					"data": {
 						"anyOf": [
 							{
-								"items": {
-									"$ref": "#/components/schemas/Notification"
-								},
-								"type": "array"
+								"$ref": "#/components/schemas/PaginatedNotificationResponse"
 							},
 							{
 								"items": {
-									"items": {
-										"$ref": "#/components/schemas/Notification"
-									},
-									"type": "array"
+									"$ref": "#/components/schemas/PaginatedNotificationResponse"
 								},
 								"type": "array"
 							}
@@ -7401,7 +7435,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ApiResponse_Notification-Array_"
+									"$ref": "#/components/schemas/ApiResponse_PaginatedNotificationResponse_"
 								}
 							}
 						}
@@ -7417,7 +7451,34 @@
 						]
 					}
 				],
-				"parameters": []
+				"parameters": [
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "isRead",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				]
 			}
 		},
 		"/notifications/paged": {

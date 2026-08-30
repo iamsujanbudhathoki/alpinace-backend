@@ -2,6 +2,15 @@ import { autoInjectable } from 'tsyringe';
 import { AppDataSource } from '../../config/database.config';
 import { Notification, NotificationType } from '../../entities/notification/Notification.entity';
 
+export interface PaginatedNotificationResponse {
+  items: Notification[];
+  total: number;
+  unreadCount: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 export interface PaginatedNotifications {
   items: Notification[];
   total: number;
@@ -14,8 +23,34 @@ export interface PaginatedNotifications {
 export class NotificationService {
   private repo = AppDataSource.getRepository(Notification);
 
-  async getAll(): Promise<Notification[]> {
-    return this.repo.find({ order: { createdAt: 'DESC' } });
+  async getAllPaginated(params?: {
+    page?: number;
+    limit?: number;
+    isRead?: boolean;
+    type?: NotificationType;
+  }): Promise<PaginatedNotificationResponse> {
+    const qb = this.repo.createQueryBuilder('n');
+
+    if (params?.isRead !== undefined) {
+      qb.andWhere('n.isRead = :isRead', { isRead: params.isRead });
+    }
+
+    if (params?.type) {
+      qb.andWhere('n.type = :type', { type: params.type });
+    }
+
+    qb.orderBy('n.createdAt', 'DESC');
+
+    const limit = params?.limit && params.limit > 0 ? params.limit : 10;
+    const page = params?.page && params.page > 0 ? params.page : 1;
+
+    qb.take(limit).skip((page - 1) * limit);
+
+    const [items, total] = await qb.getManyAndCount();
+    const unreadCount = await this.repo.count({ where: { isRead: false } });
+    const totalPages = Math.ceil(total / limit) || 1;
+
+    return { items, total, unreadCount, page, limit, totalPages };
   }
 
   async getPaged(limit: number = 10, offset: number = 0): Promise<PaginatedNotifications> {

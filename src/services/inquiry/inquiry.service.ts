@@ -10,12 +10,18 @@ import { AppError } from '../../utils/appError.util';
 import emailUtil from '../../utils/email.util';
 import { NotificationService } from '../notification/notification.service';
 import { TurnstileService } from '../turnstile/turnstile.service';
+import { AuditLogService } from '../audit-log/audit-log.service';
+import { AuditEntityType } from '../../constants/audit.constants';
 
 @autoInjectable()
 export class InquiryService {
   private repo = AppDataSource.getRepository(Inquiry);
   private notifSvc = new NotificationService();
   private turnstileSvc = new TurnstileService();
+
+  constructor(
+    private auditLogService: AuditLogService = new AuditLogService(),
+  ) {}
 
   async getAll(params?: {
     status?: InquiryStatus;
@@ -104,15 +110,19 @@ export class InquiryService {
         console.error('[Nodemailer] Background email send error:', err),
       );
 
+    await this.auditLogService.logCreate(AuditEntityType.INQUIRY, saved.id, saved);
     return saved;
   }
 
   async update(id: string, dto: UpdateInquiryDto): Promise<Inquiry> {
     const inquiry = await this.getById(id);
+    const oldState = { ...inquiry };
     if (dto.status) inquiry.status = dto.status;
     if (dto.type) inquiry.type = dto.type;
     if (dto.notes !== undefined) inquiry.notes = dto.notes;
-    return this.repo.save(inquiry);
+    const saved = await this.repo.save(inquiry);
+    await this.auditLogService.logUpdate(AuditEntityType.INQUIRY, saved.id, oldState, saved);
+    return saved;
   }
 
   async sendQuote(
@@ -120,6 +130,7 @@ export class InquiryService {
     dto: { message: string; status?: InquiryStatus },
   ): Promise<Inquiry> {
     const inquiry = await this.getById(id);
+    const oldState = { ...inquiry };
 
     // Apply status update if provided
     if (dto.status) {
@@ -128,6 +139,9 @@ export class InquiryService {
 
     // Persist any status changes in a single save
     const saved = await this.repo.save(inquiry);
+    await this.auditLogService.logUpdate(AuditEntityType.INQUIRY, saved.id, oldState, saved, {
+      metadata: { quoteSent: true, customMessageProvided: Boolean(dto.message) },
+    });
 
     // Only dispatch email if a non-empty message was provided
     const hasMessage =
@@ -160,7 +174,9 @@ export class InquiryService {
 
   async delete(id: string): Promise<boolean> {
     const inquiry = await this.getById(id);
+    const oldState = { ...inquiry };
     await this.repo.remove(inquiry);
+    await this.auditLogService.logDelete(AuditEntityType.INQUIRY, id, oldState);
     return true;
   }
 }

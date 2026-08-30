@@ -11,8 +11,12 @@ import cors from 'cors';
 import swaggerDocument from '../../public/swagger.json';
 import compression from 'compression';
 import { authLimiter, generalLimiter, inquiryLimiter } from './rate-limiter.middleware';
+import { requestContextMiddleware } from './request-context.middleware';
 
 export const configMiddleware = (app: express.Application) => {
+  // Global Request Context & Correlation ID Middleware
+  app.use(requestContextMiddleware);
+
   // Trust proxy for rate limiting behind reverse proxies (Vercel, Render, Nginx, Cloudflare)
   app.set('trust proxy', 1);
 

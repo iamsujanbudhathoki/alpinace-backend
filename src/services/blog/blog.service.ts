@@ -10,13 +10,18 @@ import {
 import { AppError } from '../../utils/appError.util';
 
 import { MediaService } from '../media/media.service';
+import { AuditLogService } from '../audit-log/audit-log.service';
+import { AuditEntityType } from '../../constants/audit.constants';
 
 @autoInjectable()
 export class BlogService {
   private repo = AppDataSource.getRepository(BlogArticle);
   private categoryRepo = AppDataSource.getRepository(Category);
 
-  constructor(private mediaService: MediaService = new MediaService()) {}
+  constructor(
+    private mediaService: MediaService = new MediaService(),
+    private auditLogService: AuditLogService = new AuditLogService(),
+  ) {}
 
   async getPublicAll(
     status?: BlogStatus,
@@ -162,6 +167,7 @@ export class BlogService {
     });
 
     const saved = await this.repo.save(blog);
+    await this.auditLogService.logCreate(AuditEntityType.BLOG, saved.id, saved);
     return this.mediaService.resolveItemMedia(saved);
   }
 
@@ -171,6 +177,7 @@ export class BlogService {
     }
 
     const article = await this.getByIdOrSlug(id);
+    const oldState = { ...article };
 
     if (dto.title && dto.title !== article.title) {
       article.title = dto.title;
@@ -190,6 +197,7 @@ export class BlogService {
     if (dto.keywords !== undefined) article.keywords = dto.keywords;
 
     const saved = await this.repo.save(article);
+    await this.auditLogService.logUpdate(AuditEntityType.BLOG, saved.id, oldState, saved);
     return this.mediaService.resolveItemMedia(saved);
   }
 
@@ -203,7 +211,9 @@ export class BlogService {
 
   async delete(id: string): Promise<boolean> {
     const article = await this.getByIdOrSlug(id);
+    const oldState = { ...article };
     await this.repo.remove(article);
+    await this.auditLogService.logDelete(AuditEntityType.BLOG, id, oldState);
     return true;
   }
 }

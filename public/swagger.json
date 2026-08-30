@@ -6238,6 +6238,112 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"AuditLog": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"action": {
+						"type": "string"
+					},
+					"entityType": {
+						"type": "string"
+					},
+					"entityId": {
+						"type": "string",
+						"nullable": true
+					},
+					"userId": {
+						"type": "string",
+						"nullable": true
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"oldData": {
+						"nullable": true
+					},
+					"newData": {
+						"nullable": true
+					},
+					"metadata": {
+						"nullable": true
+					},
+					"ipAddress": {
+						"type": "string",
+						"nullable": true
+					},
+					"userAgent": {
+						"type": "string",
+						"nullable": true
+					},
+					"requestId": {
+						"type": "string",
+						"nullable": true
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"action",
+					"entityType",
+					"entityId",
+					"userId",
+					"success",
+					"oldData",
+					"newData",
+					"metadata",
+					"ipAddress",
+					"userAgent",
+					"requestId",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_AuditLog-Array_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"items": {
+									"$ref": "#/components/schemas/AuditLog"
+								},
+								"type": "array"
+							},
+							{
+								"items": {
+									"items": {
+										"$ref": "#/components/schemas/AuditLog"
+									},
+									"type": "array"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"AboutUsValueItem": {
 				"properties": {
 					"title": {
@@ -8107,6 +8213,14 @@
 						"schema": {
 							"format": "double",
 							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "showInMenu",
+						"required": false,
+						"schema": {
+							"type": "boolean"
 						}
 					}
 				]
@@ -10789,6 +10903,14 @@
 						"schema": {
 							"type": "boolean"
 						}
+					},
+					{
+						"in": "query",
+						"name": "showInMenu",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
 					}
 				]
 			},
@@ -11440,6 +11562,110 @@
 						"required": true,
 						"schema": {
 							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/admin/audit-logs": {
+			"get": {
+				"operationId": "GetAuditLogs",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_AuditLog-Array_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Protected Admin-only endpoint for querying historical activity & security audit logs.\nLogs are strictly immutable and cannot be updated or deleted.",
+				"tags": [
+					"Admin Audit Logs"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "action",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "entityType",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "entityId",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "userId",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "startDate",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "endDate",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
 						}
 					}
 				]

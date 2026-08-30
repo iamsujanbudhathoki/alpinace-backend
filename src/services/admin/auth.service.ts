@@ -6,10 +6,15 @@ import { AdminLoginResponse } from '../../interfaces/admin.interface';
 import BcryptService from '../../utils/bcrypt.util';
 import { JwtUtil } from '../../utils/jwt.util';
 import { AppError } from '../../utils/appError.util';
+import { AuditLogService } from '../audit-log/audit-log.service';
 
 @autoInjectable()
 export class AdminAuthService {
   private adminRepo = AppDataSource.getRepository(Admin);
+
+  constructor(
+    private auditLogService: AuditLogService = new AuditLogService(),
+  ) {}
 
   async login(data: AdminAuthSchema): Promise<AdminLoginResponse> {
     const admin = await this.adminRepo.findOne({
@@ -26,10 +31,19 @@ export class AdminAuthService {
     });
 
     if (!admin) {
+      await this.auditLogService.logLoginFailed(
+        data.email,
+        'Invalid email address',
+      );
       throw AppError.unAuthorized('Invalid email or password');
     }
 
     if (!admin.isActive) {
+      await this.auditLogService.logLoginFailed(
+        data.email,
+        'Account is disabled',
+        { userId: admin.id },
+      );
       throw AppError.forbidden('Account is disabled');
     }
 
@@ -38,11 +52,22 @@ export class AdminAuthService {
       admin.password,
     );
     if (!isValidPassword) {
+      await this.auditLogService.logLoginFailed(
+        data.email,
+        'Invalid password',
+        { userId: admin.id },
+      );
       throw AppError.unAuthorized('Invalid email or password');
     }
 
     const token = JwtUtil.generateToken({
       id: admin.id,
+      email: admin.email,
+      role: admin.role,
+    });
+
+    // Log successful login
+    await this.auditLogService.logLogin(admin.id, {
       email: admin.email,
       role: admin.role,
     });

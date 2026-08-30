@@ -23,6 +23,7 @@ import { NotificationService } from '../../services/notification/notification.se
 import { NotificationType } from '../../entities/notification/Notification.entity';
 import EmailUtil from '../../utils/email.util';
 import { DotenvConfig, Environment } from '../../config/env.config';
+import { AuditLogService } from '../../services/audit-log/audit-log.service';
 
 async function resolveLocation(ip: string): Promise<string> {
   if (
@@ -65,6 +66,7 @@ export class AdminAuthController extends Controller {
   constructor(
     private adminAuthService: AdminAuthService = new AdminAuthService(),
     private notificationService: NotificationService = new NotificationService(),
+    private auditLogService: AuditLogService = new AuditLogService(),
   ) {
     super();
   }
@@ -165,6 +167,11 @@ export class AdminAuthController extends Controller {
 
   @Post('logout')
   async logout(@Request() req: express.Request): Promise<ApiResponse<null>> {
+    const authUser = (req as any).user;
+    if (authUser && authUser.id) {
+      await this.auditLogService.logLogout(authUser.id);
+    }
+
     const isProd = DotenvConfig.NODE_ENV === Environment.PRODUCTION;
     if (req.res) {
       req.res.clearCookie('auth_token', {

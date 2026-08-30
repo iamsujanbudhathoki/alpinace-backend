@@ -10,6 +10,8 @@ import { R2Util } from '../../utils/r2.util';
 import path from 'path';
 import fs from 'fs';
 import { Category } from '../../entities/category/Category.entity';
+import { AuditLogService } from '../audit-log/audit-log.service';
+import { AuditEntityType } from '../../constants/audit.constants';
 
 export interface MediaUploadResult {
   id: string;
@@ -29,6 +31,10 @@ export interface MediaUploadResult {
 @autoInjectable()
 export class MediaService {
   private mediaRepo = AppDataSource.getRepository(Media);
+
+  constructor(
+    private auditLogService: AuditLogService = new AuditLogService(),
+  ) {}
 
   private getUploadDirectory(): string {
     const uploadDir = path.join(process.cwd(), 'uploads');
@@ -116,6 +122,7 @@ export class MediaService {
     media.path = finalPath;
 
     const saved = await this.mediaRepo.save(media);
+    await this.auditLogService.logCreate(AuditEntityType.MEDIA, saved.id, saved);
     const reloaded = await this.mediaRepo.findOne({
       where: { id: saved.id },
       relations: ['category'],
@@ -209,6 +216,7 @@ export class MediaService {
     if (!media) {
       throw AppError.notFound('Media asset not found');
     }
+    const oldState = { ...media };
 
     if (data.title !== undefined) media.title = data.title;
     if (data.categoryId !== undefined) media.categoryId = data.categoryId;
@@ -216,6 +224,8 @@ export class MediaService {
     if (data.altText !== undefined) media.altText = data.altText;
 
     const saved = await this.mediaRepo.save(media);
+    await this.auditLogService.logUpdate(AuditEntityType.MEDIA, saved.id, oldState, saved);
+
     const reloaded = await this.mediaRepo.findOne({
       where: { id: saved.id },
       relations: ['category'],
@@ -241,6 +251,7 @@ export class MediaService {
   async delete(id: string): Promise<boolean> {
     const media = await this.mediaRepo.findOne({ where: { id } });
     if (!media) return false;
+    const oldState = { ...media };
 
     // Delete from Cloudflare R2 if it was stored there
     if (media.path.startsWith('http')) {
@@ -259,6 +270,7 @@ export class MediaService {
     }
 
     await this.mediaRepo.remove(media);
+    await this.auditLogService.logDelete(AuditEntityType.MEDIA, id, oldState);
     return true;
   }
 

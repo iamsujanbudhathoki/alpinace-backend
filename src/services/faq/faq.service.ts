@@ -5,10 +5,16 @@ import { CreateFaqDto, UpdateFaqDto } from '../../schemas/faq.schema';
 import { FaqQueryParamsDto } from '../../schemas/query-params.schema';
 import { applyBaseQueryParams } from '../../utils/query-builder.util';
 import { AppError } from '../../utils/appError.util';
+import { AuditLogService } from '../audit-log/audit-log.service';
+import { AuditEntityType } from '../../constants/audit.constants';
 
 @autoInjectable()
 export class FaqService {
   private repo = AppDataSource.getRepository(Faq);
+
+  constructor(
+    private auditLogService: AuditLogService = new AuditLogService(),
+  ) {}
 
   async getAll(params: FaqQueryParamsDto = {}): Promise<[Faq[], number]> {
     const qb = this.repo.createQueryBuilder('faq');
@@ -43,18 +49,25 @@ export class FaqService {
       order: orderVal,
     });
 
-    return this.repo.save(faq);
+    const saved = await this.repo.save(faq);
+    await this.auditLogService.logCreate(AuditEntityType.FAQ, saved.id, saved);
+    return saved;
   }
 
   async update(id: string, dto: UpdateFaqDto): Promise<Faq> {
     const faq = await this.getById(id);
+    const oldState = { ...faq };
     Object.assign(faq, dto);
-    return this.repo.save(faq);
+    const saved = await this.repo.save(faq);
+    await this.auditLogService.logUpdate(AuditEntityType.FAQ, saved.id, oldState, saved);
+    return saved;
   }
 
   async delete(id: string): Promise<boolean> {
     const faq = await this.getById(id);
+    const oldState = { ...faq };
     await this.repo.remove(faq);
+    await this.auditLogService.logDelete(AuditEntityType.FAQ, id, oldState);
     return true;
   }
 
@@ -67,6 +80,7 @@ export class FaqService {
       }
     });
 
+    await this.auditLogService.logOrdering(AuditEntityType.FAQ, items.length, null, items);
     return true;
   }
 }

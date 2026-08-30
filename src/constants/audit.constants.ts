@@ -1,0 +1,33 @@
+export enum AuditAction {
+  LOGIN = 'LOGIN',
+  LOGIN_FAILED = 'LOGIN_FAILED',
+  LOGOUT = 'LOGOUT',
+  CREATE = 'CREATE',
+  UPDATE = 'UPDATE',
+  DELETE = 'DELETE',
+  ORDERING_CHANGED = 'ORDERING_CHANGED',
+  MENU_VISIBILITY_CHANGED = 'MENU_VISIBILITY_CHANGED',
+  STATUS_CHANGED = 'STATUS_CHANGED',
+  PASSWORD_CHANGED = 'PASSWORD_CHANGED',
+  PASSWORD_RESET = 'PASSWORD_RESET',
+  ROLE_CHANGED = 'ROLE_CHANGED',
+}
+
+export enum AuditEntityType {
+  AUTH = 'AUTH',
+  ADMIN = 'Admin',
+  CATEGORY = 'Category',
+  SUBCATEGORY = 'Subcategory',
+  TREK = 'Trek',
+  TOUR = 'Tour',
+  EXPEDITION = 'Expedition',
+  TEAM = 'Team',
+  TESTIMONIAL = 'Testimonial',
+  FAQ = 'FAQ',
+  ABOUT_US = 'AboutUs',
+  INQUIRY = 'Inquiry',
+  BOOKING = 'Booking',
+  MEDIA = 'Media',
+  BLOG = 'BlogArticle',
+  SETTING = 'Setting',
+}

@@ -15,6 +15,8 @@ import { AppError } from '../../utils/appError.util';
 
 import { MediaService } from '../media/media.service';
 import { CategoryService } from '../category/category.service';
+import { AuditLogService } from '../audit-log/audit-log.service';
+import { AuditEntityType } from '../../constants/audit.constants';
 
 @autoInjectable()
 export class TrekService {
@@ -24,6 +26,7 @@ export class TrekService {
   constructor(
     private mediaService: MediaService = new MediaService(),
     private categoryService: CategoryService = new CategoryService(),
+    private auditLogService: AuditLogService = new AuditLogService(),
   ) { }
 
   async getPublicAll(params?: {
@@ -337,6 +340,7 @@ export class TrekService {
     } as Partial<Trek>);
 
     const saved = await this.repo.save(trek);
+    await this.auditLogService.logCreate(AuditEntityType.TREK, saved.id, saved);
     return this.mediaService.resolveItemMedia(saved);
   }
 
@@ -348,6 +352,7 @@ export class TrekService {
     ]);
 
     const trek = await this.getByIdOrSlug(id);
+    const oldState = { ...trek };
 
     const targetCategoryId =
       dto.categoryId !== undefined ? dto.categoryId : trek.categoryId;
@@ -408,12 +413,16 @@ export class TrekService {
     if (dto.keywords !== undefined) trek.keywords = dto.keywords;
 
     const saved = await this.repo.save(trek);
+    await this.auditLogService.logUpdate(AuditEntityType.TREK, saved.id, oldState, saved);
+
     return this.mediaService.resolveItemMedia(saved);
   }
 
   async delete(id: string): Promise<boolean> {
     const trek = await this.getByIdOrSlug(id);
+    const oldState = { ...trek };
     await this.repo.remove(trek);
+    await this.auditLogService.logDelete(AuditEntityType.TREK, id, oldState);
     return true;
   }
 

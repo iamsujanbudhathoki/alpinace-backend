@@ -3,10 +3,16 @@ import { AppDataSource } from '../../config/database.config';
 import { Setting } from '../../entities/setting/Setting.entity';
 import { Media } from '../../entities/media/media.entity';
 import { UpdateSettingsDto } from '../../schemas/setting.schema';
+import { AuditLogService } from '../audit-log/audit-log.service';
+import { AuditEntityType } from '../../constants/audit.constants';
 
 @autoInjectable()
 export class SettingService {
   private repo = AppDataSource.getRepository(Setting);
+
+  constructor(
+    private auditLogService: AuditLogService = new AuditLogService(),
+  ) {}
 
   async getAll(): Promise<Record<string, string>> {
     const settings = await this.repo.find();
@@ -82,6 +88,8 @@ export class SettingService {
   }
 
   async update(dto: UpdateSettingsDto): Promise<Record<string, string>> {
+    const oldSettings = await this.getAll();
+
     for (const [key, value] of Object.entries(dto)) {
       if (value !== undefined) {
         const valStr =
@@ -97,6 +105,15 @@ export class SettingService {
         await this.repo.save(setting);
       }
     }
-    return this.getAll();
+
+    const newSettings = await this.getAll();
+    await this.auditLogService.logUpdate(
+      AuditEntityType.SETTING,
+      'global',
+      oldSettings,
+      newSettings,
+    );
+
+    return newSettings;
   }
 }

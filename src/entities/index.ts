@@ -14,3 +14,5 @@ export * from './setting/Setting.entity';
 export * from './faq/Faq.entity';
 export * from './about-us/AboutUs.entity';
 export * from './testimonial/Testimonial.entity';
+export * from './log/AuditLog.entity';
+

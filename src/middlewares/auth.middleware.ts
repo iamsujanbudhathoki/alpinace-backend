@@ -3,6 +3,8 @@ import { JwtUtil, JwtPayload } from '../utils/jwt.util';
 import { AppDataSource } from '../config/database.config';
 import { Admin } from '../entities/admin/Admin.entity';
 import { AppError } from '../utils/appError.util';
+import { RequestContext } from '../utils/request-context.util';
+
 
 export async function expressAuthentication(
   request: express.Request,
@@ -70,10 +72,14 @@ export async function expressAuthentication(
       };
 
       (request as any).user = authUser;
+      RequestContext.setUser(authUser);
       return authUser;
     }
 
     (request as any).user = payload;
+    if (payload && payload.id) {
+      RequestContext.setUser({ id: payload.id, email: payload.email, role: payload.role });
+    }
     return payload;
   }
 

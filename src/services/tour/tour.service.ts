@@ -15,6 +15,8 @@ import { AppError } from '../../utils/appError.util';
 
 import { MediaService } from '../media/media.service';
 import { CategoryService } from '../category/category.service';
+import { AuditLogService } from '../audit-log/audit-log.service';
+import { AuditEntityType } from '../../constants/audit.constants';
 
 @autoInjectable()
 export class TourService {
@@ -24,6 +26,7 @@ export class TourService {
   constructor(
     private mediaService: MediaService = new MediaService(),
     private categoryService: CategoryService = new CategoryService(),
+    private auditLogService: AuditLogService = new AuditLogService(),
   ) { }
 
   async getPublicAll(params?: {
@@ -330,6 +333,7 @@ export class TourService {
     } as Partial<Tour>);
 
     const saved = await this.repo.save(tour);
+    await this.auditLogService.logCreate(AuditEntityType.TOUR, saved.id, saved);
     return this.mediaService.resolveItemMedia(saved);
   }
 
@@ -341,6 +345,7 @@ export class TourService {
     ]);
 
     const tour = await this.getByIdOrSlug(id);
+    const oldState = { ...tour };
 
     const targetCategoryId =
       dto.categoryId !== undefined ? dto.categoryId : tour.categoryId;
@@ -403,12 +408,16 @@ export class TourService {
     if (dto.keywords !== undefined) tour.keywords = dto.keywords;
 
     const saved = await this.repo.save(tour);
+    await this.auditLogService.logUpdate(AuditEntityType.TOUR, saved.id, oldState, saved);
+
     return this.mediaService.resolveItemMedia(saved);
   }
 
   async delete(id: string): Promise<boolean> {
     const tour = await this.getByIdOrSlug(id);
+    const oldState = { ...tour };
     await this.repo.remove(tour);
+    await this.auditLogService.logDelete(AuditEntityType.TOUR, id, oldState);
     return true;
   }
 

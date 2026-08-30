@@ -48,6 +48,7 @@ export class AdminCategoryController extends Controller {
     @Query() page?: number,
     @Query() parentId?: string,
     @Query() parentsOnly?: boolean,
+    @Query() showInMenu?: boolean,
   ): Promise<ApiResponse<Category[]>> {
     const dataTotalCount = await this.categoryService.getAll({
       status,
@@ -57,6 +58,7 @@ export class AdminCategoryController extends Controller {
       page,
       parentId,
       parentsOnly,
+      showInMenu,
     });
     const { data, pagination } = paginateResponse(dataTotalCount, limit, page);
     return {

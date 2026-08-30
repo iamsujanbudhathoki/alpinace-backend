@@ -6,12 +6,17 @@ import { TeamQueryParamsDto } from '../../schemas/query-params.schema';
 import { applyBaseQueryParams } from '../../utils/query-builder.util';
 import { AppError } from '../../utils/appError.util';
 import { MediaService } from '../media/media.service';
+import { AuditLogService } from '../audit-log/audit-log.service';
+import { AuditEntityType } from '../../constants/audit.constants';
 
 @autoInjectable()
 export class TeamService {
   private repo = AppDataSource.getRepository(TeamMember);
 
-  constructor(private mediaService: MediaService = new MediaService()) {}
+  constructor(
+    private mediaService: MediaService = new MediaService(),
+    private auditLogService: AuditLogService = new AuditLogService(),
+  ) {}
 
   async getAll(params: TeamQueryParamsDto = {}): Promise<[TeamMember[], number]> {
     const qb = this.repo.createQueryBuilder('team');
@@ -51,6 +56,7 @@ export class TeamService {
     });
 
     const saved = await this.repo.save(member);
+    await this.auditLogService.logCreate(AuditEntityType.TEAM, saved.id, saved);
     return this.mediaService.resolveItemMedia(saved);
   }
 
@@ -60,14 +66,18 @@ export class TeamService {
     }
 
     const member = await this.getById(id);
+    const oldState = { ...member };
     Object.assign(member, dto);
     const saved = await this.repo.save(member);
+    await this.auditLogService.logUpdate(AuditEntityType.TEAM, saved.id, oldState, saved);
     return this.mediaService.resolveItemMedia(saved);
   }
 
   async delete(id: string): Promise<boolean> {
     const member = await this.getById(id);
+    const oldState = { ...member };
     await this.repo.remove(member);
+    await this.auditLogService.logDelete(AuditEntityType.TEAM, id, oldState);
     return true;
   }
 
@@ -77,6 +87,7 @@ export class TeamService {
         await manager.update(TeamMember, { id: item.id }, { order: item.order });
       }
     });
+    await this.auditLogService.logOrdering(AuditEntityType.TEAM, items.length, null, items);
     return true;
   }
 }

@@ -3,12 +3,17 @@ import { AppDataSource } from '../../config/database.config';
 import { AboutUs, AboutUsStatus } from '../../entities/about-us/AboutUs.entity';
 import { UpdateAboutUsDto } from '../../schemas/about-us.schema';
 import { MediaService } from '../media/media.service';
+import { AuditLogService } from '../audit-log/audit-log.service';
+import { AuditEntityType } from '../../constants/audit.constants';
 
 @autoInjectable()
 export class AboutUsService {
   private aboutUsRepository = AppDataSource.getRepository(AboutUs);
 
-  constructor(private mediaService: MediaService = new MediaService()) {}
+  constructor(
+    private mediaService: MediaService = new MediaService(),
+    private auditLogService: AuditLogService = new AuditLogService(),
+  ) {}
 
   private DEFAULT_ABOUT_US: Partial<AboutUs> = {
     heroTitle: 'Sherpa-guided treks planned from Kathmandu.',
@@ -81,6 +86,8 @@ export class AboutUsService {
       order: { createdAt: 'ASC' },
       take: 1,
     });
+    const oldState = existing ? { ...existing } : null;
+
     let about: AboutUs;
     if (!existing) {
       about = this.aboutUsRepository.create({
@@ -91,6 +98,13 @@ export class AboutUsService {
       about = this.aboutUsRepository.merge(existing, dto);
     }
     const saved = await this.aboutUsRepository.save(about);
+
+    if (existing) {
+      await this.auditLogService.logUpdate(AuditEntityType.ABOUT_US, saved.id, oldState, saved);
+    } else {
+      await this.auditLogService.logCreate(AuditEntityType.ABOUT_US, saved.id, saved);
+    }
+
     return this.mediaService.resolveItemMedia(saved);
   }
 }

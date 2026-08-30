@@ -14,12 +14,18 @@ import {
 import { AppError } from '../../utils/appError.util';
 import { NotificationService } from '../notification/notification.service';
 import { TurnstileService } from '../turnstile/turnstile.service';
+import { AuditLogService } from '../audit-log/audit-log.service';
+import { AuditEntityType } from '../../constants/audit.constants';
 
 @autoInjectable()
 export class BookingService {
   private repo = AppDataSource.getRepository(Booking);
   private notifSvc = new NotificationService();
   private turnstileSvc = new TurnstileService();
+
+  constructor(
+    private auditLogService: AuditLogService = new AuditLogService(),
+  ) {}
 
   async getAll(params?: {
     search?: string;
@@ -97,18 +103,25 @@ export class BookingService {
       specialRequests: dto.specialRequests || undefined,
     } as Partial<Booking>);
 
-    return this.repo.save(booking);
+    const saved = await this.repo.save(booking);
+    await this.auditLogService.logCreate(AuditEntityType.BOOKING, saved.id, saved);
+    return saved;
   }
 
   async update(id: string, dto: UpdateBookingDto): Promise<Booking> {
     const booking = await this.getById(id);
+    const oldState = { ...booking };
     Object.assign(booking, dto);
-    return this.repo.save(booking);
+    const saved = await this.repo.save(booking);
+    await this.auditLogService.logUpdate(AuditEntityType.BOOKING, saved.id, oldState, saved);
+    return saved;
   }
 
   async delete(id: string): Promise<boolean> {
     const booking = await this.getById(id);
+    const oldState = { ...booking };
     await this.repo.remove(booking);
+    await this.auditLogService.logDelete(AuditEntityType.BOOKING, id, oldState);
     return true;
   }
 }

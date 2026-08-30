@@ -38,6 +38,7 @@ export class CategoryController extends Controller {
     @Query() search?: string,
     @Query() limit?: number,
     @Query() page?: number,
+    @Query() showInMenu?: boolean,
   ): Promise<ApiResponse<PublicCategoryDto[]>> {
     const [items, totalCount] = await this.categoryService.getAll({
       status: CategoryStatus.ACTIVE,
@@ -47,6 +48,7 @@ export class CategoryController extends Controller {
       search,
       limit,
       page,
+      showInMenu,
     });
     const publicItems = items.map(toPublicCategory);
     const { data, pagination } = paginateResponse([publicItems, totalCount], limit, page);

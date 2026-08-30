@@ -60,6 +60,8 @@ import { AdminBookingController } from './../controllers/admin/admin-booking.con
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminBlogController } from './../controllers/admin/admin-blog.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { AdminAuditLogController } from './../controllers/admin/admin-audit-log.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminAboutUsController } from './../controllers/admin/admin-about-us.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AboutUsController } from './../controllers/about-us/about-us.controller';
@@ -2177,6 +2179,37 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AuditLog": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "action": {"dataType":"string","required":true},
+            "entityType": {"dataType":"string","required":true},
+            "entityId": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "userId": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "success": {"dataType":"boolean","required":true},
+            "oldData": {"dataType":"union","subSchemas":[{"dataType":"any"},{"dataType":"enum","enums":[null]}],"required":true},
+            "newData": {"dataType":"union","subSchemas":[{"dataType":"any"},{"dataType":"enum","enums":[null]}],"required":true},
+            "metadata": {"dataType":"union","subSchemas":[{"dataType":"any"},{"dataType":"enum","enums":[null]}],"required":true},
+            "ipAddress": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "userAgent": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "requestId": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ApiResponse_AuditLog-Array_": {
+        "dataType": "refObject",
+        "properties": {
+            "data": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"AuditLog"}},{"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"AuditLog"}}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
+            "success": {"dataType":"boolean","required":true},
+            "message": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "AboutUsValueItem": {
         "dataType": "refObject",
         "properties": {
@@ -3244,6 +3277,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 search: {"in":"query","name":"search","dataType":"string"},
                 limit: {"in":"query","name":"limit","dataType":"double"},
                 page: {"in":"query","name":"page","dataType":"double"},
+                showInMenu: {"in":"query","name":"showInMenu","dataType":"boolean"},
         };
         app.get('/categories',
             ...(fetchMiddlewares<RequestHandler>(CategoryController)),
@@ -4999,6 +5033,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 page: {"in":"query","name":"page","dataType":"double"},
                 parentId: {"in":"query","name":"parentId","dataType":"string"},
                 parentsOnly: {"in":"query","name":"parentsOnly","dataType":"boolean"},
+                showInMenu: {"in":"query","name":"showInMenu","dataType":"boolean"},
         };
         app.get('/admin/categories',
             authenticateMiddleware([{"jwt":["admin"]}]),
@@ -5464,6 +5499,45 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
               await templateService.apiHandler({
                 methodName: 'delete',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminAuditLogController_getAuditLogs: Record<string, TsoaRoute.ParameterSchema> = {
+                action: {"in":"query","name":"action","dataType":"string"},
+                entityType: {"in":"query","name":"entityType","dataType":"string"},
+                entityId: {"in":"query","name":"entityId","dataType":"string"},
+                userId: {"in":"query","name":"userId","dataType":"string"},
+                search: {"in":"query","name":"search","dataType":"string"},
+                startDate: {"in":"query","name":"startDate","dataType":"string"},
+                endDate: {"in":"query","name":"endDate","dataType":"string"},
+                limit: {"in":"query","name":"limit","dataType":"double"},
+                page: {"in":"query","name":"page","dataType":"double"},
+        };
+        app.get('/admin/audit-logs',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminAuditLogController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminAuditLogController.prototype.getAuditLogs)),
+
+            async function AdminAuditLogController_getAuditLogs(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminAuditLogController_getAuditLogs, request, response });
+
+                const controller = new AdminAuditLogController();
+
+              await templateService.apiHandler({
+                methodName: 'getAuditLogs',
                 controller,
                 response,
                 next,

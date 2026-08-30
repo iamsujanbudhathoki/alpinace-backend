@@ -22,6 +22,8 @@ import { AppError } from '../../utils/appError.util';
 
 import { MediaService } from '../media/media.service';
 import { CategoryService } from '../category/category.service';
+import { AuditLogService } from '../audit-log/audit-log.service';
+import { AuditEntityType } from '../../constants/audit.constants';
 
 @autoInjectable()
 export class ExpeditionService {
@@ -31,6 +33,7 @@ export class ExpeditionService {
   constructor(
     private mediaService: MediaService = new MediaService(),
     private categoryService: CategoryService = new CategoryService(),
+    private auditLogService: AuditLogService = new AuditLogService(),
   ) { }
 
   async getPublicAll(params?: {
@@ -374,6 +377,7 @@ export class ExpeditionService {
     } as Partial<Expedition>);
 
     const saved = await this.repo.save(exp);
+    await this.auditLogService.logCreate(AuditEntityType.EXPEDITION, saved.id, saved);
     return this.mediaService.resolveItemMedia(saved);
   }
 
@@ -385,6 +389,7 @@ export class ExpeditionService {
     ]);
 
     const exp = await this.getByIdOrSlug(id);
+    const oldState = { ...exp };
 
     const targetCategoryId =
       dto.categoryId !== undefined ? dto.categoryId : exp.categoryId;
@@ -453,12 +458,16 @@ export class ExpeditionService {
     if (dto.keywords !== undefined) exp.keywords = dto.keywords;
 
     const saved = await this.repo.save(exp);
+    await this.auditLogService.logUpdate(AuditEntityType.EXPEDITION, saved.id, oldState, saved);
+
     return this.mediaService.resolveItemMedia(saved);
   }
 
   async delete(id: string): Promise<boolean> {
     const exp = await this.getByIdOrSlug(id);
+    const oldState = { ...exp };
     await this.repo.remove(exp);
+    await this.auditLogService.logDelete(AuditEntityType.EXPEDITION, id, oldState);
     return true;
   }
 

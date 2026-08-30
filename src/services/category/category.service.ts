@@ -12,12 +12,17 @@ import {
 } from '../../schemas/category.schema';
 import { AppError } from '../../utils/appError.util';
 import { MediaService } from '../media/media.service';
+import { AuditLogService } from '../audit-log/audit-log.service';
+import { AuditEntityType } from '../../constants/audit.constants';
 
 @autoInjectable()
 export class CategoryService {
   private repo = AppDataSource.getRepository(Category);
 
-  constructor(private mediaService: MediaService = new MediaService()) {}
+  constructor(
+    private mediaService: MediaService = new MediaService(),
+    private auditLogService: AuditLogService = new AuditLogService(),
+  ) {}
 
   async getAll(params?: {
     status?: CategoryStatus;
@@ -27,11 +32,16 @@ export class CategoryService {
     page?: number;
     parentId?: string | null;
     parentsOnly?: boolean;
+    showInMenu?: boolean;
   }): Promise<[Category[], number]> {
     const qb = this.repo.createQueryBuilder('cat');
 
     if (params?.status && (params.status as any) !== 'All') {
       qb.andWhere('cat.status = :status', { status: params.status });
+    }
+
+    if (params?.showInMenu !== undefined) {
+      qb.andWhere('cat.showInMenu = :showInMenu', { showInMenu: params.showInMenu });
     }
 
     if (params?.type && (params.type as any) !== 'All') {
@@ -181,6 +191,12 @@ export class CategoryService {
         await transactionalEntityManager.update(Category, { id: item.id }, { menuOrder: item.menuOrder });
       }
     });
+    await this.auditLogService.logOrdering(
+      AuditEntityType.CATEGORY,
+      items.length,
+      null,
+      items,
+    );
     return true;
   }
 
@@ -271,6 +287,10 @@ export class CategoryService {
       parentId: dto.parentId || null,
     });
     const saved = await this.repo.save(category);
+
+    const entityType = saved.parentId ? AuditEntityType.SUBCATEGORY : AuditEntityType.CATEGORY;
+    await this.auditLogService.logCreate(entityType, saved.id, saved);
+
     return this.mediaService.resolveItemMedia(saved);
   }
 
@@ -280,6 +300,7 @@ export class CategoryService {
     }
 
     const category = await this.getById(id);
+    const oldState = { ...category };
 
     if (dto.parentId !== undefined) {
       const targetParentId = dto.parentId || null;
@@ -317,12 +338,21 @@ export class CategoryService {
     if (dto.parentId !== undefined) category.parentId = dto.parentId || null;
 
     const saved = await this.repo.save(category);
+
+    const entityType = saved.parentId ? AuditEntityType.SUBCATEGORY : AuditEntityType.CATEGORY;
+    await this.auditLogService.logUpdate(entityType, saved.id, oldState, saved);
+
     return this.mediaService.resolveItemMedia(saved);
   }
 
   async delete(id: string): Promise<boolean> {
     const category = await this.getById(id);
+    const oldState = { ...category };
     await this.repo.remove(category);
+
+    const entityType = category.parentId ? AuditEntityType.SUBCATEGORY : AuditEntityType.CATEGORY;
+    await this.auditLogService.logDelete(entityType, id, oldState);
+
     return true;
   }
 }

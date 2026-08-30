@@ -6,12 +6,17 @@ import { TestimonialQueryParamsDto } from '../../schemas/query-params.schema';
 import { applyBaseQueryParams } from '../../utils/query-builder.util';
 import { AppError } from '../../utils/appError.util';
 import { MediaService } from '../media/media.service';
+import { AuditLogService } from '../audit-log/audit-log.service';
+import { AuditEntityType } from '../../constants/audit.constants';
 
 @autoInjectable()
 export class TestimonialService {
   private repo = AppDataSource.getRepository(Testimonial);
 
-  constructor(private mediaService: MediaService = new MediaService()) {}
+  constructor(
+    private mediaService: MediaService = new MediaService(),
+    private auditLogService: AuditLogService = new AuditLogService(),
+  ) {}
 
   async getAll(params: TestimonialQueryParamsDto = {}): Promise<[Testimonial[], number]> {
     const qb = this.repo.createQueryBuilder('testimonial');
@@ -53,6 +58,7 @@ export class TestimonialService {
     });
 
     const saved = await this.repo.save(item);
+    await this.auditLogService.logCreate(AuditEntityType.TESTIMONIAL, saved.id, saved);
     return this.mediaService.resolveItemMedia(saved);
   }
 
@@ -62,14 +68,18 @@ export class TestimonialService {
     }
 
     const item = await this.getById(id);
+    const oldState = { ...item };
     Object.assign(item, dto);
     const saved = await this.repo.save(item);
+    await this.auditLogService.logUpdate(AuditEntityType.TESTIMONIAL, saved.id, oldState, saved);
     return this.mediaService.resolveItemMedia(saved);
   }
 
   async delete(id: string): Promise<boolean> {
     const item = await this.getById(id);
+    const oldState = { ...item };
     await this.repo.remove(item);
+    await this.auditLogService.logDelete(AuditEntityType.TESTIMONIAL, id, oldState);
     return true;
   }
 
@@ -79,6 +89,7 @@ export class TestimonialService {
         await manager.update(Testimonial, { id: item.id }, { order: item.order });
       }
     });
+    await this.auditLogService.logOrdering(AuditEntityType.TESTIMONIAL, items.length, null, items);
     return true;
   }
 }

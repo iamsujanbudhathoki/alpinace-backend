@@ -60,6 +60,8 @@ import { AdminBookingController } from './../controllers/admin/admin-booking.con
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminBlogController } from './../controllers/admin/admin-blog.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { AdminBackupController } from './../controllers/admin/admin-backup.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminAuditLogController } from './../controllers/admin/admin-audit-log.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminAboutUsController } from './../controllers/admin/admin-about-us.controller';
@@ -2175,6 +2177,31 @@ const models: TsoaRoute.Models = {
             "metaTitle": {"dataType":"string"},
             "metaDescription": {"dataType":"string"},
             "keywords": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BackupResult": {
+        "dataType": "refObject",
+        "properties": {
+            "success": {"dataType":"boolean","required":true},
+            "timestamp": {"dataType":"string","required":true},
+            "schemaUrl": {"dataType":"string"},
+            "dataUrl": {"dataType":"string"},
+            "schemaKey": {"dataType":"string"},
+            "dataKey": {"dataType":"string"},
+            "message": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ApiResponse_BackupResult_": {
+        "dataType": "refObject",
+        "properties": {
+            "data": {"dataType":"union","subSchemas":[{"ref":"BackupResult"},{"dataType":"array","array":{"dataType":"refObject","ref":"BackupResult"}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
+            "success": {"dataType":"boolean","required":true},
+            "message": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -5499,6 +5526,36 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
               await templateService.apiHandler({
                 methodName: 'delete',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminBackupController_triggerBackup: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.post('/admin/backup/trigger',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminBackupController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminBackupController.prototype.triggerBackup)),
+
+            async function AdminBackupController_triggerBackup(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminBackupController_triggerBackup, request, response });
+
+                const controller = new AdminBackupController();
+
+              await templateService.apiHandler({
+                methodName: 'triggerBackup',
                 controller,
                 response,
                 next,

@@ -4,6 +4,8 @@ import { AppDataSource } from './config/database.config';
 import { DotenvConfig } from './config/env.config';
 import { configMiddleware } from './middlewares';
 import { PathUtils } from './utils/path.util';
+import removeTempMediaCron from './crons/removeTempMedia.cron';
+import dbBackupCron from './crons/dbBackup.cron';
 // import { RedisUtil } from './utils/redis.util';
 
 class Server {
@@ -21,11 +23,10 @@ class Server {
         const app = express();
         configMiddleware(app);
 
-        // try {
-        //   new RedisUtil().initialize();
-        // } catch (redisErr) {
-        //   console.warn('Redis initialization skipped:', redisErr);
-        // }
+        // Activate background cron tasks
+        removeTempMediaCron.start();
+        dbBackupCron.start();
+        console.log('[Cron Service] Daily database backup & cleanup cron jobs active.');
 
         const port = DotenvConfig.PORT;
         app.listen(port, () => {

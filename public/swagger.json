@@ -6238,6 +6238,72 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"BackupResult": {
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"timestamp": {
+						"type": "string"
+					},
+					"schemaUrl": {
+						"type": "string"
+					},
+					"dataUrl": {
+						"type": "string"
+					},
+					"schemaKey": {
+						"type": "string"
+					},
+					"dataKey": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"success",
+					"timestamp",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_BackupResult_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/BackupResult"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/BackupResult"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"AuditLog": {
 				"properties": {
 					"id": {
@@ -11565,6 +11631,35 @@
 						}
 					}
 				]
+			}
+		},
+		"/admin/backup/trigger": {
+			"post": {
+				"operationId": "TriggerBackup",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_BackupResult_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Manually trigger daily database schema & values backup to Cloudflare R2 on demand.",
+				"tags": [
+					"Admin System Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": []
 			}
 		},
 		"/admin/audit-logs": {

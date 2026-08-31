@@ -46,11 +46,11 @@ export class AdminAuthService {
       }
       await this.auditLogService.logLoginFailed(
         data.email,
-        'Account disabled due to 5 consecutive failed login attempts',
+        'Account locked out due to 5 consecutive failed login attempts',
         { userId: admin.id },
       );
       throw AppError.forbidden(
-        'Account is disabled due to 5 consecutive failed login attempts. Please contact a system administrator to restore access.',
+        'Too many failed requests. Your account has been temporarily locked for security. Please contact a system administrator to restore access.',
       );
     }
 
@@ -71,11 +71,11 @@ export class AdminAuthService {
       if (isNowDisabled) {
         await this.auditLogService.logLoginFailed(
           data.email,
-          'Account disabled due to 5 consecutive failed login attempts',
+          'Account locked out due to 5 consecutive failed login attempts',
           { userId: admin.id },
         );
         throw AppError.forbidden(
-          'Account is disabled due to 5 consecutive failed login attempts. Please contact a system administrator to restore access.',
+          'Too many failed requests. Your account has been temporarily locked for security. Please contact a system administrator to restore access.',
         );
       } else {
         const remaining = 5 - attempts;
@@ -85,7 +85,7 @@ export class AdminAuthService {
           { userId: admin.id },
         );
         throw AppError.unAuthorized(
-          `Invalid email or password. ${remaining} attempt(s) remaining before account lockout.`,
+          `Invalid email or password. You have ${remaining} attempt(s) remaining before account lockout.`,
         );
       }
     }

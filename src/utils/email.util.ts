@@ -2,10 +2,15 @@ import nodemailer from 'nodemailer';
 import { DotenvConfig } from '../config/env.config';
 import { getClientInquiryEmailTemplate } from '../templates/emails/client-inquiry.template';
 import { getAdminInquiryEmailTemplate } from '../templates/emails/admin-inquiry.template';
+import { getClientBookingEmailTemplate } from '../templates/emails/client-booking.template';
+import { getAdminBookingEmailTemplate } from '../templates/emails/admin-booking.template';
 import {
   getAdminLoginAlertEmailTemplate,
   LoginAlertEmailData,
 } from '../templates/emails/admin-login-alert.template';
+import { getQuoteEmailTemplate } from '../templates/emails/quote.template';
+import { getResetPasswordEmailTemplate } from '../templates/emails/auth-reset-password.template';
+import { getOtpEmailTemplate } from '../templates/emails/auth-otp.template';
 
 export enum MailType {
   RESET_PASSWORD = 'RESET_PASSWORD',
@@ -22,6 +27,21 @@ export interface InquiryEmailData {
   message?: string;
 }
 
+export interface BookingEmailData {
+  reference: string;
+  guestName: string;
+  email: string;
+  phone?: string;
+  country?: string;
+  packageName: string;
+  packageType?: string;
+  startDate?: string;
+  endDate?: string;
+  groupSize?: number;
+  totalAmountUSD?: number;
+  specialRequests?: string;
+}
+
 class EmailUtil {
   private getTransporter() {
     const port = Number(DotenvConfig.MAIL_PORT) || 465;
@@ -36,15 +56,15 @@ class EmailUtil {
     });
   }
 
-  async sendMail(to: string, mailType: MailType) {
+  async sendMail(to: string, mailType: MailType, extraData?: any): Promise<void> {
     if (!DotenvConfig.MAIL_USER || !DotenvConfig.MAIL_PASSWORD) return;
     const transporter = this.getTransporter();
-    const { subject, body } = await this.getTemplate(to, mailType);
+    const { subject, body } = await this.getTemplate(to, mailType, extraData);
     await transporter.sendMail({
       from: `"Alpine Ace" <${DotenvConfig.MAIL_USER}>`,
       to,
       subject,
-      text: body,
+      text: body.replace(/<[^>]*>/g, ''),
       html: body,
     });
   }
@@ -62,12 +82,12 @@ class EmailUtil {
       const clientHtml = getClientInquiryEmailTemplate(data);
 
       // 2. Admin Notification Email
-      const adminEmail = DotenvConfig.ADMIN_EMAIL || DotenvConfig.MAIL_USER;
+      const adminEmail = DotenvConfig.ADMIN_EMAIL || DotenvConfig.MAIL_USER || 'admin@alpineacetreks.com';
       const adminHtml = getAdminInquiryEmailTemplate(data);
 
       // Dispatch Client Email
       await transporter.sendMail({
-        from: `"Alpine Ace Concierge" <${DotenvConfig.MAIL_USER}>`,
+        from: `"Alpine Ace" <${DotenvConfig.MAIL_USER}>`,
         to: data.email,
         subject: `Inquiry Received - Alpine Ace Treks & Expeditions`,
         html: clientHtml,
@@ -87,6 +107,44 @@ class EmailUtil {
     }
   }
 
+  async sendBookingEmails(data: BookingEmailData): Promise<void> {
+    if (!DotenvConfig.MAIL_USER || !DotenvConfig.MAIL_PASSWORD) {
+      console.log('Skipping Nodemailer dispatch: MAIL_USER or MAIL_PASSWORD not configured in .env');
+      return;
+    }
+
+    try {
+      const transporter = this.getTransporter();
+
+      // 1. Client Confirmation Email
+      const clientHtml = getClientBookingEmailTemplate(data);
+
+      // 2. Admin Notification Email
+      const adminEmail = DotenvConfig.ADMIN_EMAIL || DotenvConfig.MAIL_USER || 'admin@alpineacetreks.com';
+      const adminHtml = getAdminBookingEmailTemplate(data);
+
+      // Dispatch Client Email
+      await transporter.sendMail({
+        from: `"Alpine Ace" <${DotenvConfig.MAIL_USER}>`,
+        to: data.email,
+        subject: `Booking Request Received [Ref: ${data.reference}] - Alpine Ace`,
+        html: clientHtml,
+      });
+
+      // Dispatch Admin Email
+      await transporter.sendMail({
+        from: `"Alpine Ace Website" <${DotenvConfig.MAIL_USER}>`,
+        to: adminEmail,
+        subject: `[New Booking Request] ${data.reference} - ${data.guestName} (${data.packageName})`,
+        html: adminHtml,
+      });
+
+      console.log(`[Nodemailer] Successfully sent booking confirmation email to client (${data.email}) and admin notification (${adminEmail}).`);
+    } catch (error) {
+      console.error('[Nodemailer] Error sending booking emails:', error);
+    }
+  }
+
   async sendQuoteEmail(data: { guestName: string; email: string; interestedTrip?: string; message: string }): Promise<void> {
     if (!DotenvConfig.MAIL_USER || !DotenvConfig.MAIL_PASSWORD) {
       console.log('Skipping quote email: MAIL_USER or MAIL_PASSWORD not configured in .env');
@@ -95,21 +153,10 @@ class EmailUtil {
 
     try {
       const transporter = this.getTransporter();
-      const html = `
-        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 24px;">
-          <h2 style="color: #0f172a;">Custom Quote from Alpine Ace</h2>
-          <p style="color: #475569;">Dear <strong>${data.guestName}</strong>,</p>
-          <p style="color: #475569;">Thank you for your interest in <strong>${data.interestedTrip || 'our expeditions'}</strong>. Please find your custom quote below:</p>
-          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin: 16px 0; white-space: pre-line; color: #1e293b; line-height: 1.7;">
-            ${data.message}
-          </div>
-          <p style="color: #475569;">To confirm your booking or ask further questions, please reply to this email or contact us directly.</p>
-          <p style="color: #94a3b8; font-size: 13px; margin-top: 24px;">— Alpine Ace Treks &amp; Expeditions Team</p>
-        </div>
-      `;
+      const html = getQuoteEmailTemplate(data);
 
       await transporter.sendMail({
-        from: `"Alpine Ace Concierge" <${DotenvConfig.MAIL_USER}>`,
+        from: `"Alpine Ace" <${DotenvConfig.MAIL_USER}>`,
         to: data.email,
         subject: `Your Custom Quote – ${data.interestedTrip || 'Alpine Ace Expedition'}`,
         html,
@@ -131,7 +178,7 @@ class EmailUtil {
     try {
       const transporter = this.getTransporter();
       const adminHtml = getAdminLoginAlertEmailTemplate(data);
-      const recipient = DotenvConfig.ADMIN_EMAIL || data.adminEmail;
+      const recipient = DotenvConfig.ADMIN_EMAIL || data.adminEmail || 'admin@alpineacetreks.com';
 
       await transporter.sendMail({
         from: `"Alpine Ace Security" <${DotenvConfig.MAIL_USER}>`,
@@ -146,14 +193,21 @@ class EmailUtil {
     }
   }
 
-  private async getTemplate(email: string, mailType: MailType) {
-    let subject = 'Alpine Ace Notification', body = '';
+  private async getTemplate(email: string, mailType: MailType, extraData?: any) {
+    let subject = 'Alpine Ace Notification';
+    let body = '';
     switch (mailType) {
       case MailType.RESET_PASSWORD: {
-        const token = 'abc';
-        const link = `${DotenvConfig.FRONTEND_BASE_URL}/reset-password?token=${token}`;
-        subject = 'Reset Password';
-        body = `Your Reset Link is <b><a href="${link}">${link}</a></b>`;
+        const token = extraData?.token || 'abc';
+        const resetLink = `${DotenvConfig.FRONTEND_BASE_URL}/reset-password?token=${token}`;
+        subject = 'Reset Your Password - Alpine Ace';
+        body = getResetPasswordEmailTemplate({ email, resetLink });
+        break;
+      }
+      case MailType.LOGIN_OTP: {
+        const otp = extraData?.otp || '123456';
+        subject = 'Your Verification Code - Alpine Ace';
+        body = getOtpEmailTemplate({ email, otp });
         break;
       }
     }

@@ -11,7 +11,9 @@ import {
   CreateBookingDto,
   UpdateBookingDto,
 } from '../../schemas/booking.schema';
+import { NotificationType } from '../../entities/notification/Notification.entity';
 import { AppError } from '../../utils/appError.util';
+import emailUtil from '../../utils/email.util';
 import { NotificationService } from '../notification/notification.service';
 import { TurnstileService } from '../turnstile/turnstile.service';
 import { AuditLogService } from '../audit-log/audit-log.service';
@@ -105,6 +107,35 @@ export class BookingService {
 
     const saved = await this.repo.save(booking);
     await this.auditLogService.logCreate(AuditEntityType.BOOKING, saved.id, saved);
+
+    // Create a notification for the new booking request
+    this.notifSvc
+      .create({
+        title: `New Booking Request (${saved.reference}) from ${dto.guestName}`,
+        body: `${dto.guestName} booked "${dto.packageName}" for ${dto.groupSize} traveler(s).`,
+        type: NotificationType.BOOKING,
+        refId: saved.id,
+      })
+      .catch((err) => console.error('[Notification] Booking create error:', err));
+
+    // Asynchronously dispatch email notifications to Client and Admin via Nodemailer
+    emailUtil
+      .sendBookingEmails({
+        reference: saved.reference,
+        guestName: dto.guestName,
+        email: dto.guestEmail,
+        phone: dto.guestPhone,
+        country: dto.country,
+        packageName: dto.packageName,
+        packageType: dto.packageType,
+        startDate: dto.startDate,
+        endDate: dto.endDate,
+        groupSize: Number(dto.groupSize),
+        totalAmountUSD: Number(dto.totalAmountUSD),
+        specialRequests: dto.specialRequests,
+      })
+      .catch((err) => console.error('[Nodemailer] Booking email error:', err));
+
     return saved;
   }
 

@@ -7,6 +7,8 @@ import BcryptService from '../../utils/bcrypt.util';
 import { JwtUtil } from '../../utils/jwt.util';
 import { AppError } from '../../utils/appError.util';
 import { AuditLogService } from '../audit-log/audit-log.service';
+import { NotificationService } from '../notification/notification.service';
+import { NotificationType } from '../../entities/notification/Notification.entity';
 
 @autoInjectable()
 export class AdminAuthService {
@@ -14,6 +16,7 @@ export class AdminAuthService {
 
   constructor(
     private auditLogService: AuditLogService = new AuditLogService(),
+    private notificationService: NotificationService = new NotificationService(),
   ) {}
 
   async login(data: AdminAuthSchema): Promise<AdminLoginResponse> {
@@ -49,6 +52,15 @@ export class AdminAuthService {
         'Account locked out due to 5 consecutive failed login attempts',
         { userId: admin.id },
       );
+      this.notificationService
+        .create({
+          title: 'Security Alert: Admin Account Locked Out',
+          body: `Admin account "${admin.email}" (${admin.name}) has been locked out after 5 consecutive failed login attempts. Please verify account security.`,
+          type: NotificationType.SYSTEM,
+          refId: admin.id,
+        })
+        .catch((err) => console.error('[Notification] Admin lockout alert failed:', err));
+
       throw AppError.forbidden(
         'Too many failed requests. Your account has been temporarily locked for security. Please contact a system administrator to restore access.',
       );
@@ -74,6 +86,15 @@ export class AdminAuthService {
           'Account locked out due to 5 consecutive failed login attempts',
           { userId: admin.id },
         );
+        this.notificationService
+          .create({
+            title: 'Security Alert: Admin Account Locked Out',
+            body: `Admin account "${admin.email}" (${admin.name}) has been locked out after 5 consecutive failed login attempts. Please verify account security.`,
+            type: NotificationType.SYSTEM,
+            refId: admin.id,
+          })
+          .catch((err) => console.error('[Notification] Admin lockout alert failed:', err));
+
         throw AppError.forbidden(
           'Too many failed requests. Your account has been temporarily locked for security. Please contact a system administrator to restore access.',
         );

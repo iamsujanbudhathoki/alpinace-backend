@@ -193,6 +193,43 @@ class EmailUtil {
     }
   }
 
+  async sendLockoutAlertEmail(data: { adminName: string; adminEmail: string; ip?: string }): Promise<void> {
+    if (!DotenvConfig.MAIL_USER || !DotenvConfig.MAIL_PASSWORD) {
+      console.log('Skipping lockout alert email: MAIL_USER or MAIL_PASSWORD not configured in .env');
+      return;
+    }
+
+    try {
+      const transporter = this.getTransporter();
+      const recipient = DotenvConfig.ADMIN_EMAIL || DotenvConfig.MAIL_USER || data.adminEmail || 'admin@alpineacetreks.com';
+
+      const html = `
+        <div style="font-family: Arial, sans-serif; padding: 20px; color: #1e293b; background-color: #fafaf9; border-radius: 12px; border: 1px solid #e2e8f0;">
+          <h2 style="color: #e11d48; margin-top: 0;">🚨 Security Alert: Admin Account Locked Out</h2>
+          <p style="font-size: 14px; line-height: 1.5;">An admin account has been locked out after <strong>5 consecutive failed login attempts</strong>.</p>
+          <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 16px 0;" />
+          <p style="font-size: 13px; margin: 6px 0;"><strong>Account Name:</strong> ${data.adminName}</p>
+          <p style="font-size: 13px; margin: 6px 0;"><strong>Account Email:</strong> ${data.adminEmail}</p>
+          <p style="font-size: 13px; margin: 6px 0;"><strong>Time:</strong> ${new Date().toUTCString()}</p>
+          ${data.ip ? `<p style="font-size: 13px; margin: 6px 0;"><strong>IP Address:</strong> ${data.ip}</p>` : ''}
+          <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 16px 0;" />
+          <p style="font-size: 12px; color: #64748b; margin-bottom: 0;">If this was unauthorized activity, please review system audit logs and verify account security immediately.</p>
+        </div>
+      `;
+
+      await transporter.sendMail({
+        from: `"Alpine Ace Security" <${DotenvConfig.MAIL_USER}>`,
+        to: recipient,
+        subject: `[SECURITY ALERT] Admin Account Locked Out - ${data.adminEmail}`,
+        html,
+      });
+
+      console.log(`[Nodemailer] Admin lockout security alert email sent to ${recipient}`);
+    } catch (error) {
+      console.error('[Nodemailer] Error sending lockout alert email:', error);
+    }
+  }
+
   private async getTemplate(email: string, mailType: MailType, extraData?: any) {
     let subject = 'Alpine Ace Notification';
     let body = '';

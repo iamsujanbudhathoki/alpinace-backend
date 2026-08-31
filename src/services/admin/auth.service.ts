@@ -9,6 +9,7 @@ import { AppError } from '../../utils/appError.util';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { NotificationService } from '../notification/notification.service';
 import { NotificationType } from '../../entities/notification/Notification.entity';
+import emailUtil from '../../utils/email.util';
 
 @autoInjectable()
 export class AdminAuthService {
@@ -61,6 +62,13 @@ export class AdminAuthService {
         })
         .catch((err) => console.error('[Notification] Admin lockout alert failed:', err));
 
+      emailUtil
+        .sendLockoutAlertEmail({
+          adminName: admin.name,
+          adminEmail: admin.email,
+        })
+        .catch((err) => console.error('[Nodemailer] Lockout email alert failed:', err));
+
       throw AppError.forbidden(
         'Too many failed requests. Your account has been temporarily locked for security. Please contact a system administrator to restore access.',
       );
@@ -94,6 +102,13 @@ export class AdminAuthService {
             refId: admin.id,
           })
           .catch((err) => console.error('[Notification] Admin lockout alert failed:', err));
+
+        emailUtil
+          .sendLockoutAlertEmail({
+            adminName: admin.name,
+            adminEmail: admin.email,
+          })
+          .catch((err) => console.error('[Nodemailer] Lockout email alert failed:', err));
 
         throw AppError.forbidden(
           'Too many failed requests. Your account has been temporarily locked for security. Please contact a system administrator to restore access.',

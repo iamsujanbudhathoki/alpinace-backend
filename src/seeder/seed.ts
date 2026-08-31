@@ -1,5 +1,5 @@
 import { AppDataSource } from '../config/database.config';
-import { Admin } from '../entities/admin/Admin.entity';
+import { Admin, AdminRole } from '../entities/admin/Admin.entity';
 import {
   Category,
   CategoryStatus,
@@ -353,7 +353,7 @@ export const seedDatabase = async () => {
       name: 'Sujan Budhathoki',
       email: 'admin@alpineace.com',
       password: 'admin123',
-      role: 'Expedition Director',
+      role: AdminRole.ADMIN,
       avatarUrl: getMediaUrl('guide-mingma-avatar'),
       phoneNumber: '+977 9841-234567',
       isActive: true,
@@ -362,6 +362,7 @@ export const seedDatabase = async () => {
     await adminRepo.save(admin);
     console.log('Seeded admin: admin@alpineace.com');
   } else {
+    existingAdmin.role = AdminRole.ADMIN;
     existingAdmin.isActive = true;
     existingAdmin.failedLoginAttempts = 0;
     await adminRepo.save(existingAdmin);

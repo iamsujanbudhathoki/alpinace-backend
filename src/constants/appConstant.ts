@@ -28,7 +28,7 @@ export enum MediaType {
 }
 
 export enum Role {
-  ADMIN = 'ADMIN',
+  ADMIN = 'Admin',
   ASSOCIATE = 'USER',
   SUPER_ADMIN = 'SUPER_ADMIN',
   NONE = 'NONE',

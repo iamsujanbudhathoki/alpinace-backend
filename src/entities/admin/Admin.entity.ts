@@ -2,6 +2,10 @@ import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
 import { CommonEntity } from '../common/common.entity';
 import BcryptService from '../../utils/bcrypt.util';
 
+export enum AdminRole {
+  ADMIN = 'Admin',
+}
+
 @Entity({
   name: 'admin',
 })
@@ -25,9 +29,10 @@ export class Admin extends CommonEntity {
 
   @Column({
     name: 'role',
-    default: 'Expedition Director',
+    type: 'varchar',
+    default: AdminRole.ADMIN,
   })
-  role: string;
+  role: AdminRole;
 
   @Column({
     name: 'avatar_url',

@@ -236,6 +236,7 @@ export class CategoryService {
       slug: p.slug,
       menuOrder: p.menuOrder,
       showInMenu: p.showInMenu,
+      isFeatured: p.isFeatured ?? false,
       status: p.status,
       type: p.type,
       parentId: null,
@@ -246,6 +247,7 @@ export class CategoryService {
         slug: s.slug,
         menuOrder: s.menuOrder,
         showInMenu: s.showInMenu,
+        isFeatured: s.isFeatured ?? false,
         status: s.status,
         type: s.type,
         parentId: p.id,
@@ -366,6 +368,7 @@ export class CategoryService {
       description: dto.description.trim(),
       status: dto.status,
       showInMenu: dto.showInMenu !== undefined ? dto.showInMenu : true,
+      isFeatured: dto.isFeatured !== undefined ? dto.isFeatured : false,
       menuOrder: dto.menuOrder !== undefined ? dto.menuOrder : 0,
       itemCount: 0,
       mediaId: dto.mediaId || null,
@@ -418,6 +421,7 @@ export class CategoryService {
     if (dto.description !== undefined) category.description = dto.description.trim();
     if (dto.status) category.status = dto.status;
     if (dto.showInMenu !== undefined) category.showInMenu = dto.showInMenu;
+    if (dto.isFeatured !== undefined) category.isFeatured = dto.isFeatured;
     if (dto.menuOrder !== undefined) category.menuOrder = dto.menuOrder;
     if (dto.mediaId !== undefined) category.mediaId = dto.mediaId || null;
     if (dto.parentId !== undefined) category.parentId = dto.parentId || null;

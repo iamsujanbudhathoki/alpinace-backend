@@ -33,6 +33,10 @@ export class CreateCategoryDto {
   showInMenu?: boolean;
 
   @IsOptional()
+  @IsBoolean()
+  isFeatured?: boolean;
+
+  @IsOptional()
   @IsInt()
   @Min(0)
   menuOrder?: number;
@@ -73,6 +77,10 @@ export class UpdateCategoryDto {
   @IsOptional()
   @IsBoolean()
   showInMenu?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  isFeatured?: boolean;
 
   @IsOptional()
   @IsInt()

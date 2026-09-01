@@ -6,6 +6,7 @@ export interface MenuSubcategoryDto {
   slug: string;
   menuOrder: number;
   showInMenu: boolean;
+  isFeatured: boolean;
   status: CategoryStatus;
   type: CategoryType;
   parentId: string;
@@ -18,6 +19,7 @@ export interface MenuCategoryDto {
   slug: string;
   menuOrder: number;
   showInMenu: boolean;
+  isFeatured: boolean;
   status: CategoryStatus;
   type: CategoryType;
   parentId: string | null;

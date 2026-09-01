@@ -2885,6 +2885,12 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"AdminRole": {
+				"enum": [
+					"Admin"
+				],
+				"type": "string"
+			},
 			"AdminLoginResponse": {
 				"properties": {
 					"id": {
@@ -2897,7 +2903,7 @@
 						"type": "string"
 					},
 					"role": {
-						"type": "string"
+						"$ref": "#/components/schemas/AdminRole"
 					},
 					"avatarUrl": {
 						"type": "string"
@@ -5799,6 +5805,144 @@
 								"items": {
 									"items": {
 										"$ref": "#/components/schemas/Category"
+									},
+									"type": "array"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MenuSubcategoryDto": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"menuOrder": {
+						"type": "number",
+						"format": "double"
+					},
+					"showInMenu": {
+						"type": "boolean"
+					},
+					"status": {
+						"$ref": "#/components/schemas/CategoryStatus"
+					},
+					"type": {
+						"$ref": "#/components/schemas/CategoryType"
+					},
+					"parentId": {
+						"type": "string"
+					},
+					"itemCount": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"slug",
+					"menuOrder",
+					"showInMenu",
+					"status",
+					"type",
+					"parentId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MenuCategoryDto": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"menuOrder": {
+						"type": "number",
+						"format": "double"
+					},
+					"showInMenu": {
+						"type": "boolean"
+					},
+					"status": {
+						"$ref": "#/components/schemas/CategoryStatus"
+					},
+					"type": {
+						"$ref": "#/components/schemas/CategoryType"
+					},
+					"parentId": {
+						"type": "string",
+						"nullable": true
+					},
+					"itemCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"subcategories": {
+						"items": {
+							"$ref": "#/components/schemas/MenuSubcategoryDto"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"slug",
+					"menuOrder",
+					"showInMenu",
+					"status",
+					"type",
+					"parentId",
+					"subcategories"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_MenuCategoryDto-Array_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"items": {
+									"$ref": "#/components/schemas/MenuCategoryDto"
+								},
+								"type": "array"
+							},
+							{
+								"items": {
+									"items": {
+										"$ref": "#/components/schemas/MenuCategoryDto"
 									},
 									"type": "array"
 								},
@@ -11072,6 +11216,44 @@
 				}
 			}
 		},
+		"/admin/categories/menu-structure": {
+			"get": {
+				"operationId": "GetMenuStructure",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_MenuCategoryDto-Array_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Dedicated endpoint to get target-domain category menu structure with subcategories grouped and ordered.",
+				"tags": [
+					"Admin Categories Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "domain",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/CategoryType"
+						}
+					}
+				]
+			}
+		},
 		"/admin/categories/{idOrSlug}": {
 			"get": {
 				"operationId": "GetByIdOrSlug",
@@ -11159,6 +11341,9 @@
 											"type": "object"
 										},
 										"type": "array"
+									},
+									"domain": {
+										"$ref": "#/components/schemas/CategoryType"
 									}
 								},
 								"required": [

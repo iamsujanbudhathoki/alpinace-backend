@@ -1057,13 +1057,18 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AdminRole": {
+        "dataType": "refEnum",
+        "enums": ["Admin"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "AdminLoginResponse": {
         "dataType": "refObject",
         "properties": {
             "id": {"dataType":"string","required":true},
             "name": {"dataType":"string","required":true},
             "email": {"dataType":"string","required":true},
-            "role": {"dataType":"string","required":true},
+            "role": {"ref":"AdminRole","required":true},
             "avatarUrl": {"dataType":"string"},
             "token": {"dataType":"string","required":true},
         },
@@ -2026,6 +2031,50 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "data": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"Category"}},{"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"Category"}}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
+            "success": {"dataType":"boolean","required":true},
+            "message": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MenuSubcategoryDto": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "slug": {"dataType":"string","required":true},
+            "menuOrder": {"dataType":"double","required":true},
+            "showInMenu": {"dataType":"boolean","required":true},
+            "status": {"ref":"CategoryStatus","required":true},
+            "type": {"ref":"CategoryType","required":true},
+            "parentId": {"dataType":"string","required":true},
+            "itemCount": {"dataType":"double"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MenuCategoryDto": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "slug": {"dataType":"string","required":true},
+            "menuOrder": {"dataType":"double","required":true},
+            "showInMenu": {"dataType":"boolean","required":true},
+            "status": {"ref":"CategoryStatus","required":true},
+            "type": {"ref":"CategoryType","required":true},
+            "parentId": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "itemCount": {"dataType":"double"},
+            "subcategories": {"dataType":"array","array":{"dataType":"refObject","ref":"MenuSubcategoryDto"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ApiResponse_MenuCategoryDto-Array_": {
+        "dataType": "refObject",
+        "properties": {
+            "data": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"MenuCategoryDto"}},{"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"MenuCategoryDto"}}},{"dataType":"enum","enums":[null]}],"required":true},
             "pagination": {"ref":"PaginationMeta"},
             "success": {"dataType":"boolean","required":true},
             "message": {"dataType":"string","required":true},
@@ -5104,6 +5153,37 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminCategoryController_getMenuStructure: Record<string, TsoaRoute.ParameterSchema> = {
+                domain: {"in":"query","name":"domain","required":true,"ref":"CategoryType"},
+        };
+        app.get('/admin/categories/menu-structure',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminCategoryController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminCategoryController.prototype.getMenuStructure)),
+
+            async function AdminCategoryController_getMenuStructure(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminCategoryController_getMenuStructure, request, response });
+
+                const controller = new AdminCategoryController();
+
+              await templateService.apiHandler({
+                methodName: 'getMenuStructure',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsAdminCategoryController_getByIdOrSlug: Record<string, TsoaRoute.ParameterSchema> = {
                 idOrSlug: {"in":"path","name":"idOrSlug","required":true,"dataType":"string"},
         };
@@ -5167,7 +5247,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsAdminCategoryController_reorder: Record<string, TsoaRoute.ParameterSchema> = {
-                body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"items":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"menuOrder":{"dataType":"double","required":true},"id":{"dataType":"string","required":true}}},"required":true}}},
+                body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"items":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"menuOrder":{"dataType":"double","required":true},"id":{"dataType":"string","required":true}}},"required":true},"domain":{"ref":"CategoryType"}}},
         };
         app.put('/admin/categories/reorder',
             authenticateMiddleware([{"jwt":["admin"]}]),

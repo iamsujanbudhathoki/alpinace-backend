@@ -14,7 +14,8 @@
     "build": "tsoa spec-and-routes && tsc",
     "lint:fix": "pnpm eslint --fix ",
     "seed:admin": "ts-node  ./src/seeder/admin.seed.ts add",
-    "seed": "ts-node ./src/seeder/seed.ts"
+    "seed": "ts-node ./src/seeder/seed.ts",
+    "reset:failed-logins": "ts-node ./src/scripts/reset-failed-logins.ts"
   },
   "keywords": [],
   "author": "",

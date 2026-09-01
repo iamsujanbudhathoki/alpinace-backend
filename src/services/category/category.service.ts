@@ -1,5 +1,6 @@
 import { autoInjectable } from 'tsyringe';
 import { isUUID } from 'class-validator';
+import { In, IsNull } from 'typeorm';
 import { AppDataSource } from '../../config/database.config';
 import {
   Category,
@@ -14,6 +15,7 @@ import { AppError } from '../../utils/appError.util';
 import { MediaService } from '../media/media.service';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { AuditEntityType } from '../../constants/audit.constants';
+import { MenuCategoryDto } from '../../dtos/menu-category.dto';
 
 @autoInjectable()
 export class CategoryService {
@@ -184,8 +186,91 @@ export class CategoryService {
     });
   }
 
-  async reorderCategories(items: { id: string; menuOrder: number }[]): Promise<boolean> {
+  async getMenuOrderingStructure(domain: CategoryType): Promise<MenuCategoryDto[]> {
+    const validDomains = Object.values(CategoryType);
+    if (!validDomains.includes(domain)) {
+      throw AppError.badRequest(
+        `Invalid target domain '${domain}'. Must be one of: ${validDomains.join(', ')}`,
+      );
+    }
+
+    const parents = await this.repo.find({
+      where: {
+        type: domain,
+        parentId: IsNull(),
+      },
+      order: {
+        menuOrder: 'ASC',
+        name: 'ASC',
+      },
+    });
+
+    if (parents.length === 0) {
+      return [];
+    }
+
+    const parentIds = parents.map((p) => p.id);
+    const subcategories = await this.repo.find({
+      where: {
+        type: domain,
+        parentId: In(parentIds),
+      },
+      order: {
+        menuOrder: 'ASC',
+        name: 'ASC',
+      },
+    });
+
+    const subMap = new Map<string, Category[]>();
+    subcategories.forEach((sub) => {
+      if (sub.parentId) {
+        const list = subMap.get(sub.parentId) || [];
+        list.push(sub);
+        subMap.set(sub.parentId, list);
+      }
+    });
+
+    return parents.map((p) => ({
+      id: p.id,
+      name: p.name,
+      slug: p.slug,
+      menuOrder: p.menuOrder,
+      showInMenu: p.showInMenu,
+      status: p.status,
+      type: p.type,
+      parentId: null,
+      itemCount: p.itemCount,
+      subcategories: (subMap.get(p.id) || []).map((s) => ({
+        id: s.id,
+        name: s.name,
+        slug: s.slug,
+        menuOrder: s.menuOrder,
+        showInMenu: s.showInMenu,
+        status: s.status,
+        type: s.type,
+        parentId: p.id,
+        itemCount: s.itemCount,
+      })),
+    }));
+  }
+
+  async reorderCategories(
+    items: { id: string; menuOrder: number }[],
+    domain?: CategoryType,
+  ): Promise<boolean> {
     if (!items || items.length === 0) return true;
+
+    if (domain) {
+      const itemIds = items.map((i) => i.id);
+      const categories = await this.repo.find({ where: { id: In(itemIds) } });
+      const invalidCategory = categories.find((c) => c.type !== domain);
+      if (invalidCategory) {
+        throw AppError.badRequest(
+          `Category '${invalidCategory.name}' belongs to domain '${invalidCategory.type}', not target domain '${domain}'.`,
+        );
+      }
+    }
+
     await AppDataSource.transaction(async (transactionalEntityManager) => {
       for (const item of items) {
         await transactionalEntityManager.update(Category, { id: item.id }, { menuOrder: item.menuOrder });

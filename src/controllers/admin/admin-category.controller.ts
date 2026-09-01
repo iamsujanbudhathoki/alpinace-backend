@@ -26,6 +26,8 @@ import {
 import { RequestValidator } from '../../middlewares/validator.middleware';
 import { paginateResponse } from '../../utils/pageAndLimit';
 
+import { MenuCategoryDto } from '../../dtos/menu-category.dto';
+
 @Route('admin/categories')
 @Tags('Admin Categories Management')
 @Security('jwt', ['admin'])
@@ -69,6 +71,21 @@ export class AdminCategoryController extends Controller {
     };
   }
 
+  /**
+   * Dedicated endpoint to get target-domain category menu structure with subcategories grouped and ordered.
+   */
+  @Get('menu-structure')
+  async getMenuStructure(
+    @Query() domain: CategoryType,
+  ): Promise<ApiResponse<MenuCategoryDto[]>> {
+    const data = await this.categoryService.getMenuOrderingStructure(domain);
+    return {
+      data,
+      message: 'Menu category structure retrieved successfully',
+      success: true,
+    };
+  }
+
   @Get('{idOrSlug}')
   async getByIdOrSlug(@Path() idOrSlug: string): Promise<ApiResponse<Category>> {
     const data = await this.categoryService.getByIdOrSlug(idOrSlug);
@@ -86,9 +103,9 @@ export class AdminCategoryController extends Controller {
 
   @Put('reorder')
   async reorder(
-    @Body() body: { items: { id: string; menuOrder: number }[] },
+    @Body() body: { domain?: CategoryType; items: { id: string; menuOrder: number }[] },
   ): Promise<ApiResponse<boolean>> {
-    const data = await this.categoryService.reorderCategories(body.items || []);
+    const data = await this.categoryService.reorderCategories(body.items || [], body.domain);
     return { data, message: 'Category menu ordering updated successfully', success: true };
   }
 

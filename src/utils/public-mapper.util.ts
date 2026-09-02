@@ -286,6 +286,8 @@ export function toPublicSetting(settingsMap: Record<string, string>): PublicSett
     'favicon',
     'tagline',
     'footerText',
+    'privacyPolicy',
+    'termsAndConditions',
   ];
   const publicSettings: PublicSettingDto = {};
   for (const [key, val] of Object.entries(settingsMap)) {

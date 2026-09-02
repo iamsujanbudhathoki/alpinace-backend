@@ -101,4 +101,13 @@ export class UpdateSettingsDto {
 
   @IsOptional()
   testimonials?: any;
+
+  // Legal Content
+  @IsOptional()
+  @IsString()
+  privacyPolicy?: string;
+
+  @IsOptional()
+  @IsString()
+  termsAndConditions?: string;
 }

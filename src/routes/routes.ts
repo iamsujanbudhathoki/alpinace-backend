@@ -475,6 +475,17 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ApiResponse__content-string-or-null__": {
+        "dataType": "refObject",
+        "properties": {
+            "data": {"dataType":"union","subSchemas":[{"dataType":"nestedObjectLiteral","nestedProperties":{"content":{"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true}}},{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"content":{"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true}}}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
+            "success": {"dataType":"boolean","required":true},
+            "message": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "NotificationType": {
         "dataType": "refEnum",
         "enums": ["inquiry","booking","quote","system"],
@@ -587,6 +598,7 @@ const models: TsoaRoute.Models = {
             "itemCount": {"dataType":"double","required":true},
             "status": {"ref":"CategoryStatus","required":true},
             "showInMenu": {"dataType":"boolean","required":true},
+            "isFeatured": {"dataType":"boolean","required":true},
             "menuOrder": {"dataType":"double","required":true},
             "image": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
             "mediaId": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
@@ -1716,6 +1728,8 @@ const models: TsoaRoute.Models = {
             "homeStats": {"dataType":"any"},
             "companyFaqs": {"dataType":"any"},
             "testimonials": {"dataType":"any"},
+            "privacyPolicy": {"dataType":"string"},
+            "termsAndConditions": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
@@ -2046,6 +2060,7 @@ const models: TsoaRoute.Models = {
             "slug": {"dataType":"string","required":true},
             "menuOrder": {"dataType":"double","required":true},
             "showInMenu": {"dataType":"boolean","required":true},
+            "isFeatured": {"dataType":"boolean","required":true},
             "status": {"ref":"CategoryStatus","required":true},
             "type": {"ref":"CategoryType","required":true},
             "parentId": {"dataType":"string","required":true},
@@ -2062,6 +2077,7 @@ const models: TsoaRoute.Models = {
             "slug": {"dataType":"string","required":true},
             "menuOrder": {"dataType":"double","required":true},
             "showInMenu": {"dataType":"boolean","required":true},
+            "isFeatured": {"dataType":"boolean","required":true},
             "status": {"ref":"CategoryStatus","required":true},
             "type": {"ref":"CategoryType","required":true},
             "parentId": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
@@ -2102,6 +2118,7 @@ const models: TsoaRoute.Models = {
             "description": {"dataType":"string","required":true},
             "status": {"ref":"CategoryStatus","required":true},
             "showInMenu": {"dataType":"boolean"},
+            "isFeatured": {"dataType":"boolean"},
             "menuOrder": {"dataType":"double"},
             "mediaId": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
             "parentId": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
@@ -2118,6 +2135,7 @@ const models: TsoaRoute.Models = {
             "description": {"dataType":"string"},
             "status": {"ref":"CategoryStatus"},
             "showInMenu": {"dataType":"boolean"},
+            "isFeatured": {"dataType":"boolean"},
             "menuOrder": {"dataType":"double"},
             "mediaId": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
             "parentId": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
@@ -2796,6 +2814,64 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
               await templateService.apiHandler({
                 methodName: 'getAll',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsSettingController_getPrivacyPolicy: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/settings/privacy-policy',
+            ...(fetchMiddlewares<RequestHandler>(SettingController)),
+            ...(fetchMiddlewares<RequestHandler>(SettingController.prototype.getPrivacyPolicy)),
+
+            async function SettingController_getPrivacyPolicy(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsSettingController_getPrivacyPolicy, request, response });
+
+                const controller = new SettingController();
+
+              await templateService.apiHandler({
+                methodName: 'getPrivacyPolicy',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsSettingController_getTermsAndConditions: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/settings/terms-and-conditions',
+            ...(fetchMiddlewares<RequestHandler>(SettingController)),
+            ...(fetchMiddlewares<RequestHandler>(SettingController.prototype.getTermsAndConditions)),
+
+            async function SettingController_getTermsAndConditions(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsSettingController_getTermsAndConditions, request, response });
+
+                const controller = new SettingController();
+
+              await templateService.apiHandler({
+                methodName: 'getTermsAndConditions',
                 controller,
                 response,
                 next,

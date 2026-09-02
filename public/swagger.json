@@ -1158,6 +1158,58 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ApiResponse__content-string-or-null__": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"properties": {
+									"content": {
+										"type": "string",
+										"nullable": true
+									}
+								},
+								"required": [
+									"content"
+								],
+								"type": "object"
+							},
+							{
+								"items": {
+									"properties": {
+										"content": {
+											"type": "string",
+											"nullable": true
+										}
+									},
+									"required": [
+										"content"
+									],
+									"type": "object"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"NotificationType": {
 				"enum": [
 					"inquiry",
@@ -1474,6 +1526,9 @@
 					"showInMenu": {
 						"type": "boolean"
 					},
+					"isFeatured": {
+						"type": "boolean"
+					},
 					"menuOrder": {
 						"type": "number",
 						"format": "double"
@@ -1516,6 +1571,7 @@
 					"itemCount",
 					"status",
 					"showInMenu",
+					"isFeatured",
 					"menuOrder"
 				],
 				"type": "object",
@@ -4838,7 +4894,13 @@
 					},
 					"homeStats": {},
 					"companyFaqs": {},
-					"testimonials": {}
+					"testimonials": {},
+					"privacyPolicy": {
+						"type": "string"
+					},
+					"termsAndConditions": {
+						"type": "string"
+					}
 				},
 				"type": "object",
 				"additionalProperties": false
@@ -5849,6 +5911,9 @@
 					"showInMenu": {
 						"type": "boolean"
 					},
+					"isFeatured": {
+						"type": "boolean"
+					},
 					"status": {
 						"$ref": "#/components/schemas/CategoryStatus"
 					},
@@ -5869,6 +5934,7 @@
 					"slug",
 					"menuOrder",
 					"showInMenu",
+					"isFeatured",
 					"status",
 					"type",
 					"parentId"
@@ -5892,6 +5958,9 @@
 						"format": "double"
 					},
 					"showInMenu": {
+						"type": "boolean"
+					},
+					"isFeatured": {
 						"type": "boolean"
 					},
 					"status": {
@@ -5921,6 +5990,7 @@
 					"slug",
 					"menuOrder",
 					"showInMenu",
+					"isFeatured",
 					"status",
 					"type",
 					"parentId",
@@ -6023,6 +6093,9 @@
 					"showInMenu": {
 						"type": "boolean"
 					},
+					"isFeatured": {
+						"type": "boolean"
+					},
 					"menuOrder": {
 						"type": "number",
 						"format": "double"
@@ -6064,6 +6137,9 @@
 						"$ref": "#/components/schemas/CategoryStatus"
 					},
 					"showInMenu": {
+						"type": "boolean"
+					},
+					"isFeatured": {
 						"type": "boolean"
 					},
 					"menuOrder": {
@@ -7563,6 +7639,52 @@
 					}
 				},
 				"description": "Get public site settings required for site branding and contact information.\nReturns safe, public configuration keys only.",
+				"tags": [
+					"Public Site Settings"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/settings/privacy-policy": {
+			"get": {
+				"operationId": "GetPrivacyPolicy",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse__content-string-or-null__"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get the public Privacy Policy content.\nReturns only the privacy policy HTML content — no other settings are exposed.",
+				"tags": [
+					"Public Site Settings"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/settings/terms-and-conditions": {
+			"get": {
+				"operationId": "GetTermsAndConditions",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse__content-string-or-null__"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get the public Terms & Conditions content.\nReturns only the terms and conditions HTML content — no other settings are exposed.",
 				"tags": [
 					"Public Site Settings"
 				],

@@ -22,4 +22,36 @@ export class SettingController extends Controller {
     const data = toPublicSetting(rawSettings);
     return { data, message: 'Settings retrieved successfully', success: true };
   }
+
+  /**
+   * Get the public Privacy Policy content.
+   * Returns only the privacy policy HTML content — no other settings are exposed.
+   */
+  @Get('privacy-policy')
+  @NoSecurity()
+  async getPrivacyPolicy(): Promise<ApiResponse<{ content: string | null }>> {
+    const rawSettings = await this.settingService.getAll();
+    const content = rawSettings['privacyPolicy'] ?? null;
+    return {
+      data: { content },
+      message: 'Privacy policy retrieved successfully',
+      success: true,
+    };
+  }
+
+  /**
+   * Get the public Terms & Conditions content.
+   * Returns only the terms and conditions HTML content — no other settings are exposed.
+   */
+  @Get('terms-and-conditions')
+  @NoSecurity()
+  async getTermsAndConditions(): Promise<ApiResponse<{ content: string | null }>> {
+    const rawSettings = await this.settingService.getAll();
+    const content = rawSettings['termsAndConditions'] ?? null;
+    return {
+      data: { content },
+      message: 'Terms & conditions retrieved successfully',
+      success: true,
+    };
+  }
 }

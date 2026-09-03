@@ -137,6 +137,16 @@ export class BlogService {
     if (item.status !== BlogStatus.PUBLISHED) {
       throw AppError.notFound(`Blog article ${idOrSlug} not found`);
     }
+
+    // Atomically increment views count in DB to avoid race conditions
+    await this.repo
+      .createQueryBuilder()
+      .update(BlogArticle)
+      .set({ views: () => 'COALESCE(views, 0) + 1' })
+      .where('id = :id', { id: item.id })
+      .execute();
+
+    item.views = (Number(item.views) || 0) + 1;
     return item;
   }
 

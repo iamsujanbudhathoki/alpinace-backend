@@ -201,6 +201,7 @@ export function toPublicBlogDetail(blog: BlogArticle): PublicBlogDetailDto {
     ...summary,
     content: blog.content,
     views: blog.views,
+    viewCount: blog.views,
     metaTitle: blog.metaTitle,
     metaDescription: blog.metaDescription,
     keywords: blog.keywords,

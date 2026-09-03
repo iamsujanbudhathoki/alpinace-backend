@@ -1051,6 +1051,7 @@ const models: TsoaRoute.Models = {
             "image": {"dataType":"string"},
             "content": {"dataType":"string"},
             "views": {"dataType":"double"},
+            "viewCount": {"dataType":"double"},
             "metaTitle": {"dataType":"string"},
             "metaDescription": {"dataType":"string"},
             "keywords": {"dataType":"string"},

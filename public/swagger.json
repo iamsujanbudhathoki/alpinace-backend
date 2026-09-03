@@ -2887,6 +2887,10 @@
 						"type": "number",
 						"format": "double"
 					},
+					"viewCount": {
+						"type": "number",
+						"format": "double"
+					},
 					"metaTitle": {
 						"type": "string"
 					},

@@ -165,6 +165,7 @@ export interface PublicBlogSummaryDto {
 export interface PublicBlogDetailDto extends PublicBlogSummaryDto {
   content?: string;
   views?: number;
+  viewCount?: number;
   metaTitle?: string;
   metaDescription?: string;
   keywords?: string;

@@ -8,6 +8,10 @@ export class UpdateSettingsDto {
 
   @IsOptional()
   @IsString()
+  siteLogo?: string;
+
+  @IsOptional()
+  @IsString()
   tagline?: string;
 
   @IsOptional()

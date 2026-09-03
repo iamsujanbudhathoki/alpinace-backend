@@ -4833,6 +4833,9 @@
 					"siteName": {
 						"type": "string"
 					},
+					"siteLogo": {
+						"type": "string"
+					},
 					"tagline": {
 						"type": "string"
 					},

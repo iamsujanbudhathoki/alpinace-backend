@@ -278,6 +278,7 @@ export function toPublicAboutUs(about: AboutUs): PublicAboutUsDto {
 export function toPublicSetting(settingsMap: Record<string, string>): PublicSettingDto {
   const PUBLIC_KEYS = [
     'siteName',
+    'siteLogo',
     'contactEmail',
     'contactPhone',
     'address',

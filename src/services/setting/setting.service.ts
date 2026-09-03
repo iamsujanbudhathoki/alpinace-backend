@@ -19,6 +19,7 @@ export class SettingService {
     const map: Record<string, string> = {
       // General Info
       siteName: 'Alpine Ace Expeditions',
+      siteLogo: '/logo.jpg',
       tagline: 'Venture Beyond the Ordinary',
       contactEmail: 'info@alpineace.com',
       contactPhone: '+977 1 4700543',

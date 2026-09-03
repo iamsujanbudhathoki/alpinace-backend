@@ -1705,6 +1705,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "siteName": {"dataType":"string"},
+            "siteLogo": {"dataType":"string"},
             "tagline": {"dataType":"string"},
             "siteDescription": {"dataType":"string"},
             "contactEmail": {"dataType":"string"},

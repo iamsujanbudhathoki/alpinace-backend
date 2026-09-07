@@ -15,9 +15,9 @@ class DotenvConfig {
   static NODE_ENV = process.env.NODE_ENV;
 
   // DB
-  static DATABASE_URL = process.env.DATABASE_URL?.trim() ;
+  static DATABASE_URL = process.env.DATABASE_URL?.trim();
   static DB_SSL =
-  process.env.DB_SSL === 'true' ||
+    process.env.DB_SSL === 'true' ||
     Boolean(
       (process.env.DATABASE_URL || '').includes('sslmode=require') ||
       (process.env.DATABASE_URL || '').includes('ssl=true'),

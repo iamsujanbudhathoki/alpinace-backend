@@ -81,6 +81,7 @@ export class TrekService {
     category?: string;
     categorySlug?: string;
     categoryId?: string;
+    activityId?: string;
     region?: string;
     difficulty?: TripDifficulty;
     status?: TrekStatus;
@@ -97,6 +98,12 @@ export class TrekService {
     page?: number;
   }): Promise<[Trek[], number]> {
     const qb = this.repo.createQueryBuilder('trek');
+
+    if (params?.activityId && params.activityId !== 'All') {
+      qb.andWhere('JSON_CONTAINS(trek.activity_ids, :actIdJson)', {
+        actIdJson: JSON.stringify(params.activityId),
+      });
+    }
 
     if (params?.isPublic) {
       qb.andWhere('trek.status IN (:...publicStatuses)', {
@@ -305,6 +312,7 @@ export class TrekService {
       slug,
       categoryId: dto.categoryId,
       subcategoryId: dto.subcategoryId || null,
+      activityIds: dto.activityIds || [],
       region: dto.region,
       durationDays: Number(dto.durationDays),
       maxAltitudeMeters: Number(dto.maxAltitudeMeters) || 1400,
@@ -374,6 +382,9 @@ export class TrekService {
     }
     if (dto.subcategoryId !== undefined) {
       trek.subcategoryId = dto.subcategoryId || null;
+    }
+    if (dto.activityIds !== undefined) {
+      trek.activityIds = dto.activityIds;
     }
     if (dto.region) trek.region = dto.region;
     if (dto.durationDays !== undefined)

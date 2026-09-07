@@ -34,6 +34,10 @@ export class CreateTrekDto {
   @IsUUID('4', { message: 'Subcategory ID must be a valid UUID' })
   subcategoryId?: string;
 
+  @IsOptional()
+  @IsArray()
+  activityIds?: string[];
+
   @IsString()
   @IsNotEmpty({ message: 'Region is required' })
   region!: string;
@@ -182,6 +186,10 @@ export class UpdateTrekDto {
   @IsOptional()
   @IsUUID('4', { message: 'Subcategory ID must be a valid UUID' })
   subcategoryId?: string;
+
+  @IsOptional()
+  @IsArray()
+  activityIds?: string[];
 
   @IsOptional()
   @IsString()

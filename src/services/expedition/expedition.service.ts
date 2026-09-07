@@ -90,6 +90,7 @@ export class ExpeditionService {
     category?: string;
     categorySlug?: string;
     categoryId?: string;
+    activityId?: string;
     region?: string;
     difficulty?: TripDifficulty;
     climbingGrade?: ClimbingGrade;
@@ -108,6 +109,12 @@ export class ExpeditionService {
   }): Promise<[Expedition[], number]> {
     await this.autoLinkCategories();
     const qb = this.repo.createQueryBuilder('exp');
+
+    if (params?.activityId && params.activityId !== 'All') {
+      qb.andWhere('JSON_CONTAINS(exp.activity_ids, :actIdJson)', {
+        actIdJson: JSON.stringify(params.activityId),
+      });
+    }
 
     const catParam = params?.categorySlug || params?.category || params?.categoryId;
     if (catParam && catParam !== 'All') {
@@ -337,6 +344,7 @@ export class ExpeditionService {
       slug,
       categoryId: dto.categoryId,
       subcategoryId: dto.subcategoryId || null,
+      activityIds: dto.activityIds || [],
       region: dto.region,
       durationDays: Number(dto.durationDays),
       peakHeightM: altitude,
@@ -411,6 +419,9 @@ export class ExpeditionService {
     }
     if (dto.subcategoryId !== undefined) {
       exp.subcategoryId = dto.subcategoryId || null;
+    }
+    if (dto.activityIds !== undefined) {
+      exp.activityIds = dto.activityIds;
     }
     if (dto.region) exp.region = dto.region;
     if (dto.durationDays !== undefined)

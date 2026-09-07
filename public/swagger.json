@@ -1210,6 +1210,118 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"PublicSearchType": {
+				"enum": [
+					"All",
+					"Trek",
+					"Tour",
+					"Expedition",
+					"Blog"
+				],
+				"type": "string"
+			},
+			"PublicSearchResultItemDto": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"type": {
+						"$ref": "#/components/schemas/PublicSearchType"
+					},
+					"category": {
+						"type": "string"
+					},
+					"region": {
+						"type": "string"
+					},
+					"durationDays": {
+						"type": "number",
+						"format": "double"
+					},
+					"priceUSD": {
+						"type": "number",
+						"format": "double"
+					},
+					"difficulty": {
+						"type": "string"
+					},
+					"image": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"title",
+					"slug",
+					"type"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicSearchResponseDto": {
+				"properties": {
+					"query": {
+						"type": "string"
+					},
+					"totalResults": {
+						"type": "number",
+						"format": "double"
+					},
+					"results": {
+						"items": {
+							"$ref": "#/components/schemas/PublicSearchResultItemDto"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"query",
+					"totalResults",
+					"results"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_PublicSearchResponseDto_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/PublicSearchResponseDto"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/PublicSearchResponseDto"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"NotificationType": {
 				"enum": [
 					"inquiry",
@@ -3103,6 +3215,12 @@
 						"type": "string",
 						"nullable": true
 					},
+					"activityIds": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
 					"region": {
 						"type": "string"
 					},
@@ -3520,6 +3638,12 @@
 					"subcategoryId": {
 						"type": "string"
 					},
+					"activityIds": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
 					"region": {
 						"type": "string"
 					},
@@ -3650,6 +3774,12 @@
 					},
 					"subcategoryId": {
 						"type": "string"
+					},
+					"activityIds": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
 					},
 					"region": {
 						"type": "string"
@@ -3804,6 +3934,12 @@
 					"subcategoryId": {
 						"type": "string",
 						"nullable": true
+					},
+					"activityIds": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
 					},
 					"region": {
 						"type": "string"
@@ -4059,6 +4195,12 @@
 					"subcategoryId": {
 						"type": "string"
 					},
+					"activityIds": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
 					"region": {
 						"type": "string"
 					},
@@ -4195,6 +4337,12 @@
 					},
 					"subcategoryId": {
 						"type": "string"
+					},
+					"activityIds": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
 					},
 					"region": {
 						"type": "string"
@@ -5326,6 +5474,12 @@
 						"type": "string",
 						"nullable": true
 					},
+					"activityIds": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
 					"region": {
 						"type": "string"
 					},
@@ -5589,6 +5743,12 @@
 					"subcategoryId": {
 						"type": "string"
 					},
+					"activityIds": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
 					"region": {
 						"type": "string"
 					},
@@ -5732,6 +5892,12 @@
 					},
 					"subcategoryId": {
 						"type": "string"
+					},
+					"activityIds": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
 					},
 					"region": {
 						"type": "string"
@@ -6665,6 +6831,205 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ActivityStatus": {
+				"enum": [
+					"active",
+					"draft"
+				],
+				"type": "string"
+			},
+			"Activity": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"deletedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"name": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"status": {
+						"$ref": "#/components/schemas/ActivityStatus"
+					},
+					"isFeatured": {
+						"type": "boolean"
+					},
+					"menuOrder": {
+						"type": "number",
+						"format": "double"
+					},
+					"image": {
+						"type": "string",
+						"nullable": true
+					},
+					"mediaId": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"deletedAt",
+					"name",
+					"slug",
+					"description",
+					"status",
+					"isFeatured",
+					"menuOrder"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_Activity-Array_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"items": {
+									"$ref": "#/components/schemas/Activity"
+								},
+								"type": "array"
+							},
+							{
+								"items": {
+									"items": {
+										"$ref": "#/components/schemas/Activity"
+									},
+									"type": "array"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_Activity_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/Activity"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/Activity"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateActivityDto": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"status": {
+						"$ref": "#/components/schemas/ActivityStatus"
+					},
+					"isFeatured": {
+						"type": "boolean"
+					},
+					"menuOrder": {
+						"type": "number",
+						"format": "double"
+					},
+					"mediaId": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"name",
+					"slug",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateActivityDto": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"status": {
+						"$ref": "#/components/schemas/ActivityStatus"
+					},
+					"isFeatured": {
+						"type": "boolean"
+					},
+					"menuOrder": {
+						"type": "number",
+						"format": "double"
+					},
+					"mediaId": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"AboutUsValueItem": {
 				"properties": {
 					"title": {
@@ -6909,6 +7274,86 @@
 						"type": "string"
 					}
 				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse__activity-Activity--treks-any-Array--tours-any-Array--expeditions-any-Array__": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"properties": {
+									"expeditions": {
+										"items": {},
+										"type": "array"
+									},
+									"tours": {
+										"items": {},
+										"type": "array"
+									},
+									"treks": {
+										"items": {},
+										"type": "array"
+									},
+									"activity": {
+										"$ref": "#/components/schemas/Activity"
+									}
+								},
+								"required": [
+									"expeditions",
+									"tours",
+									"treks",
+									"activity"
+								],
+								"type": "object"
+							},
+							{
+								"items": {
+									"properties": {
+										"expeditions": {
+											"items": {},
+											"type": "array"
+										},
+										"tours": {
+											"items": {},
+											"type": "array"
+										},
+										"treks": {
+											"items": {},
+											"type": "array"
+										},
+										"activity": {
+											"$ref": "#/components/schemas/Activity"
+										}
+									},
+									"required": [
+										"expeditions",
+										"tours",
+										"treks",
+										"activity"
+									],
+									"type": "object"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -7697,6 +8142,63 @@
 				],
 				"security": [],
 				"parameters": []
+			}
+		},
+		"/search": {
+			"get": {
+				"operationId": "Search",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_PublicSearchResponseDto_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Public Search API Route\nPerforms real-time search across active published Treks, Tours, Expeditions, and Blogs.\nNo authentication required.",
+				"tags": [
+					"Public Search"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "q",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "type",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/PublicSearchType"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
 			}
 		},
 		"/notifications": {
@@ -12135,6 +12637,294 @@
 				]
 			}
 		},
+		"/admin/activities": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Activity-Array_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Activities Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/ActivityStatus"
+						}
+					},
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "isFeatured",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Activity_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Activities Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateActivityDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/activities/{idOrSlug}": {
+			"get": {
+				"operationId": "GetByIdOrSlug",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Activity_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Activities Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "idOrSlug",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/admin/activities/reorder": {
+			"put": {
+				"operationId": "Reorder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Activities Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"items": {
+										"items": {
+											"properties": {
+												"menuOrder": {
+													"type": "number",
+													"format": "double"
+												},
+												"id": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"menuOrder",
+												"id"
+											],
+											"type": "object"
+										},
+										"type": "array"
+									}
+								},
+								"required": [
+									"items"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/activities/{id}": {
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Activity_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Activities Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateActivityDto"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "Delete",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_boolean_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Activities Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/admin/about-us": {
 			"get": {
 				"operationId": "GetAdminContent",
@@ -12236,6 +13026,96 @@
 						}
 					}
 				}
+			}
+		},
+		"/activities": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Activity-Array_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get active public activities list.",
+				"tags": [
+					"Public Activities"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "isFeatured",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				]
+			}
+		},
+		"/activities/{slug}": {
+			"get": {
+				"operationId": "GetBySlug",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse__activity-Activity--treks-any-Array--tours-any-Array--expeditions-any-Array__"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get activity details and associated packages (treks, tours, expeditions).",
+				"tags": [
+					"Public Activities"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "slug",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/about-us": {

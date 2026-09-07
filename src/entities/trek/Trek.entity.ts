@@ -88,6 +88,9 @@ export class Trek extends CommonEntity {
   @Column({ name: 'subcategory_id', type: 'varchar', length: 36, nullable: true })
   subcategoryId?: string | null;
 
+  @Column({ name: 'activity_ids', type: 'json', nullable: true })
+  activityIds?: string[];
+
   @Column({ name: 'region' })
   region: string;
 

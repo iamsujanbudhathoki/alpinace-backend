@@ -34,6 +34,10 @@ export class CreateTourDto {
   @IsUUID('4', { message: 'Subcategory ID must be a valid UUID' })
   subcategoryId?: string;
 
+  @IsOptional()
+  @IsArray()
+  activityIds?: string[];
+
   @IsString()
   @IsNotEmpty({ message: 'Region is required' })
   region!: string;
@@ -193,6 +197,10 @@ export class UpdateTourDto {
   @IsOptional()
   @IsUUID('4', { message: 'Subcategory ID must be a valid UUID' })
   subcategoryId?: string;
+
+  @IsOptional()
+  @IsArray()
+  activityIds?: string[];
 
   @IsOptional()
   @IsString()

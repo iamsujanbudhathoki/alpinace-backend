@@ -79,6 +79,7 @@ export class TourService {
     category?: string;
     categorySlug?: string;
     categoryId?: string;
+    activityId?: string;
     region?: string;
     tourType?: TourType;
     difficulty?: TripDifficulty;
@@ -94,6 +95,12 @@ export class TourService {
     page?: number;
   }): Promise<[Tour[], number]> {
     const qb = this.repo.createQueryBuilder('tour');
+
+    if (params?.activityId && params.activityId !== 'All') {
+      qb.andWhere('JSON_CONTAINS(tour.activity_ids, :actIdJson)', {
+        actIdJson: JSON.stringify(params.activityId),
+      });
+    }
 
     const catParam = params?.categorySlug || params?.category || params?.categoryId;
     if (catParam && catParam !== 'All') {
@@ -296,6 +303,7 @@ export class TourService {
       slug,
       categoryId: dto.categoryId,
       subcategoryId: dto.subcategoryId || null,
+      activityIds: dto.activityIds || [],
       region: dto.region,
       tourType: dto.tourType || TourType.CULTURAL_HERITAGE,
       transportation: dto.transportation,
@@ -367,6 +375,9 @@ export class TourService {
     }
     if (dto.subcategoryId !== undefined) {
       tour.subcategoryId = dto.subcategoryId || null;
+    }
+    if (dto.activityIds !== undefined) {
+      tour.activityIds = dto.activityIds;
     }
     if (dto.region) tour.region = dto.region;
     if (dto.tourType) tour.tourType = dto.tourType;

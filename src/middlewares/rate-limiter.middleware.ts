@@ -34,13 +34,18 @@ export const inquiryLimiter = rateLimit({
   },
 });
 
-/**
- * General API Limiter
- * Provides DDoS and abusive traffic protection across all standard routes.
- */
 export const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 1000, // Limit each IP to 1000 requests per 15 minutes
+  max: 5000, // Limit each IP to 5000 requests per 15 minutes
   standardHeaders: 'draft-7',
   legacyHeaders: false,
+  skip: (req) => {
+    // Skip rate limiting for search endpoints and local development
+    const path = req.path || req.originalUrl || '';
+    if (path.includes('/search')) {
+      return true;
+    }
+    const ip = req.ip || req.socket?.remoteAddress || '';
+    return ip === '127.0.0.1' || ip === '::1' || ip.includes('127.0.0.1');
+  },
 });

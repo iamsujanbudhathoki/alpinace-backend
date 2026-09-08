@@ -7439,7 +7439,7 @@
 		"securitySchemes": {}
 	},
 	"info": {
-		"title": "rest-nodejs-starter",
+		"title": "alpineace-backend",
 		"version": "1.0.0",
 		"license": {
 			"name": "ISC"

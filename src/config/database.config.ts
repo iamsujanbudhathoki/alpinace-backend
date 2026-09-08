@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { DotenvConfig } from './env.config';
+import { DotenvConfig, Environment } from './env.config';
 
 const isSslEnabled =
   DotenvConfig.DB_SSL ||
@@ -12,7 +12,7 @@ export const AppDataSource = new DataSource({
   type: 'mysql',
   url: DotenvConfig.DATABASE_URL,
   entities: [`${__dirname}/../entities/**/*.entity.{ts,js}`],
-  synchronize: true,
+  synchronize: DotenvConfig.NODE_ENV !== Environment.PRODUCTION,
   // dropSchema: true ,
   ssl: isSslEnabled ? { rejectUnauthorized: false } : false,
 });

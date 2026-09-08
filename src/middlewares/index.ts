@@ -33,7 +33,6 @@ export const configMiddleware = (app: express.Application) => {
     'https://www.alpineacetreks.com',
     'http://alpineacetreks.com',
     'http://www.alpineacetreks.com',
-    'https://alpineace.vercel.app',
     'http://localhost:3000',
     'http://localhost:3001',
     'http://localhost:5001',
@@ -48,13 +47,12 @@ export const configMiddleware = (app: express.Application) => {
       const cleanOrigin = origin.replace(/\/$/, '');
       if (
         allowedOrigins.includes(cleanOrigin) ||
-        cleanOrigin.endsWith('.vercel.app') ||
         cleanOrigin.endsWith('alpineacetreks.com') ||
         cleanOrigin.includes('localhost')
       ) {
         return callback(null, true);
       }
-      return callback(null, true);
+      return callback(new Error('Not allowed by CORS'));
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],

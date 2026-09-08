@@ -3678,6 +3678,36 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsCategoryController_getFeatured: Record<string, TsoaRoute.ParameterSchema> = {
+                limit: {"in":"query","name":"limit","dataType":"double"},
+        };
+        app.get('/categories/featured',
+            ...(fetchMiddlewares<RequestHandler>(CategoryController)),
+            ...(fetchMiddlewares<RequestHandler>(CategoryController.prototype.getFeatured)),
+
+            async function CategoryController_getFeatured(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsCategoryController_getFeatured, request, response });
+
+                const controller = new CategoryController();
+
+              await templateService.apiHandler({
+                methodName: 'getFeatured',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsCategoryController_getByIdOrSlug: Record<string, TsoaRoute.ParameterSchema> = {
                 idOrSlug: {"in":"path","name":"idOrSlug","required":true,"dataType":"string"},
         };

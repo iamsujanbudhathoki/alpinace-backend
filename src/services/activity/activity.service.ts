@@ -52,7 +52,36 @@ export class ActivityService {
     const resolved = await Promise.all(
       items.map((act) => this.mediaService.resolveItemMedia(act)),
     );
-    return [resolved, count];
+
+    // Attach tripCount (treks + tours + expeditions that list this activity) to each activity
+    const publicStatuses = ['active', 'featured'];
+    const withCounts = await Promise.all(
+      resolved.map(async (act) => {
+        const actIdJson = JSON.stringify(act.id);
+
+        const [trekCount, tourCount, expeditionCount] = await Promise.all([
+          AppDataSource.getRepository('treks')
+            .createQueryBuilder('t')
+            .where('JSON_CONTAINS(t.activity_ids, :actId)', { actId: actIdJson })
+            .andWhere('t.status IN (:...statuses)', { statuses: publicStatuses })
+            .getCount(),
+          AppDataSource.getRepository('tours')
+            .createQueryBuilder('t')
+            .where('JSON_CONTAINS(t.activity_ids, :actId)', { actId: actIdJson })
+            .andWhere('t.status IN (:...statuses)', { statuses: publicStatuses })
+            .getCount(),
+          AppDataSource.getRepository('expeditions')
+            .createQueryBuilder('t')
+            .where('JSON_CONTAINS(t.activity_ids, :actId)', { actId: actIdJson })
+            .andWhere('t.status IN (:...statuses)', { statuses: publicStatuses })
+            .getCount(),
+        ]);
+
+        return Object.assign(act, { tripCount: trekCount + tourCount + expeditionCount });
+      }),
+    );
+
+    return [withCounts, count];
   }
 
   async getByIdOrSlug(idOrSlug: string): Promise<Activity> {

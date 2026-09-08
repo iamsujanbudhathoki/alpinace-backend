@@ -76,6 +76,21 @@ export class CategoryController extends Controller {
   }
 
   /**
+   * Get featured categories for public display (e.g. site footer).
+   */
+  @Get('featured')
+  @NoSecurity()
+  async getFeatured(@Query() limit?: number): Promise<ApiResponse<PublicCategoryDto[]>> {
+    const items = await this.categoryService.getFeatured(limit);
+    const data = items.map(toPublicCategory);
+    return {
+      data,
+      message: 'Featured categories retrieved successfully',
+      success: true,
+    };
+  }
+
+  /**
    * Get public active category by ID or Slug.
    */
   @Get('{idOrSlug}')

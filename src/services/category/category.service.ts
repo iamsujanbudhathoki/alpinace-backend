@@ -84,6 +84,26 @@ export class CategoryService {
     return [resolved, count];
   }
 
+  async getFeatured(limit = 6): Promise<Category[]> {
+    const qb = this.repo.createQueryBuilder('cat');
+    qb.where('cat.status = :status', { status: CategoryStatus.ACTIVE });
+    qb.andWhere('cat.isFeatured = :isFeatured', { isFeatured: true });
+    qb.orderBy('cat.menuOrder', 'ASC').addOrderBy('cat.createdAt', 'DESC');
+    if (limit) qb.take(limit);
+
+    let items = await qb.getMany();
+    if (items.length === 0) {
+      const fallbackQb = this.repo.createQueryBuilder('cat');
+      fallbackQb.where('cat.status = :status', { status: CategoryStatus.ACTIVE });
+      fallbackQb.andWhere('cat.parentId IS NULL');
+      fallbackQb.orderBy('cat.menuOrder', 'ASC').addOrderBy('cat.createdAt', 'DESC');
+      if (limit) fallbackQb.take(limit);
+      items = await fallbackQb.getMany();
+    }
+
+    return Promise.all(items.map((cat) => this.mediaService.resolveItemMedia(cat)));
+  }
+
   async validateResourceCategory(
     domain: CategoryType,
     categoryId?: string | null,

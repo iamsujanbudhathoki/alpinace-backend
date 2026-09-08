@@ -20,12 +20,12 @@ export class AboutUsService {
     heroSubtitle:
       'AlpineAce was founded in Thamel in 2012 with a clear commitment: deliver high-altitude Himalayan expeditions that combine certified mountain guides with safety logistics and authentic local hospitality.',
     heroImage:
-      'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?q=80&w=1600',
+      '/about-everest-group.png',
     storyTitle: 'Twelve years of guided expeditions',
     storyContent:
       '<p>When we started, most operators in Nepal were either budget teahouse companies or foreign-owned luxury brands that subcontracted local guides. Neither worked well for serious travelers who wanted both comfort and real local knowledge.</p><p>We built AlpineAce around a direct model: Sherpa guides who lead every expedition, long-standing mountain lodge partnerships, and clear safety protocols. The result is a company focused entirely on trip quality and trekker safety.</p>',
     storyImage:
-      'https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=800',
+      '/mountain-placeholder.jpg',
     mission:
       '<p>To empower local Sherpa communities through sustainable, ethically managed Himalayan adventures while providing world-class safety standards for international trekkers.</p>',
     vision:
@@ -78,6 +78,7 @@ export class AboutUsService {
     if (dto.heroMediaId) {
       await this.mediaService.validateMediaExists(dto.heroMediaId);
     }
+    
     if (dto.storyMediaId) {
       await this.mediaService.validateMediaExists(dto.storyMediaId);
     }

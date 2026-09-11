@@ -1,6 +1,7 @@
 import { Type } from 'class-transformer';
 import {
   IsArray,
+  IsBoolean,
   IsEnum,
   IsNotEmpty,
   IsNumber,
@@ -77,9 +78,17 @@ export class CreateTourDto {
 
   @IsOptional()
   @IsEnum(TourStatus, {
-    message: 'Invalid tour status. Must be active, featured, or draft',
+    message: 'Invalid tour status. Must be active or draft',
   })
   status?: TourStatus;
+
+  @IsOptional()
+  @IsBoolean()
+  isFeatured?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  isPopular?: boolean;
 
   @IsOptional()
   @IsString()
@@ -238,6 +247,14 @@ export class UpdateTourDto {
   @IsOptional()
   @IsEnum(TourStatus)
   status?: TourStatus;
+
+  @IsOptional()
+  @IsBoolean()
+  isFeatured?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  isPopular?: boolean;
 
   @IsOptional()
   @IsString()

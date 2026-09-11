@@ -38,12 +38,12 @@ export class PublicSearchService {
     const pattern = `%${q.toLowerCase()}%`;
 
     const [treks, tours, expeditions, blogs] = await Promise.all([
-      // Treks (Active / Featured)
+      // Treks (Active)
       typeFilter === PublicSearchType.ALL || typeFilter === PublicSearchType.TREK
         ? this.trekRepo
             .createQueryBuilder('t')
-            .where('t.status IN (:...publicStatuses)', {
-              publicStatuses: [TrekStatus.ACTIVE, TrekStatus.FEATURED],
+            .where('t.status = :activeStatus', {
+              activeStatus: TrekStatus.ACTIVE,
             })
             .andWhere(
               '(LOWER(t.title) LIKE :pattern OR LOWER(t.region) LIKE :pattern OR LOWER(t.slug) LIKE :pattern)',
@@ -53,12 +53,12 @@ export class PublicSearchService {
             .getMany()
         : Promise.resolve([]),
 
-      // Tours (Active / Featured)
+      // Tours (Active)
       typeFilter === PublicSearchType.ALL || typeFilter === PublicSearchType.TOUR
         ? this.tourRepo
             .createQueryBuilder('t')
-            .where('t.status IN (:...publicStatuses)', {
-              publicStatuses: [TourStatus.ACTIVE, TourStatus.FEATURED],
+            .where('t.status = :activeStatus', {
+              activeStatus: TourStatus.ACTIVE,
             })
             .andWhere(
               '(LOWER(t.title) LIKE :pattern OR LOWER(t.region) LIKE :pattern OR LOWER(t.slug) LIKE :pattern)',
@@ -68,12 +68,12 @@ export class PublicSearchService {
             .getMany()
         : Promise.resolve([]),
 
-      // Expeditions (Active / Featured)
+      // Expeditions (Active)
       typeFilter === PublicSearchType.ALL || typeFilter === PublicSearchType.EXPEDITION
         ? this.expeditionRepo
             .createQueryBuilder('e')
-            .where('e.status IN (:...publicStatuses)', {
-              publicStatuses: [ExpeditionStatus.ACTIVE, ExpeditionStatus.FEATURED],
+            .where('e.status = :activeStatus', {
+              activeStatus: ExpeditionStatus.ACTIVE,
             })
             .andWhere(
               '(LOWER(e.title) LIKE :pattern OR LOWER(e.region) LIKE :pattern OR LOWER(e.slug) LIKE :pattern)',

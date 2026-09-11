@@ -37,6 +37,8 @@ export class TourService {
     tourType?: TourType;
     difficulty?: TripDifficulty;
     status?: TourStatus;
+    isFeatured?: boolean;
+    isPopular?: boolean;
     search?: string;
     minPrice?: number;
     maxPrice?: number;
@@ -60,6 +62,8 @@ export class TourService {
     tourType?: TourType;
     difficulty?: TripDifficulty;
     status?: TourStatus;
+    isFeatured?: boolean;
+    isPopular?: boolean;
     search?: string;
     minPrice?: number;
     maxPrice?: number;
@@ -84,6 +88,8 @@ export class TourService {
     tourType?: TourType;
     difficulty?: TripDifficulty;
     status?: TourStatus;
+    isFeatured?: boolean;
+    isPopular?: boolean;
     isPublic?: boolean;
     search?: string;
     minPrice?: number;
@@ -158,11 +164,19 @@ export class TourService {
       });
     }
     if (params?.isPublic) {
-      qb.andWhere('tour.status IN (:...publicStatuses)', {
-        publicStatuses: [TourStatus.ACTIVE, TourStatus.FEATURED],
+      qb.andWhere('tour.status = :activeStatus', {
+        activeStatus: TourStatus.ACTIVE,
       });
     } else if (params?.status) {
       qb.andWhere('tour.status = :status', { status: params.status });
+    }
+    if ((params as any)?.isFeatured !== undefined) {
+      const isFeatured = (params as any).isFeatured === 'true' || (params as any).isFeatured === true;
+      qb.andWhere('tour.isFeatured = :isFeatured', { isFeatured });
+    }
+    if ((params as any)?.isPopular !== undefined) {
+      const isPopular = (params as any).isPopular === 'true' || (params as any).isPopular === true;
+      qb.andWhere('tour.isPopular = :isPopular', { isPopular });
     }
     if (params?.search && params.search.trim()) {
       qb.andWhere(
@@ -273,7 +287,7 @@ export class TourService {
 
   async getPublicByIdOrSlug(idOrSlug: string): Promise<Tour> {
     const item = await this.getByIdOrSlug(idOrSlug);
-    if (item.status !== TourStatus.ACTIVE && item.status !== TourStatus.FEATURED) {
+    if (item.status !== TourStatus.ACTIVE) {
       throw AppError.notFound(`Tour package ${idOrSlug} not found`);
     }
     return item;

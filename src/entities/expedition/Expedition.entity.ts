@@ -12,7 +12,6 @@ import {
 
 export enum ExpeditionStatus {
   ACTIVE = 'active',
-  FEATURED = 'featured',
   DRAFT = 'draft',
 }
 
@@ -95,6 +94,12 @@ export class Expedition extends CommonEntity {
     default: ExpeditionStatus.ACTIVE,
   })
   status: ExpeditionStatus;
+
+  @Column({ name: 'is_featured', type: 'boolean', default: false })
+  isFeatured: boolean;
+
+  @Column({ name: 'is_popular', type: 'boolean', default: false })
+  isPopular: boolean;
 
   @Column({ name: 'total_bookings', type: 'int', default: 0 })
   totalBookings: number;

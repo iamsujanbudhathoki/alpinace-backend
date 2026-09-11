@@ -44,6 +44,8 @@ export class ExpeditionService {
     difficulty?: TripDifficulty;
     climbingGrade?: ClimbingGrade;
     status?: ExpeditionStatus;
+    isFeatured?: boolean;
+    isPopular?: boolean;
     search?: string;
     minPrice?: number;
     maxPrice?: number;
@@ -69,6 +71,8 @@ export class ExpeditionService {
     difficulty?: TripDifficulty;
     climbingGrade?: ClimbingGrade;
     status?: ExpeditionStatus;
+    isFeatured?: boolean;
+    isPopular?: boolean;
     search?: string;
     minPrice?: number;
     maxPrice?: number;
@@ -95,6 +99,8 @@ export class ExpeditionService {
     difficulty?: TripDifficulty;
     climbingGrade?: ClimbingGrade;
     status?: ExpeditionStatus;
+    isFeatured?: boolean;
+    isPopular?: boolean;
     isPublic?: boolean;
     search?: string;
     minPrice?: number;
@@ -174,11 +180,19 @@ export class ExpeditionService {
       });
     }
     if (params?.isPublic) {
-      qb.andWhere('exp.status IN (:...publicStatuses)', {
-        publicStatuses: [ExpeditionStatus.ACTIVE, ExpeditionStatus.FEATURED],
+      qb.andWhere('exp.status = :activeStatus', {
+        activeStatus: ExpeditionStatus.ACTIVE,
       });
     } else if (params?.status) {
       qb.andWhere('exp.status = :status', { status: params.status });
+    }
+    if ((params as any)?.isFeatured !== undefined) {
+      const isFeatured = (params as any).isFeatured === 'true' || (params as any).isFeatured === true;
+      qb.andWhere('exp.isFeatured = :isFeatured', { isFeatured });
+    }
+    if ((params as any)?.isPopular !== undefined) {
+      const isPopular = (params as any).isPopular === 'true' || (params as any).isPopular === true;
+      qb.andWhere('exp.isPopular = :isPopular', { isPopular });
     }
     if (params?.search && params.search.trim()) {
       qb.andWhere(
@@ -307,7 +321,7 @@ export class ExpeditionService {
 
   async getPublicByIdOrSlug(idOrSlug: string): Promise<Expedition> {
     const item = await this.getByIdOrSlug(idOrSlug);
-    if (item.status !== ExpeditionStatus.ACTIVE && item.status !== ExpeditionStatus.FEATURED) {
+    if (item.status !== ExpeditionStatus.ACTIVE) {
       throw AppError.notFound(`Expedition package ${idOrSlug} not found`);
     }
     return item;

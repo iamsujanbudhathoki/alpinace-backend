@@ -1,6 +1,7 @@
 import { Type } from 'class-transformer';
 import {
   IsArray,
+  IsBoolean,
   IsEnum,
   IsNotEmpty,
   IsNumber,
@@ -66,9 +67,17 @@ export class CreateTrekDto {
 
   @IsOptional()
   @IsEnum(TrekStatus, {
-    message: 'Invalid trek status. Must be active, featured, or draft',
+    message: 'Invalid trek status. Must be active or draft',
   })
   status?: TrekStatus;
+
+  @IsOptional()
+  @IsBoolean()
+  isFeatured?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  isPopular?: boolean;
 
   @IsOptional()
   @IsString()
@@ -219,6 +228,14 @@ export class UpdateTrekDto {
   @IsOptional()
   @IsEnum(TrekStatus)
   status?: TrekStatus;
+
+  @IsOptional()
+  @IsBoolean()
+  isFeatured?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  isPopular?: boolean;
 
   @IsOptional()
   @IsString()

@@ -5,7 +5,6 @@ import { TripActivity } from '../common/activity.enum';
 
 export enum TrekStatus {
   ACTIVE = 'active',
-  FEATURED = 'featured',
   DRAFT = 'draft',
 }
 
@@ -118,6 +117,12 @@ export class Trek extends CommonEntity {
     default: TrekStatus.ACTIVE,
   })
   status: TrekStatus;
+
+  @Column({ name: 'is_featured', type: 'boolean', default: false })
+  isFeatured: boolean;
+
+  @Column({ name: 'is_popular', type: 'boolean', default: false })
+  isPopular: boolean;
 
   @Column({ name: 'total_bookings', type: 'int', default: 0 })
   totalBookings: number;

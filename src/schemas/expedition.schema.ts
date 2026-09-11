@@ -89,9 +89,17 @@ export class CreateExpeditionDto {
 
   @IsOptional()
   @IsEnum(ExpeditionStatus, {
-    message: 'Invalid expedition status. Must be active, featured, or draft',
+    message: 'Invalid expedition status. Must be active or draft',
   })
   status?: ExpeditionStatus;
+
+  @IsOptional()
+  @IsBoolean()
+  isFeatured?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  isPopular?: boolean;
 
   @IsOptional()
   @IsString()
@@ -259,6 +267,14 @@ export class UpdateExpeditionDto {
   @IsOptional()
   @IsEnum(ExpeditionStatus)
   status?: ExpeditionStatus;
+
+  @IsOptional()
+  @IsBoolean()
+  isFeatured?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  isPopular?: boolean;
 
   @IsOptional()
   @IsString()

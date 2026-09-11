@@ -49,9 +49,7 @@ export class DashboardService {
       0,
     );
     const activeExpeditionsCount = expeditions.filter(
-      (e) =>
-        e.status === ExpeditionStatus.ACTIVE ||
-        e.status === ExpeditionStatus.FEATURED,
+      (e) => e.status === ExpeditionStatus.ACTIVE,
     ).length;
     const climbersCount = bookings
       .filter(
@@ -74,13 +72,13 @@ export class DashboardService {
     ).length;
 
     const featuredTreks = treks
-      .filter((t) => t.status === TrekStatus.FEATURED)
+      .filter((t) => Boolean(t.isFeatured))
       .map((t) => ({ ...t, categoryType: 'trekking' }));
     const featuredExpeditions = expeditions
-      .filter((e) => e.status === ExpeditionStatus.FEATURED)
+      .filter((e) => Boolean(e.isFeatured))
       .map((e) => ({ ...e, categoryType: 'expedition' }));
     const featuredTours = tours
-      .filter((tr) => tr.status === TourStatus.FEATURED)
+      .filter((tr) => Boolean(tr.isFeatured))
       .map((tr) => ({ ...tr, categoryType: 'tour' }));
 
     const featuredPackages = [

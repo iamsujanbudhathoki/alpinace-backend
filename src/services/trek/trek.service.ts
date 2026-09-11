@@ -36,6 +36,8 @@ export class TrekService {
     region?: string;
     difficulty?: TripDifficulty;
     status?: TrekStatus;
+    isFeatured?: boolean;
+    isPopular?: boolean;
     search?: string;
     minPrice?: number;
     maxPrice?: number;
@@ -60,6 +62,8 @@ export class TrekService {
     region?: string;
     difficulty?: TripDifficulty;
     status?: TrekStatus;
+    isFeatured?: boolean;
+    isPopular?: boolean;
     search?: string;
     minPrice?: number;
     maxPrice?: number;
@@ -85,6 +89,8 @@ export class TrekService {
     region?: string;
     difficulty?: TripDifficulty;
     status?: TrekStatus;
+    isFeatured?: boolean;
+    isPopular?: boolean;
     isPublic?: boolean;
     search?: string;
     minPrice?: number;
@@ -106,11 +112,19 @@ export class TrekService {
     }
 
     if (params?.isPublic) {
-      qb.andWhere('trek.status IN (:...publicStatuses)', {
-        publicStatuses: [TrekStatus.ACTIVE, TrekStatus.FEATURED],
+      qb.andWhere('trek.status = :activeStatus', {
+        activeStatus: TrekStatus.ACTIVE,
       });
     } else if (params?.status) {
       qb.andWhere('trek.status = :status', { status: params.status });
+    }
+    if ((params as any)?.isFeatured !== undefined) {
+      const isFeatured = (params as any).isFeatured === 'true' || (params as any).isFeatured === true;
+      qb.andWhere('trek.isFeatured = :isFeatured', { isFeatured });
+    }
+    if ((params as any)?.isPopular !== undefined) {
+      const isPopular = (params as any).isPopular === 'true' || (params as any).isPopular === true;
+      qb.andWhere('trek.isPopular = :isPopular', { isPopular });
     }
 
     const catParam = params?.categorySlug || params?.category || params?.categoryId;
@@ -282,7 +296,7 @@ export class TrekService {
 
   async getPublicByIdOrSlug(idOrSlug: string): Promise<Trek> {
     const item = await this.getByIdOrSlug(idOrSlug);
-    if (item.status !== TrekStatus.ACTIVE && item.status !== TrekStatus.FEATURED) {
+    if (item.status !== TrekStatus.ACTIVE) {
       throw AppError.notFound(`Trek package ${idOrSlug} not found`);
     }
     return item;

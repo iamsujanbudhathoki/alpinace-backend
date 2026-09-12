@@ -48,9 +48,37 @@ export class DashboardService {
       (sum, b) => sum + Number(b.totalAmountUSD || 0),
       0,
     );
+
+    const now = new Date();
+    const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const prevMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+
+    const currentMonthRevenue = bookings
+      .filter((b) => b.createdAt && new Date(b.createdAt) >= currentMonthStart)
+      .reduce((sum, b) => sum + Number(b.totalAmountUSD || 0), 0);
+
+    const prevMonthRevenue = bookings
+      .filter(
+        (b) =>
+          b.createdAt &&
+          new Date(b.createdAt) >= prevMonthStart &&
+          new Date(b.createdAt) < currentMonthStart,
+      )
+      .reduce((sum, b) => sum + Number(b.totalAmountUSD || 0), 0);
+
+    let revenueChangePercent = 0;
+    if (prevMonthRevenue > 0) {
+      revenueChangePercent = Number(
+        (((currentMonthRevenue - prevMonthRevenue) / prevMonthRevenue) * 100).toFixed(1),
+      );
+    } else if (currentMonthRevenue > 0) {
+      revenueChangePercent = 100;
+    }
+
     const activeExpeditionsCount = expeditions.filter(
       (e) => e.status === ExpeditionStatus.ACTIVE,
     ).length;
+
     const climbersCount = bookings
       .filter(
         (b) =>
@@ -59,14 +87,17 @@ export class DashboardService {
             b.bookingStatus === BookingStatus.CONFIRMED),
       )
       .reduce((sum, b) => sum + Number(b.groupSize || 1), 0);
+
     const pendingBookingsCount = bookings.filter(
       (b) =>
         b.bookingStatus === BookingStatus.IN_REVIEW ||
         b.paymentStatus === BookingPaymentStatus.PENDING,
     ).length;
+
     const pendingInquiriesCount = inquiries.filter(
       (i) => i.status === 'New',
     ).length;
+
     const timsProcessingCount = bookings.filter(
       (b) => b.permitStatus === BookingPermitStatus.PROCESSING,
     ).length;
@@ -88,10 +119,10 @@ export class DashboardService {
     ].slice(0, 4);
 
     return {
-      totalRevenueUSD: totalRevenue || 148500,
-      revenueChangePercent: 18.4,
-      activeExpeditions: activeExpeditionsCount || 6,
-      climbersOnMountain: climbersCount || 24,
+      totalRevenueUSD: totalRevenue,
+      revenueChangePercent,
+      activeExpeditions: activeExpeditionsCount,
+      climbersOnMountain: climbersCount,
       pendingBookings: pendingBookingsCount,
       pendingInquiries: pendingInquiriesCount,
       timsPermitsProcessing: timsProcessingCount,

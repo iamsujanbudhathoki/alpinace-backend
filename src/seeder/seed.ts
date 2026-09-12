@@ -16,7 +16,7 @@ export const seedDatabase = async () => {
 
   if (!existingAdmin) {
     const admin = adminRepo.create({
-      name: 'Sujan Budhathoki',
+      name: 'Alpine Ace Treks Admin',
       email: 'admin@alpineacetreks.com',
       password: 'admin123',
       role: AdminRole.ADMIN,

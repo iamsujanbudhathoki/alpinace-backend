@@ -1,0 +1,26 @@
+<h1 style="font-size: 20px; font-weight: 800; color: #e11d48; margin: 0 0 16px 0; letter-spacing: -0.3px;">
+  🚨 Security Alert: Admin Account Locked Out
+</h1>
+
+<p style="font-size: 14px; line-height: 1.6; color: #3f3f46; margin: 0 0 20px 0;">
+  An administrator account has been locked out after <strong>5 consecutive failed login attempts</strong>.
+</p>
+
+<div style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #71717a; margin-bottom: 8px;">
+  Lockout Event Details
+</div>
+
+<%- include('partials/data-table', {
+  rows: [
+    { label: 'Account Name', value: adminName },
+    { label: 'Account Email', value: adminEmail },
+    { label: 'Lockout Time', value: timestamp },
+    { label: 'IP Address', value: (typeof ip !== 'undefined' && ip) ? ip : 'Unknown', isCode: true }
+  ]
+}) %>
+
+<%- include('partials/callout', {
+  title: 'Action Required',
+  text: 'If this was unauthorized activity, please review system audit logs and verify account security immediately.',
+  type: 'warning'
+}) %>

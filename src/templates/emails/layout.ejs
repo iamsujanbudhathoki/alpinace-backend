@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title><%= typeof title !== 'undefined' ? title : 'Alpine Ace' %></title>
+  <% if (typeof preheader !== 'undefined' && preheader) { %>
+    <div style="display: none; max-height: 0px; overflow: hidden; font-size: 1px; line-height: 1px; color: #ffffff; opacity: 0;"><%= preheader %></div>
+  <% } %>
+  <style type="text/css">
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
+    body { height: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important; background-color: #fafaf9; color: #09090b; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    a[x-apple-data-detectors] { color: inherit !important; text-decoration: none !important; font-size: inherit !important; font-family: inherit !important; font-weight: inherit !important; line-height: inherit !important; }
+    @media screen and (max-width: 600px) {
+      .email-container { width: 100% !important; margin: auto !important; border-radius: 0 !important; border: none !important; }
+      .content-padding { padding: 24px 20px !important; }
+    }
+  </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #fafaf9;">
+  <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #fafaf9; table-layout: fixed;">
+    <tr>
+      <td align="center" style="padding: 36px 16px;">
+        <!--[if mso]>
+        <table role="presentation" align="center" border="0" cellspacing="0" cellpadding="0" width="580">
+        <tr>
+        <td>
+        <![endif]-->
+        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" class="email-container" style="max-width: 580px; background-color: #ffffff; border: 1px solid #e7e5e4; border-top: 4px solid #f59e0b; border-radius: 8px; overflow: hidden; margin: 0 auto;">
+          <!-- Shared Header -->
+          <tr>
+            <td>
+              <%- include('partials/header', { subtitle: typeof subtitle !== 'undefined' ? subtitle : undefined }) %>
+            </td>
+          </tr>
+          <!-- Body Content -->
+          <tr>
+            <td class="content-padding" style="padding: 32px 32px 28px 32px;">
+              <%- body %>
+            </td>
+          </tr>
+          <!-- Shared Footer -->
+          <tr>
+            <td>
+              <%- include('partials/footer', { footerText: typeof footerText !== 'undefined' ? footerText : undefined }) %>
+            </td>
+          </tr>
+        </table>
+        <!--[if mso]>
+        </td>
+        </tr>
+        </table>
+        <![endif]-->
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

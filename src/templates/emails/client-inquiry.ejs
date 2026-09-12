@@ -1,0 +1,30 @@
+<h1 style="font-size: 20px; font-weight: 800; color: #09090b; margin: 0 0 16px 0; letter-spacing: -0.3px;">
+  Inquiry Received
+</h1>
+
+<p style="font-size: 15px; font-weight: 700; color: #09090b; margin: 0 0 12px 0;">
+  Namaste <%= guestName %>,
+</p>
+
+<p style="font-size: 14px; line-height: 1.6; color: #3f3f46; margin: 0 0 24px 0;">
+  Thank you for reaching out to Alpine Ace! We have received your inquiry for <strong><%= interestedTrip || 'your upcoming trip' %></strong>.
+</p>
+
+<div style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #71717a; margin-bottom: 8px;">
+  Your Inquiry Details
+</div>
+
+<%- include('partials/data-table', {
+  rows: [
+    { label: 'Trip', value: interestedTrip || 'Custom Trek' },
+    { label: 'Travelers', value: (typeof groupSize !== 'undefined' && groupSize ? groupSize : 1) + ' ' + (groupSize === 1 ? 'person' : 'people') },
+    { label: 'Dates', value: (typeof travelDates !== 'undefined' && travelDates ? travelDates : 'Flexible') },
+    { label: 'Note', value: (typeof message !== 'undefined' && message ? message : 'None') }
+  ]
+}) %>
+
+<%- include('partials/callout', {
+  title: 'What Happens Next',
+  text: 'We are checking availability and route options for your trip. Someone from our team will email you back within 12 hours with recommendations.',
+  type: 'info'
+}) %>

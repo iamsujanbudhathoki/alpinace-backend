@@ -1,0 +1,31 @@
+<h1 style="font-size: 20px; font-weight: 800; color: #09090b; margin: 0 0 16px 0; letter-spacing: -0.3px;">
+  New Booking Request
+</h1>
+
+<p style="font-size: 14px; line-height: 1.6; color: #3f3f46; margin: 0 0 20px 0;">
+  A new trip booking request has been submitted through the website.
+</p>
+
+<div style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #71717a; margin-bottom: 8px;">
+  Booking &amp; Traveler Details
+</div>
+
+<%- include('partials/data-table', {
+  rows: [
+    { label: 'Booking Reference', value: reference, isCode: true },
+    { label: 'Guest Name', value: guestName },
+    { label: 'Email Address', value: email, isLink: true, href: 'mailto:' + email },
+    { label: 'Phone / WhatsApp', value: (typeof phone !== 'undefined' && phone) ? phone : 'Not provided' },
+    { label: 'Country', value: (typeof country !== 'undefined' && country) ? country : 'N/A' },
+    { label: 'Package Name', value: packageName },
+    { label: 'Departure & Return', value: (typeof startDate !== 'undefined' && startDate ? startDate : 'TBD') + ' to ' + (typeof endDate !== 'undefined' && endDate ? endDate : 'TBD') },
+    { label: 'Group Size', value: (typeof groupSize !== 'undefined' && groupSize ? groupSize : 1) + ' Traveler(s)' },
+    { label: 'Total Amount', value: '$' + (typeof totalAmountUSD !== 'undefined' && totalAmountUSD ? totalAmountUSD.toLocaleString() : 0) + ' USD' },
+    { label: 'Special Requests', value: (typeof specialRequests !== 'undefined' && specialRequests ? specialRequests : 'None') }
+  ]
+}) %>
+
+<%- include('partials/button', {
+  url: 'mailto:' + email + '?subject=RE:%20Alpine%20Ace%20Booking%20' + reference + '%20-%20' + encodeURIComponent(packageName),
+  label: 'Reply to ' + guestName
+}) %>

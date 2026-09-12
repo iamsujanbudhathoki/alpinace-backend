@@ -1,0 +1,28 @@
+<h1 style="font-size: 20px; font-weight: 800; color: #09090b; margin: 0 0 16px 0; letter-spacing: -0.3px;">
+  New Trip Inquiry
+</h1>
+
+<p style="font-size: 14px; line-height: 1.6; color: #3f3f46; margin: 0 0 20px 0;">
+  A new traveler inquiry has been submitted through the website.
+</p>
+
+<div style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #71717a; margin-bottom: 8px;">
+  Traveler Details
+</div>
+
+<%- include('partials/data-table', {
+  rows: [
+    { label: 'Guest Name', value: guestName },
+    { label: 'Email Address', value: email, isLink: true, href: 'mailto:' + email },
+    { label: 'Phone / WhatsApp', value: (typeof phone !== 'undefined' && phone) ? phone : 'Not provided' },
+    { label: 'Interested Trip', value: (typeof interestedTrip !== 'undefined' && interestedTrip) ? interestedTrip : 'General inquiry' },
+    { label: 'Group Size', value: (typeof groupSize !== 'undefined' && groupSize ? groupSize : 1) + ' Traveler(s)' },
+    { label: 'Travel Dates', value: (typeof travelDates !== 'undefined' && travelDates) ? travelDates : 'Flexible' },
+    { label: 'Guest Message', value: (typeof message !== 'undefined' && message) ? message : 'None' }
+  ]
+}) %>
+
+<%- include('partials/button', {
+  url: 'mailto:' + email + '?subject=RE:%20Alpine%20Ace%20Inquiry%20-%20' + encodeURIComponent(typeof interestedTrip !== 'undefined' && interestedTrip ? interestedTrip : 'Expedition'),
+  label: 'Reply to ' + guestName
+}) %>

@@ -1,0 +1,32 @@
+<h1 style="font-size: 20px; font-weight: 800; color: #09090b; margin: 0 0 16px 0; letter-spacing: -0.3px;">
+  Booking Request Received
+</h1>
+
+<p style="font-size: 15px; font-weight: 700; color: #09090b; margin: 0 0 12px 0;">
+  Namaste <%= guestName %>,
+</p>
+
+<p style="font-size: 14px; line-height: 1.6; color: #3f3f46; margin: 0 0 24px 0;">
+  Thank you for choosing Alpine Ace! We have received your booking request for <strong><%= packageName %></strong>. Your booking reference code is <strong style="color: #d97706;"><%= reference %></strong>.
+</p>
+
+<div style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #71717a; margin-bottom: 8px;">
+  Booking Summary
+</div>
+
+<%- include('partials/data-table', {
+  rows: [
+    { label: 'Booking Reference', value: reference, isCode: true },
+    { label: 'Trip Name', value: packageName },
+    { label: 'Dates', value: (typeof startDate !== 'undefined' && startDate ? startDate : 'TBD') + ' to ' + (typeof endDate !== 'undefined' && endDate ? endDate : 'TBD') },
+    { label: 'Travelers', value: (typeof groupSize !== 'undefined' && groupSize ? groupSize : 1) + ' ' + (groupSize === 1 ? 'person' : 'people') },
+    { label: 'Estimated Total', value: '$' + (typeof totalAmountUSD !== 'undefined' && totalAmountUSD ? totalAmountUSD.toLocaleString() : 0) + ' USD' },
+    { label: 'Special Requests', value: (typeof specialRequests !== 'undefined' && specialRequests ? specialRequests : 'None') }
+  ]
+}) %>
+
+<%- include('partials/callout', {
+  title: 'What Happens Next',
+  text: 'Our team is checking lodge rooms and permits for your dates. We will follow up with you within 12 hours to confirm your reservation details.',
+  type: 'info'
+}) %>

@@ -139,7 +139,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "TrekStatus": {
         "dataType": "refEnum",
-        "enums": ["active","featured","draft"],
+        "enums": ["active","draft"],
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ApiResponse_any_": {
@@ -332,7 +332,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "TourStatus": {
         "dataType": "refEnum",
-        "enums": ["active","featured","draft"],
+        "enums": ["active","draft"],
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "PublicTourDetailDto": {
@@ -850,7 +850,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ExpeditionStatus": {
         "dataType": "refEnum",
-        "enums": ["active","featured","draft"],
+        "enums": ["active","draft"],
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "PublicExpeditionDetailDto": {
@@ -1188,6 +1188,8 @@ const models: TsoaRoute.Models = {
             "difficulty": {"ref":"TripDifficulty","required":true},
             "priceUSD": {"dataType":"double","required":true},
             "status": {"ref":"TrekStatus","required":true},
+            "isFeatured": {"dataType":"boolean","required":true},
+            "isPopular": {"dataType":"boolean","required":true},
             "totalBookings": {"dataType":"double","required":true},
             "rating": {"dataType":"double","required":true},
             "reviewsCount": {"dataType":"double","required":true},
@@ -1329,6 +1331,8 @@ const models: TsoaRoute.Models = {
             "difficulty": {"ref":"TripDifficulty"},
             "priceUSD": {"dataType":"double","required":true},
             "status": {"ref":"TrekStatus"},
+            "isFeatured": {"dataType":"boolean"},
+            "isPopular": {"dataType":"boolean"},
             "shortDesc": {"dataType":"string"},
             "country": {"dataType":"string"},
             "activity": {"ref":"TripActivity"},
@@ -1369,6 +1373,8 @@ const models: TsoaRoute.Models = {
             "difficulty": {"ref":"TripDifficulty"},
             "priceUSD": {"dataType":"double"},
             "status": {"ref":"TrekStatus"},
+            "isFeatured": {"dataType":"boolean"},
+            "isPopular": {"dataType":"boolean"},
             "shortDesc": {"dataType":"string"},
             "country": {"dataType":"string"},
             "activity": {"ref":"TripActivity"},
@@ -1418,6 +1424,8 @@ const models: TsoaRoute.Models = {
             "difficulty": {"ref":"TripDifficulty","required":true},
             "priceUSD": {"dataType":"double","required":true},
             "status": {"ref":"TourStatus","required":true},
+            "isFeatured": {"dataType":"boolean","required":true},
+            "isPopular": {"dataType":"boolean","required":true},
             "totalBookings": {"dataType":"double","required":true},
             "rating": {"dataType":"double","required":true},
             "reviewsCount": {"dataType":"double","required":true},
@@ -1485,6 +1493,8 @@ const models: TsoaRoute.Models = {
             "difficulty": {"ref":"TripDifficulty"},
             "priceUSD": {"dataType":"double","required":true},
             "status": {"ref":"TourStatus"},
+            "isFeatured": {"dataType":"boolean"},
+            "isPopular": {"dataType":"boolean"},
             "shortDesc": {"dataType":"string"},
             "country": {"dataType":"string"},
             "activity": {"ref":"TripActivity"},
@@ -1527,6 +1537,8 @@ const models: TsoaRoute.Models = {
             "difficulty": {"ref":"TripDifficulty"},
             "priceUSD": {"dataType":"double"},
             "status": {"ref":"TourStatus"},
+            "isFeatured": {"dataType":"boolean"},
+            "isPopular": {"dataType":"boolean"},
             "shortDesc": {"dataType":"string"},
             "country": {"dataType":"string"},
             "activity": {"ref":"TripActivity"},
@@ -1961,6 +1973,8 @@ const models: TsoaRoute.Models = {
             "oxygenRequired": {"dataType":"boolean","required":true},
             "priceUSD": {"dataType":"double","required":true},
             "status": {"ref":"ExpeditionStatus","required":true},
+            "isFeatured": {"dataType":"boolean","required":true},
+            "isPopular": {"dataType":"boolean","required":true},
             "totalBookings": {"dataType":"double","required":true},
             "rating": {"dataType":"double","required":true},
             "reviewsCount": {"dataType":"double","required":true},
@@ -2030,6 +2044,8 @@ const models: TsoaRoute.Models = {
             "oxygenRequired": {"dataType":"boolean"},
             "priceUSD": {"dataType":"double","required":true},
             "status": {"ref":"ExpeditionStatus"},
+            "isFeatured": {"dataType":"boolean"},
+            "isPopular": {"dataType":"boolean"},
             "shortDesc": {"dataType":"string"},
             "country": {"dataType":"string"},
             "activity": {"ref":"TripActivity"},
@@ -2074,6 +2090,8 @@ const models: TsoaRoute.Models = {
             "oxygenRequired": {"dataType":"boolean"},
             "priceUSD": {"dataType":"double"},
             "status": {"ref":"ExpeditionStatus"},
+            "isFeatured": {"dataType":"boolean"},
+            "isPopular": {"dataType":"boolean"},
             "shortDesc": {"dataType":"string"},
             "country": {"dataType":"string"},
             "activity": {"ref":"TripActivity"},
@@ -3931,6 +3949,8 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 region: {"in":"query","name":"region","dataType":"string"},
                 difficulty: {"in":"query","name":"difficulty","ref":"TripDifficulty"},
                 status: {"in":"query","name":"status","ref":"TrekStatus"},
+                isFeatured: {"in":"query","name":"isFeatured","dataType":"boolean"},
+                isPopular: {"in":"query","name":"isPopular","dataType":"boolean"},
                 search: {"in":"query","name":"search","dataType":"string"},
                 minPrice: {"in":"query","name":"minPrice","dataType":"double"},
                 maxPrice: {"in":"query","name":"maxPrice","dataType":"double"},
@@ -4101,6 +4121,8 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 tourType: {"in":"query","name":"tourType","ref":"TourType"},
                 difficulty: {"in":"query","name":"difficulty","ref":"TripDifficulty"},
                 status: {"in":"query","name":"status","ref":"TourStatus"},
+                isFeatured: {"in":"query","name":"isFeatured","dataType":"boolean"},
+                isPopular: {"in":"query","name":"isPopular","dataType":"boolean"},
                 search: {"in":"query","name":"search","dataType":"string"},
                 minPrice: {"in":"query","name":"minPrice","dataType":"double"},
                 maxPrice: {"in":"query","name":"maxPrice","dataType":"double"},
@@ -5234,6 +5256,8 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 difficulty: {"in":"query","name":"difficulty","ref":"TripDifficulty"},
                 climbingGrade: {"in":"query","name":"climbingGrade","ref":"ClimbingGrade"},
                 status: {"in":"query","name":"status","ref":"ExpeditionStatus"},
+                isFeatured: {"in":"query","name":"isFeatured","dataType":"boolean"},
+                isPopular: {"in":"query","name":"isPopular","dataType":"boolean"},
                 search: {"in":"query","name":"search","dataType":"string"},
                 minPrice: {"in":"query","name":"minPrice","dataType":"double"},
                 maxPrice: {"in":"query","name":"maxPrice","dataType":"double"},

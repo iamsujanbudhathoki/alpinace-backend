@@ -1,0 +1,28 @@
+<%
+  let bgColor = '#fefce8';
+  let borderColor = '#f59e0b';
+  let titleColor = '#b45309';
+  let textColor = '#451a03';
+
+  if (typeof type !== 'undefined' && type === 'warning') {
+    bgColor = '#fff1f2';
+    borderColor = '#e11d48';
+    titleColor = '#9f1239';
+    textColor = '#881337';
+  } else if (typeof type !== 'undefined' && type === 'info') {
+    bgColor = '#fafaf9';
+    borderColor = '#d97706';
+    titleColor = '#09090b';
+    textColor = '#3f3f46';
+  }
+%>
+<div style="background-color: <%= bgColor %>; border-left: 4px solid <%= borderColor %>; padding: 16px 20px; border-radius: 0 6px 6px 0; margin: 24px 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <% if (typeof title !== 'undefined' && title) { %>
+    <div style="font-size: 14px; font-weight: 700; color: <%= titleColor %>; margin-bottom: 4px;">
+      <%= title %>
+    </div>
+  <% } %>
+  <div style="font-size: 14px; line-height: 1.6; color: <%= textColor %>; font-weight: 400;">
+    <%= text %>
+  </div>
+</div>

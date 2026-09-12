@@ -170,7 +170,6 @@
 			"TrekStatus": {
 				"enum": [
 					"active",
-					"featured",
 					"draft"
 				],
 				"type": "string"
@@ -707,7 +706,6 @@
 			"TourStatus": {
 				"enum": [
 					"active",
-					"featured",
 					"draft"
 				],
 				"type": "string"
@@ -2244,7 +2242,6 @@
 			"ExpeditionStatus": {
 				"enum": [
 					"active",
-					"featured",
 					"draft"
 				],
 				"type": "string"
@@ -3242,6 +3239,12 @@
 					"status": {
 						"$ref": "#/components/schemas/TrekStatus"
 					},
+					"isFeatured": {
+						"type": "boolean"
+					},
+					"isPopular": {
+						"type": "boolean"
+					},
 					"totalBookings": {
 						"type": "number",
 						"format": "double"
@@ -3355,6 +3358,8 @@
 					"difficulty",
 					"priceUSD",
 					"status",
+					"isFeatured",
+					"isPopular",
 					"totalBookings",
 					"rating",
 					"reviewsCount",
@@ -3665,6 +3670,12 @@
 					"status": {
 						"$ref": "#/components/schemas/TrekStatus"
 					},
+					"isFeatured": {
+						"type": "boolean"
+					},
+					"isPopular": {
+						"type": "boolean"
+					},
 					"shortDesc": {
 						"type": "string"
 					},
@@ -3801,6 +3812,12 @@
 					},
 					"status": {
 						"$ref": "#/components/schemas/TrekStatus"
+					},
+					"isFeatured": {
+						"type": "boolean"
+					},
+					"isPopular": {
+						"type": "boolean"
 					},
 					"shortDesc": {
 						"type": "string"
@@ -3968,6 +3985,12 @@
 					"status": {
 						"$ref": "#/components/schemas/TourStatus"
 					},
+					"isFeatured": {
+						"type": "boolean"
+					},
+					"isPopular": {
+						"type": "boolean"
+					},
 					"totalBookings": {
 						"type": "number",
 						"format": "double"
@@ -4083,6 +4106,8 @@
 					"difficulty",
 					"priceUSD",
 					"status",
+					"isFeatured",
+					"isPopular",
 					"totalBookings",
 					"rating",
 					"reviewsCount",
@@ -4228,6 +4253,12 @@
 					"status": {
 						"$ref": "#/components/schemas/TourStatus"
 					},
+					"isFeatured": {
+						"type": "boolean"
+					},
+					"isPopular": {
+						"type": "boolean"
+					},
 					"shortDesc": {
 						"type": "string"
 					},
@@ -4370,6 +4401,12 @@
 					},
 					"status": {
 						"$ref": "#/components/schemas/TourStatus"
+					},
+					"isFeatured": {
+						"type": "boolean"
+					},
+					"isPopular": {
+						"type": "boolean"
 					},
 					"shortDesc": {
 						"type": "string"
@@ -5514,6 +5551,12 @@
 					"status": {
 						"$ref": "#/components/schemas/ExpeditionStatus"
 					},
+					"isFeatured": {
+						"type": "boolean"
+					},
+					"isPopular": {
+						"type": "boolean"
+					},
 					"totalBookings": {
 						"type": "number",
 						"format": "double"
@@ -5631,6 +5674,8 @@
 					"oxygenRequired",
 					"priceUSD",
 					"status",
+					"isFeatured",
+					"isPopular",
 					"totalBookings",
 					"rating",
 					"reviewsCount",
@@ -5783,6 +5828,12 @@
 					"status": {
 						"$ref": "#/components/schemas/ExpeditionStatus"
 					},
+					"isFeatured": {
+						"type": "boolean"
+					},
+					"isPopular": {
+						"type": "boolean"
+					},
 					"shortDesc": {
 						"type": "string"
 					},
@@ -5932,6 +5983,12 @@
 					},
 					"status": {
 						"$ref": "#/components/schemas/ExpeditionStatus"
+					},
+					"isFeatured": {
+						"type": "boolean"
+					},
+					"isPopular": {
+						"type": "boolean"
 					},
 					"shortDesc": {
 						"type": "string"
@@ -9494,6 +9551,22 @@
 					},
 					{
 						"in": "query",
+						"name": "isFeatured",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "isPopular",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
 						"name": "search",
 						"required": false,
 						"schema": {
@@ -9807,6 +9880,22 @@
 						"required": false,
 						"schema": {
 							"$ref": "#/components/schemas/TourStatus"
+						}
+					},
+					{
+						"in": "query",
+						"name": "isFeatured",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "isPopular",
+						"required": false,
+						"schema": {
+							"type": "boolean"
 						}
 					},
 					{
@@ -11496,6 +11585,22 @@
 						"required": false,
 						"schema": {
 							"$ref": "#/components/schemas/ExpeditionStatus"
+						}
+					},
+					{
+						"in": "query",
+						"name": "isFeatured",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "isPopular",
+						"required": false,
+						"schema": {
+							"type": "boolean"
 						}
 					},
 					{

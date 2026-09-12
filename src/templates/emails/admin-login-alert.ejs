@@ -1,0 +1,31 @@
+<h1 style="font-size: 20px; font-weight: 800; color: #09090b; margin: 0 0 16px 0; letter-spacing: -0.3px;">
+  Security Alert: Admin Login
+</h1>
+
+<p style="font-size: 15px; font-weight: 700; color: #09090b; margin: 0 0 12px 0;">
+  Hello <%= adminName %>,
+</p>
+
+<p style="font-size: 14px; line-height: 1.6; color: #3f3f46; margin: 0 0 24px 0;">
+  A new sign-in was detected for your administrator account.
+</p>
+
+<div style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #71717a; margin-bottom: 8px;">
+  Session Details
+</div>
+
+<%- include('partials/data-table', {
+  rows: [
+    { label: 'Account Email', value: adminEmail },
+    { label: 'Login Time', value: timestamp },
+    { label: 'IP Address', value: ip, isCode: true },
+    { label: 'Location', value: (typeof location !== 'undefined' && location) ? location : 'Localhost / Private Network' },
+    { label: 'User Agent', value: userAgent }
+  ]
+}) %>
+
+<%- include('partials/callout', {
+  title: 'Was this you?',
+  text: 'If you authorized this sign-in, no further action is required. If you did not authorize this access, please change your password immediately.',
+  type: 'warning'
+}) %>

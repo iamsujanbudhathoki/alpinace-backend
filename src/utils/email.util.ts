@@ -8,6 +8,7 @@ import {
   getAdminLoginAlertEmailTemplate,
   LoginAlertEmailData,
 } from '../templates/emails/admin-login-alert.template';
+import { getAdminLockoutAlertEmailTemplate } from '../templates/emails/admin-lockout-alert.template';
 import { getQuoteEmailTemplate } from '../templates/emails/quote.template';
 import { getResetPasswordEmailTemplate } from '../templates/emails/auth-reset-password.template';
 import { getOtpEmailTemplate } from '../templates/emails/auth-otp.template';
@@ -79,11 +80,11 @@ class EmailUtil {
       const transporter = this.getTransporter();
 
       // 1. Client Confirmation Email
-      const clientHtml = getClientInquiryEmailTemplate(data);
+      const clientHtml = await getClientInquiryEmailTemplate(data);
 
       // 2. Admin Notification Email
       const adminEmail = DotenvConfig.ADMIN_EMAIL || DotenvConfig.MAIL_USER || 'admin@alpineacetreks.com';
-      const adminHtml = getAdminInquiryEmailTemplate(data);
+      const adminHtml = await getAdminInquiryEmailTemplate(data);
 
       // Dispatch Client Email
       await transporter.sendMail({
@@ -117,11 +118,11 @@ class EmailUtil {
       const transporter = this.getTransporter();
 
       // 1. Client Confirmation Email
-      const clientHtml = getClientBookingEmailTemplate(data);
+      const clientHtml = await getClientBookingEmailTemplate(data);
 
       // 2. Admin Notification Email
       const adminEmail = DotenvConfig.ADMIN_EMAIL || DotenvConfig.MAIL_USER || 'admin@alpineacetreks.com';
-      const adminHtml = getAdminBookingEmailTemplate(data);
+      const adminHtml = await getAdminBookingEmailTemplate(data);
 
       // Dispatch Client Email
       await transporter.sendMail({
@@ -153,7 +154,7 @@ class EmailUtil {
 
     try {
       const transporter = this.getTransporter();
-      const html = getQuoteEmailTemplate(data);
+      const html = await getQuoteEmailTemplate(data);
 
       await transporter.sendMail({
         from: `"Alpine Ace" <${DotenvConfig.MAIL_USER}>`,
@@ -177,7 +178,7 @@ class EmailUtil {
 
     try {
       const transporter = this.getTransporter();
-      const adminHtml = getAdminLoginAlertEmailTemplate(data);
+      const adminHtml = await getAdminLoginAlertEmailTemplate(data);
       const recipient = DotenvConfig.ADMIN_EMAIL || data.adminEmail || 'admin@alpineacetreks.com';
 
       await transporter.sendMail({
@@ -203,19 +204,7 @@ class EmailUtil {
       const transporter = this.getTransporter();
       const recipient = DotenvConfig.ADMIN_EMAIL || DotenvConfig.MAIL_USER || data.adminEmail || 'admin@alpineacetreks.com';
 
-      const html = `
-        <div style="font-family: Arial, sans-serif; padding: 20px; color: #1e293b; background-color: #fafaf9; border-radius: 12px; border: 1px solid #e2e8f0;">
-          <h2 style="color: #e11d48; margin-top: 0;">🚨 Security Alert: Admin Account Locked Out</h2>
-          <p style="font-size: 14px; line-height: 1.5;">An admin account has been locked out after <strong>5 consecutive failed login attempts</strong>.</p>
-          <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 16px 0;" />
-          <p style="font-size: 13px; margin: 6px 0;"><strong>Account Name:</strong> ${data.adminName}</p>
-          <p style="font-size: 13px; margin: 6px 0;"><strong>Account Email:</strong> ${data.adminEmail}</p>
-          <p style="font-size: 13px; margin: 6px 0;"><strong>Time:</strong> ${new Date().toUTCString()}</p>
-          ${data.ip ? `<p style="font-size: 13px; margin: 6px 0;"><strong>IP Address:</strong> ${data.ip}</p>` : ''}
-          <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 16px 0;" />
-          <p style="font-size: 12px; color: #64748b; margin-bottom: 0;">If this was unauthorized activity, please review system audit logs and verify account security immediately.</p>
-        </div>
-      `;
+      const html = await getAdminLockoutAlertEmailTemplate(data);
 
       await transporter.sendMail({
         from: `"Alpine Ace Security" <${DotenvConfig.MAIL_USER}>`,
@@ -238,13 +227,13 @@ class EmailUtil {
         const token = extraData?.token || 'abc';
         const resetLink = `${DotenvConfig.FRONTEND_BASE_URL}/reset-password?token=${token}`;
         subject = 'Reset Your Password - Alpine Ace';
-        body = getResetPasswordEmailTemplate({ email, resetLink });
+        body = await getResetPasswordEmailTemplate({ email, resetLink });
         break;
       }
       case MailType.LOGIN_OTP: {
         const otp = extraData?.otp || '123456';
         subject = 'Your Verification Code - Alpine Ace';
-        body = getOtpEmailTemplate({ email, otp });
+        body = await getOtpEmailTemplate({ email, otp });
         break;
       }
     }

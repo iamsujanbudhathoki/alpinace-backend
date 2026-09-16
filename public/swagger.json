@@ -7519,7 +7519,7 @@
 						}
 					}
 				},
-				"description": "Get public active/featured trekking packages with dynamic filtering.\nReturns lightweight PublicTrekSummaryDto data suitable for the marketing site.",
+				"description": "Get public active/featured trekking packages with dynamic filtering.\r\nReturns lightweight PublicTrekSummaryDto data suitable for the marketing site.",
 				"tags": [
 					"Trekking Public"
 				],
@@ -7702,7 +7702,7 @@
 						}
 					}
 				},
-				"description": "Get active/featured trekking package by ID or Slug.\nReturns sanitized PublicTrekDetailDto data for the marketing detail page.",
+				"description": "Get active/featured trekking package by ID or Slug.\r\nReturns sanitized PublicTrekDetailDto data for the marketing detail page.",
 				"tags": [
 					"Trekking Public"
 				],
@@ -7734,7 +7734,7 @@
 						}
 					}
 				},
-				"description": "Get public active/featured tour packages with dynamic filtering.\nReturns lightweight PublicTourSummaryDto data suitable for the marketing site.",
+				"description": "Get public active/featured tour packages with dynamic filtering.\r\nReturns lightweight PublicTourSummaryDto data suitable for the marketing site.",
 				"tags": [
 					"Tours Public"
 				],
@@ -7907,7 +7907,7 @@
 						}
 					}
 				},
-				"description": "Get active/featured tour package by ID or Slug.\nReturns sanitized PublicTourDetailDto data for the marketing detail page.",
+				"description": "Get active/featured tour package by ID or Slug.\r\nReturns sanitized PublicTourDetailDto data for the marketing detail page.",
 				"tags": [
 					"Tours Public"
 				],
@@ -7939,7 +7939,7 @@
 						}
 					}
 				},
-				"description": "Get public active testimonials.\nEnforces status = ACTIVE for public requests.",
+				"description": "Get public active testimonials.\r\nEnforces status = ACTIVE for public requests.",
 				"tags": [
 					"Testimonials Public"
 				],
@@ -8043,7 +8043,7 @@
 						}
 					}
 				},
-				"description": "Get public active team members.\nEnforces status = ACTIVE for public requests.",
+				"description": "Get public active team members.\r\nEnforces status = ACTIVE for public requests.",
 				"tags": [
 					"Teams Public"
 				],
@@ -8147,7 +8147,7 @@
 						}
 					}
 				},
-				"description": "Get public site settings required for site branding and contact information.\nReturns safe, public configuration keys only.",
+				"description": "Get public site settings required for site branding and contact information.\r\nReturns safe, public configuration keys only.",
 				"tags": [
 					"Public Site Settings"
 				],
@@ -8170,7 +8170,7 @@
 						}
 					}
 				},
-				"description": "Get the public Privacy Policy content.\nReturns only the privacy policy HTML content — no other settings are exposed.",
+				"description": "Get the public Privacy Policy content.\r\nReturns only the privacy policy HTML content — no other settings are exposed.",
 				"tags": [
 					"Public Site Settings"
 				],
@@ -8193,7 +8193,7 @@
 						}
 					}
 				},
-				"description": "Get the public Terms & Conditions content.\nReturns only the terms and conditions HTML content — no other settings are exposed.",
+				"description": "Get the public Terms & Conditions content.\r\nReturns only the terms and conditions HTML content — no other settings are exposed.",
 				"tags": [
 					"Public Site Settings"
 				],
@@ -8216,7 +8216,7 @@
 						}
 					}
 				},
-				"description": "Public Search API Route\nPerforms real-time search across active published Treks, Tours, Expeditions, and Blogs.\nNo authentication required.",
+				"description": "Public Search API Route\r\nPerforms real-time search across active published Treks, Tours, Expeditions, and Blogs.\r\nNo authentication required.",
 				"tags": [
 					"Public Search"
 				],
@@ -8749,7 +8749,7 @@
 						}
 					}
 				},
-				"description": "Get public active FAQs.\nEnforces status = ACTIVE for public requests.",
+				"description": "Get public active FAQs.\r\nEnforces status = ACTIVE for public requests.",
 				"tags": [
 					"FAQs Public"
 				],
@@ -8861,7 +8861,7 @@
 						}
 					}
 				},
-				"description": "Get public active/featured expedition packages with dynamic filtering.\nReturns lightweight PublicExpeditionSummaryDto data suitable for marketing site.",
+				"description": "Get public active/featured expedition packages with dynamic filtering.\r\nReturns lightweight PublicExpeditionSummaryDto data suitable for marketing site.",
 				"tags": [
 					"Expeditions Public"
 				],
@@ -9052,7 +9052,7 @@
 						}
 					}
 				},
-				"description": "Get active/featured expedition package by ID or Slug.\nReturns sanitized PublicExpeditionDetailDto data for marketing detail page.",
+				"description": "Get active/featured expedition package by ID or Slug.\r\nReturns sanitized PublicExpeditionDetailDto data for marketing detail page.",
 				"tags": [
 					"Expeditions Public"
 				],
@@ -9315,7 +9315,7 @@
 						}
 					}
 				},
-				"description": "Get public published blog articles with optional category and search filtering.\nReturns lightweight PublicBlogSummaryDto data.",
+				"description": "Get public published blog articles with optional category and search filtering.\r\nReturns lightweight PublicBlogSummaryDto data.",
 				"tags": [
 					"Blog Articles Public"
 				],
@@ -9389,7 +9389,7 @@
 						}
 					}
 				},
-				"description": "Get public published blog article by ID or Slug.\nReturns sanitized PublicBlogDetailDto data.",
+				"description": "Get public published blog article by ID or Slug.\r\nReturns sanitized PublicBlogDetailDto data.",
 				"tags": [
 					"Blog Articles Public"
 				],
@@ -12686,7 +12686,7 @@
 						}
 					}
 				},
-				"description": "Protected Admin-only endpoint for querying historical activity & security audit logs.\nLogs are strictly immutable and cannot be updated or deleted.",
+				"description": "Protected Admin-only endpoint for querying historical activity & security audit logs.\r\nLogs are strictly immutable and cannot be updated or deleted.",
 				"tags": [
 					"Admin Audit Logs"
 				],

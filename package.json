@@ -9,8 +9,8 @@
   "scripts": {
     "dev": "npm run start:dev",
     "start": "node dist/server.js",
+    "start:prod": "node src/server.js",
     "start:dev": "tsoa spec-and-routes && ts-node-dev --transpile-only --respawn src/server.ts",
-    "prepare": "husky",
     "build": "tsoa spec-and-routes && tsc && node -e \"require('fs-extra').copySync('src/templates/emails', 'dist/templates/emails')\"",
     "lint:fix": "pnpm eslint --fix ",
     "seed:admin": "ts-node  ./src/seeder/admin.seed.ts add",
@@ -62,7 +62,6 @@
     "dotenv": "^16.3.1",
     "eslint": "^9.14.0",
     "eslint-plugin-prettier": "^5.2.1",
-    "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
     "ts-node-dev": "^2.0.0",

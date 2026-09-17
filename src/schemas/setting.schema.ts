@@ -63,14 +63,6 @@ export class UpdateSettingsDto {
   @IsString()
   canonicalUrl?: string;
 
-  @IsOptional()
-  @IsString()
-  googleAnalyticsId?: string;
-
-  @IsOptional()
-  @IsString()
-  googleSiteVerification?: string;
-
   // Social Links
   @IsOptional()
   @IsString()

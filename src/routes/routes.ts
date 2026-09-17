@@ -1786,8 +1786,6 @@ const models: TsoaRoute.Models = {
             "metaDescription": {"dataType":"string"},
             "metaKeywords": {"dataType":"string"},
             "canonicalUrl": {"dataType":"string"},
-            "googleAnalyticsId": {"dataType":"string"},
-            "googleSiteVerification": {"dataType":"string"},
             "facebookUrl": {"dataType":"string"},
             "instagramUrl": {"dataType":"string"},
             "youtubeUrl": {"dataType":"string"},

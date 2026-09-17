@@ -13,6 +13,6 @@ export const AppDataSource = new DataSource({
   url: DotenvConfig.DATABASE_URL,
   entities: [`${__dirname}/../entities/**/*.entity.{ts,js}`],
   // synchronize: true,
-  // dropSchema: true ,
+  // dropSchema: true,
   ssl: isSslEnabled ? { rejectUnauthorized: false } : false,
 });

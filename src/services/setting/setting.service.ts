@@ -37,8 +37,6 @@ export class SettingService {
       metaKeywords:
         'Nepal trekking, Everest Base Camp, Annapurna Circuit, peak climbing, Sherpa guides, luxury mountain lodges',
       canonicalUrl: 'https://alpineacetreks.com',
-      googleAnalyticsId: '',
-      googleSiteVerification: '',
 
       // Social Links
       facebookUrl: 'https://facebook.com/alpineacenepal',

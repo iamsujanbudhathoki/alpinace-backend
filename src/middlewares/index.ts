@@ -81,9 +81,12 @@ export const configMiddleware = (app: express.Application) => {
     app.use('/swagger-json', (req, res) => res.send(swaggerUi));
   }
 
-  // Static file serving for local image uploads
+  // Static file serving for local image uploads and public assets (logos, icons)
   const uploadPath = path.join(process.cwd(), 'uploads');
+  const publicPath = path.join(process.cwd(), 'public');
   app.use('/uploads', express.static(uploadPath));
+  app.use('/public', express.static(publicPath));
+  app.use(express.static(publicPath));
 
   // Root and Health Check routes (showing DB connection status)
   app.get('/', async (req, res) => {

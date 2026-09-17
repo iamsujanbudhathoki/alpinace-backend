@@ -3,20 +3,26 @@
   const siteUrl = (typeof websiteUrl !== 'undefined' && websiteUrl) ? websiteUrl : 'https://alpineacetreks.com';
   const sub = (typeof subtitle !== 'undefined' && subtitle) ? subtitle : 'Nepal Treks & Expeditions';
 %>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-bottom: 1px solid #e5e5e5; background-color: #ffffff;">
+<table role="presentation" align="center" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-bottom: 1px solid #e5e5e5; background-color: #ffffff; width: 100%;">
   <tr>
-    <td class="header-padding" align="center" style="padding: 20px 24px; text-align: center;">
-      <a href="<%= siteUrl %>" target="_blank" style="text-decoration: none; display: inline-block;">
-        <img src="<%= logoSource %>" alt="Alpine Ace Logo" width="40" height="40" style="display: block; margin: 0 auto 8px auto; width: 40px; height: 40px; max-width: 40px; border-radius: 6px; border: 1px solid #e5e5e5; object-fit: cover;" />
-        <div style="font-size: 17px; font-weight: 700; color: #0a0a0a; line-height: 1.25; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-          Alpine Ace
-        </div>
-        <% if (sub) { %>
-          <div style="font-size: 11px; font-weight: 500; color: #737373; margin-top: 2px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-            <%= sub %>
-          </div>
-        <% } %>
-      </a>
+    <td class="header-padding" align="center" style="padding: 22px 24px; text-align: center;">
+      <table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto; text-align: center;">
+        <tr>
+          <td align="center" style="text-align: center;">
+            <a href="<%= siteUrl %>" target="_blank" style="text-decoration: none; display: inline-block; text-align: center;">
+              <img src="<%= logoSource %>" alt="Alpine Ace Logo" width="44" height="44" align="center" style="display: block; margin: 0 auto 8px auto; width: 44px; height: 44px; max-width: 44px; border-radius: 8px; border: 1px solid #e5e5e5; object-fit: cover;" />
+              <div align="center" style="font-size: 17.5px; font-weight: 700; color: #0a0a0a; line-height: 1.25; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; text-align: center;">
+                Alpine Ace
+              </div>
+              <% if (sub) { %>
+                <div align="center" style="font-size: 11.5px; font-weight: 500; color: #737373; margin-top: 3px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; text-align: center;">
+                  <%= sub %>
+                </div>
+              <% } %>
+            </a>
+          </td>
+        </tr>
+      </table>
     </td>
   </tr>
 </table>

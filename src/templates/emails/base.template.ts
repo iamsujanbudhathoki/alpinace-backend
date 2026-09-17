@@ -21,20 +21,26 @@ export function renderHeader(
   websiteUrl: string = 'https://alpineacetreks.com',
 ): string {
   return `
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-bottom: 1px solid #e5e5e5; background-color: #ffffff;">
+    <table role="presentation" align="center" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-bottom: 1px solid #e5e5e5; background-color: #ffffff; width: 100%;">
       <tr>
-        <td class="header-padding" align="center" style="padding: 20px 24px; text-align: center;">
-          <a href="${websiteUrl}" target="_blank" style="text-decoration: none; display: inline-block;">
-            <img src="${logoUrl}" alt="Alpine Ace Logo" width="40" height="40" style="display: block; margin: 0 auto 8px auto; width: 40px; height: 40px; max-width: 40px; border-radius: 6px; border: 1px solid #e5e5e5; object-fit: cover;" />
-            <div style="font-size: 17px; font-weight: 700; color: #0a0a0a; line-height: 1.25; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-              Alpine Ace
-            </div>
-            ${
-              subtitle
-                ? `<div style="font-size: 11px; font-weight: 500; color: #737373; margin-top: 2px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">${subtitle}</div>`
-                : ''
-            }
-          </a>
+        <td class="header-padding" align="center" style="padding: 22px 24px; text-align: center;">
+          <table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto; text-align: center;">
+            <tr>
+              <td align="center" style="text-align: center;">
+                <a href="${websiteUrl}" target="_blank" style="text-decoration: none; display: inline-block; text-align: center;">
+                  <img src="${logoUrl}" alt="Alpine Ace Logo" width="44" height="44" align="center" style="display: block; margin: 0 auto 8px auto; width: 44px; height: 44px; max-width: 44px; border-radius: 8px; border: 1px solid #e5e5e5; object-fit: cover;" />
+                  <div align="center" style="font-size: 17.5px; font-weight: 700; color: #0a0a0a; line-height: 1.25; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; text-align: center;">
+                    Alpine Ace
+                  </div>
+                  ${
+                    subtitle
+                      ? `<div align="center" style="font-size: 11.5px; font-weight: 500; color: #737373; margin-top: 3px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; text-align: center;">${subtitle}</div>`
+                      : ''
+                  }
+                </a>
+              </td>
+            </tr>
+          </table>
         </td>
       </tr>
     </table>
@@ -168,45 +174,51 @@ export function renderBaseEmail(options: BaseEmailOptions): string {
     @media screen and (max-width: 600px) {
       .email-container { width: 100% !important; margin: auto !important; border-radius: 0 !important; border-left: none !important; border-right: none !important; }
       .content-padding { padding: 24px 20px !important; }
-      .header-padding { padding: 18px 20px !important; }
-      .footer-padding { padding: 20px 20px !important; }
+      .header-padding { padding: 20px 20px !important; }
+      .footer-padding { padding: 22px 20px !important; }
     }
   </style>
 </head>
 <body style="margin: 0; padding: 0; background-color: #fafaf9; -webkit-font-smoothing: antialiased;">
-  <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #fafaf9; table-layout: fixed;">
+  <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" align="center" style="background-color: #fafaf9; table-layout: fixed; width: 100%;">
     <tr>
-      <td align="center" style="padding: 28px 16px;">
+      <td align="center" style="padding: 32px 16px; text-align: center;">
         <!--[if mso]>
-        <table role="presentation" align="center" border="0" cellspacing="0" cellpadding="0" width="580">
+        <table role="presentation" align="center" border="0" cellspacing="0" cellpadding="0" width="580" style="width: 580px;">
         <tr>
-        <td>
+        <td align="center" style="text-align: center;">
         <![endif]-->
-        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" class="email-container" style="max-width: 580px; background-color: #ffffff; border: 1px solid #e5e5e5; border-top: 3px solid #eab308; border-radius: 8px; overflow: hidden; margin: 0 auto; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);">
+        <table role="presentation" align="center" border="0" cellpadding="0" cellspacing="0" width="100%" class="email-container" style="max-width: 580px; width: 100%; background-color: #ffffff; border: 1px solid #e5e5e5; border-top: 3px solid #eab308; border-radius: 8px; overflow: hidden; margin: 0 auto; text-align: left; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);">
           <!-- Header -->
           <tr>
-            <td>
+            <td align="center" style="text-align: center;">
               ${renderHeader('Nepal Treks & Expeditions', logoUrl, websiteUrl)}
             </td>
           </tr>
           <!-- Body Content -->
           <tr>
-            <td class="content-padding" style="padding: 28px 28px 24px 28px;">
+            <td class="content-padding" style="padding: 32px 32px 28px 32px;">
               ${options.content}
             </td>
           </tr>
           <!-- Footer -->
           <tr>
-            <td class="footer-padding" align="center" style="padding: 20px 24px; background-color: #fafaf9; border-top: 1px solid #e5e5e5; text-align: center;">
-              <p style="margin: 0 0 4px 0; font-size: 12px; line-height: 1.5; font-weight: 600; color: #0a0a0a; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-                Alpine Ace Treks &amp; Expeditions Pvt. Ltd.
-              </p>
-              <p style="margin: 0 0 6px 0; font-size: 11px; line-height: 1.5; color: #737373; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-                Tridevi Marg, Thamel, Kathmandu, Nepal &bull; <a href="mailto:info@alpineacetreks.com" style="color: #404040; text-decoration: underline;">info@alpineacetreks.com</a> &bull; <a href="${websiteUrl}" target="_blank" style="color: #404040; text-decoration: underline;">${siteHost}</a>
-              </p>
-              <p style="margin: 0; font-size: 11px; line-height: 1.5; color: #a3a3a3; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-                ${footerLegal}
-              </p>
+            <td class="footer-padding" align="center" style="padding: 22px 24px; background-color: #fafaf9; border-top: 1px solid #e5e5e5; text-align: center;">
+              <table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto; text-align: center; width: 100%;">
+                <tr>
+                  <td align="center" style="text-align: center;">
+                    <p align="center" style="margin: 0 0 4px 0; font-size: 12px; line-height: 1.5; font-weight: 600; color: #0a0a0a; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; text-align: center;">
+                      Alpine Ace Treks &amp; Expeditions Pvt. Ltd.
+                    </p>
+                    <p align="center" style="margin: 0 0 6px 0; font-size: 11.5px; line-height: 1.5; color: #737373; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; text-align: center;">
+                      Tridevi Marg, Thamel, Kathmandu, Nepal &bull; <a href="mailto:info@alpineacetreks.com" style="color: #404040; text-decoration: underline;">info@alpineacetreks.com</a> &bull; <a href="${websiteUrl}" target="_blank" style="color: #404040; text-decoration: underline;">${siteHost}</a>
+                    </p>
+                    <p align="center" style="margin: 0; font-size: 11px; line-height: 1.5; color: #a3a3a3; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; text-align: center;">
+                      ${footerLegal}
+                    </p>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
         </table>

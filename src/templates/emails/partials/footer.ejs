@@ -2,22 +2,28 @@
   const siteUrl = (typeof websiteUrl !== 'undefined' && websiteUrl) ? websiteUrl : 'https://alpineacetreks.com';
   const siteHost = siteUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
 %>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #fafaf9; border-top: 1px solid #e5e5e5;">
+<table role="presentation" align="center" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #fafaf9; border-top: 1px solid #e5e5e5; width: 100%;">
   <tr>
-    <td class="footer-padding" align="center" style="padding: 20px 24px; text-align: center;">
-      <p style="margin: 0 0 4px 0; font-size: 12px; line-height: 1.5; font-weight: 600; color: #0a0a0a; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-        Alpine Ace Treks &amp; Expeditions Pvt. Ltd.
-      </p>
-      <p style="margin: 0 0 6px 0; font-size: 11px; line-height: 1.5; color: #737373; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-        Tridevi Marg, Thamel, Kathmandu, Nepal &bull; <a href="mailto:info@alpineacetreks.com" style="color: #404040; text-decoration: underline;">info@alpineacetreks.com</a> &bull; <a href="<%= siteUrl %>" target="_blank" style="color: #404040; text-decoration: underline;"><%= siteHost %></a>
-      </p>
-      <p style="margin: 0; font-size: 11px; line-height: 1.5; color: #a3a3a3; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-        <% if (typeof footerText !== 'undefined' && footerText) { %>
-          <%- footerText %>
-        <% } else { %>
-          &copy; <%= new Date().getFullYear() %> Alpine Ace. All rights reserved.
-        <% } %>
-      </p>
+    <td class="footer-padding" align="center" style="padding: 22px 24px; text-align: center;">
+      <table role="presentation" align="center" cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto; text-align: center; width: 100%;">
+        <tr>
+          <td align="center" style="text-align: center;">
+            <p align="center" style="margin: 0 0 4px 0; font-size: 12px; line-height: 1.5; font-weight: 600; color: #0a0a0a; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; text-align: center;">
+              Alpine Ace Treks &amp; Expeditions Pvt. Ltd.
+            </p>
+            <p align="center" style="margin: 0 0 6px 0; font-size: 11.5px; line-height: 1.5; color: #737373; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; text-align: center;">
+              Tridevi Marg, Thamel, Kathmandu, Nepal &bull; <a href="mailto:info@alpineacetreks.com" style="color: #404040; text-decoration: underline;">info@alpineacetreks.com</a> &bull; <a href="<%= siteUrl %>" target="_blank" style="color: #404040; text-decoration: underline;"><%= siteHost %></a>
+            </p>
+            <p align="center" style="margin: 0; font-size: 11px; line-height: 1.5; color: #a3a3a3; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; text-align: center;">
+              <% if (typeof footerText !== 'undefined' && footerText) { %>
+                <%- footerText %>
+              <% } else { %>
+                &copy; <%= new Date().getFullYear() %> Alpine Ace. All rights reserved.
+              <% } %>
+            </p>
+          </td>
+        </tr>
+      </table>
     </td>
   </tr>
 </table>

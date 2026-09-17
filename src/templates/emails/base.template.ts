@@ -23,28 +23,18 @@ export function renderHeader(
   return `
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-bottom: 1px solid #e5e5e5; background-color: #ffffff;">
       <tr>
-        <td class="header-padding" style="padding: 22px 32px; text-align: left;">
-          <table role="presentation" cellpadding="0" cellspacing="0" border="0">
-            <tr>
-              <td style="vertical-align: middle; padding-right: 12px;">
-                <a href="${websiteUrl}" target="_blank" style="text-decoration: none; display: inline-block;">
-                  <img src="${logoUrl}" alt="Alpine Ace Logo" width="38" height="38" style="display: block; width: 38px; height: 38px; max-width: 38px; border-radius: 6px; border: 1px solid #e5e5e5; object-fit: cover;" />
-                </a>
-              </td>
-              <td style="vertical-align: middle;">
-                <a href="${websiteUrl}" target="_blank" style="text-decoration: none; display: block;">
-                  <div style="font-size: 18px; font-weight: 700; color: #0a0a0a; letter-spacing: -0.01em; line-height: 1.2; font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-                    Alpine Ace
-                  </div>
-                  ${
-                    subtitle
-                      ? `<div style="font-size: 11px; font-weight: 600; color: #737373; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">${subtitle}</div>`
-                      : ''
-                  }
-                </a>
-              </td>
-            </tr>
-          </table>
+        <td class="header-padding" align="center" style="padding: 20px 24px; text-align: center;">
+          <a href="${websiteUrl}" target="_blank" style="text-decoration: none; display: inline-block;">
+            <img src="${logoUrl}" alt="Alpine Ace Logo" width="40" height="40" style="display: block; margin: 0 auto 8px auto; width: 40px; height: 40px; max-width: 40px; border-radius: 6px; border: 1px solid #e5e5e5; object-fit: cover;" />
+            <div style="font-size: 17px; font-weight: 700; color: #0a0a0a; line-height: 1.25; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+              Alpine Ace
+            </div>
+            ${
+              subtitle
+                ? `<div style="font-size: 11px; font-weight: 500; color: #737373; margin-top: 2px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">${subtitle}</div>`
+                : ''
+            }
+          </a>
         </td>
       </tr>
     </table>
@@ -68,10 +58,10 @@ export function renderDataTable(rows: DataTableRow[]): string {
 
       return `
         <tr>
-          <td style="padding: 9px 12px 9px 0; font-size: 13px; font-weight: 600; color: #737373; border-bottom: 1px solid #f5f5f5; width: 140px; vertical-align: top; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+          <td style="padding: 7px 12px 7px 0; font-size: 13px; font-weight: 500; color: #525252; border-bottom: 1px solid #f5f5f5; width: 140px; vertical-align: top; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
             ${row.label}
           </td>
-          <td style="padding: 9px 0; font-size: 14px; font-weight: 500; color: #0a0a0a; border-bottom: 1px solid #f5f5f5; vertical-align: top; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+          <td style="padding: 7px 0; font-size: 13.5px; font-weight: 500; color: #0a0a0a; border-bottom: 1px solid #f5f5f5; vertical-align: top; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
             ${valContent}
           </td>
         </tr>
@@ -80,7 +70,7 @@ export function renderDataTable(rows: DataTableRow[]): string {
     .join('');
 
   return `
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 14px 0 20px 0; border-collapse: collapse;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 12px 0 16px 0; border-collapse: collapse;">
       ${rowHtml}
     </table>
   `;
@@ -118,13 +108,13 @@ export function renderCallout(
   }
 
   return `
-    <div style="background-color: ${bgColor}; border: 1px solid ${boxBorder}; border-left: 3px solid ${accentBorder}; padding: 14px 18px; border-radius: 6px; margin: 20px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+    <div style="background-color: ${bgColor}; border: 1px solid ${boxBorder}; border-left: 3px solid ${accentBorder}; padding: 12px 16px; border-radius: 6px; margin: 16px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
       ${
         title
-          ? `<div style="font-size: 13px; font-weight: 600; color: ${titleColor}; margin-bottom: 4px; font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">${title}</div>`
+          ? `<div style="font-size: 13px; font-weight: 600; color: ${titleColor}; margin-bottom: 3px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">${title}</div>`
           : ''
       }
-      <div style="font-size: 13px; line-height: 1.55; color: ${textColor}; font-weight: 400;">
+      <div style="font-size: 13px; line-height: 1.5; color: ${textColor}; font-weight: 400;">
         ${text}
       </div>
     </div>
@@ -133,10 +123,10 @@ export function renderCallout(
 
 export function renderButton(url: string, label: string): string {
   return `
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: 22px 0;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 20px 0;">
       <tr>
-        <td align="left">
-          <a href="${url}" target="_blank" style="background-color: #0a0a0a; color: #ffffff; font-size: 13px; font-weight: 600; text-decoration: none; padding: 11px 22px; border-radius: 6px; display: inline-block; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; letter-spacing: -0.01em; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);">
+        <td align="center" style="text-align: center;">
+          <a href="${url}" target="_blank" style="background-color: #0a0a0a; color: #ffffff; font-size: 13px; font-weight: 600; text-decoration: none; padding: 10px 22px; border-radius: 6px; display: inline-block; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);">
             ${label}
           </a>
         </td>
@@ -178,15 +168,15 @@ export function renderBaseEmail(options: BaseEmailOptions): string {
     @media screen and (max-width: 600px) {
       .email-container { width: 100% !important; margin: auto !important; border-radius: 0 !important; border-left: none !important; border-right: none !important; }
       .content-padding { padding: 24px 20px !important; }
-      .header-padding { padding: 20px 20px !important; }
-      .footer-padding { padding: 22px 20px !important; }
+      .header-padding { padding: 18px 20px !important; }
+      .footer-padding { padding: 20px 20px !important; }
     }
   </style>
 </head>
 <body style="margin: 0; padding: 0; background-color: #fafaf9; -webkit-font-smoothing: antialiased;">
   <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #fafaf9; table-layout: fixed;">
     <tr>
-      <td align="center" style="padding: 32px 16px;">
+      <td align="center" style="padding: 28px 16px;">
         <!--[if mso]>
         <table role="presentation" align="center" border="0" cellspacing="0" cellpadding="0" width="580">
         <tr>
@@ -201,17 +191,17 @@ export function renderBaseEmail(options: BaseEmailOptions): string {
           </tr>
           <!-- Body Content -->
           <tr>
-            <td class="content-padding" style="padding: 32px 32px 28px 32px;">
+            <td class="content-padding" style="padding: 28px 28px 24px 28px;">
               ${options.content}
             </td>
           </tr>
           <!-- Footer -->
           <tr>
-            <td class="footer-padding" style="padding: 22px 32px; background-color: #fafaf9; border-top: 1px solid #e5e5e5; text-align: left;">
-              <p style="margin: 0 0 6px 0; font-size: 12px; line-height: 1.5; font-weight: 600; color: #0a0a0a; font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+            <td class="footer-padding" align="center" style="padding: 20px 24px; background-color: #fafaf9; border-top: 1px solid #e5e5e5; text-align: center;">
+              <p style="margin: 0 0 4px 0; font-size: 12px; line-height: 1.5; font-weight: 600; color: #0a0a0a; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
                 Alpine Ace Treks &amp; Expeditions Pvt. Ltd.
               </p>
-              <p style="margin: 0 0 8px 0; font-size: 11px; line-height: 1.5; color: #737373; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+              <p style="margin: 0 0 6px 0; font-size: 11px; line-height: 1.5; color: #737373; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
                 Tridevi Marg, Thamel, Kathmandu, Nepal &bull; <a href="mailto:info@alpineacetreks.com" style="color: #404040; text-decoration: underline;">info@alpineacetreks.com</a> &bull; <a href="${websiteUrl}" target="_blank" style="color: #404040; text-decoration: underline;">${siteHost}</a>
               </p>
               <p style="margin: 0; font-size: 11px; line-height: 1.5; color: #a3a3a3; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">

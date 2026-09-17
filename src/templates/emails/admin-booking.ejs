@@ -18,7 +18,7 @@
     { label: 'Phone / WhatsApp', value: (typeof phone !== 'undefined' && phone) ? phone : 'Not provided' },
     { label: 'Country', value: (typeof country !== 'undefined' && country) ? country : 'N/A' },
     { label: 'Package Name', value: packageName },
-    { label: 'Departure & Return', value: (typeof startDate !== 'undefined' && startDate ? startDate : 'TBD') + ' to ' + (typeof endDate !== 'undefined' && endDate ? endDate : 'TBD') },
+    { label: 'Departure & Return', value: formatHumanDateRange(typeof startDate !== 'undefined' ? startDate : undefined, typeof endDate !== 'undefined' ? endDate : undefined) },
     { label: 'Group Size', value: (typeof groupSize !== 'undefined' && groupSize ? groupSize : 1) + ' ' + (groupSize === 1 ? 'traveler' : 'travelers') },
     { label: 'Total Amount', value: '$' + (typeof totalAmountUSD !== 'undefined' && totalAmountUSD ? totalAmountUSD.toLocaleString() : 0) + ' USD' },
     { label: 'Special Requests', value: (typeof specialRequests !== 'undefined' && specialRequests ? specialRequests : 'None') }

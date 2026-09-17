@@ -18,7 +18,7 @@
   rows: [
     { label: 'Interested Trip', value: interestedTrip || 'Custom Expedition / Trek' },
     { label: 'Travelers', value: (typeof groupSize !== 'undefined' && groupSize ? groupSize : 1) + ' ' + (groupSize === 1 ? 'traveler' : 'travelers') },
-    { label: 'Travel Dates', value: (typeof travelDates !== 'undefined' && travelDates ? travelDates : 'Flexible') },
+    { label: 'Travel Dates', value: formatHumanDate(typeof travelDates !== 'undefined' ? travelDates : undefined) },
     { label: 'Special Notes', value: (typeof message !== 'undefined' && message ? message : 'None provided') }
   ]
 }) %>

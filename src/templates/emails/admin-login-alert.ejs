@@ -17,7 +17,7 @@
 <%- include('partials/data-table', {
   rows: [
     { label: 'Account Email', value: adminEmail },
-    { label: 'Sign-In Time', value: timestamp },
+    { label: 'Sign-In Time', value: formatHumanDateTime(typeof timestamp !== 'undefined' ? timestamp : undefined) },
     { label: 'IP Address', value: ip, isCode: true },
     { label: 'Location', value: (typeof location !== 'undefined' && location) ? location : 'Localhost / Private Network' },
     { label: 'User Agent', value: userAgent }

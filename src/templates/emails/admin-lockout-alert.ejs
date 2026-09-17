@@ -14,7 +14,7 @@
   rows: [
     { label: 'Account Name', value: adminName },
     { label: 'Account Email', value: adminEmail },
-    { label: 'Lockout Time', value: timestamp },
+    { label: 'Lockout Time', value: formatHumanDateTime(typeof timestamp !== 'undefined' ? timestamp : undefined) },
     { label: 'IP Address', value: (typeof ip !== 'undefined' && ip) ? ip : 'Unknown', isCode: true }
   ]
 }) %>

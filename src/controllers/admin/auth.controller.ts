@@ -24,6 +24,7 @@ import { NotificationType } from '../../entities/notification/Notification.entit
 import EmailUtil from '../../utils/email.util';
 import { DotenvConfig, Environment } from '../../config/env.config';
 import { AuditLogService } from '../../services/audit-log/audit-log.service';
+import { formatHumanDateTime } from '../../utils/date.util';
 
 async function resolveLocation(ip: string): Promise<string> {
   if (
@@ -99,8 +100,7 @@ export class AdminAuthController extends Controller {
       '127.0.0.1';
     const cleanIp = rawIp.replace(/^::ffff:/, '');
     const userAgent = (req.headers['user-agent'] as string) || 'Unknown Browser/Device';
-    const now = new Date();
-    const timestamp = `${now.toUTCString()} / ${now.toLocaleString('en-US', { timeZone: 'Asia/Kathmandu' })} (NPT)`;
+    const timestamp = formatHumanDateTime(new Date());
 
     // Asynchronously resolve location, send security email, and generate in-app notification
     resolveLocation(cleanIp)

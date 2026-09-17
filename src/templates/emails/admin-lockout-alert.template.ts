@@ -1,4 +1,5 @@
 import { renderEjsTemplate } from './template-renderer';
+import { formatHumanDateTime } from '../../utils/date.util';
 
 export interface LockoutAlertEmailData {
   adminName: string;
@@ -10,7 +11,7 @@ export interface LockoutAlertEmailData {
 export async function getAdminLockoutAlertEmailTemplate(
   data: LockoutAlertEmailData,
 ): Promise<string> {
-  const timestamp = data.timestamp || new Date().toUTCString();
+  const timestamp = formatHumanDateTime(data.timestamp);
   return renderEjsTemplate(
     'admin-lockout-alert',
     { ...data, timestamp },

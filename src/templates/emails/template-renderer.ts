@@ -2,6 +2,11 @@ import path from 'path';
 import fs from 'fs';
 import ejs from 'ejs';
 import { DotenvConfig } from '../../config/env.config';
+import {
+  formatHumanDate,
+  formatHumanDateRange,
+  formatHumanDateTime,
+} from '../../utils/date.util';
 
 export interface RenderOptions {
   title?: string;
@@ -60,6 +65,9 @@ export async function renderEjsTemplate(
     {
       websiteUrl,
       logoUrl,
+      formatHumanDate,
+      formatHumanDateRange,
+      formatHumanDateTime,
       ...data,
     },
     {

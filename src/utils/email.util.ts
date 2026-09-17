@@ -10,11 +10,9 @@ import {
 } from '../templates/emails/admin-login-alert.template';
 import { getAdminLockoutAlertEmailTemplate } from '../templates/emails/admin-lockout-alert.template';
 import { getQuoteEmailTemplate } from '../templates/emails/quote.template';
-import { getResetPasswordEmailTemplate } from '../templates/emails/auth-reset-password.template';
 import { getOtpEmailTemplate } from '../templates/emails/auth-otp.template';
 
 export enum MailType {
-  RESET_PASSWORD = 'RESET_PASSWORD',
   LOGIN_OTP = 'LOGIN_OTP',
 }
 
@@ -223,13 +221,6 @@ class EmailUtil {
     let subject = 'Alpine Ace Notification';
     let body = '';
     switch (mailType) {
-      case MailType.RESET_PASSWORD: {
-        const token = extraData?.token || 'abc';
-        const resetLink = `${DotenvConfig.FRONTEND_BASE_URL}/reset-password?token=${token}`;
-        subject = 'Reset Your Password - Alpine Ace';
-        body = await getResetPasswordEmailTemplate({ email, resetLink });
-        break;
-      }
       case MailType.LOGIN_OTP: {
         const otp = extraData?.otp || '123456';
         subject = 'Your Verification Code - Alpine Ace';

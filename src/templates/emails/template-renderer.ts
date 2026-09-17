@@ -1,12 +1,14 @@
 import path from 'path';
 import fs from 'fs';
 import ejs from 'ejs';
+import { DotenvConfig } from '../../config/env.config';
 
 export interface RenderOptions {
   title?: string;
   preheader?: string;
   subtitle?: string;
   footerText?: string;
+  logoUrl?: string;
 }
 
 /**
@@ -38,7 +40,7 @@ function getTemplatesDirectory(): string {
  *
  * @param templateName Name of the template (e.g. 'client-inquiry' or 'auth-otp')
  * @param data Data context object passed into the template
- * @param options Layout parameters (title, preheader, subtitle, footerText)
+ * @param options Layout parameters (title, preheader, subtitle, footerText, logoUrl)
  */
 export async function renderEjsTemplate(
   templateName: string,
@@ -49,11 +51,22 @@ export async function renderEjsTemplate(
   const templatePath = path.join(templatesDir, `${templateName}.ejs`);
   const layoutPath = path.join(templatesDir, 'layout.ejs');
 
+  const websiteUrl = DotenvConfig.FRONTEND_BASE_URL || 'https://alpineacetreks.com';
+  const logoUrl = options.logoUrl || `${websiteUrl}/logo.jpg`;
+
   // Render specific template content body
-  const innerBodyHtml = await ejs.renderFile(templatePath, data, {
-    root: templatesDir,
-    filename: templatePath,
-  });
+  const innerBodyHtml = await ejs.renderFile(
+    templatePath,
+    {
+      websiteUrl,
+      logoUrl,
+      ...data,
+    },
+    {
+      root: templatesDir,
+      filename: templatePath,
+    },
+  );
 
   // Wrap inside centralized layout with shared header & footer
   const fullHtml = await ejs.renderFile(
@@ -64,6 +77,8 @@ export async function renderEjsTemplate(
       preheader: options.preheader || '',
       subtitle: options.subtitle || 'Nepal Treks & Expeditions',
       footerText: options.footerText || undefined,
+      logoUrl,
+      websiteUrl,
     },
     {
       root: templatesDir,

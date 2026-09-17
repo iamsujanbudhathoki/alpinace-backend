@@ -1,12 +1,21 @@
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #fafaf9; border-top: 1px solid #f5f5f4;">
+<%
+  const siteUrl = (typeof websiteUrl !== 'undefined' && websiteUrl) ? websiteUrl : 'https://alpineacetreks.com';
+  const siteHost = siteUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
+%>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #fafaf9; border-top: 1px solid #e5e5e5;">
   <tr>
-    <td style="padding: 24px 32px; text-align: left;">
-      <p style="margin: 0; font-size: 12px; line-height: 1.6; color: #71717a; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+    <td class="footer-padding" style="padding: 22px 32px; text-align: left;">
+      <p style="margin: 0 0 6px 0; font-size: 12px; line-height: 1.5; font-weight: 600; color: #0a0a0a; font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+        Alpine Ace Treks &amp; Expeditions Pvt. Ltd.
+      </p>
+      <p style="margin: 0 0 8px 0; font-size: 11px; line-height: 1.5; color: #737373; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+        Tridevi Marg, Thamel, Kathmandu, Nepal &bull; <a href="mailto:info@alpineacetreks.com" style="color: #404040; text-decoration: underline;">info@alpineacetreks.com</a> &bull; <a href="<%= siteUrl %>" target="_blank" style="color: #404040; text-decoration: underline;"><%= siteHost %></a>
+      </p>
+      <p style="margin: 0; font-size: 11px; line-height: 1.5; color: #a3a3a3; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
         <% if (typeof footerText !== 'undefined' && footerText) { %>
           <%- footerText %>
         <% } else { %>
-          &copy; <%= new Date().getFullYear() %> Alpine Ace Treks &amp; Expeditions Pvt. Ltd.<br />
-          Tridevi Marg, Thamel, Kathmandu, Nepal &bull; <a href="mailto:info@alpineacetreks.com" style="color: #09090b; text-decoration: underline; font-weight: 500;">info@alpineacetreks.com</a>
+          &copy; <%= new Date().getFullYear() %> Alpine Ace. All rights reserved.
         <% } %>
       </p>
     </td>

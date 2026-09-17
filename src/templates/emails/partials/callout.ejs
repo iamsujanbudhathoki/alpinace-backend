@@ -1,28 +1,37 @@
 <%
-  let bgColor = '#fefce8';
-  let borderColor = '#eab308';
-  let titleColor = '#000000';
-  let textColor = '#1c1917';
+  let bgColor = '#fafaf9';
+  let boxBorder = '#e5e5e5';
+  let accentBorder = '#eab308';
+  let titleColor = '#0a0a0a';
+  let textColor = '#404040';
 
   if (typeof type !== 'undefined' && type === 'warning') {
     bgColor = '#fff1f2';
-    borderColor = '#e11d48';
+    boxBorder = '#fecdd3';
+    accentBorder = '#e11d48';
     titleColor = '#9f1239';
     textColor = '#881337';
+  } else if (typeof type !== 'undefined' && type === 'notice') {
+    bgColor = '#fefce8';
+    boxBorder = '#fef08a';
+    accentBorder = '#eab308';
+    titleColor = '#854d0e';
+    textColor = '#713f12';
   } else if (typeof type !== 'undefined' && type === 'info') {
     bgColor = '#fafaf9';
-    borderColor = '#eab308';
-    titleColor = '#000000';
-    textColor = '#3f3f46';
+    boxBorder = '#e5e5e5';
+    accentBorder = '#eab308';
+    titleColor = '#0a0a0a';
+    textColor = '#404040';
   }
 %>
-<div style="background-color: <%= bgColor %>; border-left: 4px solid <%= borderColor %>; padding: 16px 20px; border-radius: 0 6px 6px 0; margin: 24px 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+<div style="background-color: <%= bgColor %>; border: 1px solid <%= boxBorder %>; border-left: 3px solid <%= accentBorder %>; padding: 14px 18px; border-radius: 6px; margin: 20px 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
   <% if (typeof title !== 'undefined' && title) { %>
-    <div style="font-size: 14px; font-weight: 700; color: <%= titleColor %>; margin-bottom: 4px;">
+    <div style="font-size: 13px; font-weight: 600; color: <%= titleColor %>; margin-bottom: 4px; font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
       <%= title %>
     </div>
   <% } %>
-  <div style="font-size: 14px; line-height: 1.6; color: <%= textColor %>; font-weight: 400;">
+  <div style="font-size: 13px; line-height: 1.55; color: <%= textColor %>; font-weight: 400;">
     <%= text %>
   </div>
 </div>

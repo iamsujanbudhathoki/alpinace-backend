@@ -6,4 +6,6 @@ dist/
 public/uploads/*
 !public/uploads/.gitkeep
 public/temp/
-email-previews/
+email-previews/
+logs/
+

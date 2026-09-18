@@ -3,6 +3,7 @@ import { AppError } from '../utils/appError.util';
 import { ValidateError } from 'tsoa';
 import multer from 'multer';
 import messages from '../constants/messages.constants';
+import logger from '../utils/logger.util';
 
 const errorHandler = (
   error: any,
@@ -11,6 +12,10 @@ const errorHandler = (
   _next: NextFunction,
 ) => {
   if (error instanceof AppError) {
+    logger.warn(`AppError [${error?.statusCode || 400}]: ${error?.message}`, {
+      path: req.originalUrl || req.url,
+      statusCode: +error?.statusCode || 400,
+    });
     return res.status(+error?.statusCode || 400).json({
       success: false,
       message: error?.message ?? 'Internal server error',
@@ -61,6 +66,10 @@ const errorHandler = (
 
     const exactMessage =
       fieldMessages.length > 0 ? fieldMessages.join(', ') : 'Validation Failed';
+    logger.warn(`Validation Error [400]: ${exactMessage}`, {
+      path: req.originalUrl || req.url,
+      errors: fieldMessages,
+    });
     return res.status(400).json({
       success: false,
       message: exactMessage,
@@ -71,13 +80,19 @@ const errorHandler = (
   }
 
   if (error instanceof multer.MulterError) {
+    logger.warn(`Multer File Error: ${error.message}`, {
+      path: req.originalUrl || req.url,
+    });
     return res.status(400).json({
       message: 'File Size Exceeded. Please upload within 8MB',
       details: error.message,
     });
   }
 
-  console.log('Error', error);
+  logger.error(`Unhandled Express Error on [${req.method}] ${req.originalUrl || req.url}`, {
+    error: error?.message || error,
+    stack: error?.stack,
+  });
   return res.status(500).json({
     success: false,
     message: messages.serverError,
@@ -85,3 +100,4 @@ const errorHandler = (
   });
 };
 export default errorHandler;
+

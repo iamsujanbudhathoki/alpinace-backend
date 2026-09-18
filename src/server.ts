@@ -6,7 +6,22 @@ import { configMiddleware } from './middlewares';
 import { PathUtils } from './utils/path.util';
 import removeTempMediaCron from './crons/removeTempMedia.cron';
 import dbBackupCron from './crons/dbBackup.cron';
-// import { RedisUtil } from './utils/redis.util';
+import logger from './utils/logger.util';
+
+// Register global crash handlers to ensure unhandled errors are logged before exit
+process.on('uncaughtException', (error) => {
+  logger.error('CRITICAL: Uncaught Exception detected', {
+    error: error.message,
+    stack: error.stack,
+  });
+});
+
+process.on('unhandledRejection', (reason: any) => {
+  logger.error('CRITICAL: Unhandled Promise Rejection detected', {
+    reason: reason?.message || reason,
+    stack: reason?.stack,
+  });
+});
 
 class Server {
   constructor() {
@@ -15,10 +30,10 @@ class Server {
 
   async bootstrap() {
     await this.initializePath();
-    console.log('Connecting to MySQL database...');
+    logger.info('Connecting to MySQL database...');
     AppDataSource.initialize()
       .then(async () => {
-        console.log('Data Source has been initialized!');
+        logger.info('Data Source has been successfully initialized!');
 
         const app = express();
         configMiddleware(app);
@@ -26,17 +41,17 @@ class Server {
         // Activate background cron tasks
         removeTempMediaCron.start();
         dbBackupCron.start();
-        console.log('[Cron Service] Daily database backup & cleanup cron jobs active.');
+        logger.info('[Cron Service] Daily database backup & cleanup cron jobs active.');
 
         const port = DotenvConfig.PORT;
         app.listen(port, () => {
-          console.log(
+          logger.info(
             `Alpine Ace Backend TCP server established on port ${port}`,
           );
         });
       })
       .catch((err) => {
-        console.error('Error during Data Source initialization', err);
+        logger.error('Error during Data Source initialization', { error: err });
       });
   }
 
@@ -50,3 +65,4 @@ class Server {
 }
 
 new Server();
+

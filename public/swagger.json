@@ -3700,6 +3700,9 @@
 			},
 			"GroupPricingTierDto": {
 				"properties": {
+					"id": {
+						"type": "string"
+					},
 					"minTravelers": {
 						"type": "number",
 						"format": "double"

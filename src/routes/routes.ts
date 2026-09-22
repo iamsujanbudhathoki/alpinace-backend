@@ -1341,6 +1341,7 @@ const models: TsoaRoute.Models = {
     "GroupPricingTierDto": {
         "dataType": "refObject",
         "properties": {
+            "id": {"dataType":"string"},
             "minTravelers": {"dataType":"double","required":true},
             "maxTravelers": {"dataType":"double","required":true},
             "pricePerPerson": {"dataType":"double","required":true},

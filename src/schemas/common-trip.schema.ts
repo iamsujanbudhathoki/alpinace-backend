@@ -166,6 +166,10 @@ export class TripPackageFileDto {
 }
 
 export class GroupPricingTierDto {
+  @IsOptional()
+  @IsString({ message: 'Tier ID must be a string' })
+  id?: string;
+
   @Type(() => Number)
   @IsNumber({}, { message: 'minTravelers must be a number' })
   @Min(1, { message: 'minTravelers must be at least 1' })

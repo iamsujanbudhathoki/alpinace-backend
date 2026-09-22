@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { DotenvConfig, Environment } from './env.config';
+import { DotenvConfig } from './env.config';
 
 const isSslEnabled =
   DotenvConfig.DB_SSL ||

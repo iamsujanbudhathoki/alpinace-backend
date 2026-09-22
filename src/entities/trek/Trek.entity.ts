@@ -50,6 +50,10 @@ export interface TripDepartureDate {
   notes?: string;
 }
 
+import { GroupPricingTier } from '../../utils/pricing.util';
+
+export { GroupPricingTier };
+
 export interface TripPackageFile {
   id?: string;
   mediaId?: string;
@@ -109,6 +113,16 @@ export class Trek extends CommonEntity {
 
   @Column({ name: 'price_usd', type: 'decimal', precision: 10, scale: 2 })
   priceUSD: number;
+
+  @Column({ name: 'group_pricing_enabled', type: 'boolean', default: false })
+  groupPricingEnabled: boolean;
+
+  @Column({
+    name: 'group_pricing',
+    type: 'json',
+    nullable: true,
+  })
+  groupPricing?: GroupPricingTier[];
 
   @Column({
     name: 'status',

@@ -164,3 +164,20 @@ export class TripPackageFileDto {
   @IsString()
   uploadedAt?: string;
 }
+
+export class GroupPricingTierDto {
+  @Type(() => Number)
+  @IsNumber({}, { message: 'minTravelers must be a number' })
+  @Min(1, { message: 'minTravelers must be at least 1' })
+  minTravelers!: number;
+
+  @Type(() => Number)
+  @IsNumber({}, { message: 'maxTravelers must be a number' })
+  @Min(1, { message: 'maxTravelers must be at least 1' })
+  maxTravelers!: number;
+
+  @Type(() => Number)
+  @IsNumber({}, { message: 'pricePerPerson must be a number' })
+  @Min(0.01, { message: 'pricePerPerson must be greater than 0' })
+  pricePerPerson!: number;
+}

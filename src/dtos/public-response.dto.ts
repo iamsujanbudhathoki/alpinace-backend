@@ -4,6 +4,7 @@ import { TourType } from '../entities/tour/Tour.entity';
 import { ClimbingGrade } from '../entities/expedition/Expedition.entity';
 import { CategoryType } from '../entities/category/Category.entity';
 import {
+  GroupPricingTier,
   TripDepartureDate,
   TripFaq,
   TripItineraryDay,
@@ -53,6 +54,8 @@ export interface PublicTrekDetailDto extends PublicTrekSummaryDto {
   metaTitle?: string;
   metaDescription?: string;
   keywords?: string;
+  groupPricingEnabled?: boolean;
+  groupPricing?: GroupPricingTier[];
 }
 
 // ─── Public Tour DTOs ──────────────────────────────────────────────────────────
@@ -99,6 +102,8 @@ export interface PublicTourDetailDto extends PublicTourSummaryDto {
   metaTitle?: string;
   metaDescription?: string;
   keywords?: string;
+  groupPricingEnabled?: boolean;
+  groupPricing?: GroupPricingTier[];
 }
 
 // ─── Public Expedition DTOs ───────────────────────────────────────────────────
@@ -147,6 +152,8 @@ export interface PublicExpeditionDetailDto extends PublicExpeditionSummaryDto {
   metaTitle?: string;
   metaDescription?: string;
   keywords?: string;
+  groupPricingEnabled?: boolean;
+  groupPricing?: GroupPricingTier[];
 }
 
 // ─── Public Blog DTOs ──────────────────────────────────────────────────────────

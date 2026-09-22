@@ -12,6 +12,7 @@ import {
 } from '../../entities/category/Category.entity';
 import { CreateTrekDto, UpdateTrekDto } from '../../schemas/trek.schema';
 import { AppError } from '../../utils/appError.util';
+import { validateGroupPricingTiers } from '../../utils/pricing.util';
 
 import { MediaService } from '../media/media.service';
 import { CategoryService } from '../category/category.service';
@@ -321,6 +322,16 @@ export class TrekService {
       ...(dto.galleryMediaIds || []),
     ]);
 
+    const groupPricingValidation = validateGroupPricingTiers(
+      dto.groupPricing,
+      dto.groupPricingEnabled,
+    );
+    if (!groupPricingValidation.valid) {
+      throw AppError.badRequest(
+        groupPricingValidation.error || 'Invalid group pricing configuration',
+      );
+    }
+
     const trek = this.repo.create({
       title: dto.title,
       slug,
@@ -332,6 +343,8 @@ export class TrekService {
       maxAltitudeMeters: Number(dto.maxAltitudeMeters) || 1400,
       difficulty: dto.difficulty || TripDifficulty.MODERATE,
       priceUSD: Number(dto.priceUSD),
+      groupPricingEnabled: Boolean(dto.groupPricingEnabled),
+      groupPricing: dto.groupPricingEnabled ? dto.groupPricing || [] : [],
       status: dto.status || TrekStatus.ACTIVE,
       shortDesc: dto.shortDesc,
       coverMediaId: dto.coverMediaId,
@@ -436,6 +449,25 @@ export class TrekService {
     if (dto.metaDescription !== undefined)
       trek.metaDescription = dto.metaDescription;
     if (dto.keywords !== undefined) trek.keywords = dto.keywords;
+
+    const newEnabled =
+      dto.groupPricingEnabled !== undefined
+        ? dto.groupPricingEnabled
+        : trek.groupPricingEnabled;
+    const newPricing =
+      dto.groupPricing !== undefined ? dto.groupPricing : trek.groupPricing;
+    const groupPricingValidation = validateGroupPricingTiers(newPricing, newEnabled);
+    if (!groupPricingValidation.valid) {
+      throw AppError.badRequest(
+        groupPricingValidation.error || 'Invalid group pricing configuration',
+      );
+    }
+    if (dto.groupPricingEnabled !== undefined) {
+      trek.groupPricingEnabled = Boolean(dto.groupPricingEnabled);
+    }
+    if (dto.groupPricing !== undefined) {
+      trek.groupPricing = dto.groupPricing;
+    }
 
     const saved = await this.repo.save(trek);
     await this.auditLogService.logUpdate(AuditEntityType.TREK, saved.id, oldState, saved);

@@ -71,6 +71,8 @@ export function toPublicTrekDetail(trek: Trek): PublicTrekDetailDto {
     metaTitle: trek.metaTitle,
     metaDescription: trek.metaDescription,
     keywords: trek.keywords,
+    groupPricingEnabled: trek.groupPricingEnabled,
+    groupPricing: trek.groupPricing,
   };
 }
 
@@ -123,6 +125,8 @@ export function toPublicTourDetail(tour: Tour): PublicTourDetailDto {
     metaTitle: tour.metaTitle,
     metaDescription: tour.metaDescription,
     keywords: tour.keywords,
+    groupPricingEnabled: tour.groupPricingEnabled,
+    groupPricing: tour.groupPricing,
   };
 }
 
@@ -177,6 +181,8 @@ export function toPublicExpeditionDetail(exp: Expedition): PublicExpeditionDetai
     metaTitle: exp.metaTitle,
     metaDescription: exp.metaDescription,
     keywords: exp.keywords,
+    groupPricingEnabled: exp.groupPricingEnabled,
+    groupPricing: exp.groupPricing,
   };
 }
 

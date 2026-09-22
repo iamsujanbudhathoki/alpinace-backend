@@ -19,6 +19,7 @@ import {
   UpdateExpeditionDto,
 } from '../../schemas/expedition.schema';
 import { AppError } from '../../utils/appError.util';
+import { validateGroupPricingTiers } from '../../utils/pricing.util';
 
 import { MediaService } from '../media/media.service';
 import { CategoryService } from '../category/category.service';
@@ -353,6 +354,16 @@ export class ExpeditionService {
           ? Number(dto.maxAltitudeMeters)
           : 6000;
 
+    const groupPricingValidation = validateGroupPricingTiers(
+      dto.groupPricing,
+      dto.groupPricingEnabled,
+    );
+    if (!groupPricingValidation.valid) {
+      throw AppError.badRequest(
+        groupPricingValidation.error || 'Invalid group pricing configuration',
+      );
+    }
+
     const exp = this.repo.create({
       title: dto.title,
       slug,
@@ -369,6 +380,8 @@ export class ExpeditionService {
       oxygenRequired:
         dto.oxygenRequired !== undefined ? dto.oxygenRequired : true,
       priceUSD: Number(dto.priceUSD),
+      groupPricingEnabled: Boolean(dto.groupPricingEnabled),
+      groupPricing: dto.groupPricingEnabled ? dto.groupPricing || [] : [],
       status: dto.status || ExpeditionStatus.ACTIVE,
       shortDesc: dto.shortDesc,
       coverMediaId: dto.coverMediaId,
@@ -481,6 +494,25 @@ export class ExpeditionService {
     if (dto.metaDescription !== undefined)
       exp.metaDescription = dto.metaDescription;
     if (dto.keywords !== undefined) exp.keywords = dto.keywords;
+
+    const newEnabled =
+      dto.groupPricingEnabled !== undefined
+        ? dto.groupPricingEnabled
+        : exp.groupPricingEnabled;
+    const newPricing =
+      dto.groupPricing !== undefined ? dto.groupPricing : exp.groupPricing;
+    const groupPricingValidation = validateGroupPricingTiers(newPricing, newEnabled);
+    if (!groupPricingValidation.valid) {
+      throw AppError.badRequest(
+        groupPricingValidation.error || 'Invalid group pricing configuration',
+      );
+    }
+    if (dto.groupPricingEnabled !== undefined) {
+      exp.groupPricingEnabled = Boolean(dto.groupPricingEnabled);
+    }
+    if (dto.groupPricing !== undefined) {
+      exp.groupPricing = dto.groupPricing;
+    }
 
     const saved = await this.repo.save(exp);
     await this.auditLogService.logUpdate(AuditEntityType.EXPEDITION, saved.id, oldState, saved);

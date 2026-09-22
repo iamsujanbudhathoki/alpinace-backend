@@ -15,6 +15,7 @@ import { TourStatus, TourType } from '../entities/tour/Tour.entity';
 import { TripDifficulty } from '../entities/common/difficulty.enum';
 import { TripActivity } from '../entities/common/activity.enum';
 import {
+  GroupPricingTierDto,
   TripDepartureDateDto,
   TripFaqDto,
   TripItineraryDayDto,
@@ -192,6 +193,16 @@ export class CreateTourDto {
   @IsOptional()
   @IsString()
   keywords?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  groupPricingEnabled?: boolean;
+
+  @IsOptional()
+  @IsArray({ message: 'Group pricing must be an array' })
+  @ValidateNested({ each: true })
+  @Type(() => GroupPricingTierDto)
+  groupPricing?: GroupPricingTierDto[];
 }
 
 export class UpdateTourDto {
@@ -358,4 +369,14 @@ export class UpdateTourDto {
   @IsOptional()
   @IsString()
   keywords?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  groupPricingEnabled?: boolean;
+
+  @IsOptional()
+  @IsArray({ message: 'Group pricing must be an array' })
+  @ValidateNested({ each: true })
+  @Type(() => GroupPricingTierDto)
+  groupPricing?: GroupPricingTierDto[];
 }

@@ -386,6 +386,29 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"GroupPricingTier": {
+				"properties": {
+					"minTravelers": {
+						"type": "number",
+						"format": "double"
+					},
+					"maxTravelers": {
+						"type": "number",
+						"format": "double"
+					},
+					"pricePerPerson": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"minTravelers",
+					"maxTravelers",
+					"pricePerPerson"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"PublicTrekDetailDto": {
 				"properties": {
 					"id": {
@@ -518,6 +541,15 @@
 					},
 					"keywords": {
 						"type": "string"
+					},
+					"groupPricingEnabled": {
+						"type": "boolean"
+					},
+					"groupPricing": {
+						"items": {
+							"$ref": "#/components/schemas/GroupPricingTier"
+						},
+						"type": "array"
 					}
 				},
 				"required": [
@@ -848,6 +880,15 @@
 					},
 					"keywords": {
 						"type": "string"
+					},
+					"groupPricingEnabled": {
+						"type": "boolean"
+					},
+					"groupPricing": {
+						"items": {
+							"$ref": "#/components/schemas/GroupPricingTier"
+						},
+						"type": "array"
 					}
 				},
 				"required": [
@@ -2391,6 +2432,15 @@
 					},
 					"keywords": {
 						"type": "string"
+					},
+					"groupPricingEnabled": {
+						"type": "boolean"
+					},
+					"groupPricing": {
+						"items": {
+							"$ref": "#/components/schemas/GroupPricingTier"
+						},
+						"type": "array"
 					}
 				},
 				"required": [
@@ -2827,6 +2877,12 @@
 					"packageName": {
 						"type": "string"
 					},
+					"packageId": {
+						"type": "string"
+					},
+					"packageSlug": {
+						"type": "string"
+					},
 					"packageType": {
 						"$ref": "#/components/schemas/BookingPackageType"
 					},
@@ -3236,6 +3292,15 @@
 						"type": "number",
 						"format": "double"
 					},
+					"groupPricingEnabled": {
+						"type": "boolean"
+					},
+					"groupPricing": {
+						"items": {
+							"$ref": "#/components/schemas/GroupPricingTier"
+						},
+						"type": "array"
+					},
 					"status": {
 						"$ref": "#/components/schemas/TrekStatus"
 					},
@@ -3357,6 +3422,7 @@
 					"maxAltitudeMeters",
 					"difficulty",
 					"priceUSD",
+					"groupPricingEnabled",
 					"status",
 					"isFeatured",
 					"isPopular",
@@ -3632,6 +3698,29 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"GroupPricingTierDto": {
+				"properties": {
+					"minTravelers": {
+						"type": "number",
+						"format": "double"
+					},
+					"maxTravelers": {
+						"type": "number",
+						"format": "double"
+					},
+					"pricePerPerson": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"minTravelers",
+					"maxTravelers",
+					"pricePerPerson"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"CreateTrekDto": {
 				"properties": {
 					"title": {
@@ -3764,6 +3853,15 @@
 					},
 					"keywords": {
 						"type": "string"
+					},
+					"groupPricingEnabled": {
+						"type": "boolean"
+					},
+					"groupPricing": {
+						"items": {
+							"$ref": "#/components/schemas/GroupPricingTierDto"
+						},
+						"type": "array"
 					}
 				},
 				"required": [
@@ -3907,6 +4005,15 @@
 					},
 					"keywords": {
 						"type": "string"
+					},
+					"groupPricingEnabled": {
+						"type": "boolean"
+					},
+					"groupPricing": {
+						"items": {
+							"$ref": "#/components/schemas/GroupPricingTierDto"
+						},
+						"type": "array"
 					}
 				},
 				"type": "object",
@@ -3981,6 +4088,15 @@
 					"priceUSD": {
 						"type": "number",
 						"format": "double"
+					},
+					"groupPricingEnabled": {
+						"type": "boolean"
+					},
+					"groupPricing": {
+						"items": {
+							"$ref": "#/components/schemas/GroupPricingTier"
+						},
+						"type": "array"
 					},
 					"status": {
 						"$ref": "#/components/schemas/TourStatus"
@@ -4105,6 +4221,7 @@
 					"maxAltitudeMeters",
 					"difficulty",
 					"priceUSD",
+					"groupPricingEnabled",
 					"status",
 					"isFeatured",
 					"isPopular",
@@ -4347,6 +4464,15 @@
 					},
 					"keywords": {
 						"type": "string"
+					},
+					"groupPricingEnabled": {
+						"type": "boolean"
+					},
+					"groupPricing": {
+						"items": {
+							"$ref": "#/components/schemas/GroupPricingTierDto"
+						},
+						"type": "array"
 					}
 				},
 				"required": [
@@ -4496,6 +4622,15 @@
 					},
 					"keywords": {
 						"type": "string"
+					},
+					"groupPricingEnabled": {
+						"type": "boolean"
+					},
+					"groupPricing": {
+						"items": {
+							"$ref": "#/components/schemas/GroupPricingTierDto"
+						},
+						"type": "array"
 					}
 				},
 				"type": "object",
@@ -5542,6 +5677,15 @@
 						"type": "number",
 						"format": "double"
 					},
+					"groupPricingEnabled": {
+						"type": "boolean"
+					},
+					"groupPricing": {
+						"items": {
+							"$ref": "#/components/schemas/GroupPricingTier"
+						},
+						"type": "array"
+					},
 					"status": {
 						"$ref": "#/components/schemas/ExpeditionStatus"
 					},
@@ -5667,6 +5811,7 @@
 					"sherpaGuideRatio",
 					"oxygenRequired",
 					"priceUSD",
+					"groupPricingEnabled",
 					"status",
 					"isFeatured",
 					"isPopular",
@@ -5916,6 +6061,15 @@
 					},
 					"keywords": {
 						"type": "string"
+					},
+					"groupPricingEnabled": {
+						"type": "boolean"
+					},
+					"groupPricing": {
+						"items": {
+							"$ref": "#/components/schemas/GroupPricingTierDto"
+						},
+						"type": "array"
 					}
 				},
 				"required": [
@@ -6072,6 +6226,15 @@
 					},
 					"keywords": {
 						"type": "string"
+					},
+					"groupPricingEnabled": {
+						"type": "boolean"
+					},
+					"groupPricing": {
+						"items": {
+							"$ref": "#/components/schemas/GroupPricingTierDto"
+						},
+						"type": "array"
 					}
 				},
 				"type": "object",

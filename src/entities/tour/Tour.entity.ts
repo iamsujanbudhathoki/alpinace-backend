@@ -3,6 +3,7 @@ import { CommonEntity } from '../common/common.entity';
 import { TripDifficulty } from '../common/difficulty.enum';
 import { TripActivity } from '../common/activity.enum';
 import {
+  GroupPricingTier,
   TripDepartureDate,
   TripFaq,
   TripItineraryDay,
@@ -83,6 +84,16 @@ export class Tour extends CommonEntity {
 
   @Column({ name: 'price_usd', type: 'decimal', precision: 10, scale: 2 })
   priceUSD: number;
+
+  @Column({ name: 'group_pricing_enabled', type: 'boolean', default: false })
+  groupPricingEnabled: boolean;
+
+  @Column({
+    name: 'group_pricing',
+    type: 'json',
+    nullable: true,
+  })
+  groupPricing?: GroupPricingTier[];
 
   @Column({
     name: 'status',

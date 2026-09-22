@@ -12,6 +12,7 @@ import {
 } from '../../entities/category/Category.entity';
 import { CreateTourDto, UpdateTourDto } from '../../schemas/tour.schema';
 import { AppError } from '../../utils/appError.util';
+import { validateGroupPricingTiers } from '../../utils/pricing.util';
 
 import { MediaService } from '../media/media.service';
 import { CategoryService } from '../category/category.service';
@@ -312,6 +313,16 @@ export class TourService {
       ...(dto.galleryMediaIds || []),
     ]);
 
+    const groupPricingValidation = validateGroupPricingTiers(
+      dto.groupPricing,
+      dto.groupPricingEnabled,
+    );
+    if (!groupPricingValidation.valid) {
+      throw AppError.badRequest(
+        groupPricingValidation.error || 'Invalid group pricing configuration',
+      );
+    }
+
     const tour = this.repo.create({
       title: dto.title,
       slug,
@@ -325,6 +336,8 @@ export class TourService {
       maxAltitudeMeters: Number(dto.maxAltitudeMeters) || 1400,
       difficulty: dto.difficulty || TripDifficulty.EASY,
       priceUSD: Number(dto.priceUSD),
+      groupPricingEnabled: Boolean(dto.groupPricingEnabled),
+      groupPricing: dto.groupPricingEnabled ? dto.groupPricing || [] : [],
       status: dto.status || TourStatus.ACTIVE,
       shortDesc: dto.shortDesc,
       coverMediaId: dto.coverMediaId,
@@ -431,6 +444,25 @@ export class TourService {
     if (dto.metaDescription !== undefined)
       tour.metaDescription = dto.metaDescription;
     if (dto.keywords !== undefined) tour.keywords = dto.keywords;
+
+    const newEnabled =
+      dto.groupPricingEnabled !== undefined
+        ? dto.groupPricingEnabled
+        : tour.groupPricingEnabled;
+    const newPricing =
+      dto.groupPricing !== undefined ? dto.groupPricing : tour.groupPricing;
+    const groupPricingValidation = validateGroupPricingTiers(newPricing, newEnabled);
+    if (!groupPricingValidation.valid) {
+      throw AppError.badRequest(
+        groupPricingValidation.error || 'Invalid group pricing configuration',
+      );
+    }
+    if (dto.groupPricingEnabled !== undefined) {
+      tour.groupPricingEnabled = Boolean(dto.groupPricingEnabled);
+    }
+    if (dto.groupPricing !== undefined) {
+      tour.groupPricing = dto.groupPricing;
+    }
 
     const saved = await this.repo.save(tour);
     await this.auditLogService.logUpdate(AuditEntityType.TOUR, saved.id, oldState, saved);

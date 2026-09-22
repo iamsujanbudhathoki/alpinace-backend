@@ -17,6 +17,10 @@ import emailUtil from '../../utils/email.util';
 import { NotificationService } from '../notification/notification.service';
 import { TurnstileService } from '../turnstile/turnstile.service';
 import { AuditLogService } from '../audit-log/audit-log.service';
+import { Tour } from '../../entities/tour/Tour.entity';
+import { Trek } from '../../entities/trek/Trek.entity';
+import { Expedition } from '../../entities/expedition/Expedition.entity';
+import { calculateApplicablePrice } from '../../utils/pricing.util';
 import { AuditEntityType } from '../../constants/audit.constants';
 
 @autoInjectable()
@@ -86,6 +90,84 @@ export class BookingService {
 
     const reference = `ACE-2026-${Math.floor(1000 + Math.random() * 9000)}`;
 
+    let calculatedTotal = Number(dto.totalAmountUSD);
+    const groupSize = Number(dto.groupSize);
+
+    // Authoritative server-side price calculation: Look up product and recalculate
+    let product: {
+      priceUSD: number;
+      groupPricingEnabled?: boolean;
+      groupPricing?: any[];
+    } | null = null;
+
+    if (dto.packageType === BookingPackageType.TOUR) {
+      const tourRepo = AppDataSource.getRepository(Tour);
+      if (dto.packageId) {
+        product = await tourRepo.findOne({ where: { id: dto.packageId } });
+      }
+      if (!product && dto.packageSlug) {
+        product = await tourRepo.findOne({ where: { slug: dto.packageSlug } });
+      }
+      if (!product && dto.packageName) {
+        product = await tourRepo.findOne({ where: { title: dto.packageName } });
+        if (!product) {
+          product = await tourRepo
+            .createQueryBuilder('tour')
+            .where('LOWER(tour.title) = LOWER(:title)', { title: dto.packageName.trim() })
+            .getOne();
+        }
+      }
+    } else if (dto.packageType === BookingPackageType.EXPEDITION) {
+      const expRepo = AppDataSource.getRepository(Expedition);
+      if (dto.packageId) {
+        product = await expRepo.findOne({ where: { id: dto.packageId } });
+      }
+      if (!product && dto.packageSlug) {
+        product = await expRepo.findOne({ where: { slug: dto.packageSlug } });
+      }
+      if (!product && dto.packageName) {
+        product = await expRepo.findOne({ where: { title: dto.packageName } });
+        if (!product) {
+          product = await expRepo
+            .createQueryBuilder('exp')
+            .where('LOWER(exp.title) = LOWER(:title)', { title: dto.packageName.trim() })
+            .getOne();
+        }
+      }
+    } else {
+      const trekRepo = AppDataSource.getRepository(Trek);
+      if (dto.packageId) {
+        product = await trekRepo.findOne({ where: { id: dto.packageId } });
+      }
+      if (!product && dto.packageSlug) {
+        product = await trekRepo.findOne({ where: { slug: dto.packageSlug } });
+      }
+      if (!product && dto.packageName) {
+        product = await trekRepo.findOne({ where: { title: dto.packageName } });
+        if (!product) {
+          product = await trekRepo
+            .createQueryBuilder('trek')
+            .where('LOWER(trek.title) = LOWER(:title)', { title: dto.packageName.trim() })
+            .getOne();
+        }
+      }
+    }
+
+    if (!product) {
+      throw AppError.notFound(
+        `Package "${dto.packageName || dto.packageSlug || dto.packageId}" could not be found to determine booking pricing.`,
+      );
+    }
+
+    try {
+      const pricing = calculateApplicablePrice(product, groupSize);
+      calculatedTotal = pricing.totalPrice;
+    } catch (pricingError: any) {
+      throw AppError.badRequest(
+        pricingError.message || 'Unable to calculate price for traveler count',
+      );
+    }
+
     const booking = this.repo.create({
       reference,
       guestName: dto.guestName,
@@ -97,7 +179,7 @@ export class BookingService {
       startDate: dto.startDate,
       endDate: dto.endDate,
       groupSize: Number(dto.groupSize),
-      totalAmountUSD: Number(dto.totalAmountUSD),
+      totalAmountUSD: calculatedTotal,
       paymentStatus: dto.paymentStatus || BookingPaymentStatus.PENDING,
       bookingStatus: dto.bookingStatus || BookingStatus.IN_REVIEW,
       assignedGuide: dto.assignedGuide || undefined,
@@ -131,7 +213,7 @@ export class BookingService {
         startDate: dto.startDate,
         endDate: dto.endDate,
         groupSize: Number(dto.groupSize),
-        totalAmountUSD: Number(dto.totalAmountUSD),
+        totalAmountUSD: saved.totalAmountUSD,
         specialRequests: dto.specialRequests,
       })
       .catch((err) => console.error('[Nodemailer] Booking email error:', err));

@@ -36,6 +36,14 @@ export class CreateBookingDto {
   @IsNotEmpty({ message: 'Package name is required' })
   packageName!: string;
 
+  @IsOptional()
+  @IsString()
+  packageId?: string;
+
+  @IsOptional()
+  @IsString()
+  packageSlug?: string;
+
   @IsEnum(BookingPackageType, {
     message: 'Invalid package type. Must be trekking, expedition, or tour',
   })

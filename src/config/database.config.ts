@@ -12,7 +12,6 @@ export const AppDataSource = new DataSource({
   type: 'mysql',
   url: DotenvConfig.DATABASE_URL,
   entities: [`${__dirname}/../entities/**/*.entity.{ts,js}`],
-  // synchronize: true,
-  // dropSchema: true,
+  synchronize: true,
   ssl: isSslEnabled ? { rejectUnauthorized: false } : false,
 });

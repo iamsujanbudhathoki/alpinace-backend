@@ -18,6 +18,7 @@ import {
 import { TripDifficulty } from '../entities/common/difficulty.enum';
 import { TripActivity } from '../entities/common/activity.enum';
 import {
+  GroupPricingTierDto,
   TripDepartureDateDto,
   TripFaqDto,
   TripItineraryDayDto,
@@ -203,6 +204,16 @@ export class CreateExpeditionDto {
   @IsOptional()
   @IsString()
   keywords?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  groupPricingEnabled?: boolean;
+
+  @IsOptional()
+  @IsArray({ message: 'Group pricing must be an array' })
+  @ValidateNested({ each: true })
+  @Type(() => GroupPricingTierDto)
+  groupPricing?: GroupPricingTierDto[];
 }
 
 export class UpdateExpeditionDto {
@@ -378,4 +389,14 @@ export class UpdateExpeditionDto {
   @IsOptional()
   @IsString()
   keywords?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  groupPricingEnabled?: boolean;
+
+  @IsOptional()
+  @IsArray({ message: 'Group pricing must be an array' })
+  @ValidateNested({ each: true })
+  @Type(() => GroupPricingTierDto)
+  groupPricing?: GroupPricingTierDto[];
 }

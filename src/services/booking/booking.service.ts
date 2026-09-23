@@ -22,6 +22,7 @@ import { Trek } from '../../entities/trek/Trek.entity';
 import { Expedition } from '../../entities/expedition/Expedition.entity';
 import { calculateApplicablePrice } from '../../utils/pricing.util';
 import { AuditEntityType } from '../../constants/audit.constants';
+import { formatHumanDateTime } from '../../utils/date.util';
 
 @autoInjectable()
 export class BookingService {
@@ -194,7 +195,7 @@ export class BookingService {
     this.notifSvc
       .create({
         title: `New Booking Request (${saved.reference}) from ${dto.guestName}`,
-        body: `${dto.guestName} booked "${dto.packageName}" for ${dto.groupSize} traveler(s).`,
+        body: `${dto.guestName} booked "${dto.packageName}" for ${dto.groupSize} traveler(s) at ${formatHumanDateTime(saved.createdAt)}.`,
         type: NotificationType.BOOKING,
         refId: saved.id,
       })

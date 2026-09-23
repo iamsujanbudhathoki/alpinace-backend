@@ -10,6 +10,7 @@ import { AuditLogService } from '../audit-log/audit-log.service';
 import { NotificationService } from '../notification/notification.service';
 import { NotificationType } from '../../entities/notification/Notification.entity';
 import emailUtil from '../../utils/email.util';
+import { formatHumanDateTime } from '../../utils/date.util';
 
 @autoInjectable()
 export class AdminAuthService {
@@ -56,7 +57,7 @@ export class AdminAuthService {
       this.notificationService
         .create({
           title: 'Security Alert: Admin Account Locked Out',
-          body: `Admin account "${admin.email}" (${admin.name}) has been locked out after 5 consecutive failed login attempts. Please verify account security.`,
+          body: `Admin account "${admin.email}" (${admin.name}) has been locked out after 5 consecutive failed login attempts on ${formatHumanDateTime(new Date())}. Please verify account security.`,
           type: NotificationType.SYSTEM,
           refId: admin.id,
         })
@@ -97,7 +98,7 @@ export class AdminAuthService {
         this.notificationService
           .create({
             title: 'Security Alert: Admin Account Locked Out',
-            body: `Admin account "${admin.email}" (${admin.name}) has been locked out after 5 consecutive failed login attempts. Please verify account security.`,
+            body: `Admin account "${admin.email}" (${admin.name}) has been locked out after 5 consecutive failed login attempts on ${formatHumanDateTime(new Date())}. Please verify account security.`,
             type: NotificationType.SYSTEM,
             refId: admin.id,
           })

@@ -118,7 +118,7 @@ export class AdminAuthController extends Controller {
         // 2. Generate In-App System Notification
         await this.notificationService.create({
           title: 'Admin Login Detected',
-          body: `${data.name} (${data.email}) logged in from ${location} (IP: ${cleanIp}) using ${userAgent.slice(0, 60)}.`,
+          body: `${data.name} (${data.email}) logged in from ${location} (IP: ${cleanIp}) at ${timestamp} using ${userAgent.slice(0, 60)}.`,
           type: NotificationType.SYSTEM,
         });
       })

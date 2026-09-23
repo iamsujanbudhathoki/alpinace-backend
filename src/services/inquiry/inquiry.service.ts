@@ -12,6 +12,7 @@ import { NotificationService } from '../notification/notification.service';
 import { TurnstileService } from '../turnstile/turnstile.service';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { AuditEntityType } from '../../constants/audit.constants';
+import { formatHumanDateTime } from '../../utils/date.util';
 
 @autoInjectable()
 export class InquiryService {
@@ -107,7 +108,7 @@ export class InquiryService {
     this.notifSvc
       .create({
         title: `New ${saved.type} Inquiry from ${dto.guestName}`,
-        body: `${dto.guestName} from ${dto.country || 'N/A'} is interested in "${dto.interestedTrip}".`,
+        body: `${dto.guestName} from ${dto.country || 'N/A'} is interested in "${dto.interestedTrip}" (received at ${formatHumanDateTime(saved.createdAt)}).`,
         type: NotificationType.INQUIRY,
         refId: saved.id,
       })
@@ -169,7 +170,7 @@ export class InquiryService {
       this.notifSvc
         .create({
           title: `Quote Dispatched to ${saved.guestName}`,
-          body: `Custom quote email sent to ${saved.email} for "${saved.interestedTrip}".`,
+          body: `Custom quote email sent to ${saved.email} for "${saved.interestedTrip}" on ${formatHumanDateTime(new Date())}.`,
           type: NotificationType.QUOTE,
           refId: saved.id,
         })

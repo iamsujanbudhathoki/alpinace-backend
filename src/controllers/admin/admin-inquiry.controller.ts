@@ -13,7 +13,7 @@ import {
   Tags,
 } from 'tsoa';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
-import { Inquiry, InquiryStatus } from '../../entities/inquiry/Inquiry.entity';
+import { Inquiry, InquiryStatus, InquiryType } from '../../entities/inquiry/Inquiry.entity';
 import { InquiryService } from '../../services/inquiry/inquiry.service';
 import {
   UpdateInquiryDto,
@@ -33,12 +33,14 @@ export class AdminInquiryController extends Controller {
   @Get('')
   async getAll(
     @Query() status?: InquiryStatus,
+    @Query() type?: InquiryType,
     @Query() search?: string,
     @Query() limit?: number,
     @Query() page?: number,
   ): Promise<ApiResponse<Inquiry[]>> {
     const dataTotalCount = await this.inquiryService.getAll({
       status,
+      type,
       search,
       limit,
       page,

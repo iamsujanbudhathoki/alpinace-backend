@@ -4944,6 +4944,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsAdminInquiryController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
                 status: {"in":"query","name":"status","ref":"InquiryStatus"},
+                type: {"in":"query","name":"type","ref":"InquiryType"},
                 search: {"in":"query","name":"search","dataType":"string"},
                 limit: {"in":"query","name":"limit","dataType":"double"},
                 page: {"in":"query","name":"page","dataType":"double"},

@@ -33,11 +33,29 @@ export class InquiryService {
     const qb = this.repo.createQueryBuilder('inq');
 
     if (params?.status && (params.status as any) !== 'All') {
-      qb.andWhere('inq.status = :status', { status: params.status });
+      const statusStr = String(params.status).trim();
+      const matchedStatus = Object.values(InquiryStatus).find(
+        (s) => s.toLowerCase() === statusStr.toLowerCase(),
+      );
+      if (matchedStatus) {
+        qb.andWhere('inq.status = :status', { status: matchedStatus });
+      } else {
+        qb.andWhere('LOWER(inq.status) = LOWER(:status)', { status: statusStr });
+      }
     }
 
     if (params?.type && (params.type as any) !== 'All') {
-      qb.andWhere('inq.type = :type', { type: params.type });
+      const typeStr = String(params.type).trim();
+      const matchedType = Object.values(InquiryType).find(
+        (t) =>
+          t.toLowerCase() === typeStr.toLowerCase() ||
+          `${t.toLowerCase()}s` === typeStr.toLowerCase(),
+      );
+      if (matchedType) {
+        qb.andWhere('inq.type = :type', { type: matchedType });
+      } else {
+        qb.andWhere('LOWER(inq.type) = LOWER(:type)', { type: typeStr });
+      }
     }
 
     if (params?.search && params.search.trim()) {

@@ -11192,6 +11192,14 @@
 					},
 					{
 						"in": "query",
+						"name": "type",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/InquiryType"
+						}
+					},
+					{
+						"in": "query",
 						"name": "search",
 						"required": false,
 						"schema": {

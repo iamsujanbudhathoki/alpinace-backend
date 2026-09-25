@@ -290,8 +290,31 @@ export class BookingService {
 
   async updateWorkflowStatus(id: string, dto: UpdateBookingWorkflowDto): Promise<Booking> {
     const booking = await this.getById(id);
+    const oldStatus = booking.bookingStatus;
+    const newStatus = dto.status;
+
+    // Validate status transition
+    if (oldStatus !== newStatus) {
+      if (oldStatus === BookingStatus.CANCELLED) {
+        if (newStatus !== BookingStatus.PENDING && newStatus !== BookingStatus.IN_REVIEW) {
+          throw new AppError(
+            'Cancelled bookings can only be reactivated to Pending or In Review',
+            400,
+          );
+        }
+      } else {
+        const currentPhase = BOOKING_WORKFLOW_PHASES.find((p) => p.status === oldStatus);
+        if (currentPhase && !currentPhase.allowedTransitions.includes(newStatus)) {
+          throw new AppError(
+            `Invalid status transition from "${oldStatus}" to "${newStatus}". Allowed transitions: ${currentPhase.allowedTransitions.join(', ')}`,
+            400,
+          );
+        }
+      }
+    }
+
     const oldState = { ...booking };
-    booking.bookingStatus = dto.status;
+    booking.bookingStatus = newStatus;
     if (dto.note !== undefined) {
       booking.statusNote = dto.note ? dto.note.trim() : undefined;
     }

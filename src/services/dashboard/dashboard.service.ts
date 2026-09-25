@@ -83,7 +83,8 @@ export class DashboardService {
       .filter(
         (b) =>
           b.packageType === BookingPackageType.EXPEDITION &&
-          (b.bookingStatus === BookingStatus.ACTIVE_TREK ||
+          (b.bookingStatus === BookingStatus.ACTIVE ||
+            b.bookingStatus === ('active_trek' as any) ||
             b.bookingStatus === BookingStatus.CONFIRMED),
       )
       .reduce((sum, b) => sum + Number(b.groupSize || 1), 0);
@@ -91,6 +92,7 @@ export class DashboardService {
     const pendingBookingsCount = bookings.filter(
       (b) =>
         b.bookingStatus === BookingStatus.IN_REVIEW ||
+        b.bookingStatus === BookingStatus.PENDING ||
         b.paymentStatus === BookingPaymentStatus.PENDING,
     ).length;
 

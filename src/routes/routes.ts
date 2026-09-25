@@ -939,7 +939,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "BookingStatus": {
         "dataType": "refEnum",
-        "enums": ["confirmed","in_review","active_trek","completed","cancelled"],
+        "enums": ["confirmed","pending","in_review","active","completed","cancelled"],
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "BookingPermitStatus": {

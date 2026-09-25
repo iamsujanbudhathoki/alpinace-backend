@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Type, Transform } from 'class-transformer';
 import {
   IsEmail,
   IsEnum,
@@ -74,6 +74,10 @@ export class CreateBookingDto {
   @IsOptional()
   paymentStatus?: BookingPaymentStatus;
 
+  @Transform(({ value }) => {
+    if (value === 'active_trek') return BookingStatus.ACTIVE;
+    return value;
+  })
   @IsEnum(BookingStatus, {
     message: 'Invalid booking status',
   })
@@ -146,6 +150,10 @@ export class UpdateBookingDto {
   @IsEnum(BookingPaymentStatus)
   paymentStatus?: BookingPaymentStatus;
 
+  @Transform(({ value }) => {
+    if (value === 'active_trek') return BookingStatus.ACTIVE;
+    return value;
+  })
   @IsOptional()
   @IsEnum(BookingStatus)
   bookingStatus?: BookingStatus;

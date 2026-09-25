@@ -45,7 +45,9 @@ export class BookingService {
     const qb = this.repo.createQueryBuilder('booking');
 
     if (params?.status && (params.status as any) !== 'All') {
-      qb.andWhere('booking.bookingStatus = :status', { status: params.status });
+      let status = params.status;
+      if ((status as any) === 'active_trek') status = BookingStatus.ACTIVE;
+      qb.andWhere('booking.bookingStatus = :status', { status });
     }
 
     if (params?.packageType && (params.packageType as any) !== 'All') {
@@ -182,7 +184,7 @@ export class BookingService {
       groupSize: Number(dto.groupSize),
       totalAmountUSD: calculatedTotal,
       paymentStatus: dto.paymentStatus || BookingPaymentStatus.PENDING,
-      bookingStatus: dto.bookingStatus || BookingStatus.IN_REVIEW,
+      bookingStatus: dto.bookingStatus || BookingStatus.PENDING,
       assignedGuide: dto.assignedGuide || undefined,
       permitStatus: dto.permitStatus || BookingPermitStatus.PROCESSING,
       specialRequests: dto.specialRequests || undefined,

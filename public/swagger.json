@@ -2515,8 +2515,9 @@
 			"BookingStatus": {
 				"enum": [
 					"confirmed",
+					"pending",
 					"in_review",
-					"active_trek",
+					"active",
 					"completed",
 					"cancelled"
 				],

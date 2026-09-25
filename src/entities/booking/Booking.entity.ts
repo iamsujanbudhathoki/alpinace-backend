@@ -85,7 +85,7 @@ export class Booking extends CommonEntity {
     name: 'booking_status',
     type: 'enum',
     enum: BookingStatus,
-    default: BookingStatus.IN_REVIEW,
+    default: BookingStatus.PENDING,
   })
   bookingStatus: BookingStatus;
 

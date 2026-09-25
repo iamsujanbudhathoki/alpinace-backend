@@ -41,7 +41,12 @@ export const BOOKING_WORKFLOW_PHASES: BookingWorkflowPhase[] = [
     label: 'Pending',
     title: 'Booking Request Received',
     description: 'Initial booking request submitted by guest. Review requested dates, group capacity, and availability.',
-    allowedTransitions: [BookingStatus.IN_REVIEW, BookingStatus.CONFIRMED, BookingStatus.CANCELLED],
+    allowedTransitions: [
+      BookingStatus.IN_REVIEW,
+      BookingStatus.CONFIRMED,
+      BookingStatus.ACTIVE,
+      BookingStatus.CANCELLED,
+    ],
   },
   {
     status: BookingStatus.IN_REVIEW,
@@ -49,7 +54,12 @@ export const BOOKING_WORKFLOW_PHASES: BookingWorkflowPhase[] = [
     label: 'In Review',
     title: 'Operational Review & Vetting',
     description: 'Reviewing permits, guide availability, and logistics. Communicating with client regarding requirements.',
-    allowedTransitions: [BookingStatus.PENDING, BookingStatus.CONFIRMED, BookingStatus.CANCELLED],
+    allowedTransitions: [
+      BookingStatus.PENDING,
+      BookingStatus.CONFIRMED,
+      BookingStatus.ACTIVE,
+      BookingStatus.CANCELLED,
+    ],
   },
   {
     status: BookingStatus.CONFIRMED,
@@ -57,7 +67,13 @@ export const BOOKING_WORKFLOW_PHASES: BookingWorkflowPhase[] = [
     label: 'Confirmed',
     title: 'Booking Confirmed & Secured',
     description: 'Deposit verified, dates locked, and official permits (TIMS/National Park) issued. Pre-departure briefing sent.',
-    allowedTransitions: [BookingStatus.IN_REVIEW, BookingStatus.ACTIVE, BookingStatus.CANCELLED],
+    allowedTransitions: [
+      BookingStatus.PENDING,
+      BookingStatus.IN_REVIEW,
+      BookingStatus.ACTIVE,
+      BookingStatus.COMPLETED,
+      BookingStatus.CANCELLED,
+    ],
   },
   {
     status: BookingStatus.ACTIVE,
@@ -65,7 +81,12 @@ export const BOOKING_WORKFLOW_PHASES: BookingWorkflowPhase[] = [
     label: 'Active',
     title: 'Trip in Progress',
     description: 'The trip is underway on the trail. Operations team is monitoring daily field check-ins and safety telemetry.',
-    allowedTransitions: [BookingStatus.CONFIRMED, BookingStatus.COMPLETED, BookingStatus.CANCELLED],
+    allowedTransitions: [
+      BookingStatus.IN_REVIEW,
+      BookingStatus.CONFIRMED,
+      BookingStatus.COMPLETED,
+      BookingStatus.CANCELLED,
+    ],
   },
   {
     status: BookingStatus.COMPLETED,
@@ -73,7 +94,11 @@ export const BOOKING_WORKFLOW_PHASES: BookingWorkflowPhase[] = [
     label: 'Completed',
     title: 'Trip Completed Successfully',
     description: 'All services fulfilled, post-trip debrief finished, feedback collected, and booking records archived.',
-    allowedTransitions: [BookingStatus.ACTIVE],
+    allowedTransitions: [
+      BookingStatus.ACTIVE,
+      BookingStatus.CONFIRMED,
+      BookingStatus.CANCELLED,
+    ],
   },
 ];
 
@@ -296,9 +321,13 @@ export class BookingService {
     // Validate status transition
     if (oldStatus !== newStatus) {
       if (oldStatus === BookingStatus.CANCELLED) {
-        if (newStatus !== BookingStatus.PENDING && newStatus !== BookingStatus.IN_REVIEW) {
+        if (
+          newStatus !== BookingStatus.PENDING &&
+          newStatus !== BookingStatus.IN_REVIEW &&
+          newStatus !== BookingStatus.CONFIRMED
+        ) {
           throw new AppError(
-            'Cancelled bookings can only be reactivated to Pending or In Review',
+            'Cancelled bookings can only be reactivated to Pending, In Review, or Confirmed',
             400,
           );
         }

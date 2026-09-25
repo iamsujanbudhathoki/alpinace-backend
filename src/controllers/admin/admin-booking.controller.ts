@@ -18,8 +18,8 @@ import {
   BookingPaymentStatus,
   BookingStatus,
 } from '../../entities/booking/Booking.entity';
-import { BookingService } from '../../services/booking/booking.service';
-import { UpdateBookingDto } from '../../schemas/booking.schema';
+import { BookingService, BookingWorkflowPhase } from '../../services/booking/booking.service';
+import { UpdateBookingDto, UpdateBookingWorkflowDto } from '../../schemas/booking.schema';
 import { RequestValidator } from '../../middlewares/validator.middleware';
 import { paginateResponse } from '../../utils/pageAndLimit';
 
@@ -52,6 +52,12 @@ export class AdminBookingController extends Controller {
     return { data, pagination, message: 'Admin bookings retrieved successfully', success: true };
   }
 
+  @Get('workflow/phases')
+  async getWorkflowPhases(): Promise<ApiResponse<BookingWorkflowPhase[]>> {
+    const data = this.bookingService.getWorkflowPhases();
+    return { data, message: 'Booking workflow phases retrieved successfully', success: true };
+  }
+
   @Get('{id}')
   async getById(@Path() id: string): Promise<ApiResponse<Booking>> {
     const data = await this.bookingService.getById(id);
@@ -66,6 +72,16 @@ export class AdminBookingController extends Controller {
   ): Promise<ApiResponse<Booking>> {
     const data = await this.bookingService.update(id, body);
     return { data, message: 'Booking updated successfully', success: true };
+  }
+
+  @Put('{id}/workflow')
+  @Middlewares(RequestValidator.validate(UpdateBookingWorkflowDto))
+  async updateWorkflow(
+    @Path() id: string,
+    @Body() body: UpdateBookingWorkflowDto,
+  ): Promise<ApiResponse<Booking>> {
+    const data = await this.bookingService.updateWorkflowStatus(id, body);
+    return { data, message: `Booking status changed to ${body.status}`, success: true };
   }
 
   @Delete('{id}')

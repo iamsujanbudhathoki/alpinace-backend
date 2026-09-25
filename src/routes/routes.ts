@@ -969,6 +969,7 @@ const models: TsoaRoute.Models = {
             "assignedGuide": {"dataType":"string","required":true},
             "permitStatus": {"ref":"BookingPermitStatus","required":true},
             "specialRequests": {"dataType":"string","required":true},
+            "statusNote": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
@@ -2277,6 +2278,30 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BookingWorkflowPhase": {
+        "dataType": "refObject",
+        "properties": {
+            "status": {"ref":"BookingStatus","required":true},
+            "step": {"dataType":"double","required":true},
+            "label": {"dataType":"string","required":true},
+            "title": {"dataType":"string","required":true},
+            "description": {"dataType":"string","required":true},
+            "allowedTransitions": {"dataType":"array","array":{"dataType":"refEnum","ref":"BookingStatus"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ApiResponse_BookingWorkflowPhase-Array_": {
+        "dataType": "refObject",
+        "properties": {
+            "data": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"BookingWorkflowPhase"}},{"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"BookingWorkflowPhase"}}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
+            "success": {"dataType":"boolean","required":true},
+            "message": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "UpdateBookingDto": {
         "dataType": "refObject",
         "properties": {
@@ -2295,6 +2320,16 @@ const models: TsoaRoute.Models = {
             "assignedGuide": {"dataType":"string"},
             "permitStatus": {"ref":"BookingPermitStatus"},
             "specialRequests": {"dataType":"string"},
+            "statusNote": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UpdateBookingWorkflowDto": {
+        "dataType": "refObject",
+        "properties": {
+            "status": {"ref":"BookingStatus","required":true},
+            "note": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
@@ -5729,6 +5764,36 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminBookingController_getWorkflowPhases: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/admin/bookings/workflow/phases',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminBookingController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminBookingController.prototype.getWorkflowPhases)),
+
+            async function AdminBookingController_getWorkflowPhases(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminBookingController_getWorkflowPhases, request, response });
+
+                const controller = new AdminBookingController();
+
+              await templateService.apiHandler({
+                methodName: 'getWorkflowPhases',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsAdminBookingController_getById: Record<string, TsoaRoute.ParameterSchema> = {
                 id: {"in":"path","name":"id","required":true,"dataType":"string"},
         };
@@ -5781,6 +5846,38 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
               await templateService.apiHandler({
                 methodName: 'update',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminBookingController_updateWorkflow: Record<string, TsoaRoute.ParameterSchema> = {
+                id: {"in":"path","name":"id","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"UpdateBookingWorkflowDto"},
+        };
+        app.put('/admin/bookings/:id/workflow',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminBookingController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminBookingController.prototype.updateWorkflow)),
+
+            async function AdminBookingController_updateWorkflow(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminBookingController_updateWorkflow, request, response });
+
+                const controller = new AdminBookingController();
+
+              await templateService.apiHandler({
+                methodName: 'updateWorkflow',
                 controller,
                 response,
                 next,

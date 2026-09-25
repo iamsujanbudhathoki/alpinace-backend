@@ -2593,6 +2593,9 @@
 					},
 					"specialRequests": {
 						"type": "string"
+					},
+					"statusNote": {
+						"type": "string"
 					}
 				},
 				"required": [
@@ -6589,6 +6592,82 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"BookingWorkflowPhase": {
+				"properties": {
+					"status": {
+						"$ref": "#/components/schemas/BookingStatus"
+					},
+					"step": {
+						"type": "number",
+						"format": "double"
+					},
+					"label": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"allowedTransitions": {
+						"items": {
+							"$ref": "#/components/schemas/BookingStatus"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"status",
+					"step",
+					"label",
+					"title",
+					"description",
+					"allowedTransitions"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_BookingWorkflowPhase-Array_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"items": {
+									"$ref": "#/components/schemas/BookingWorkflowPhase"
+								},
+								"type": "array"
+							},
+							{
+								"items": {
+									"items": {
+										"$ref": "#/components/schemas/BookingWorkflowPhase"
+									},
+									"type": "array"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"UpdateBookingDto": {
 				"properties": {
 					"guestName": {
@@ -6637,8 +6716,26 @@
 					},
 					"specialRequests": {
 						"type": "string"
+					},
+					"statusNote": {
+						"type": "string"
 					}
 				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateBookingWorkflowDto": {
+				"properties": {
+					"status": {
+						"$ref": "#/components/schemas/BookingStatus"
+					},
+					"note": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"status"
+				],
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -12455,6 +12552,34 @@
 				]
 			}
 		},
+		"/admin/bookings/workflow/phases": {
+			"get": {
+				"operationId": "GetWorkflowPhases",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_BookingWorkflowPhase-Array_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Bookings Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": []
+			}
+		},
 		"/admin/bookings/{id}": {
 			"get": {
 				"operationId": "GetById",
@@ -12570,6 +12695,53 @@
 						}
 					}
 				]
+			}
+		},
+		"/admin/bookings/{id}/workflow": {
+			"put": {
+				"operationId": "UpdateWorkflow",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Booking_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Bookings Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateBookingWorkflowDto"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/admin/blogs": {

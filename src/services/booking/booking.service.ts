@@ -10,6 +10,7 @@ import {
 import {
   CreateBookingDto,
   UpdateBookingDto,
+  UpdateBookingWorkflowDto,
 } from '../../schemas/booking.schema';
 import { NotificationType } from '../../entities/notification/Notification.entity';
 import { AppError } from '../../utils/appError.util';
@@ -23,6 +24,58 @@ import { Expedition } from '../../entities/expedition/Expedition.entity';
 import { calculateApplicablePrice } from '../../utils/pricing.util';
 import { AuditEntityType } from '../../constants/audit.constants';
 import { formatHumanDateTime } from '../../utils/date.util';
+
+export interface BookingWorkflowPhase {
+  status: BookingStatus;
+  step: number;
+  label: string;
+  title: string;
+  description: string;
+  allowedTransitions: BookingStatus[];
+}
+
+export const BOOKING_WORKFLOW_PHASES: BookingWorkflowPhase[] = [
+  {
+    status: BookingStatus.PENDING,
+    step: 1,
+    label: 'Pending',
+    title: 'Booking Request Received',
+    description: 'Initial booking request submitted by guest. Review requested dates, group capacity, and availability.',
+    allowedTransitions: [BookingStatus.IN_REVIEW, BookingStatus.CONFIRMED, BookingStatus.CANCELLED],
+  },
+  {
+    status: BookingStatus.IN_REVIEW,
+    step: 2,
+    label: 'In Review',
+    title: 'Operational Review & Vetting',
+    description: 'Reviewing permits, guide availability, and logistics. Communicating with client regarding requirements.',
+    allowedTransitions: [BookingStatus.PENDING, BookingStatus.CONFIRMED, BookingStatus.CANCELLED],
+  },
+  {
+    status: BookingStatus.CONFIRMED,
+    step: 3,
+    label: 'Confirmed',
+    title: 'Booking Confirmed & Secured',
+    description: 'Deposit verified, dates locked, and official permits (TIMS/National Park) issued. Pre-departure briefing sent.',
+    allowedTransitions: [BookingStatus.IN_REVIEW, BookingStatus.ACTIVE, BookingStatus.CANCELLED],
+  },
+  {
+    status: BookingStatus.ACTIVE,
+    step: 4,
+    label: 'Active',
+    title: 'Trip in Progress',
+    description: 'The trip is underway on the trail. Operations team is monitoring daily field check-ins and safety telemetry.',
+    allowedTransitions: [BookingStatus.CONFIRMED, BookingStatus.COMPLETED, BookingStatus.CANCELLED],
+  },
+  {
+    status: BookingStatus.COMPLETED,
+    step: 5,
+    label: 'Completed',
+    title: 'Trip Completed Successfully',
+    description: 'All services fulfilled, post-trip debrief finished, feedback collected, and booking records archived.',
+    allowedTransitions: [BookingStatus.ACTIVE],
+  },
+];
 
 @autoInjectable()
 export class BookingService {
@@ -228,6 +281,27 @@ export class BookingService {
     Object.assign(booking, dto);
     const saved = await this.repo.save(booking);
     await this.auditLogService.logUpdate(AuditEntityType.BOOKING, saved.id, oldState, saved);
+    return saved;
+  }
+
+  getWorkflowPhases(): BookingWorkflowPhase[] {
+    return BOOKING_WORKFLOW_PHASES;
+  }
+
+  async updateWorkflowStatus(id: string, dto: UpdateBookingWorkflowDto): Promise<Booking> {
+    const booking = await this.getById(id);
+    const oldState = { ...booking };
+    booking.bookingStatus = dto.status;
+    if (dto.note !== undefined) {
+      booking.statusNote = dto.note ? dto.note.trim() : undefined;
+    }
+    const saved = await this.repo.save(booking);
+    await this.auditLogService.logUpdate(
+      AuditEntityType.BOOKING,
+      saved.id,
+      oldState,
+      saved,
+    );
     return saved;
   }
 

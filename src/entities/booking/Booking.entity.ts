@@ -102,4 +102,7 @@ export class Booking extends CommonEntity {
 
   @Column({ name: 'special_requests', type: 'text', nullable: true })
   specialRequests: string;
+
+  @Column({ name: 'status_note', type: 'text', nullable: true })
+  statusNote?: string;
 }

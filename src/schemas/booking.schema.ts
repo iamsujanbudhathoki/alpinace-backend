@@ -161,4 +161,20 @@ export class UpdateBookingDto {
   @IsOptional()
   @IsString()
   specialRequests?: string;
+
+  @IsOptional()
+  @IsString()
+  statusNote?: string;
+}
+
+export class UpdateBookingWorkflowDto {
+  @IsEnum(BookingStatus, {
+    message: 'Invalid booking status',
+  })
+  @IsNotEmpty({ message: 'Booking status is required' })
+  status!: BookingStatus;
+
+  @IsOptional()
+  @IsString()
+  note?: string;
 }

@@ -84,7 +84,6 @@ export class DashboardService {
         (b) =>
           b.packageType === BookingPackageType.EXPEDITION &&
           (b.bookingStatus === BookingStatus.ACTIVE ||
-            b.bookingStatus === ('active_trek' as any) ||
             b.bookingStatus === BookingStatus.CONFIRMED),
       )
       .reduce((sum, b) => sum + Number(b.groupSize || 1), 0);

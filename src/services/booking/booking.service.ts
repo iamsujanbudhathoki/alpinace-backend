@@ -45,9 +45,7 @@ export class BookingService {
     const qb = this.repo.createQueryBuilder('booking');
 
     if (params?.status && (params.status as any) !== 'All') {
-      let status = params.status;
-      if ((status as any) === 'active_trek') status = BookingStatus.ACTIVE;
-      qb.andWhere('booking.bookingStatus = :status', { status });
+      qb.andWhere('booking.bookingStatus = :status', { status: params.status });
     }
 
     if (params?.packageType && (params.packageType as any) !== 'All') {

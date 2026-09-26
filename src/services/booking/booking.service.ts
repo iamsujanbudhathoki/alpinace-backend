@@ -5,7 +5,8 @@ import {
   BookingPackageType,
   BookingPaymentStatus,
   BookingPermitStatus,
-  BookingStatus,
+  BookingStep,
+  BookingStepStatus,
 } from '../../entities/booking/Booking.entity';
 import {
   CreateBookingDto,
@@ -26,81 +27,62 @@ import { AuditEntityType } from '../../constants/audit.constants';
 import { formatHumanDateTime } from '../../utils/date.util';
 
 export interface BookingWorkflowPhase {
-  status: BookingStatus;
   step: number;
   label: string;
   title: string;
   description: string;
-  allowedTransitions: BookingStatus[];
 }
 
 export const BOOKING_WORKFLOW_PHASES: BookingWorkflowPhase[] = [
   {
-    status: BookingStatus.PENDING,
     step: 1,
-    label: 'Pending',
+    label: 'Request Received',
     title: 'Booking Request Received',
     description: 'Initial booking request submitted by guest. Review requested dates, group capacity, and availability.',
-    allowedTransitions: [
-      BookingStatus.IN_REVIEW,
-      BookingStatus.CONFIRMED,
-      BookingStatus.ACTIVE,
-      BookingStatus.CANCELLED,
-    ],
   },
   {
-    status: BookingStatus.IN_REVIEW,
     step: 2,
     label: 'In Review',
     title: 'Operational Review & Vetting',
     description: 'Reviewing permits, guide availability, and logistics. Communicating with client regarding requirements.',
-    allowedTransitions: [
-      BookingStatus.PENDING,
-      BookingStatus.CONFIRMED,
-      BookingStatus.ACTIVE,
-      BookingStatus.CANCELLED,
-    ],
   },
   {
-    status: BookingStatus.CONFIRMED,
     step: 3,
     label: 'Confirmed',
     title: 'Booking Confirmed & Secured',
     description: 'Deposit verified, dates locked, and official permits (TIMS/National Park) issued. Pre-departure briefing sent.',
-    allowedTransitions: [
-      BookingStatus.PENDING,
-      BookingStatus.IN_REVIEW,
-      BookingStatus.ACTIVE,
-      BookingStatus.COMPLETED,
-      BookingStatus.CANCELLED,
-    ],
   },
   {
-    status: BookingStatus.ACTIVE,
     step: 4,
     label: 'Active',
     title: 'Trip in Progress',
     description: 'The trip is underway on the trail. Operations team is monitoring daily field check-ins and safety telemetry.',
-    allowedTransitions: [
-      BookingStatus.IN_REVIEW,
-      BookingStatus.CONFIRMED,
-      BookingStatus.COMPLETED,
-      BookingStatus.CANCELLED,
-    ],
   },
   {
-    status: BookingStatus.COMPLETED,
     step: 5,
     label: 'Completed',
     title: 'Trip Completed Successfully',
     description: 'All services fulfilled, post-trip debrief finished, feedback collected, and booking records archived.',
-    allowedTransitions: [
-      BookingStatus.ACTIVE,
-      BookingStatus.CONFIRMED,
-      BookingStatus.CANCELLED,
-    ],
   },
 ];
+
+export const getDefaultBookingSteps = (): BookingStep[] => [
+  { status: BookingStepStatus.COMPLETED, message: 'Booking request received' },
+  { status: BookingStepStatus.PENDING, message: '' },
+  { status: BookingStepStatus.PENDING, message: '' },
+  { status: BookingStepStatus.PENDING, message: '' },
+  { status: BookingStepStatus.PENDING, message: '' },
+];
+
+export const normalizeBookingSteps = (steps?: BookingStep[]): BookingStep[] => {
+  if (Array.isArray(steps) && steps.length > 0) {
+    return steps.map((s) => ({
+      status: s.status || BookingStepStatus.PENDING,
+      message: s.message || '',
+    }));
+  }
+  return getDefaultBookingSteps();
+};
 
 @autoInjectable()
 export class BookingService {
@@ -114,7 +96,7 @@ export class BookingService {
 
   async getAll(params?: {
     search?: string;
-    status?: BookingStatus;
+    status?: string;
     packageType?: BookingPackageType;
     paymentStatus?: BookingPaymentStatus;
     limit?: number;
@@ -123,7 +105,8 @@ export class BookingService {
     const qb = this.repo.createQueryBuilder('booking');
 
     if (params?.status && (params.status as any) !== 'All') {
-      qb.andWhere('booking.bookingStatus = :status', { status: params.status });
+      const statusParam = `%"status":"${params.status}"%`;
+      qb.andWhere('booking.steps LIKE :statusParam', { statusParam });
     }
 
     if (params?.packageType && (params.packageType as any) !== 'All') {
@@ -155,12 +138,18 @@ export class BookingService {
       }
     }
 
-    return qb.getManyAndCount();
+    const [bookings, total] = await qb.getManyAndCount();
+    const normalized = bookings.map((b) => {
+      b.steps = normalizeBookingSteps(b.steps);
+      return b;
+    });
+    return [normalized, total];
   }
 
   async getById(id: string): Promise<Booking> {
     const item = await this.repo.findOne({ where: { id } });
     if (!item) throw AppError.notFound(`Booking with ID ${id} not found`);
+    item.steps = normalizeBookingSteps(item.steps);
     return item;
   }
 
@@ -260,13 +249,17 @@ export class BookingService {
       groupSize: Number(dto.groupSize),
       totalAmountUSD: calculatedTotal,
       paymentStatus: dto.paymentStatus || BookingPaymentStatus.PENDING,
-      bookingStatus: dto.bookingStatus || BookingStatus.PENDING,
+      steps:
+        dto.steps && Array.isArray(dto.steps) && dto.steps.length > 0
+          ? dto.steps.map((s) => ({ status: s.status, message: s.message || '' }))
+          : getDefaultBookingSteps(),
       assignedGuide: dto.assignedGuide || undefined,
       permitStatus: dto.permitStatus || BookingPermitStatus.PROCESSING,
       specialRequests: dto.specialRequests || undefined,
     } as Partial<Booking>);
 
     const saved = await this.repo.save(booking);
+    saved.steps = normalizeBookingSteps(saved.steps);
     await this.auditLogService.logCreate(AuditEntityType.BOOKING, saved.id, saved);
 
     // Create a notification for the new booking request
@@ -303,8 +296,16 @@ export class BookingService {
   async update(id: string, dto: UpdateBookingDto): Promise<Booking> {
     const booking = await this.getById(id);
     const oldState = { ...booking };
-    Object.assign(booking, dto);
+    if (dto.steps) {
+      booking.steps = dto.steps.map((s) => ({
+        status: s.status || BookingStepStatus.PENDING,
+        message: s.message || '',
+      }));
+    }
+    const { steps: _steps, ...rest } = dto;
+    Object.assign(booking, rest);
     const saved = await this.repo.save(booking);
+    saved.steps = normalizeBookingSteps(saved.steps);
     await this.auditLogService.logUpdate(AuditEntityType.BOOKING, saved.id, oldState, saved);
     return saved;
   }
@@ -315,39 +316,29 @@ export class BookingService {
 
   async updateWorkflowStatus(id: string, dto: UpdateBookingWorkflowDto): Promise<Booking> {
     const booking = await this.getById(id);
-    const oldStatus = booking.bookingStatus;
-    const newStatus = dto.status;
+    let currentSteps = normalizeBookingSteps(booking.steps);
 
-    // Validate status transition
-    if (oldStatus !== newStatus) {
-      if (oldStatus === BookingStatus.CANCELLED) {
-        if (
-          newStatus !== BookingStatus.PENDING &&
-          newStatus !== BookingStatus.IN_REVIEW &&
-          newStatus !== BookingStatus.CONFIRMED
-        ) {
-          throw new AppError(
-            'Cancelled bookings can only be reactivated to Pending, In Review, or Confirmed',
-            400,
-          );
-        }
-      } else {
-        const currentPhase = BOOKING_WORKFLOW_PHASES.find((p) => p.status === oldStatus);
-        if (currentPhase && !currentPhase.allowedTransitions.includes(newStatus)) {
-          throw new AppError(
-            `Invalid status transition from "${oldStatus}" to "${newStatus}". Allowed transitions: ${currentPhase.allowedTransitions.join(', ')}`,
-            400,
-          );
-        }
-      }
+    if (dto.steps && Array.isArray(dto.steps) && dto.steps.length > 0) {
+      currentSteps = dto.steps.map((s) => ({
+        status: s.status || BookingStepStatus.PENDING,
+        message: s.message || '',
+      }));
+    } else if (dto.stepIndex !== undefined && dto.stepIndex >= 0 && dto.stepIndex < currentSteps.length) {
+      currentSteps[dto.stepIndex] = {
+        status: dto.status !== undefined ? dto.status : currentSteps[dto.stepIndex].status,
+        message: dto.message !== undefined ? dto.message : currentSteps[dto.stepIndex].message,
+      };
+    } else if (dto.status) {
+      currentSteps[0] = {
+        status: dto.status,
+        message: dto.message !== undefined ? dto.message : currentSteps[0].message,
+      };
     }
 
     const oldState = { ...booking };
-    booking.bookingStatus = newStatus;
-    if (dto.note !== undefined) {
-      booking.statusNote = dto.note ? dto.note.trim() : undefined;
-    }
+    booking.steps = currentSteps;
     const saved = await this.repo.save(booking);
+    saved.steps = normalizeBookingSteps(saved.steps);
     await this.auditLogService.logUpdate(
       AuditEntityType.BOOKING,
       saved.id,

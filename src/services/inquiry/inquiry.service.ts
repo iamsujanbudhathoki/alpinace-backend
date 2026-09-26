@@ -1,10 +1,20 @@
 import { autoInjectable } from 'tsyringe';
 import { AppDataSource } from '../../config/database.config';
-import { Inquiry, InquiryStatus, InquiryType } from '../../entities/inquiry/Inquiry.entity';
+import {
+  Inquiry,
+  InquiryStep,
+  InquiryStepStatus,
+  InquiryType,
+  InquiryWorkflowPhase,
+  INQUIRY_WORKFLOW_PHASES,
+  getDefaultInquirySteps,
+  normalizeInquirySteps,
+} from '../../entities/inquiry/Inquiry.entity';
 import { NotificationType } from '../../entities/notification/Notification.entity';
 import {
   CreateInquiryDto,
   UpdateInquiryDto,
+  UpdateInquiryWorkflowDto,
 } from '../../schemas/inquiry.schema';
 import { AppError } from '../../utils/appError.util';
 import emailUtil from '../../utils/email.util';
@@ -25,7 +35,7 @@ export class InquiryService {
   ) {}
 
   async getAll(params?: {
-    status?: InquiryStatus;
+    status?: string;
     type?: InquiryType;
     search?: string;
     limit?: number;
@@ -34,15 +44,8 @@ export class InquiryService {
     const qb = this.repo.createQueryBuilder('inq');
 
     if (params?.status && (params.status as any) !== 'All') {
-      const statusStr = String(params.status).trim();
-      const matchedStatus = Object.values(InquiryStatus).find(
-        (s) => s.toLowerCase() === statusStr.toLowerCase(),
-      );
-      if (matchedStatus) {
-        qb.andWhere('inq.status = :status', { status: matchedStatus });
-      } else {
-        qb.andWhere('LOWER(inq.status) = LOWER(:status)', { status: statusStr });
-      }
+      const statusParam = `%"status":"${params.status}"%`;
+      qb.andWhere('inq.steps LIKE :statusParam', { statusParam });
     }
 
     if (params?.type && (params.type as any) !== 'All') {
@@ -76,12 +79,18 @@ export class InquiryService {
       }
     }
 
-    return qb.getManyAndCount();
+    const [items, total] = await qb.getManyAndCount();
+    const normalized = items.map((item) => {
+      item.steps = normalizeInquirySteps(item.steps);
+      return item;
+    });
+    return [normalized, total];
   }
 
   async getById(id: string): Promise<Inquiry> {
     const item = await this.repo.findOne({ where: { id } });
     if (!item) throw AppError.notFound(`Inquiry with ID ${id} not found`);
+    item.steps = normalizeInquirySteps(item.steps);
     return item;
   }
 
@@ -97,12 +106,16 @@ export class InquiryService {
       travelDates: dto.travelDates || "Flexible",
       groupSize: Number(dto.groupSize),
       message: dto.message,
-      status: dto.status || InquiryStatus.NEW,
+      steps:
+        dto.steps && Array.isArray(dto.steps) && dto.steps.length > 0
+          ? dto.steps.map((s) => ({ status: s.status, message: s.message || '' }))
+          : getDefaultInquirySteps(),
       type: dto.type || InquiryType.GENERAL,
       notes: dto.notes,
-    });
+    } as Partial<Inquiry>);
 
     const saved = await this.repo.save(inquiry);
+    saved.steps = normalizeInquirySteps(saved.steps);
 
     // Create a notification for the new inquiry
     this.notifSvc
@@ -136,28 +149,82 @@ export class InquiryService {
   async update(id: string, dto: UpdateInquiryDto): Promise<Inquiry> {
     const inquiry = await this.getById(id);
     const oldState = { ...inquiry };
-    if (dto.status) inquiry.status = dto.status;
+    if (dto.steps) {
+      inquiry.steps = dto.steps.map((s) => ({
+        status: s.status || InquiryStepStatus.PENDING,
+        message: s.message || '',
+      }));
+    }
     if (dto.type) inquiry.type = dto.type;
     if (dto.notes !== undefined) inquiry.notes = dto.notes;
     const saved = await this.repo.save(inquiry);
+    saved.steps = normalizeInquirySteps(saved.steps);
     await this.auditLogService.logUpdate(AuditEntityType.INQUIRY, saved.id, oldState, saved);
+    return saved;
+  }
+
+  getWorkflowPhases(): InquiryWorkflowPhase[] {
+    return INQUIRY_WORKFLOW_PHASES;
+  }
+
+  async updateWorkflowStatus(id: string, dto: UpdateInquiryWorkflowDto): Promise<Inquiry> {
+    const inquiry = await this.getById(id);
+    let currentSteps = normalizeInquirySteps(inquiry.steps);
+
+    if (dto.steps && Array.isArray(dto.steps) && dto.steps.length > 0) {
+      currentSteps = dto.steps.map((s) => ({
+        status: s.status || InquiryStepStatus.PENDING,
+        message: s.message || '',
+      }));
+    } else if (dto.stepIndex !== undefined && dto.stepIndex >= 0 && dto.stepIndex < currentSteps.length) {
+      currentSteps[dto.stepIndex] = {
+        status: dto.status !== undefined ? dto.status : currentSteps[dto.stepIndex].status,
+        message: dto.message !== undefined ? dto.message : currentSteps[dto.stepIndex].message,
+      };
+    } else if (dto.status) {
+      currentSteps[0] = {
+        status: dto.status,
+        message: dto.message !== undefined ? dto.message : currentSteps[0].message,
+      };
+    }
+
+    const oldState = { ...inquiry };
+    inquiry.steps = currentSteps;
+    const saved = await this.repo.save(inquiry);
+    saved.steps = normalizeInquirySteps(saved.steps);
+    await this.auditLogService.logUpdate(
+      AuditEntityType.INQUIRY,
+      saved.id,
+      oldState,
+      saved,
+    );
     return saved;
   }
 
   async sendQuote(
     id: string,
-    dto: { message: string; status?: InquiryStatus },
+    dto: { message: string },
   ): Promise<Inquiry> {
     const inquiry = await this.getById(id);
     const oldState = { ...inquiry };
 
-    // Apply status update if provided
-    if (dto.status) {
-      inquiry.status = dto.status;
+    const currentSteps = normalizeInquirySteps(inquiry.steps);
+    // Mark Phase 3 (Quote Sent) as completed
+    currentSteps[2] = {
+      status: InquiryStepStatus.COMPLETED,
+      message: dto.message ? `Quote dispatched: ${dto.message.slice(0, 100)}` : 'Quote dispatched to client',
+    };
+    if (currentSteps[0].status === InquiryStepStatus.PENDING) {
+      currentSteps[0].status = InquiryStepStatus.COMPLETED;
+    }
+    if (currentSteps[1].status === InquiryStepStatus.PENDING) {
+      currentSteps[1].status = InquiryStepStatus.COMPLETED;
     }
 
-    // Persist any status changes in a single save
+    inquiry.steps = currentSteps;
     const saved = await this.repo.save(inquiry);
+    saved.steps = normalizeInquirySteps(saved.steps);
+
     await this.auditLogService.logUpdate(AuditEntityType.INQUIRY, saved.id, oldState, saved, {
       metadata: { quoteSent: true, customMessageProvided: Boolean(dto.message) },
     });

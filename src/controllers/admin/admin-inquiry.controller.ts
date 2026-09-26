@@ -13,10 +13,15 @@ import {
   Tags,
 } from 'tsoa';
 import { ApiResponse } from '../../interfaces/apiResponse.interface';
-import { Inquiry, InquiryStatus, InquiryType } from '../../entities/inquiry/Inquiry.entity';
+import {
+  Inquiry,
+  InquiryType,
+  InquiryWorkflowPhase,
+} from '../../entities/inquiry/Inquiry.entity';
 import { InquiryService } from '../../services/inquiry/inquiry.service';
 import {
   UpdateInquiryDto,
+  UpdateInquiryWorkflowDto,
   SendQuoteDto,
 } from '../../schemas/inquiry.schema';
 import { RequestValidator } from '../../middlewares/validator.middleware';
@@ -32,7 +37,7 @@ export class AdminInquiryController extends Controller {
 
   @Get('')
   async getAll(
-    @Query() status?: InquiryStatus,
+    @Query() status?: string,
     @Query() type?: InquiryType,
     @Query() search?: string,
     @Query() limit?: number,
@@ -47,6 +52,12 @@ export class AdminInquiryController extends Controller {
     });
     const { data, pagination } = paginateResponse(dataTotalCount, limit, page);
     return { data, pagination, message: 'Admin inquiries retrieved successfully', success: true };
+  }
+
+  @Get('workflow/phases')
+  async getWorkflowPhases(): Promise<ApiResponse<InquiryWorkflowPhase[]>> {
+    const data = this.inquiryService.getWorkflowPhases();
+    return { data, message: 'Inquiry workflow phases retrieved successfully', success: true };
   }
 
   @Get('{id}')
@@ -65,15 +76,24 @@ export class AdminInquiryController extends Controller {
     return { data, message: 'Inquiry updated successfully', success: true };
   }
 
+  @Put('{id}/workflow')
+  @Middlewares(RequestValidator.validate(UpdateInquiryWorkflowDto))
+  async updateWorkflow(
+    @Path() id: string,
+    @Body() body: UpdateInquiryWorkflowDto,
+  ): Promise<ApiResponse<Inquiry>> {
+    const data = await this.inquiryService.updateWorkflowStatus(id, body);
+    return { data, message: 'Inquiry workflow steps updated successfully', success: true };
+  }
+
   @Post('{id}/quote')
   @Middlewares(RequestValidator.validate(SendQuoteDto))
   async sendQuote(
     @Path() id: string,
-    @Body() body: SendQuoteDto & { status?: InquiryStatus },
+    @Body() body: SendQuoteDto,
   ): Promise<ApiResponse<Inquiry>> {
     const data = await this.inquiryService.sendQuote(id, {
       message: body.message,
-      status: body.status,
     });
     return {
       data,

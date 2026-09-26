@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
 import {
+  IsArray,
   IsEmail,
   IsEnum,
   IsNotEmpty,
@@ -7,8 +8,24 @@ import {
   IsOptional,
   IsString,
   Min,
+  ValidateNested,
 } from 'class-validator';
-import { InquiryStatus, InquiryType } from '../entities/inquiry/Inquiry.entity';
+import {
+  InquiryStepStatus,
+  InquiryType,
+} from '../entities/inquiry/Inquiry.entity';
+
+export class InquiryStepDto {
+  @IsEnum(InquiryStepStatus, {
+    message: 'Step status must be pending, in_progress, active, completed, or cancelled',
+  })
+  @IsNotEmpty({ message: 'Step status is required' })
+  status!: InquiryStepStatus;
+
+  @IsOptional()
+  @IsString({ message: 'Step message must be a string' })
+  message?: string;
+}
 
 export class CreateInquiryDto {
   @IsString()
@@ -45,10 +62,10 @@ export class CreateInquiryDto {
   message!: string;
 
   @IsOptional()
-  @IsEnum(InquiryStatus, {
-    message: 'Invalid inquiry status',
-  })
-  status?: InquiryStatus;
+  @IsArray({ message: 'Steps must be an array' })
+  @ValidateNested({ each: true })
+  @Type(() => InquiryStepDto)
+  steps?: InquiryStepDto[];
 
   @IsOptional()
   @IsEnum(InquiryType, {
@@ -67,10 +84,10 @@ export class CreateInquiryDto {
 
 export class UpdateInquiryDto {
   @IsOptional()
-  @IsEnum(InquiryStatus, {
-    message: 'Invalid inquiry status',
-  })
-  status?: InquiryStatus;
+  @IsArray({ message: 'Steps must be an array' })
+  @ValidateNested({ each: true })
+  @Type(() => InquiryStepDto)
+  steps?: InquiryStepDto[];
 
   @IsOptional()
   @IsEnum(InquiryType, {
@@ -81,6 +98,29 @@ export class UpdateInquiryDto {
   @IsOptional()
   @IsString()
   notes?: string;
+}
+
+export class UpdateInquiryWorkflowDto {
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  stepIndex?: number;
+
+  @IsOptional()
+  @IsEnum(InquiryStepStatus, {
+    message: 'Step status must be pending, in_progress, active, completed, or cancelled',
+  })
+  status?: InquiryStepStatus;
+
+  @IsOptional()
+  @IsString()
+  message?: string;
+
+  @IsOptional()
+  @IsArray({ message: 'Steps must be an array' })
+  @ValidateNested({ each: true })
+  @Type(() => InquiryStepDto)
+  steps?: InquiryStepDto[];
 }
 
 export class SendQuoteDto {

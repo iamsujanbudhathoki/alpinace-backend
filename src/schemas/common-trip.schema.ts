@@ -1,6 +1,7 @@
 import { Type } from 'class-transformer';
 import {
   IsArray,
+  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -9,6 +10,7 @@ import {
   Min,
   ValidateNested,
 } from 'class-validator';
+import { DepartureDateStatus } from '../entities/trek/Trek.entity';
 
 export class TripItineraryDetailDto {
   @IsString({ message: 'Detail label must be a string' })
@@ -118,8 +120,8 @@ export class TripDepartureDateDto {
   priceUSD?: number;
 
   @IsOptional()
-  @IsString()
-  status?: string;
+  @IsEnum(DepartureDateStatus, { message: 'Invalid departure date status' })
+  status?: DepartureDateStatus;
 
   @IsOptional()
   @Type(() => Number)

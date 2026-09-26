@@ -16,7 +16,6 @@ import {
   Booking,
   BookingPackageType,
   BookingPaymentStatus,
-  BookingStatus,
 } from '../../entities/booking/Booking.entity';
 import { BookingService, BookingWorkflowPhase } from '../../services/booking/booking.service';
 import { UpdateBookingDto, UpdateBookingWorkflowDto } from '../../schemas/booking.schema';
@@ -34,7 +33,7 @@ export class AdminBookingController extends Controller {
   @Get('')
   async getAll(
     @Query() search?: string,
-    @Query() status?: BookingStatus,
+    @Query() status?: string,
     @Query() packageType?: BookingPackageType,
     @Query() paymentStatus?: BookingPaymentStatus,
     @Query() limit?: number,
@@ -81,7 +80,7 @@ export class AdminBookingController extends Controller {
     @Body() body: UpdateBookingWorkflowDto,
   ): Promise<ApiResponse<Booking>> {
     const data = await this.bookingService.updateWorkflowStatus(id, body);
-    return { data, message: `Booking status changed to ${body.status}`, success: true };
+    return { data, message: 'Booking workflow steps updated successfully', success: true };
   }
 
   @Delete('{id}')

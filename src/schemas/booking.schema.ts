@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
 import {
+  IsArray,
   IsEmail,
   IsEnum,
   IsNotEmpty,
@@ -7,34 +8,44 @@ import {
   IsOptional,
   IsString,
   Min,
+  ValidateNested,
 } from 'class-validator';
 import {
   BookingPackageType,
   BookingPaymentStatus,
   BookingPermitStatus,
-  BookingStatus,
+  BookingStep,
+  BookingStepStatus,
 } from '../entities/booking/Booking.entity';
+
+export class BookingStepDto implements BookingStep {
+  @IsEnum(BookingStepStatus, {
+    message: 'Step status must be pending, in_progress, active, completed, or cancelled',
+  })
+  @IsNotEmpty({ message: 'Step status is required' })
+  status!: BookingStepStatus;
+
+  @IsOptional()
+  @IsString()
+  message!: string;
+}
 
 export class CreateBookingDto {
   @IsString()
   @IsNotEmpty({ message: 'Guest name is required' })
-  guestName!: string;
+  guestName: string;
 
-  @IsEmail({}, { message: 'Valid guest email is required' })
+  @IsEmail({}, { message: 'A valid email is required' })
   @IsNotEmpty({ message: 'Guest email is required' })
-  guestEmail!: string;
+  guestEmail: string;
 
   @IsString()
   @IsNotEmpty({ message: 'Guest phone is required' })
-  guestPhone!: string;
+  guestPhone: string;
 
   @IsString()
   @IsNotEmpty({ message: 'Country is required' })
-  country!: string;
-
-  @IsString()
-  @IsNotEmpty({ message: 'Package name is required' })
-  packageName!: string;
+  country: string;
 
   @IsOptional()
   @IsString()
@@ -44,29 +55,33 @@ export class CreateBookingDto {
   @IsString()
   packageSlug?: string;
 
+  @IsString()
+  @IsNotEmpty({ message: 'Package name is required' })
+  packageName: string;
+
   @IsEnum(BookingPackageType, {
-    message: 'Invalid package type. Must be trekking, expedition, or tour',
+    message: 'Package type must be trekking, expedition, or tour',
   })
   @IsNotEmpty({ message: 'Package type is required' })
-  packageType!: BookingPackageType;
+  packageType: BookingPackageType;
 
   @IsString()
   @IsNotEmpty({ message: 'Start date is required' })
-  startDate!: string;
+  startDate: string;
 
   @IsString()
   @IsNotEmpty({ message: 'End date is required' })
-  endDate!: string;
+  endDate: string;
 
   @Type(() => Number)
-  @IsNumber({}, { message: 'Group size must be a number' })
+  @IsNumber()
   @Min(1, { message: 'Group size must be at least 1' })
-  groupSize!: number;
+  groupSize: number;
 
+  @IsOptional()
   @Type(() => Number)
-  @IsNumber({}, { message: 'Total amount must be a number' })
-  @Min(0, { message: 'Total amount must be non-negative' })
-  totalAmountUSD!: number;
+  @IsNumber()
+  totalAmountUSD?: number;
 
   @IsEnum(BookingPaymentStatus, {
     message: 'Invalid payment status',
@@ -74,11 +89,11 @@ export class CreateBookingDto {
   @IsOptional()
   paymentStatus?: BookingPaymentStatus;
 
-  @IsEnum(BookingStatus, {
-    message: 'Invalid booking status',
-  })
   @IsOptional()
-  bookingStatus?: BookingStatus;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => BookingStepDto)
+  steps?: BookingStepDto[];
 
   @IsOptional()
   @IsString()
@@ -147,8 +162,10 @@ export class UpdateBookingDto {
   paymentStatus?: BookingPaymentStatus;
 
   @IsOptional()
-  @IsEnum(BookingStatus)
-  bookingStatus?: BookingStatus;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => BookingStepDto)
+  steps?: BookingStepDto[];
 
   @IsOptional()
   @IsString()
@@ -161,20 +178,27 @@ export class UpdateBookingDto {
   @IsOptional()
   @IsString()
   specialRequests?: string;
-
-  @IsOptional()
-  @IsString()
-  statusNote?: string;
 }
 
 export class UpdateBookingWorkflowDto {
-  @IsEnum(BookingStatus, {
-    message: 'Invalid booking status',
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => BookingStepDto)
+  steps?: BookingStepDto[];
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  stepIndex?: number;
+
+  @IsOptional()
+  @IsEnum(BookingStepStatus, {
+    message: 'Step status must be pending, in_progress, active, completed, or cancelled',
   })
-  @IsNotEmpty({ message: 'Booking status is required' })
-  status!: BookingStatus;
+  status?: BookingStepStatus;
 
   @IsOptional()
   @IsString()
-  note?: string;
+  message?: string;
 }

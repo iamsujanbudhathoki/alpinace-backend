@@ -27,10 +27,10 @@ export enum TourType {
 
 @Entity('tours')
 export class Tour extends CommonEntity {
-  @Column({ name: 'cover_media_id', type: 'varchar', nullable: true })
+  @Column({ name: 'cover_media_id', type: 'varchar', length: 36, nullable: true })
   coverMediaId?: string | null;
 
-  @Column({ name: 'map_media_id', type: 'varchar', nullable: true })
+  @Column({ name: 'map_media_id', type: 'varchar', length: 36, nullable: true })
   mapMediaId?: string | null;
 
   @Column({
@@ -209,6 +209,6 @@ export class Tour extends CommonEntity {
   @Column({ name: 'meta_description', type: 'text', nullable: true })
   metaDescription: string;
 
-  @Column({ name: 'keywords', nullable: true })
-  keywords: string;
+  @Column({ name: 'keywords', type: 'text', nullable: true })
+  keywords?: string;
 }

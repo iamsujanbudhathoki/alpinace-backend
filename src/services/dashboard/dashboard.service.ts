@@ -5,9 +5,9 @@ import {
   BookingPackageType,
   BookingPaymentStatus,
   BookingPermitStatus,
-  BookingStatus,
+  BookingStepStatus,
 } from '../../entities/booking/Booking.entity';
-import { Inquiry } from '../../entities/inquiry/Inquiry.entity';
+import { Inquiry, InquiryStepStatus } from '../../entities/inquiry/Inquiry.entity';
 import { Trek, TrekStatus } from '../../entities/trek/Trek.entity';
 import { Tour, TourStatus } from '../../entities/tour/Tour.entity';
 import {
@@ -80,24 +80,45 @@ export class DashboardService {
     ).length;
 
     const climbersCount = bookings
-      .filter(
-        (b) =>
-          b.packageType === BookingPackageType.EXPEDITION &&
-          (b.bookingStatus === BookingStatus.ACTIVE ||
-            b.bookingStatus === BookingStatus.CONFIRMED),
-      )
+      .filter((b) => {
+        if (b.packageType !== BookingPackageType.EXPEDITION) return false;
+        const steps = b.steps;
+        if (!Array.isArray(steps) || steps.length === 0) return false;
+        const s3 = steps[2]?.status;
+        const s4 = steps[3]?.status;
+        return (
+          s3 === BookingStepStatus.COMPLETED ||
+          s4 === BookingStepStatus.IN_PROGRESS ||
+          s4 === BookingStepStatus.COMPLETED ||
+          s4 === BookingStepStatus.ACTIVE
+        );
+      })
       .reduce((sum, b) => sum + Number(b.groupSize || 1), 0);
 
-    const pendingBookingsCount = bookings.filter(
-      (b) =>
-        b.bookingStatus === BookingStatus.IN_REVIEW ||
-        b.bookingStatus === BookingStatus.PENDING ||
-        b.paymentStatus === BookingPaymentStatus.PENDING,
-    ).length;
+    const pendingBookingsCount = bookings.filter((b) => {
+      if (b.paymentStatus === BookingPaymentStatus.PENDING) return true;
+      const steps = b.steps;
+      if (!Array.isArray(steps) || steps.length === 0) return true;
+      const s1 = steps[0]?.status;
+      const s2 = steps[1]?.status;
+      return (
+        s1 === BookingStepStatus.PENDING ||
+        s2 === BookingStepStatus.PENDING ||
+        s2 === BookingStepStatus.IN_PROGRESS
+      );
+    }).length;
 
-    const pendingInquiriesCount = inquiries.filter(
-      (i) => i.status === 'New',
-    ).length;
+    const pendingInquiriesCount = inquiries.filter((inq) => {
+      const steps = inq.steps;
+      if (!Array.isArray(steps) || steps.length === 0) return true;
+      const s1 = steps[0]?.status;
+      const s2 = steps[1]?.status;
+      return (
+        s1 === InquiryStepStatus.PENDING ||
+        s2 === InquiryStepStatus.PENDING ||
+        s2 === InquiryStepStatus.IN_PROGRESS
+      );
+    }).length;
 
     const timsProcessingCount = bookings.filter(
       (b) => b.permitStatus === BookingPermitStatus.PROCESSING,
@@ -105,13 +126,13 @@ export class DashboardService {
 
     const featuredTreks = treks
       .filter((t) => Boolean(t.isFeatured))
-      .map((t) => ({ ...t, categoryType: 'trekking' }));
+      .map((t) => ({ ...t, categoryType: BookingPackageType.TREKKING }));
     const featuredExpeditions = expeditions
       .filter((e) => Boolean(e.isFeatured))
-      .map((e) => ({ ...e, categoryType: 'expedition' }));
+      .map((e) => ({ ...e, categoryType: BookingPackageType.EXPEDITION }));
     const featuredTours = tours
       .filter((tr) => Boolean(tr.isFeatured))
-      .map((tr) => ({ ...tr, categoryType: 'tour' }));
+      .map((tr) => ({ ...tr, categoryType: BookingPackageType.TOUR }));
 
     const featuredPackages = [
       ...featuredTreks,

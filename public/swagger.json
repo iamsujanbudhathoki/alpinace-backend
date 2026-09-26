@@ -320,6 +320,15 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"DepartureDateStatus": {
+				"enum": [
+					"guaranteed",
+					"available",
+					"limited",
+					"full"
+				],
+				"type": "string"
+			},
 			"TripDepartureDate": {
 				"properties": {
 					"id": {
@@ -336,7 +345,14 @@
 						"format": "double"
 					},
 					"status": {
-						"type": "string"
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/DepartureDateStatus"
+							},
+							{
+								"type": "string"
+							}
+						]
 					},
 					"seatsAvailable": {
 						"type": "number",
@@ -1873,15 +1889,31 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"InquiryStatus": {
+			"InquiryStepStatus": {
 				"enum": [
-					"New",
-					"Contacted",
-					"Quote Sent",
-					"Booked",
-					"Closed"
+					"pending",
+					"in_progress",
+					"active",
+					"completed",
+					"cancelled"
 				],
 				"type": "string"
+			},
+			"InquiryStep": {
+				"properties": {
+					"status": {
+						"$ref": "#/components/schemas/InquiryStepStatus"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"status",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
 			},
 			"InquiryType": {
 				"enum": [
@@ -1930,8 +1962,11 @@
 					"message": {
 						"type": "string"
 					},
-					"status": {
-						"$ref": "#/components/schemas/InquiryStatus"
+					"steps": {
+						"items": {
+							"$ref": "#/components/schemas/InquiryStep"
+						},
+						"type": "array"
 					},
 					"type": {
 						"$ref": "#/components/schemas/InquiryType"
@@ -1952,7 +1987,7 @@
 					"travelDates",
 					"groupSize",
 					"message",
-					"status",
+					"steps",
 					"type",
 					"notes"
 				],
@@ -1993,6 +2028,21 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"InquiryStepDto": {
+				"properties": {
+					"status": {
+						"$ref": "#/components/schemas/InquiryStepStatus"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"CreateInquiryDto": {
 				"properties": {
 					"guestName": {
@@ -2020,8 +2070,11 @@
 					"message": {
 						"type": "string"
 					},
-					"status": {
-						"$ref": "#/components/schemas/InquiryStatus"
+					"steps": {
+						"items": {
+							"$ref": "#/components/schemas/InquiryStepDto"
+						},
+						"type": "array"
 					},
 					"type": {
 						"$ref": "#/components/schemas/InquiryType"
@@ -2512,17 +2565,6 @@
 				],
 				"type": "string"
 			},
-			"BookingStatus": {
-				"enum": [
-					"confirmed",
-					"pending",
-					"in_review",
-					"active",
-					"completed",
-					"cancelled"
-				],
-				"type": "string"
-			},
 			"BookingPermitStatus": {
 				"enum": [
 					"issued",
@@ -2530,6 +2572,32 @@
 					"pending_document"
 				],
 				"type": "string"
+			},
+			"BookingStepStatus": {
+				"enum": [
+					"pending",
+					"in_progress",
+					"active",
+					"completed",
+					"cancelled"
+				],
+				"type": "string"
+			},
+			"BookingStep": {
+				"properties": {
+					"status": {
+						"$ref": "#/components/schemas/BookingStepStatus"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"status",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
 			},
 			"Booking": {
 				"properties": {
@@ -2582,9 +2650,6 @@
 					"paymentStatus": {
 						"$ref": "#/components/schemas/BookingPaymentStatus"
 					},
-					"bookingStatus": {
-						"$ref": "#/components/schemas/BookingStatus"
-					},
 					"assignedGuide": {
 						"type": "string"
 					},
@@ -2594,8 +2659,11 @@
 					"specialRequests": {
 						"type": "string"
 					},
-					"statusNote": {
-						"type": "string"
+					"steps": {
+						"items": {
+							"$ref": "#/components/schemas/BookingStep"
+						},
+						"type": "array"
 					}
 				},
 				"required": [
@@ -2614,10 +2682,10 @@
 					"groupSize",
 					"totalAmountUSD",
 					"paymentStatus",
-					"bookingStatus",
 					"assignedGuide",
 					"permitStatus",
-					"specialRequests"
+					"specialRequests",
+					"steps"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -2864,6 +2932,22 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"BookingStepDto": {
+				"properties": {
+					"status": {
+						"$ref": "#/components/schemas/BookingStepStatus"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"status",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"CreateBookingDto": {
 				"properties": {
 					"guestName": {
@@ -2878,13 +2962,13 @@
 					"country": {
 						"type": "string"
 					},
-					"packageName": {
-						"type": "string"
-					},
 					"packageId": {
 						"type": "string"
 					},
 					"packageSlug": {
+						"type": "string"
+					},
+					"packageName": {
 						"type": "string"
 					},
 					"packageType": {
@@ -2907,8 +2991,11 @@
 					"paymentStatus": {
 						"$ref": "#/components/schemas/BookingPaymentStatus"
 					},
-					"bookingStatus": {
-						"$ref": "#/components/schemas/BookingStatus"
+					"steps": {
+						"items": {
+							"$ref": "#/components/schemas/BookingStepDto"
+						},
+						"type": "array"
 					},
 					"assignedGuide": {
 						"type": "string"
@@ -2932,8 +3019,7 @@
 					"packageType",
 					"startDate",
 					"endDate",
-					"groupSize",
-					"totalAmountUSD"
+					"groupSize"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -3451,8 +3537,7 @@
 					"departureDates",
 					"packageFiles",
 					"metaTitle",
-					"metaDescription",
-					"keywords"
+					"metaDescription"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -3652,7 +3737,7 @@
 						"format": "double"
 					},
 					"status": {
-						"type": "string"
+						"$ref": "#/components/schemas/DepartureDateStatus"
 					},
 					"seatsAvailable": {
 						"type": "number",
@@ -4253,8 +4338,7 @@
 					"departureDates",
 					"packageFiles",
 					"metaTitle",
-					"metaDescription",
-					"keywords"
+					"metaDescription"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -5376,16 +5460,106 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"InquiryWorkflowPhase": {
+				"properties": {
+					"step": {
+						"type": "number",
+						"format": "double"
+					},
+					"label": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"step",
+					"label",
+					"title",
+					"description"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse_InquiryWorkflowPhase-Array_": {
+				"properties": {
+					"data": {
+						"anyOf": [
+							{
+								"items": {
+									"$ref": "#/components/schemas/InquiryWorkflowPhase"
+								},
+								"type": "array"
+							},
+							{
+								"items": {
+									"items": {
+										"$ref": "#/components/schemas/InquiryWorkflowPhase"
+									},
+									"type": "array"
+								},
+								"type": "array"
+							}
+						],
+						"nullable": true
+					},
+					"pagination": {
+						"$ref": "#/components/schemas/PaginationMeta"
+					},
+					"success": {
+						"type": "boolean"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"data",
+					"success",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"UpdateInquiryDto": {
 				"properties": {
-					"status": {
-						"$ref": "#/components/schemas/InquiryStatus"
+					"steps": {
+						"items": {
+							"$ref": "#/components/schemas/InquiryStepDto"
+						},
+						"type": "array"
 					},
 					"type": {
 						"$ref": "#/components/schemas/InquiryType"
 					},
 					"notes": {
 						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateInquiryWorkflowDto": {
+				"properties": {
+					"stepIndex": {
+						"type": "number",
+						"format": "double"
+					},
+					"status": {
+						"$ref": "#/components/schemas/InquiryStepStatus"
+					},
+					"message": {
+						"type": "string"
+					},
+					"steps": {
+						"items": {
+							"$ref": "#/components/schemas/InquiryStepDto"
+						},
+						"type": "array"
 					}
 				},
 				"type": "object",
@@ -5843,8 +6017,7 @@
 					"departureDates",
 					"packageFiles",
 					"metaTitle",
-					"metaDescription",
-					"keywords"
+					"metaDescription"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -6594,9 +6767,6 @@
 			},
 			"BookingWorkflowPhase": {
 				"properties": {
-					"status": {
-						"$ref": "#/components/schemas/BookingStatus"
-					},
 					"step": {
 						"type": "number",
 						"format": "double"
@@ -6609,21 +6779,13 @@
 					},
 					"description": {
 						"type": "string"
-					},
-					"allowedTransitions": {
-						"items": {
-							"$ref": "#/components/schemas/BookingStatus"
-						},
-						"type": "array"
 					}
 				},
 				"required": [
-					"status",
 					"step",
 					"label",
 					"title",
-					"description",
-					"allowedTransitions"
+					"description"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -6705,8 +6867,11 @@
 					"paymentStatus": {
 						"$ref": "#/components/schemas/BookingPaymentStatus"
 					},
-					"bookingStatus": {
-						"$ref": "#/components/schemas/BookingStatus"
+					"steps": {
+						"items": {
+							"$ref": "#/components/schemas/BookingStepDto"
+						},
+						"type": "array"
 					},
 					"assignedGuide": {
 						"type": "string"
@@ -6716,9 +6881,6 @@
 					},
 					"specialRequests": {
 						"type": "string"
-					},
-					"statusNote": {
-						"type": "string"
 					}
 				},
 				"type": "object",
@@ -6726,16 +6888,23 @@
 			},
 			"UpdateBookingWorkflowDto": {
 				"properties": {
-					"status": {
-						"$ref": "#/components/schemas/BookingStatus"
+					"steps": {
+						"items": {
+							"$ref": "#/components/schemas/BookingStepDto"
+						},
+						"type": "array"
 					},
-					"note": {
+					"stepIndex": {
+						"type": "number",
+						"format": "double"
+					},
+					"status": {
+						"$ref": "#/components/schemas/BookingStepStatus"
+					},
+					"message": {
 						"type": "string"
 					}
 				},
-				"required": [
-					"status"
-				],
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -11285,7 +11454,7 @@
 						"name": "status",
 						"required": false,
 						"schema": {
-							"$ref": "#/components/schemas/InquiryStatus"
+							"type": "string"
 						}
 					},
 					{
@@ -11323,6 +11492,34 @@
 						}
 					}
 				]
+			}
+		},
+		"/admin/inquiries/workflow/phases": {
+			"get": {
+				"operationId": "GetWorkflowPhases",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_InquiryWorkflowPhase-Array_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Inquiries Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": []
 			}
 		},
 		"/admin/inquiries/{id}": {
@@ -11442,6 +11639,53 @@
 				]
 			}
 		},
+		"/admin/inquiries/{id}/workflow": {
+			"put": {
+				"operationId": "UpdateWorkflow",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse_Inquiry_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin Inquiries Management"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateInquiryWorkflowDto"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/admin/inquiries/{id}/quote": {
 			"post": {
 				"operationId": "SendQuote",
@@ -11482,19 +11726,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"allOf": [
-									{
-										"$ref": "#/components/schemas/SendQuoteDto"
-									},
-									{
-										"properties": {
-											"status": {
-												"$ref": "#/components/schemas/InquiryStatus"
-											}
-										},
-										"type": "object"
-									}
-								]
+								"$ref": "#/components/schemas/SendQuoteDto"
 							}
 						}
 					}
@@ -12512,7 +12744,7 @@
 						"name": "status",
 						"required": false,
 						"schema": {
-							"$ref": "#/components/schemas/BookingStatus"
+							"type": "string"
 						}
 					},
 					{

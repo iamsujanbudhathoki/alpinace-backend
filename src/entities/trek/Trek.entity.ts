@@ -40,12 +40,19 @@ export interface TripReview {
   content: string;
 }
 
+export enum DepartureDateStatus {
+  GUARANTEED = 'guaranteed',
+  AVAILABLE = 'available',
+  LIMITED = 'limited',
+  FULL = 'full',
+}
+
 export interface TripDepartureDate {
   id?: string;
   startDate: string;
   endDate: string;
   priceUSD?: number;
-  status?: string;
+  status?: DepartureDateStatus | string;
   seatsAvailable?: number;
   notes?: string;
 }
@@ -67,10 +74,10 @@ export interface TripPackageFile {
 
 @Entity('treks')
 export class Trek extends CommonEntity {
-  @Column({ name: 'cover_media_id', type: 'varchar', nullable: true })
+  @Column({ name: 'cover_media_id', type: 'varchar', length: 36, nullable: true })
   coverMediaId?: string | null;
 
-  @Column({ name: 'map_media_id', type: 'varchar', nullable: true })
+  @Column({ name: 'map_media_id', type: 'varchar', length: 36, nullable: true })
   mapMediaId?: string | null;
 
   @Column({
@@ -238,6 +245,6 @@ export class Trek extends CommonEntity {
   @Column({ name: 'meta_description', type: 'text', nullable: true })
   metaDescription: string;
 
-  @Column({ name: 'keywords', nullable: true })
-  keywords: string;
+  @Column({ name: 'keywords', type: 'text', nullable: true })
+  keywords?: string;
 }

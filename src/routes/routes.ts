@@ -205,6 +205,11 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "DepartureDateStatus": {
+        "dataType": "refEnum",
+        "enums": ["guaranteed","available","limited","full"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "TripDepartureDate": {
         "dataType": "refObject",
         "properties": {
@@ -212,7 +217,7 @@ const models: TsoaRoute.Models = {
             "startDate": {"dataType":"string","required":true},
             "endDate": {"dataType":"string","required":true},
             "priceUSD": {"dataType":"double"},
-            "status": {"dataType":"string"},
+            "status": {"dataType":"union","subSchemas":[{"ref":"DepartureDateStatus"},{"dataType":"string"}]},
             "seatsAvailable": {"dataType":"double"},
             "notes": {"dataType":"string"},
         },
@@ -724,9 +729,18 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "InquiryStatus": {
+    "InquiryStepStatus": {
         "dataType": "refEnum",
-        "enums": ["New","Contacted","Quote Sent","Booked","Closed"],
+        "enums": ["pending","in_progress","active","completed","cancelled"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "InquiryStep": {
+        "dataType": "refObject",
+        "properties": {
+            "status": {"ref":"InquiryStepStatus","required":true},
+            "message": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "InquiryType": {
@@ -748,7 +762,7 @@ const models: TsoaRoute.Models = {
             "travelDates": {"dataType":"string","required":true},
             "groupSize": {"dataType":"double","required":true},
             "message": {"dataType":"string","required":true},
-            "status": {"ref":"InquiryStatus","required":true},
+            "steps": {"dataType":"array","array":{"dataType":"refObject","ref":"InquiryStep"},"required":true},
             "type": {"ref":"InquiryType","required":true},
             "notes": {"dataType":"string","required":true},
         },
@@ -766,6 +780,15 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "InquiryStepDto": {
+        "dataType": "refObject",
+        "properties": {
+            "status": {"ref":"InquiryStepStatus","required":true},
+            "message": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "CreateInquiryDto": {
         "dataType": "refObject",
         "properties": {
@@ -777,7 +800,7 @@ const models: TsoaRoute.Models = {
             "travelDates": {"dataType":"string"},
             "groupSize": {"dataType":"double","required":true},
             "message": {"dataType":"string","required":true},
-            "status": {"ref":"InquiryStatus"},
+            "steps": {"dataType":"array","array":{"dataType":"refObject","ref":"InquiryStepDto"}},
             "type": {"ref":"InquiryType"},
             "notes": {"dataType":"string"},
             "cfTurnstileToken": {"dataType":"string"},
@@ -937,14 +960,23 @@ const models: TsoaRoute.Models = {
         "enums": ["paid","deposit_paid","pending","refunded"],
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "BookingStatus": {
-        "dataType": "refEnum",
-        "enums": ["confirmed","pending","in_review","active","completed","cancelled"],
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "BookingPermitStatus": {
         "dataType": "refEnum",
         "enums": ["issued","processing","pending_document"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BookingStepStatus": {
+        "dataType": "refEnum",
+        "enums": ["pending","in_progress","active","completed","cancelled"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BookingStep": {
+        "dataType": "refObject",
+        "properties": {
+            "status": {"ref":"BookingStepStatus","required":true},
+            "message": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Booking": {
@@ -965,11 +997,10 @@ const models: TsoaRoute.Models = {
             "groupSize": {"dataType":"double","required":true},
             "totalAmountUSD": {"dataType":"double","required":true},
             "paymentStatus": {"ref":"BookingPaymentStatus","required":true},
-            "bookingStatus": {"ref":"BookingStatus","required":true},
             "assignedGuide": {"dataType":"string","required":true},
             "permitStatus": {"ref":"BookingPermitStatus","required":true},
             "specialRequests": {"dataType":"string","required":true},
-            "statusNote": {"dataType":"string"},
+            "steps": {"dataType":"array","array":{"dataType":"refObject","ref":"BookingStep"},"required":true},
         },
         "additionalProperties": false,
     },
@@ -1050,6 +1081,15 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BookingStepDto": {
+        "dataType": "refObject",
+        "properties": {
+            "status": {"ref":"BookingStepStatus","required":true},
+            "message": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "CreateBookingDto": {
         "dataType": "refObject",
         "properties": {
@@ -1057,16 +1097,16 @@ const models: TsoaRoute.Models = {
             "guestEmail": {"dataType":"string","required":true},
             "guestPhone": {"dataType":"string","required":true},
             "country": {"dataType":"string","required":true},
-            "packageName": {"dataType":"string","required":true},
             "packageId": {"dataType":"string"},
             "packageSlug": {"dataType":"string"},
+            "packageName": {"dataType":"string","required":true},
             "packageType": {"ref":"BookingPackageType","required":true},
             "startDate": {"dataType":"string","required":true},
             "endDate": {"dataType":"string","required":true},
             "groupSize": {"dataType":"double","required":true},
-            "totalAmountUSD": {"dataType":"double","required":true},
+            "totalAmountUSD": {"dataType":"double"},
             "paymentStatus": {"ref":"BookingPaymentStatus"},
-            "bookingStatus": {"ref":"BookingStatus"},
+            "steps": {"dataType":"array","array":{"dataType":"refObject","ref":"BookingStepDto"}},
             "assignedGuide": {"dataType":"string"},
             "permitStatus": {"ref":"BookingPermitStatus"},
             "specialRequests": {"dataType":"string"},
@@ -1236,7 +1276,7 @@ const models: TsoaRoute.Models = {
             "packageFiles": {"dataType":"array","array":{"dataType":"refObject","ref":"TripPackageFile"},"required":true},
             "metaTitle": {"dataType":"string","required":true},
             "metaDescription": {"dataType":"string","required":true},
-            "keywords": {"dataType":"string","required":true},
+            "keywords": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
@@ -1317,7 +1357,7 @@ const models: TsoaRoute.Models = {
             "startDate": {"dataType":"string","required":true},
             "endDate": {"dataType":"string","required":true},
             "priceUSD": {"dataType":"double"},
-            "status": {"dataType":"string"},
+            "status": {"ref":"DepartureDateStatus"},
             "seatsAvailable": {"dataType":"double"},
             "notes": {"dataType":"string"},
         },
@@ -1489,7 +1529,7 @@ const models: TsoaRoute.Models = {
             "packageFiles": {"dataType":"array","array":{"dataType":"refObject","ref":"TripPackageFile"},"required":true},
             "metaTitle": {"dataType":"string","required":true},
             "metaDescription": {"dataType":"string","required":true},
-            "keywords": {"dataType":"string","required":true},
+            "keywords": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
@@ -1888,12 +1928,45 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "InquiryWorkflowPhase": {
+        "dataType": "refObject",
+        "properties": {
+            "step": {"dataType":"double","required":true},
+            "label": {"dataType":"string","required":true},
+            "title": {"dataType":"string","required":true},
+            "description": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ApiResponse_InquiryWorkflowPhase-Array_": {
+        "dataType": "refObject",
+        "properties": {
+            "data": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"InquiryWorkflowPhase"}},{"dataType":"array","array":{"dataType":"array","array":{"dataType":"refObject","ref":"InquiryWorkflowPhase"}}},{"dataType":"enum","enums":[null]}],"required":true},
+            "pagination": {"ref":"PaginationMeta"},
+            "success": {"dataType":"boolean","required":true},
+            "message": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "UpdateInquiryDto": {
         "dataType": "refObject",
         "properties": {
-            "status": {"ref":"InquiryStatus"},
+            "steps": {"dataType":"array","array":{"dataType":"refObject","ref":"InquiryStepDto"}},
             "type": {"ref":"InquiryType"},
             "notes": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UpdateInquiryWorkflowDto": {
+        "dataType": "refObject",
+        "properties": {
+            "stepIndex": {"dataType":"double"},
+            "status": {"ref":"InquiryStepStatus"},
+            "message": {"dataType":"string"},
+            "steps": {"dataType":"array","array":{"dataType":"refObject","ref":"InquiryStepDto"}},
         },
         "additionalProperties": false,
     },
@@ -2042,7 +2115,7 @@ const models: TsoaRoute.Models = {
             "packageFiles": {"dataType":"array","array":{"dataType":"refObject","ref":"TripPackageFile"},"required":true},
             "metaTitle": {"dataType":"string","required":true},
             "metaDescription": {"dataType":"string","required":true},
-            "keywords": {"dataType":"string","required":true},
+            "keywords": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
@@ -2281,12 +2354,10 @@ const models: TsoaRoute.Models = {
     "BookingWorkflowPhase": {
         "dataType": "refObject",
         "properties": {
-            "status": {"ref":"BookingStatus","required":true},
             "step": {"dataType":"double","required":true},
             "label": {"dataType":"string","required":true},
             "title": {"dataType":"string","required":true},
             "description": {"dataType":"string","required":true},
-            "allowedTransitions": {"dataType":"array","array":{"dataType":"refEnum","ref":"BookingStatus"},"required":true},
         },
         "additionalProperties": false,
     },
@@ -2316,11 +2387,10 @@ const models: TsoaRoute.Models = {
             "groupSize": {"dataType":"double"},
             "totalAmountUSD": {"dataType":"double"},
             "paymentStatus": {"ref":"BookingPaymentStatus"},
-            "bookingStatus": {"ref":"BookingStatus"},
+            "steps": {"dataType":"array","array":{"dataType":"refObject","ref":"BookingStepDto"}},
             "assignedGuide": {"dataType":"string"},
             "permitStatus": {"ref":"BookingPermitStatus"},
             "specialRequests": {"dataType":"string"},
-            "statusNote": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
@@ -2328,8 +2398,10 @@ const models: TsoaRoute.Models = {
     "UpdateBookingWorkflowDto": {
         "dataType": "refObject",
         "properties": {
-            "status": {"ref":"BookingStatus","required":true},
-            "note": {"dataType":"string"},
+            "steps": {"dataType":"array","array":{"dataType":"refObject","ref":"BookingStepDto"}},
+            "stepIndex": {"dataType":"double"},
+            "status": {"ref":"BookingStepStatus"},
+            "message": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
@@ -4978,7 +5050,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsAdminInquiryController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
-                status: {"in":"query","name":"status","ref":"InquiryStatus"},
+                status: {"in":"query","name":"status","dataType":"string"},
                 type: {"in":"query","name":"type","ref":"InquiryType"},
                 search: {"in":"query","name":"search","dataType":"string"},
                 limit: {"in":"query","name":"limit","dataType":"double"},
@@ -5001,6 +5073,36 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
               await templateService.apiHandler({
                 methodName: 'getAll',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminInquiryController_getWorkflowPhases: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/admin/inquiries/workflow/phases',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminInquiryController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminInquiryController.prototype.getWorkflowPhases)),
+
+            async function AdminInquiryController_getWorkflowPhases(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminInquiryController_getWorkflowPhases, request, response });
+
+                const controller = new AdminInquiryController();
+
+              await templateService.apiHandler({
+                methodName: 'getWorkflowPhases',
                 controller,
                 response,
                 next,
@@ -5075,9 +5177,41 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminInquiryController_updateWorkflow: Record<string, TsoaRoute.ParameterSchema> = {
+                id: {"in":"path","name":"id","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"UpdateInquiryWorkflowDto"},
+        };
+        app.put('/admin/inquiries/:id/workflow',
+            authenticateMiddleware([{"jwt":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminInquiryController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminInquiryController.prototype.updateWorkflow)),
+
+            async function AdminInquiryController_updateWorkflow(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminInquiryController_updateWorkflow, request, response });
+
+                const controller = new AdminInquiryController();
+
+              await templateService.apiHandler({
+                methodName: 'updateWorkflow',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsAdminInquiryController_sendQuote: Record<string, TsoaRoute.ParameterSchema> = {
                 id: {"in":"path","name":"id","required":true,"dataType":"string"},
-                body: {"in":"body","name":"body","required":true,"dataType":"intersection","subSchemas":[{"ref":"SendQuoteDto"},{"dataType":"nestedObjectLiteral","nestedProperties":{"status":{"ref":"InquiryStatus"}}}]},
+                body: {"in":"body","name":"body","required":true,"ref":"SendQuoteDto"},
         };
         app.post('/admin/inquiries/:id/quote',
             authenticateMiddleware([{"jwt":["admin"]}]),
@@ -5730,7 +5864,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsAdminBookingController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
                 search: {"in":"query","name":"search","dataType":"string"},
-                status: {"in":"query","name":"status","ref":"BookingStatus"},
+                status: {"in":"query","name":"status","dataType":"string"},
                 packageType: {"in":"query","name":"packageType","ref":"BookingPackageType"},
                 paymentStatus: {"in":"query","name":"paymentStatus","ref":"BookingPaymentStatus"},
                 limit: {"in":"query","name":"limit","dataType":"double"},

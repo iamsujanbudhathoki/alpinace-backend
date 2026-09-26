@@ -29,6 +29,19 @@ export enum BookingPermitStatus {
   PENDING_DOCUMENT = 'pending_document',
 }
 
+export enum BookingStepStatus {
+  PENDING = 'pending',
+  IN_PROGRESS = 'in_progress',
+  ACTIVE = 'active',
+  COMPLETED = 'completed',
+  CANCELLED = 'cancelled',
+}
+
+export interface BookingStep {
+  status: BookingStepStatus;
+  message: string;
+}
+
 @Entity('bookings')
 export class Booking extends CommonEntity {
   @Column({ name: 'reference', unique: true })
@@ -81,14 +94,6 @@ export class Booking extends CommonEntity {
   })
   paymentStatus: BookingPaymentStatus;
 
-  @Column({
-    name: 'booking_status',
-    type: 'enum',
-    enum: BookingStatus,
-    default: BookingStatus.PENDING,
-  })
-  bookingStatus: BookingStatus;
-
   @Column({ name: 'assigned_guide', nullable: true })
   assignedGuide: string;
 
@@ -103,6 +108,6 @@ export class Booking extends CommonEntity {
   @Column({ name: 'special_requests', type: 'text', nullable: true })
   specialRequests: string;
 
-  @Column({ name: 'status_note', type: 'text', nullable: true })
-  statusNote?: string;
+  @Column({ name: 'steps', type: 'json', nullable: true })
+  steps: BookingStep[];
 }
